@@ -23,6 +23,12 @@ public class GameInfo : MonoBehaviour
 	//Respawn with r
 	private Respawn currentSpawn = null;
 
+	//Game settings
+	private float mouseSpeed = 1f;
+
+	//References
+	private GameObject playerObj;
+
 	public enum MenuState
 	{
 		closed = 0,
@@ -104,7 +110,18 @@ public class GameInfo : MonoBehaviour
 
 		if(showSettings)
 		{
-			
+			mouseSpeed = drawHorizontalSlider(0f, 0f, 100, 20, 0.5f, 20f, mouseSpeed, "Mouse Speed: ");
+			if(drawButton(-0.25f,0.25f,"Cancel"))
+			{
+				setMenuState(MenuState.escmenu);
+				mouseSpeed = playerObj.GetComponentInChildren<MouseLook>().sensitivityX;
+			}
+			if(drawButton(0.25f,0.25f,"OK"))
+			{
+				setMenuState(MenuState.escmenu);
+				playerObj.GetComponentInChildren<MouseLook>().sensitivityX = mouseSpeed;
+				playerObj.GetComponentInChildren<MouseLook>().sensitivityY = mouseSpeed;
+			}
 		}
 	}
 
@@ -176,8 +193,32 @@ public class GameInfo : MonoBehaviour
 		Rect extendedPos = new Rect(pos.x - 10, pos.y - 5, pos.width + 20, pos.height + 10);
 		return GUI.Button(extendedPos, text, skin.button);
 	}
+
+	public float drawHorizontalSlider(float virtualX, float virtualY, int realWidth, int realHeight, float min, float max, float value, string description)
+	{
+		Rect descriptionPos = getVirtualContentPos(virtualX, virtualY, description);
+
+		float valueWidth = skin.label.CalcSize(new GUIContent(value.ToString())).x;
+		float valueHeight = skin.label.CalcSize(new GUIContent(value.ToString())).y;
+		float valueX = descriptionPos.x + descriptionPos.width + 5 + realWidth + 5;
+		float valueY = descriptionPos.y;
+		Rect valuePos = new Rect(valueX, valueY, valueWidth, valueHeight);
+
+		float boxWidth = 5 + descriptionPos.width + 5 + realWidth + 5 + valueWidth + 5;
+		float boxHeight = Mathf.Max(descriptionPos.height + 10, realHeight);
+		Rect boxPos = new Rect(descriptionPos.x - 5, descriptionPos.y - 5, boxWidth, boxHeight);
+
+		float sliderX = descriptionPos.x + descriptionPos.width + 5;
+		float sliderY = boxPos.y + 5;
+		Rect sliderPos = new Rect(sliderX, sliderY, realWidth, realHeight);
+
+		GUI.Box(boxPos, "");
+		GUI.Label(descriptionPos, description, skin.label);
+		GUI.Label(valuePos, value.ToString(), skin.label);
+		return GUI.HorizontalSlider(sliderPos, value, min, max);
+	}
 	
-	//virtual position: 0,0 = center of screen
+	//virtual position: 0,0 = center of screen; 1,1 = bottom right corner
 	private Rect getVirtualContentPos(float virtualX, float virtualY, string text)
 	{
 		GUIContent content = new GUIContent(text);
@@ -226,5 +267,10 @@ public class GameInfo : MonoBehaviour
 	public Respawn getCurrentSpawn()
 	{
 		return currentSpawn;
+	}
+
+	public void setPlayerObject(GameObject player)
+	{
+		playerObj = player;
 	}
 }

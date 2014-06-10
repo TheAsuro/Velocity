@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//Interacts with checkpoint triggers, add this to the player
+//Interacts with checkpoint triggers, must be added to every player
 public class RaceScript : MonoBehaviour
 {
 	//Draw the timer
@@ -14,6 +14,11 @@ public class RaceScript : MonoBehaviour
 	private bool frozen = false;
 	private float unfreezeTime = float.PositiveInfinity;
 	
+	void Awake()
+	{
+		GameInfo.info.setPlayerObject(gameObject);
+	}
+
 	void Start()
 	{
 		GameInfo.info.addWindowLine("Frozen: ", getFrozenString);
