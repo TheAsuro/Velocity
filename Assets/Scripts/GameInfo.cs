@@ -9,10 +9,12 @@ public class GameInfo : MonoBehaviour
 	public GUISkin skin;
 	
 	//Gamestates
-	private bool showDebug = true;
+	private bool showDebug = false;
 	private bool gamePaused = false;
-	private bool showMenu = false;
 	private bool showIntro = false;
+	private bool showEscMenu = false;
+	private bool showSettings = false;
+	private MenuState menuState = MenuState.closed;
 	
 	//Debug window (top-left corner, toggle with f8)
 	private List<string> linePrefixes = new List<string>();
@@ -20,14 +22,21 @@ public class GameInfo : MonoBehaviour
 	
 	//Respawn with r
 	private Respawn currentSpawn = null;
+
+	public enum MenuState
+	{
+		closed = 0,
+		escmenu = 1,
+		intro = 2,
+		settings = 3
+	}
 	
 	void Awake()
 	{
 		//TODO make this a proper singleton thingy stuff
 		info = this;
 		Screen.lockCursor = true;
-		//***DEBUG***
-		toggleMenu();
+		setMenuState(MenuState.intro);
 	}
 
 	//Don't do movement stuff here, do it in FixedUpdate()
@@ -40,13 +49,14 @@ public class GameInfo : MonoBehaviour
 		
 		if(Input.GetButtonDown("Menu"))
 		{
-			toggleMenu();
+			toggleEscMenu();
 		}
 	}
 	
 	//Draw the HUD
 	void OnGUI()
 	{
+		//Debug info in the top-left corner
 		if(showDebug)
 		{
 			int height = 10 + windowLines.Count * 20;
@@ -64,12 +74,22 @@ public class GameInfo : MonoBehaviour
 		
 		if(gamePaused)
 		{
+			//Display pause info
 			string menuText = "Game Paused!";
-			drawTextBox(0f,-0.25f,menuText);
+			drawTextBox(0f,-0.6f,menuText);
 		}
 		
-		if(showMenu)
+		if(showEscMenu)
 		{
+			//Draw menu buttons
+			if(drawButton(0f,-0.25f,"Help"))
+			{
+				setMenuState(MenuState.intro);
+			}
+			if(drawButton(0f,0f,"Settings"))
+			{
+				setMenuState(MenuState.settings);
+			}
 			if(drawButton(0f,0.25f,"Quit"))
 			{
 				Application.Quit();
@@ -78,17 +98,68 @@ public class GameInfo : MonoBehaviour
 		
 		if(showIntro)
 		{
-			string infoText = "Press ESC to toggle this menu.\nPress F8 to toggle debug info.\nPress (or hold) space to jump.\nPress E to grab.\nPress R to respawn.";
+			string infoText = "Press ESC to toggle the menu.\nPress F8 to toggle debug info.\nPress (or hold) space to jump.\nPress E to grab.\nPress R to respawn.";
 			drawTextBox(0f,0f,infoText);
+		}
+
+		if(showSettings)
+		{
+			
 		}
 	}
 
 	void OnApplicationFocus(bool focusStatus)
 	{
-		if(!showMenu && focusStatus)
+		if(!showEscMenu && focusStatus)
 		{
 			Screen.lockCursor = true;
 		}
+	}
+
+	private void setMenuState(MenuState state)
+	{
+		//Reset all states
+		setGamePaused(true);
+		showIntro = false;
+		showEscMenu = false;
+		showSettings = false;
+		Screen.lockCursor = false;
+
+		switch(state)
+		{
+			case MenuState.escmenu:
+				showEscMenu = true;
+				break;
+			case MenuState.intro:
+				showIntro = true;
+				break;
+			case MenuState.settings:
+				showSettings = true;
+				break;
+			default:
+				setGamePaused(false);
+				Screen.lockCursor = true;
+				break;
+		}
+
+		menuState = state;
+	}
+
+	private void toggleEscMenu()
+	{
+		if(menuState == MenuState.closed)
+		{
+			setMenuState(MenuState.escmenu);
+		}
+		else
+		{
+			setMenuState(MenuState.closed);
+		}
+	}
+
+	public MenuState getMenuState()
+	{
+		return menuState;
 	}
 	
 	public void drawTextBox(float virtualX, float virtualY, string text)
@@ -129,23 +200,6 @@ public class GameInfo : MonoBehaviour
 	public void setSpawn(Respawn spawn)
 	{
 		currentSpawn = spawn;
-	}
-	
-	private void toggleMenu()
-	{
-		showMenu = !showMenu;
-		showIntro = showMenu;
-		
-		if(showMenu)
-		{
-			Screen.lockCursor = false;
-			setGamePaused(true);
-		}
-		else
-		{
-			Screen.lockCursor = true;
-			setGamePaused(false);
-		}
 	}
 	
 	private void setGamePaused(bool value)
