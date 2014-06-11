@@ -14,11 +14,14 @@ public abstract class Movement : MonoBehaviour
 	public bool crouched = false;
 	public float lastJumpPress = -1f;
 
+	protected const float UPSToSpeed = (7 / 320f);
+	protected const float SpeedToUPS = (320f / 7);
+
 	void Awake()
 	{
 		camObj = transform.FindChild("Camera").gameObject;
 	}
-	
+
 	void Start()
 	{
 		GameInfo.info.addWindowLine("XZ-Speed: ", getXzVelocityString);
@@ -26,15 +29,16 @@ public abstract class Movement : MonoBehaviour
 		GameInfo.info.addWindowLine("Speed 'limit': ", getMaxSpeedString);
 		GameInfo.info.addWindowLine("Crouched: ", getCrouchedString);
 		GameInfo.info.addWindowLine("On Ground: ", getGroundString);
+		GameInfo.info.addWindowLine("Origin: ", getOriginString);
 	}
-	
+
 	void Update()
 	{
 		if(Input.GetButtonDown("Jump") || autojump && Input.GetButton("Jump"))
 		{
 			lastJumpPress = Time.time;
 		}
-		
+
 		if(Input.GetButton("Respawn"))
 		{
 			respawnPlayer();
@@ -53,8 +57,8 @@ public abstract class Movement : MonoBehaviour
 	{
 		if(canMove)
 		{
-			Vector3 additionalVelocity = calculateAdditionalVelocity();
-			
+			Vector3 additionalVelocity = calculateAdditionalVelocity(Time.deltaTime);
+
 			//Apply
 			if(!rigidbody.isKinematic)
 			{
@@ -63,11 +67,11 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 
-	public virtual Vector3 calculateAdditionalVelocity()
+	public virtual Vector3 calculateAdditionalVelocity(float frametime)
 	{
 		return Vector3.zero;
 	}
-	
+
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.tag.Equals("Teleporter"))
@@ -84,7 +88,7 @@ public abstract class Movement : MonoBehaviour
 			}
 		}
 	}
-	
+
 	private void respawnPlayer()
 	{
 		Respawn spawn = GameInfo.info.getCurrentSpawn();
@@ -100,7 +104,7 @@ public abstract class Movement : MonoBehaviour
 			print("Tried to respawn, but no spawnpoint selected. RIP :(");
 		}
 	}
-	
+
 	public bool checkGround()
 	{
 		Vector3 origin = new Vector3(transform.position.x, transform.position.y - collider.bounds.extents.y + 0.05f, transform.position.z);
@@ -117,7 +121,7 @@ public abstract class Movement : MonoBehaviour
 		}
 		return false;
 	}
-	
+
 	private void setCrouched(bool state)
 	{
 		CapsuleCollider col = (CapsuleCollider)collider;
@@ -137,15 +141,15 @@ public abstract class Movement : MonoBehaviour
 			crouched = false;
 		}
 	}
-		
+
 	private float getVelocity()
 	{
 		return Vector3.Magnitude(rigidbody.velocity);
 	}
-	
+
 	private string getXzVelocityString()
 	{
-		float mag = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z).magnitude;
+		float mag = (new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z) * SpeedToUPS).magnitude;
 		string magstr = mag.ToString();
 		if(magstr.ToLower().Contains("e"))
 		{
@@ -153,7 +157,7 @@ public abstract class Movement : MonoBehaviour
 		}
 		return roundString(magstr, 2);
 	}
-	
+
 	private string getYVelocityString()
 	{
 		string v = rigidbody.velocity.y.ToString();
@@ -163,12 +167,12 @@ public abstract class Movement : MonoBehaviour
 		}
 		return roundString(v, 2);
 	}
-	
+
 	private string getMaxSpeedString()
 	{
 		return maxSpeed.ToString();
 	}
-	
+
 	private string getCrouchedString()
 	{
 		return crouched.ToString();
@@ -178,7 +182,12 @@ public abstract class Movement : MonoBehaviour
 	{
 		return checkGround().ToString();
 	}
-	
+
+	private string getOriginString()
+	{
+		return transform.position.x.ToString() + " " + transform.position.y.ToString() + " " + transform.position.z.ToString();
+	}
+
 	private string roundString(string input, int digitsAfterDot)
 	{
 		if(input.Contains("."))
