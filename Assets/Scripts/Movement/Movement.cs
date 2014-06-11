@@ -12,7 +12,10 @@ public abstract class Movement : MonoBehaviour
 
 	public GameObject camObj;
 	public bool crouched = false;
-	public float lastJumpPress = -1f;
+    public float lastJumpPress = -1f;
+
+    protected const float UPSToSpeed = (7 / 320f);
+    protected const float SpeedToUPS = (320f / 7);
 
 	void Awake()
 	{
@@ -26,6 +29,7 @@ public abstract class Movement : MonoBehaviour
 		GameInfo.info.addWindowLine("Speed 'limit': ", getMaxSpeedString);
 		GameInfo.info.addWindowLine("Crouched: ", getCrouchedString);
 		GameInfo.info.addWindowLine("On Ground: ", getGroundString);
+        GameInfo.info.addWindowLine("Origin: ", getOriginString);
 	}
 	
 	void Update()
@@ -53,7 +57,7 @@ public abstract class Movement : MonoBehaviour
 	{
 		if(canMove)
 		{
-			Vector3 additionalVelocity = calculateAdditionalVelocity();
+			Vector3 additionalVelocity = calculateAdditionalVelocity(Time.deltaTime);
 			
 			//Apply
 			if(!rigidbody.isKinematic)
@@ -63,7 +67,7 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 
-	public virtual Vector3 calculateAdditionalVelocity()
+	public virtual Vector3 calculateAdditionalVelocity(float frametime)
 	{
 		return Vector3.zero;
 	}
@@ -145,7 +149,7 @@ public abstract class Movement : MonoBehaviour
 	
 	private string getXzVelocityString()
 	{
-		float mag = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z).magnitude;
+		float mag = (new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z) * SpeedToUPS).magnitude;
 		string magstr = mag.ToString();
 		if(magstr.ToLower().Contains("e"))
 		{
@@ -178,6 +182,11 @@ public abstract class Movement : MonoBehaviour
 	{
 		return checkGround().ToString();
 	}
+
+    private string getOriginString()
+    {
+        return transform.position.x.ToString() + " " + transform.position.y.ToString() + " " + transform.position.z.ToString();
+    }
 	
 	private string roundString(string input, int digitsAfterDot)
 	{

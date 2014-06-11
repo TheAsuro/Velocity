@@ -70,7 +70,7 @@ public class GameInfo : MonoBehaviour
 			GUI.Box(new Rect(5,5,width,height), "", skin.box);
 			
 			int lineHeight = 20;
-			int lineWidth = 135;
+            int lineWidth = 500; // 135;
 			
 			for(int i = 0; i < windowLines.Count; i++)
 			{
