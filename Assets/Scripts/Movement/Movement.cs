@@ -132,9 +132,12 @@ public abstract class Movement : MonoBehaviour
 		else if(crouched && !state)
 		{
 			//uncrouch
-			col.height = 2f;
-			transform.position += new Vector3(0f,0.5f,0f);
-			crouched = false;
+			if(true) //Do some sort of raycast here
+			{
+				col.height = 2f;
+				transform.position += new Vector3(0f,0.5f,0f);
+				crouched = false;
+			}
 		}
 	}
 		

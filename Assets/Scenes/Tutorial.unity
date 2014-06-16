@@ -443,6 +443,10 @@ Prefab:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 9fc39f30e4fcf5b42a7dd99375cd2637, type: 2}
+      propertyPath: jumpForce
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11400000, guid: 9fc39f30e4fcf5b42a7dd99375cd2637, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 9fc39f30e4fcf5b42a7dd99375cd2637, type: 2}
@@ -1679,7 +1683,7 @@ MonoBehaviour:
   autojump: 1
   speed: .5
   maxSpeed: 7
-  jumpForce: 5
+  jumpForce: 3
   groundLayers:
     serializedVersion: 2
     m_Bits: 1281
