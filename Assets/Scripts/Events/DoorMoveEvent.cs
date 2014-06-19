@@ -1,33 +1,57 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DoorMoveEvent : Event
 {
-	public Vector3 relativeMovement;
-	public float duration = 5f;
+	public List<Vector3> positions = new List<Vector3>();
+	public float movementTime = 2.5f;
 
+	private Vector3 initialPos;
 	private Vector3 startPos;
 	private Vector3 endPos;
 	private float startTime;
 	private bool running = false;
+	private int positionCounter = 0;
 
-	void Awake()
+	void Start()
 	{
-		startPos = transform.position;
+		initialPos = transform.position;
 	}
 
 	void Update()
 	{
 		if(running)
 		{
-			float completion = (Time.time - startTime) / duration;
+			float completion = (Time.time - startTime) / movementTime;
 			transform.position = Vector3.Lerp(startPos, endPos, completion);
 
-			if(Time.time > startTime + duration)
+			if(Time.time > startTime + movementTime)
 			{
-				running = false;
+				positionCounter++;
+				if(positionCounter >= positions.Count)
+				{
+					stop();
+				}
+				else
+				{
+					updatePositions();
+				}
 			}
 		}
+	}
+
+	private void updatePositions()
+	{
+		startPos = transform.position;
+		endPos = initialPos + positions[positionCounter];
+		startTime = Time.time;
+	}
+
+	private void stop()
+	{
+		running = false;
+		positionCounter = 0;
 	}
 
 	public override void fire(params object[] parameters)
@@ -35,8 +59,7 @@ public class DoorMoveEvent : Event
 		if(!running)
 		{
 			running = true;
-			endPos = startPos + relativeMovement;
-			startTime = Time.time;
+			updatePositions();
 		}
 	}
 }

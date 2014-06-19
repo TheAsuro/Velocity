@@ -5,8 +5,6 @@ public class BunnyHopMovement : Movement
 {
 	public override Vector3 calculateAdditionalVelocity()
 	{
-		bool onGround = checkGround();
-
 		//Get input and make it a vector
 		Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 		Vector3 camRotation = new Vector3(0f, camObj.transform.rotation.eulerAngles.y, camObj.transform.rotation.eulerAngles.z);
@@ -19,12 +17,23 @@ public class BunnyHopMovement : Movement
 		float velocityDot = Vector3.Dot(currentVelocity, additionalVelocity);
 		Vector3 modifiedVelocity = additionalVelocity * max;
 		Vector3 correctVelocity = Vector3.Lerp(additionalVelocity, modifiedVelocity, velocityDot);
-		
-		//Get jump velocity
-		int jump = 0;
-		if(Time.time < lastJumpPress + 0.2f && onGround) { jump = 1; lastJumpPress = -1f; }
 
 		//Return
-		return new Vector3(correctVelocity.x, jump * jumpForce, correctVelocity.z);
+		return new Vector3(correctVelocity.x, getJumpVelocity(rigidbody.velocity.y), correctVelocity.z);
+	}
+
+	private float getJumpVelocity(float yVelocity)
+	{
+		bool onGround = checkGround();
+
+		if(Time.time < lastJumpPress + 0.2f && yVelocity < jumpForce && onGround)
+		{
+			lastJumpPress = -1f;
+			return jumpForce - yVelocity;
+		}
+		else
+		{
+			return 0f;
+		}
 	}
 }

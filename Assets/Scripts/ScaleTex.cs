@@ -6,17 +6,23 @@ public class ScaleTex : MonoBehaviour
 {
 	public float scaleFactor = 1f;
 	public List<string> textures = new List<string>(new string[] {"_MainTex"});
-	
-	public string scaleMode = "XY";
+	public textureScaleMode scaleMode = textureScaleMode.XY;
 
-	void Awake ()
+	public enum textureScaleMode
+	{
+		XY,
+		XZ,
+		YZ
+	}
+
+	void Awake()
 	{
 		Vector2 scale;
-		if(scaleMode.ToLower() == "xy")
+		if(scaleMode == textureScaleMode.XY)
 		{
 			scale = new Vector2(transform.lossyScale.x * scaleFactor, transform.lossyScale.y * scaleFactor);
 		}
-		else if(scaleMode.ToLower() == "xz")
+		else if(scaleMode == textureScaleMode.XZ)
 		{
 			scale = new Vector2(transform.lossyScale.x * scaleFactor, transform.lossyScale.z * scaleFactor);
 		}

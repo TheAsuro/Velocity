@@ -48,7 +48,7 @@ public class RaceScript : MonoBehaviour
 				if(freezeTime > 0f)
 				{
 					freeze(freezeTime);
-					startTime += 3f;
+					startTime += freezeTime;
 				}
 			}
 			else if(end && nr == checkpoint + 1)
