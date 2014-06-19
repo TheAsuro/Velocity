@@ -9,12 +9,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 33: {fileID: 3300000}
-  - 64: {fileID: 6400000}
   - 23: {fileID: 2300000}
   - 114: {fileID: 11400000}
+  - 65: {fileID: 6500000}
   m_Layer: 12
-  m_Name: Checkpoint
-  m_TagString: Checkpoint
+  m_Name: Respawn
+  m_TagString: Respawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26,8 +26,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 100}
-  m_LocalScale: {x: 6, y: 5, z: 1}
+  m_LocalPosition: {x: 0, y: 20.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -43,7 +43,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 076966d5d7548fb4e94e55d1f9d9271d, type: 2}
+  - {fileID: 2100000, guid: 06350e81efcda2c40a788bf14d6ba686, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -57,9 +57,9 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!64 &6400000
-MeshCollider:
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &6500000
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -68,9 +68,8 @@ MeshCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_SmoothSphereCollisions: 0
-  m_Convex: 0
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  m_Size: {x: 10, y: 2, z: 10}
+  m_Center: {x: 0, y: .5, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -79,12 +78,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a7782a60d720a247b1b271b25f6df4c, type: 3}
+  m_Script: {fileID: 11500000, guid: 04c789344c600c24ba7a65a2d696c122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkpointNumber: 1
-  isEnd: 0
-  freezeTime: 0
+  isFistSpawn: 0
+  respawnPositionIsRelative: 1
+  respawnRotationIsRelative: 0
+  respawnPosition: {x: 0, y: 1, z: 0}
+  respawnYRotation: 90
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

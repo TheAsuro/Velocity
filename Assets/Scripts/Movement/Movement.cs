@@ -35,9 +35,13 @@ public abstract class Movement : MonoBehaviour
 			lastJumpPress = Time.time;
 		}
 		
-		if(Input.GetButton("Respawn"))
+		if(Input.GetButtonDown("Respawn"))
 		{
 			respawnPlayer();
+		}
+		if(Input.GetButtonDown("Reset"))
+		{
+			resetPlayer();
 		}
 		if(Input.GetButton("Crouch"))
 		{
@@ -84,14 +88,13 @@ public abstract class Movement : MonoBehaviour
 			}
 		}
 	}
-	
-	private void respawnPlayer()
+
+	private void spawnPlayer(Respawn spawn)
 	{
-		Respawn spawn = GameInfo.info.getCurrentSpawn();
 		if(spawn != null)
 		{
 			transform.position = spawn.getSpawnPos();
-			transform.rotation = spawn.getSpawnRot();
+			camObj.transform.rotation = spawn.getSpawnRot();
 			rigidbody.velocity = Vector3.zero;
 			lastJumpPress = -1f;
 		}
@@ -99,6 +102,16 @@ public abstract class Movement : MonoBehaviour
 		{
 			print("Tried to respawn, but no spawnpoint selected. RIP :(");
 		}
+	}
+	
+	private void respawnPlayer()
+	{
+		spawnPlayer(GameInfo.info.getCurrentSpawn());
+	}
+
+	private void resetPlayer()
+	{
+		spawnPlayer(GameInfo.info.getFirstSpawn());
 	}
 	
 	public bool checkGround()
@@ -132,7 +145,8 @@ public abstract class Movement : MonoBehaviour
 		else if(crouched && !state)
 		{
 			//uncrouch
-			if(true) //Do some sort of raycast here
+			Ray ray = new Ray(transform.position - new Vector3(0f, -0.5f, 0f), Vector3.up);
+			if(!Physics.SphereCast(ray, 0.5f, 2f, groundLayers)) //Do some sort of raycast here
 			{
 				col.height = 2f;
 				transform.position += new Vector3(0f,0.5f,0f);

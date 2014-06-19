@@ -22,6 +22,7 @@ public class GameInfo : MonoBehaviour
 	
 	//Respawn with r
 	private Respawn currentSpawn = null;
+	private Respawn firstSpawn = null;
 
 	//Game settings
 	private float mouseSpeed = 1f;
@@ -240,6 +241,10 @@ public class GameInfo : MonoBehaviour
 	
 	public void setSpawn(Respawn spawn)
 	{
+		if(firstSpawn == null)
+		{
+			firstSpawn = spawn;
+		}
 		currentSpawn = spawn;
 	}
 	
@@ -267,6 +272,11 @@ public class GameInfo : MonoBehaviour
 	public Respawn getCurrentSpawn()
 	{
 		return currentSpawn;
+	}
+
+	public Respawn getFirstSpawn()
+	{
+		return firstSpawn;
 	}
 
 	public void setPlayerObject(GameObject player)

@@ -19,11 +19,6 @@ public class RaceScript : MonoBehaviour
 		GameInfo.info.setPlayerObject(gameObject);
 	}
 
-	void Start()
-	{
-		GameInfo.info.addWindowLine("Frozen: ", getFrozenString);
-	}
-	
 	void Update()
 	{
 		if(!finished)
