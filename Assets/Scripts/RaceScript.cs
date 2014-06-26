@@ -19,6 +19,11 @@ public class RaceScript : MonoBehaviour
 		GameInfo.info.setPlayerObject(gameObject);
 	}
 
+	void Start()
+	{
+		WorldInfo.info.addResetMethod(reset);
+	}
+
 	void Update()
 	{
 		if(!finished)
@@ -90,6 +95,15 @@ public class RaceScript : MonoBehaviour
 	private string getFrozenString()
 	{
 		return unfreezeTime.ToString();
+	}
+
+	public void reset()
+	{
+		startTime = -1f;
+		time = -1f;
+		checkpoint = -1;
+		finished = false;
+		frozen = false;
 	}
 	
 	void OnGUI()

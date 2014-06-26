@@ -9,6 +9,8 @@ public abstract class Movement : MonoBehaviour
 	public float maxSpeed = 10f;
 	public float jumpForce = 1f;
 	public LayerMask groundLayers;
+	public PhysicMaterial friction;
+	public PhysicMaterial noFriction;
 
 	public GameObject camObj;
 	public bool crouched = false;
@@ -42,6 +44,7 @@ public abstract class Movement : MonoBehaviour
 		if(Input.GetButtonDown("Reset"))
 		{
 			resetPlayer();
+			WorldInfo.info.reset();
 		}
 		if(Input.GetButton("Crouch"))
 		{
@@ -89,6 +92,21 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 
+	void OnCollisionEnter(Collision col)
+	{
+		foreach(ContactPoint point in col.contacts)
+		{
+			if(point.normal.y > 0.5f)
+			{
+				col.gameObject.collider.material = friction;
+			}
+			else
+			{
+				col.gameObject.collider.material = noFriction;
+			}
+		}
+	}
+
 	private void spawnPlayer(Respawn spawn)
 	{
 		if(spawn != null)
@@ -122,11 +140,8 @@ public abstract class Movement : MonoBehaviour
 		//Collided with something
 		if(hasHit)
 		{
-			//Something's angle is less than 45° relative to the ground
-			if(hit.collider.transform.rotation.eulerAngles.x >= 45f)
-			{
-				return true;
-			}
+			//Maybe do some angle calculations here to avoid jumping up slopes?
+			return true;
 		}
 		return false;
 	}
@@ -139,17 +154,21 @@ public abstract class Movement : MonoBehaviour
 		{
 			//crouch
 			col.height = 1f;
-			transform.position += new Vector3(0f,-0.5f,0f);
+			transform.position += new Vector3(0f,0.5f,0f);
+			camObj.transform.localPosition += new Vector3(0f,-0.25f,0f);
 			crouched = true;
 		}
 		else if(crouched && !state)
 		{
 			//uncrouch
 			Ray ray = new Ray(transform.position - new Vector3(0f, -0.5f, 0f), Vector3.up);
-			if(!Physics.SphereCast(ray, 0.5f, 2f, groundLayers)) //Do some sort of raycast here
+
+			//Todo unrouch by extending down except when on ground
+			if(!Physics.SphereCast(ray, 0.5f, 2f, groundLayers))
 			{
 				col.height = 2f;
 				transform.position += new Vector3(0f,0.5f,0f);
+				camObj.transform.localPosition += new Vector3(0f,0.25f,0f);
 				crouched = false;
 			}
 		}

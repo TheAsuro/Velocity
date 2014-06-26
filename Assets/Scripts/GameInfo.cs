@@ -105,7 +105,7 @@ public class GameInfo : MonoBehaviour
 		
 		if(showIntro)
 		{
-			string infoText = "Press ESC to toggle the menu.\nPress F8 to toggle debug info.\nPress (or hold) space to jump.\nPress E to grab.\nPress R to respawn.";
+			string infoText = "Press ESC to toggle the menu.\nPress F8 to toggle debug info.\nPress (or hold) space to jump.\nPress E to grab.\nPress R to respawn.\nPress F1 to reset.";
 			drawTextBox(0f,0f,infoText);
 		}
 
