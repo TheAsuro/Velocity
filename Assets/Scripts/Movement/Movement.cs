@@ -134,14 +134,27 @@ public abstract class Movement : MonoBehaviour
 	
 	public bool checkGround()
 	{
-		Vector3 origin = new Vector3(transform.position.x, transform.position.y - collider.bounds.extents.y + 0.05f, transform.position.z);
-		RaycastHit hit;
-		bool hasHit = Physics.Raycast(origin, -Vector3.up, out hit, 0.1f, groundLayers);
-		//Collided with something
-		if(hasHit)
+		Vector3 pos = new Vector3(transform.position.x, transform.position.y - collider.bounds.extents.y + 0.05f, transform.position.z);
+		Vector3 radiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
+		return checkCylinder(pos, radiusVector, 8);
+	}
+
+	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, int rayCount)
+	{
+		for(int i = 0; i < rayCount; i++)
 		{
-			//Maybe do some angle calculations here to avoid jumping up slopes?
-			return true;
+			Vector3 radius = Quaternion.Euler(new Vector3(0f, i * (360f / rayCount), 0f)) * radiusVector;
+			Vector3 circlePoint = origin + radius;
+
+			RaycastHit hit;
+			bool hasHit = Physics.Raycast(circlePoint, -Vector3.up, out hit, 0.1f, groundLayers);
+			Debug.DrawLine(circlePoint, circlePoint - Vector3.up);
+			//Collided with something
+			if(hasHit)
+			{
+				//Maybe do some angle calculations here to avoid jumping up slopes?
+				return true;
+			}
 		}
 		return false;
 	}
