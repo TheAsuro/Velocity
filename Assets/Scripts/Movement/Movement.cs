@@ -136,23 +136,28 @@ public abstract class Movement : MonoBehaviour
 	{
 		Vector3 pos = new Vector3(transform.position.x, transform.position.y - collider.bounds.extents.y + 0.05f, transform.position.z);
 		Vector3 radiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
-		return checkCylinder(pos, radiusVector, 8);
+		return checkCylinder(pos, radiusVector, -0.1f, 8);
 	}
 
-	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, int rayCount)
+	//Doesn't actually check the volume of a cylinder, instead executes a given number of raycasts in a circle
+	//origin: center of the circle from which will be cast
+	//radiusVector: radius of the circle
+	//verticalDirection: 1 = up, -1 = down
+	//rayCount: number of vertices the "circle" will have
+	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount)
 	{
 		for(int i = 0; i < rayCount; i++)
 		{
 			Vector3 radius = Quaternion.Euler(new Vector3(0f, i * (360f / rayCount), 0f)) * radiusVector;
 			Vector3 circlePoint = origin + radius;
+			float verticalDirection = Mathf.Sign(verticalLength);
 
 			RaycastHit hit;
-			bool hasHit = Physics.Raycast(circlePoint, -Vector3.up, out hit, 0.1f, groundLayers);
-			Debug.DrawLine(circlePoint, circlePoint - Vector3.up);
+			bool hasHit = Physics.Raycast(circlePoint, Vector3.up * verticalDirection, out hit, Mathf.Abs(verticalLength), groundLayers);
 			//Collided with something
 			if(hasHit)
 			{
-				//Maybe do some angle calculations here to avoid jumping up slopes?
+				//Maybe do some angle calculations here to avoid jumping up steep slopes?
 				return true;
 			}
 		}
@@ -173,16 +178,28 @@ public abstract class Movement : MonoBehaviour
 		}
 		else if(crouched && !state)
 		{
-			//uncrouch
-			Ray ray = new Ray(transform.position - new Vector3(0f, -0.5f, 0f), Vector3.up);
-
-			//Todo unrouch by extending down except when on ground
-			if(!Physics.SphereCast(ray, 0.5f, 2f, groundLayers))
+			//extend down if not on ground
+			Vector3 lowerPos = transform.position + new Vector3(0f, (collider.bounds.extents.y * -1f) + 0.05f, 0f);
+			Vector3 lowerRadiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
+			if(!checkCylinder(lowerPos, lowerRadiusVector, -1.05f, 8))
 			{
 				col.transform.localScale = new Vector3(col.transform.localScale.x, 1f, col.transform.localScale.z);
-				transform.position += new Vector3(0f,0.5f,0f);
+				transform.position += new Vector3(0f,-0.5f,0f);
 				camObj.transform.localPosition += new Vector3(0f,0.25f,0f);
 				crouched = false;
+			}
+			else
+			{
+				//extend up if there is space
+				Vector3 upperPos = transform.position + new Vector3(0f, collider.bounds.extents.y - 0.05f, 0f);
+				Vector3 upperRadiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
+				if(!checkCylinder(upperPos, upperRadiusVector, 1.05f, 8))
+				{
+					col.transform.localScale = new Vector3(col.transform.localScale.x, 1f, col.transform.localScale.z);
+					transform.position += new Vector3(0f,0.5f,0f);
+					camObj.transform.localPosition += new Vector3(0f,0.25f,0f);
+					crouched = false;
+				}
 			}
 		}
 	}
