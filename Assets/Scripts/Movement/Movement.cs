@@ -148,12 +148,12 @@ public abstract class Movement : MonoBehaviour
 	
 	private void setCrouched(bool state)
 	{
-		CapsuleCollider col = (CapsuleCollider)collider;
+		MeshCollider col = (MeshCollider)collider;
 
 		if(!crouched && state)
 		{
 			//crouch
-			col.height = 1f;
+			col.transform.localScale = new Vector3(col.transform.localScale.x, 0.5f, col.transform.localScale.z);
 			transform.position += new Vector3(0f,0.5f,0f);
 			camObj.transform.localPosition += new Vector3(0f,-0.25f,0f);
 			crouched = true;
@@ -166,7 +166,7 @@ public abstract class Movement : MonoBehaviour
 			//Todo unrouch by extending down except when on ground
 			if(!Physics.SphereCast(ray, 0.5f, 2f, groundLayers))
 			{
-				col.height = 2f;
+				col.transform.localScale = new Vector3(col.transform.localScale.x, 1f, col.transform.localScale.z);
 				transform.position += new Vector3(0f,0.5f,0f);
 				camObj.transform.localPosition += new Vector3(0f,0.25f,0f);
 				crouched = false;
