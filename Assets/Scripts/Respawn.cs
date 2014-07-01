@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//Player resets to one of these points if r is pressed, handeled by GameInfo
+//Player resets to one of these points if r is pressed, handeled by WorldInfo
 public class Respawn : MonoBehaviour
 {
 	public bool isFistSpawn = false;
@@ -14,7 +14,7 @@ public class Respawn : MonoBehaviour
 	{
 		if(isFistSpawn)
 		{
-			GameInfo.info.setSpawn(this);
+			WorldInfo.info.setSpawn(this);
 		}
 	}
 
@@ -22,7 +22,7 @@ public class Respawn : MonoBehaviour
 	{
 		if(col.gameObject.tag.Equals("Player"))
 		{
-			GameInfo.info.setSpawn(this);
+			WorldInfo.info.setSpawn(this);
 		}
 	}
 

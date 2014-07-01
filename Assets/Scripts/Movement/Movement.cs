@@ -15,6 +15,7 @@ public abstract class Movement : MonoBehaviour
 	public GameObject camObj;
 	public bool crouched = false;
 	public float lastJumpPress = -1f;
+	public float jumpPressDuration = 0.1f;
 
 	void Awake()
 	{
@@ -96,6 +97,7 @@ public abstract class Movement : MonoBehaviour
 	{
 		foreach(ContactPoint point in col.contacts)
 		{
+			//If it's horizontal and the player is not jumping apply friction
 			if(point.normal.y > 0.5f)
 			{
 				col.gameObject.collider.material = friction;
@@ -124,12 +126,12 @@ public abstract class Movement : MonoBehaviour
 	
 	private void respawnPlayer()
 	{
-		spawnPlayer(GameInfo.info.getCurrentSpawn());
+		spawnPlayer(WorldInfo.info.getCurrentSpawn());
 	}
 
 	private void resetPlayer()
 	{
-		spawnPlayer(GameInfo.info.getFirstSpawn());
+		spawnPlayer(WorldInfo.info.getFirstSpawn());
 	}
 	
 	public bool checkGround()

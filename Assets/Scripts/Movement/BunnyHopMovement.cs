@@ -26,7 +26,7 @@ public class BunnyHopMovement : Movement
 	{
 		bool onGround = checkGround();
 
-		if(Time.time < lastJumpPress + 0.2f && yVelocity < jumpForce && onGround)
+		if(Time.time < lastJumpPress + jumpPressDuration && yVelocity < jumpForce && onGround)
 		{
 			lastJumpPress = -1f;
 			return jumpForce - yVelocity;

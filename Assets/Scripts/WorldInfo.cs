@@ -7,21 +7,54 @@ public class WorldInfo : MonoBehaviour
 	public static WorldInfo info;
 	public delegate void Reset();
 
-	private List<Reset> resetList = new List<Reset>();
+	private Dictionary<string,Reset> resetList = new Dictionary<string,Reset>();
+
+	//Respawn with r
+	private Respawn currentSpawn = null;
+	private Respawn firstSpawn = null;
 
 	void Awake()
 	{
 		info = this;
 	}
 
-	public void addResetMethod(Reset reset)
+	public void addResetMethod(Reset reset, string id)
 	{
-		resetList.Add(reset);
+		if(resetList.ContainsKey(id))
+		{
+			resetList.Remove(id);
+		}
+		resetList.Add(id, reset);
+	}
+
+	public void setSpawn(Respawn spawn)
+	{
+		if(firstSpawn == null)
+		{
+			firstSpawn = spawn;
+		}
+		currentSpawn = spawn;
+		addResetMethod(resetSpawn, "spawn reset");
+	}
+
+	private void resetSpawn()
+	{
+		currentSpawn = firstSpawn;
+	}
+
+	public Respawn getCurrentSpawn()
+	{
+		return currentSpawn;
+	}
+
+	public Respawn getFirstSpawn()
+	{
+		return firstSpawn;
 	}
 
 	public void reset()
 	{
-		foreach(Reset r in resetList)
+		foreach(Reset r in resetList.Values)
 		{
 			r();
 		}

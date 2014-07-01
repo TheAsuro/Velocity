@@ -9,10 +9,16 @@ public class RaceScript : MonoBehaviour
 
 	private float startTime = -1f;
 	private float time = -1f;
+
 	private int checkpoint = -1;
 	private bool finished = false;
+
 	private bool frozen = false;
+	private float freezeDuration = 0f;
 	private float unfreezeTime = float.PositiveInfinity;
+
+	private bool drawCountdown = false;
+	private string countdownText = ":^)";
 	
 	void Awake()
 	{
@@ -21,7 +27,7 @@ public class RaceScript : MonoBehaviour
 
 	void Start()
 	{
-		WorldInfo.info.addResetMethod(reset);
+		WorldInfo.info.addResetMethod(reset, "race reset");
 	}
 
 	void Update()
@@ -43,34 +49,35 @@ public class RaceScript : MonoBehaviour
 			Checkpoint cp = other.GetComponent<Checkpoint>();
 			int nr = cp.checkpointNumber;
 			bool end = cp.isEnd;
-			float freezeTime = cp.freezeTime;
+			freezeDuration = cp.freezeTime;
+			drawCountdown = cp.countdown;
 			
 			if(nr == 0)
 			{
 				startTime = Time.time;
 				checkpoint = 0;
 				finished = false;
-				if(freezeTime > 0f)
+				if(freezeDuration > 0f)
 				{
-					freeze(freezeTime);
-					startTime += freezeTime;
+					freeze(freezeDuration);
+					startTime += freezeDuration;
 				}
 			}
-			else if(end && nr == checkpoint + 1)
+			else if(end && nr == checkpoint + 1 && !finished)
 			{
 				time = Time.time - startTime;
 				finished = true;
-				if(freezeTime > 0f)
+				if(freezeDuration > 0f)
 				{
-					freeze(freezeTime);
+					freeze(freezeDuration);
 				}
 			}
 			else if(nr == checkpoint + 1)
 			{
 				checkpoint++;
-				if(freezeTime > 0f)
+				if(freezeDuration > 0f)
 				{
-					freeze(freezeTime);
+					freeze(freezeDuration);
 				}
 			}
 		}
@@ -110,7 +117,7 @@ public class RaceScript : MonoBehaviour
 	{
 		string tStr ="Time: " + time.ToString().Substring(0,time.ToString().IndexOf('.') + 2);
 		
-		if(drawTime && checkpoint != -1 && !finished)
+		if(drawTime && time > 0f && checkpoint != -1 && !finished)
 		{
 			string output = tStr + "\nCP: " + checkpoint.ToString();
 			GameInfo.info.drawTextBox(0f,-0.8f,output);
@@ -118,6 +125,31 @@ public class RaceScript : MonoBehaviour
 		if(finished)
 		{
 			GameInfo.info.drawTextBox(0f,-0.8f,time.ToString());
+		}
+		if(drawCountdown && !GameInfo.info.getGamePaused())
+		{
+			float remainingFreezeTime = unfreezeTime - Time.time;
+			if(remainingFreezeTime > freezeDuration * (2f/3f))
+			{
+				countdownText = "3";
+			}
+			else if(remainingFreezeTime > freezeDuration * (1f/3f))
+			{
+				countdownText = "2";
+			}
+			else if(remainingFreezeTime > 0f)
+			{
+				countdownText = "1";
+			}
+			else if(remainingFreezeTime > freezeDuration * (-1f/3f))
+			{
+				countdownText = "GO!";
+			}
+			else
+			{
+				drawCountdown = false;
+			}
+			GameInfo.info.drawTextBox(0f, -0.5f, countdownText);
 		}
 	}
 }

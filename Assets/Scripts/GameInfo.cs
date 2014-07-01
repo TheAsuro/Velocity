@@ -19,10 +19,6 @@ public class GameInfo : MonoBehaviour
 	//Debug window (top-left corner, toggle with f8)
 	private List<string> linePrefixes = new List<string>();
 	private List<InfoString> windowLines = new List<InfoString>();
-	
-	//Respawn with r
-	private Respawn currentSpawn = null;
-	private Respawn firstSpawn = null;
 
 	//Game settings
 	private float mouseSpeed = 1f;
@@ -239,15 +235,6 @@ public class GameInfo : MonoBehaviour
 		windowLines.Add(stringFunction);
 	}
 	
-	public void setSpawn(Respawn spawn)
-	{
-		if(firstSpawn == null)
-		{
-			firstSpawn = spawn;
-		}
-		currentSpawn = spawn;
-	}
-	
 	private void setGamePaused(bool value)
 	{
 		gamePaused = value;
@@ -267,16 +254,6 @@ public class GameInfo : MonoBehaviour
 	public bool getGamePaused()
 	{
 		return gamePaused;
-	}
-	
-	public Respawn getCurrentSpawn()
-	{
-		return currentSpawn;
-	}
-
-	public Respawn getFirstSpawn()
-	{
-		return firstSpawn;
 	}
 
 	public void setPlayerObject(GameObject player)

@@ -2579,8 +2579,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 558888426}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 45, z: 0}
-  m_LocalScale: {x: 50, y: 40, z: 50.0000153}
+  m_LocalPosition: {x: 0, y: 43, z: 0}
+  m_LocalScale: {x: 50, y: 40, z: 50}
   m_Children: []
   m_Father: {fileID: 1035485895}
   m_RootOrder: 1
@@ -4502,7 +4502,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 43
+      value: 42.5
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -4542,7 +4542,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: m_LocalScale.y
-      value: .200000003
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: isEnd
@@ -4550,7 +4550,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: freezeTime
-      value: 0
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
+      propertyPath: countdown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6500000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
@@ -4646,6 +4654,7 @@ MonoBehaviour:
   camObj: {fileID: 0}
   crouched: 0
   lastJumpPress: -1
+  jumpPressDuration: .100000001
 --- !u!54 &1117012969
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4787,7 +4796,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 8716d2083010a294c9ebf1940786bb18, type: 2}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -5727,6 +5736,7 @@ MonoBehaviour:
   checkpointNumber: 1
   isEnd: 1
   freezeTime: 0
+  countdown: 0
 --- !u!65 &1308790713
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8073,7 +8083,6 @@ GameObject:
   - 33: {fileID: 1818142407}
   - 65: {fileID: 1818142406}
   - 114: {fileID: 1818142405}
-  - 23: {fileID: 1818142408}
   m_Layer: 12
   m_Name: RaceStart
   m_TagString: Checkpoint
@@ -8088,8 +8097,8 @@ Transform:
   m_PrefabInternal: {fileID: 1101359684}
   m_GameObject: {fileID: 1818142403}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 43, z: 0}
-  m_LocalScale: {x: 3, y: .200000003, z: 3}
+  m_LocalPosition: {x: 0, y: 42.5, z: 0}
+  m_LocalScale: {x: 3, y: 5, z: 3}
   m_Children: []
   m_Father: {fileID: 1035485895}
   m_RootOrder: 3
@@ -8107,7 +8116,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   checkpointNumber: 0
   isEnd: 0
-  freezeTime: 0
+  freezeTime: 2
+  countdown: 1
 --- !u!65 &1818142406
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8129,26 +8139,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1101359684}
   m_GameObject: {fileID: 1818142403}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &1818142408
-Renderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1818142403}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
-  m_Materials:
-  - {fileID: 2100000, guid: 076966d5d7548fb4e94e55d1f9d9271d, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
 --- !u!1 &1833257986
 GameObject:
   m_ObjectHideFlags: 0
