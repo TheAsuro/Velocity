@@ -6,6 +6,7 @@ public class DoorMoveEvent : Event
 {
 	public List<Vector3> positions = new List<Vector3>();
 	public float movementTime = 2.5f;
+	public bool addToResetList = true;
 
 	private Vector3 initialPos;
 	private Vector3 startPos;
@@ -17,6 +18,11 @@ public class DoorMoveEvent : Event
 	void Start()
 	{
 		initialPos = transform.position;
+
+		if(addToResetList)
+		{
+			WorldInfo.info.addResetMethod(reset, "reset door " + GetInstanceID().ToString());
+		}
 	}
 
 	void Update()
@@ -61,5 +67,11 @@ public class DoorMoveEvent : Event
 			running = true;
 			updatePositions();
 		}
+	}
+
+	public override void reset()
+	{
+		stop();
+		transform.position = initialPos;
 	}
 }

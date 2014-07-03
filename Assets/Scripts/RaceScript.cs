@@ -119,8 +119,7 @@ public class RaceScript : MonoBehaviour
 		
 		if(drawTime && time > 0f && checkpoint != -1 && !finished)
 		{
-			string output = tStr + "\nCP: " + checkpoint.ToString();
-			GameInfo.info.drawTextBox(0f,-0.8f,output);
+			GameInfo.info.drawTextBox(0f,-0.8f,tStr);
 		}
 		if(finished)
 		{

@@ -7,4 +7,9 @@ public abstract class Event : MonoBehaviour
 	{
 
 	}
+
+	public virtual void reset()
+	{
+		
+	}
 }
