@@ -33,6 +33,44 @@ public class GameInfo : MonoBehaviour
 		intro = 2,
 		settings = 3
 	}
+
+	public class ButtonInfo
+	{
+		private string text;
+		private GUISkin skin;
+		private float width;
+		private float height;
+
+		public ButtonInfo(string pText, GUISkin pSkin)
+		{
+			text = pText;
+			skin = pSkin;
+
+			GUIContent content = new GUIContent(text);
+			width = skin.button.CalcSize(content).x;
+			height = skin.button.CalcSize(content).y;
+		}
+
+		public float getWidth()
+		{
+			return width;
+		}
+
+		public float getHeight()
+		{
+			return height;
+		}
+
+		public string getText()
+		{
+			return text;
+		}
+
+		public GUIStyle getSkin()
+		{
+			return skin.button;
+		}
+	}
 	
 	void Awake()
 	{
@@ -84,18 +122,27 @@ public class GameInfo : MonoBehaviour
 		
 		if(showEscMenu)
 		{
+			List<ButtonInfo> escButtons = new List<ButtonInfo>()
+			{
+				new ButtonInfo("Help", skin),
+				new ButtonInfo("Settings", skin),
+				new ButtonInfo("Quit", skin)
+			};
+
 			//Draw menu buttons
-			if(drawButton(0f,-0.25f,"Help"))
+			switch(drawButtonGroup(escButtons, 5, 0f, 0f))
 			{
-				setMenuState(MenuState.intro);
-			}
-			if(drawButton(0f,0f,"Settings"))
-			{
-				setMenuState(MenuState.settings);
-			}
-			if(drawButton(0f,0.25f,"Quit"))
-			{
-				Application.Quit();
+				case "Help":
+					setMenuState(MenuState.intro);
+					break;
+				case "Settings":
+					setMenuState(MenuState.settings);
+					break;
+				case "Quit":
+					Application.Quit();
+					break;
+				default:
+					break;
 			}
 		}
 		
@@ -108,16 +155,26 @@ public class GameInfo : MonoBehaviour
 		if(showSettings)
 		{
 			mouseSpeed = drawHorizontalSlider(0f, 0f, 100, 20, 0.5f, 20f, mouseSpeed, "Mouse Speed: ");
-			if(drawButton(-0.25f,0.25f,"Cancel"))
+
+			List<ButtonInfo> settingsButtons = new List<ButtonInfo>()
 			{
-				setMenuState(MenuState.escmenu);
-				mouseSpeed = playerObj.GetComponentInChildren<MouseLook>().sensitivityX;
-			}
-			if(drawButton(0.25f,0.25f,"OK"))
+				new ButtonInfo("OK", skin),
+				new ButtonInfo("Cancel", skin)
+			};
+
+			switch(drawButtonGroup(settingsButtons, 5, 0f, 0.1f))
 			{
-				setMenuState(MenuState.escmenu);
-				playerObj.GetComponentInChildren<MouseLook>().sensitivityX = mouseSpeed;
-				playerObj.GetComponentInChildren<MouseLook>().sensitivityY = mouseSpeed;
+				case "OK":
+					playerObj.GetComponentInChildren<MouseLook>().sensitivityX = mouseSpeed;
+					playerObj.GetComponentInChildren<MouseLook>().sensitivityY = mouseSpeed;
+					setMenuState(MenuState.escmenu);
+					break;
+				case "Cancel":
+					mouseSpeed = playerObj.GetComponentInChildren<MouseLook>().sensitivityX;
+					setMenuState(MenuState.escmenu);
+					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -213,6 +270,42 @@ public class GameInfo : MonoBehaviour
 		GUI.Label(descriptionPos, description, skin.label);
 		GUI.Label(valuePos, value.ToString(), skin.label);
 		return GUI.HorizontalSlider(sliderPos, value, min, max);
+	}
+
+	//Draws a list of buttons and returns the name of the pressed one (null if no button is pressed)
+	private string drawButtonGroup(List<ButtonInfo> buttons, int margin, float virtualX, float virtualY)
+	{
+		float width = 0;
+		float height = (buttons.Count - 1) * margin;
+
+		//Get widest button and combined height
+		foreach(ButtonInfo button in buttons)
+		{
+			if(button.getWidth() > width) { width = button.getWidth(); }
+			height += button.getHeight();
+		}
+
+		//Topmost y position, virtual position is applied here
+		float startPosY = ((Screen.height / 2f) - (height / 2f)) + (Screen.width / 2f) * virtualY;
+
+		//Draw the box in the background
+		float boxX = (Screen.width / 2f) - (width / 2f);
+		Rect boxPos = new Rect(boxX - margin, startPosY - margin, width + 2f * margin, height + 2f * margin);
+		GUI.Box(boxPos, "", skin.box);
+
+		foreach(ButtonInfo button in buttons)
+		{
+			float xPos = (Screen.width / 2f) - (button.getWidth() / 2f);
+			Rect pos = new Rect(xPos, startPosY, button.getWidth(), button.getHeight());
+			if(GUI.Button(pos, button.getText(), button.getSkin()))
+			{
+				return button.getText();
+			}
+
+			startPosY += button.getHeight() + margin;
+		}
+
+		return null;
 	}
 	
 	//virtual position: 0,0 = center of screen; 1,1 = bottom right corner
