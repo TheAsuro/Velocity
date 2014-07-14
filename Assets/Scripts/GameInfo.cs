@@ -23,6 +23,7 @@ public class GameInfo : MonoBehaviour
 	//Game settings
 	private float mouseSpeed = 1f;
 	private float fov = 90f;
+	public bool showHelp = true;
 
 	//References
 	private GameObject playerObj;
@@ -161,7 +162,7 @@ public class GameInfo : MonoBehaviour
 
 		if(showSettings)
 		{
-			fov = drawHorizontalSlider(0f, -0.1f, 100, 20, 60f, 140f, fov, "FOV: ");
+			fov = drawHorizontalSlider(0f, -0.1f, 100, 20, 60f, 120f, fov, "FOV: ");
 			fov = Mathf.RoundToInt(fov);
 			updateFov();
 
@@ -361,6 +362,16 @@ public class GameInfo : MonoBehaviour
 			Camera.main.GetComponent<MouseLook>().enabled = true;
 			Time.timeScale = 1f;
 		}
+	}
+
+	public void savePlayerSettings()
+	{
+
+	}
+
+	public void loadPlayerSettings()
+	{
+
 	}
 	
 	public bool getGamePaused()
