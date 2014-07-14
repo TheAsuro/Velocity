@@ -22,9 +22,11 @@ public class GameInfo : MonoBehaviour
 
 	//Game settings
 	private float mouseSpeed = 1f;
+	private float fov = 90f;
 
 	//References
 	private GameObject playerObj;
+	private DemoRecord recorder;
 
 	public enum MenuState
 	{
@@ -78,6 +80,7 @@ public class GameInfo : MonoBehaviour
 		info = this;
 		Screen.lockCursor = true;
 		setMenuState(MenuState.intro);
+		updateFov();
 	}
 
 	//Don't do movement stuff here, do it in FixedUpdate()
@@ -124,6 +127,7 @@ public class GameInfo : MonoBehaviour
 		{
 			List<ButtonInfo> escButtons = new List<ButtonInfo>()
 			{
+				new ButtonInfo("Continue", skin),
 				new ButtonInfo("Help", skin),
 				new ButtonInfo("Settings", skin),
 				new ButtonInfo("Quit", skin)
@@ -132,6 +136,9 @@ public class GameInfo : MonoBehaviour
 			//Draw menu buttons
 			switch(drawButtonGroup(escButtons, 5, 0f, 0f))
 			{
+				case "Continue":
+					setMenuState(MenuState.closed);
+					break;
 				case "Help":
 					setMenuState(MenuState.intro);
 					break;
@@ -154,8 +161,10 @@ public class GameInfo : MonoBehaviour
 
 		if(showSettings)
 		{
-			Camera.main.fieldOfView = drawHorizontalSlider(0f, -0.1f, 100, 20, 60f, 179f, Camera.main.fieldOfView, "FOV: ");
-			Camera.main.fieldOfView = Mathf.RoundToInt(Camera.main.fieldOfView);
+			fov = drawHorizontalSlider(0f, -0.1f, 100, 20, 60f, 140f, fov, "FOV: ");
+			fov = Mathf.RoundToInt(fov);
+			updateFov();
+
 			mouseSpeed = drawHorizontalSlider(0f, 0f, 100, 20, 0.5f, 20f, mouseSpeed, "Mouse Speed: ");
 
 			List<ButtonInfo> settingsButtons = new List<ButtonInfo>()
@@ -186,6 +195,14 @@ public class GameInfo : MonoBehaviour
 		if(!showEscMenu && focusStatus)
 		{
 			Screen.lockCursor = true;
+		}
+	}
+
+	private void updateFov()
+	{
+		foreach(Camera cam in Camera.allCameras)
+		{
+			cam.fieldOfView = fov;
 		}
 	}
 
@@ -297,8 +314,8 @@ public class GameInfo : MonoBehaviour
 
 		foreach(ButtonInfo button in buttons)
 		{
-			float xPos = (Screen.width / 2f) - (button.getWidth() / 2f);
-			Rect pos = new Rect(xPos, startPosY, button.getWidth(), button.getHeight());
+			float xPos = (Screen.width / 2f) - (width / 2f);
+			Rect pos = new Rect(xPos, startPosY, width, button.getHeight());
 			if(GUI.Button(pos, button.getText(), button.getSkin()))
 			{
 				return button.getText();
@@ -354,5 +371,21 @@ public class GameInfo : MonoBehaviour
 	public void setPlayerObject(GameObject player)
 	{
 		playerObj = player;
+		recorder = playerObj.GetComponent<DemoRecord>();
+	}
+
+	public void StartDemo()
+	{
+		recorder.StartDemo("sweg");
+	}
+
+	public void StopDemo()
+	{
+		recorder.StopDemo();
+	}
+
+	public void PlayLastDemo()
+	{
+		recorder.PlayDemo(recorder.getDemo());
 	}
 }

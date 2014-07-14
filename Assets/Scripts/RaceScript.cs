@@ -52,7 +52,7 @@ public class RaceScript : MonoBehaviour
 			freezeDuration = cp.freezeTime;
 			drawCountdown = cp.countdown;
 			
-			if(nr == 0)
+			if(nr == 0) //Start
 			{
 				startTime = Time.time;
 				checkpoint = 0;
@@ -62,9 +62,11 @@ public class RaceScript : MonoBehaviour
 					freeze(freezeDuration);
 					startTime += freezeDuration;
 				}
+				GameInfo.info.StartDemo();
 			}
-			else if(end && nr == checkpoint + 1 && !finished)
+			else if(end && nr == checkpoint + 1 && !finished) //End
 			{
+				GameInfo.info.StopDemo();
 				time = Time.time - startTime;
 				finished = true;
 				if(freezeDuration > 0f)
@@ -72,7 +74,7 @@ public class RaceScript : MonoBehaviour
 					freeze(freezeDuration);
 				}
 			}
-			else if(nr == checkpoint + 1)
+			else if(nr == checkpoint + 1) //Random checkpoint
 			{
 				checkpoint++;
 				if(freezeDuration > 0f)
