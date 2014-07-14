@@ -154,6 +154,8 @@ public class GameInfo : MonoBehaviour
 
 		if(showSettings)
 		{
+			Camera.main.fieldOfView = drawHorizontalSlider(0f, -0.1f, 100, 20, 60f, 179f, Camera.main.fieldOfView, "FOV: ");
+			Camera.main.fieldOfView = Mathf.RoundToInt(Camera.main.fieldOfView);
 			mouseSpeed = drawHorizontalSlider(0f, 0f, 100, 20, 0.5f, 20f, mouseSpeed, "Mouse Speed: ");
 
 			List<ButtonInfo> settingsButtons = new List<ButtonInfo>()
