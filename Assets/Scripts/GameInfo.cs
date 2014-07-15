@@ -397,6 +397,7 @@ public class GameInfo : MonoBehaviour
 
 	public void PlayLastDemo()
 	{
+		playerObj.collider.enabled = false;
 		recorder.PlayDemo(recorder.getDemo());
 	}
 }

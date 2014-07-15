@@ -17,6 +17,7 @@ public class DemoRecord : MonoBehaviour
 	private bool playing = false;
 	private float startPlayTime;
 	private GameObject ghost;
+	private Camera ghostCam;
 	private Demo replayDemo;
 
 	void Update()
@@ -53,9 +54,9 @@ public class DemoRecord : MonoBehaviour
 				float frameStep = nextFrameTime - lastFrameTime;
 				float timeToNextFrame = nextFrameTime - playTime;
 				float t = timeToNextFrame / frameStep;
-				print(t);
 
-				ghost.transform.position = Vector3.Slerp(oldPos, newPos, t);
+				ghost.transform.position = Vector3.Lerp(oldPos, newPos, t);
+				ghostCam.transform.LookAt(newPos);
 			}
 		}
 	}
@@ -91,6 +92,7 @@ public class DemoRecord : MonoBehaviour
 	{
 		Respawn spawn = WorldInfo.info.getFirstSpawn();
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
+		ghostCam = ghost.transform.FindChild("Cam").GetComponent<Camera>();
 		replayDemo = demo;
 		startPlayTime = Time.time;
 		playing = true;
