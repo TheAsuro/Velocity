@@ -8,7 +8,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  - 20: {fileID: 2000000}
   m_Layer: 0
   m_Name: GhostCam
   m_TagString: Untagged
@@ -24,6 +23,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400002}
+  - 20: {fileID: 2000000}
   m_Layer: 0
   m_Name: CamObj
   m_TagString: Untagged
@@ -61,7 +61,7 @@ Camera:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 100002}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1

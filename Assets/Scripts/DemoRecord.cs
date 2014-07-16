@@ -19,7 +19,8 @@ public class DemoRecord : MonoBehaviour
 	private bool playing = false;
 	private float startPlayTime;
 	private GameObject ghost;
-	private GameObject ghostCam;
+	private GameObject ghostCamObj;
+	private GameObject ghostCamChild;
 	private Demo replayDemo;
 
 	void Update()
@@ -63,14 +64,18 @@ public class DemoRecord : MonoBehaviour
 				float timeToNextFrame = nextFrameTime - playTime;
 				float t = timeToNextFrame / frameStep;
 
+				Quaternion editedLastRot = Quaternion.Euler(0f, lastRot.eulerAngles.y, 0f);
+				Quaternion editedNextRot = Quaternion.Euler(0f, nextRot.eulerAngles.y, 0f);
+
 				ghost.transform.position = Vector3.Lerp(lastPos, nextPos, t);
-				ghost.transform.rotation = Quaternion.Lerp(lastRot, nextRot, t);
+				ghost.transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, t);
 
 				//TODO make obj at ghost position and child at cam distance
-				ghostCam.transform.localPosition = camDistance;
-				ghostCam.transform.position = lastPos;
+				ghostCamObj.transform.position = ghost.transform.position;
+				ghostCamChild.transform.localPosition = camDistance;
+				ghostCamObj.transform.rotation = ghost.transform.rotation;
 
-				Camera.main.transform.LookAt(nextPos);
+				ghostCamChild.transform.LookAt(ghost.transform.position);
 			}
 		}
 	}
@@ -79,7 +84,8 @@ public class DemoRecord : MonoBehaviour
 	{
 		if(recording)
 		{
-			tickList.Add(new DemoTick(Time.time, transform.position, transform.rotation));
+			Quaternion rot = Camera.main.transform.rotation;
+			tickList.Add(new DemoTick(Time.time, transform.position, rot));
 		}
 	}
 
@@ -106,7 +112,8 @@ public class DemoRecord : MonoBehaviour
 	{
 		Respawn spawn = WorldInfo.info.getFirstSpawn();
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
-		ghostCam = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
+		ghostCamObj = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
+		ghostCamChild = ghostCamObj.transform.FindChild("CamObj").gameObject;
 		replayDemo = demo;
 		startPlayTime = Time.time;
 		playing = true;
