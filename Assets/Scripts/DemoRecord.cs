@@ -5,9 +5,11 @@ using System.Collections.Generic;
 public class DemoRecord : MonoBehaviour
 {
 	public GameObject ghostPrefab;
+	public GameObject ghostCamPrefab;
+	public Vector3 camDistance;
 
 	//Record
-	private Dictionary<float,Vector3> posList;
+	private List<DemoTick> tickList;
 	private bool recording = false;
 	private Demo completeDemo;
 	private string playerName;
@@ -17,7 +19,7 @@ public class DemoRecord : MonoBehaviour
 	private bool playing = false;
 	private float startPlayTime;
 	private GameObject ghost;
-	private Camera ghostCam;
+	private GameObject ghostCam;
 	private Demo replayDemo;
 
 	void Update()
@@ -28,35 +30,47 @@ public class DemoRecord : MonoBehaviour
 			float playTime = Time.time - startPlayTime; //Time since we began playing
 			float lastFrameTime = -1f; //Last recorded frame
 			float nextFrameTime = -1f; //Frame that comes after that
+			Vector3 lastPos = Vector3.zero;
+			Vector3 nextPos = Vector3.zero;
+			Quaternion lastRot = new Quaternion();
+			Quaternion nextRot = new Quaternion();
 
 			//Go through all frames
-			foreach(KeyValuePair<float,Vector3> pair in replayDemo.getPosList())
+			foreach(DemoTick tick in tickList)
 			{
 				//Find the highest one that is smaller than playTime
-				if(pair.Key <= playTime && pair.Key > lastFrameTime)
+				if(tick.getTime() <= playTime && tick.getTime() > lastFrameTime)
 				{
-					lastFrameTime = pair.Key;
+					lastFrameTime = tick.getTime();
+					lastPos = tick.getPosition();
+					lastRot = tick.getRotation();
 				}
 				//Find the one after that
 				else
 				{
-					if(pair.Key > lastFrameTime && nextFrameTime == -1f)
+					if(tick.getTime() > lastFrameTime && nextFrameTime == -1f)
 					{
-						nextFrameTime = pair.Key;
+						nextFrameTime = tick.getTime();
+						nextPos = tick.getPosition();
+						nextRot = tick.getRotation();
 					}
 				}
 			}
 
-			Vector3 oldPos; //Position of last frame
-			Vector3 newPos; //Position of the frame after that
-			if(replayDemo.getPosList().TryGetValue(lastFrameTime, out oldPos) && replayDemo.getPosList().TryGetValue(nextFrameTime, out newPos))
+			if(lastFrameTime > 0f && nextFrameTime > 0f)
 			{
 				float frameStep = nextFrameTime - lastFrameTime;
 				float timeToNextFrame = nextFrameTime - playTime;
 				float t = timeToNextFrame / frameStep;
 
-				ghost.transform.position = Vector3.Lerp(oldPos, newPos, t);
-				ghostCam.transform.LookAt(newPos);
+				ghost.transform.position = Vector3.Lerp(lastPos, nextPos, t);
+				ghost.transform.rotation = Quaternion.Lerp(lastRot, nextRot, t);
+
+				//TODO make obj at ghost position and child at cam distance
+				ghostCam.transform.localPosition = camDistance;
+				ghostCam.transform.position = lastPos;
+
+				Camera.main.transform.LookAt(nextPos);
 			}
 		}
 	}
@@ -65,13 +79,13 @@ public class DemoRecord : MonoBehaviour
 	{
 		if(recording)
 		{
-			posList.Add(Time.time, transform.position);
+			tickList.Add(new DemoTick(Time.time, transform.position, transform.rotation));
 		}
 	}
 
 	public void StartDemo(string pPlayerName)
 	{
-		posList = new Dictionary<float,Vector3>();
+		tickList = new List<DemoTick>();
 		playerName = pPlayerName;
 		levelName = Application.loadedLevelName;
 		recording = true;
@@ -80,7 +94,7 @@ public class DemoRecord : MonoBehaviour
 	public void StopDemo()
 	{
 		recording = false;
-		completeDemo = new Demo(posList, playerName, levelName);
+		completeDemo = new Demo(tickList, playerName, levelName);
 	}
 
 	public Demo getDemo()
@@ -92,7 +106,7 @@ public class DemoRecord : MonoBehaviour
 	{
 		Respawn spawn = WorldInfo.info.getFirstSpawn();
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
-		ghostCam = ghost.transform.FindChild("Cam").GetComponent<Camera>();
+		ghostCam = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		replayDemo = demo;
 		startPlayTime = Time.time;
 		playing = true;

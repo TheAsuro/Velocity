@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class Demo
 {
-	private Dictionary<float,Vector3> posList;
+	private List<DemoTick> tickList;
 	private string playerName;
 	private string levelName;
 
-	public Demo(Dictionary<float,Vector3> pPosList, string pPlayerName, string pLevelName)
+	public Demo(List<DemoTick> pTickList, string pPlayerName, string pLevelName)
 	{
-		posList = pPosList;
+		tickList = pTickList;
 		playerName = pPlayerName;
 		levelName = pLevelName;
 	}
@@ -27,11 +27,11 @@ public class Demo
 
 	public int getFrameCount()
 	{
-		return posList.Count;	
+		return tickList.Count;	
 	}
 
-	public Dictionary<float,Vector3> getPosList()
+	public List<DemoTick> getTickList()
 	{
-		return posList;
+		return tickList;
 	}
 }

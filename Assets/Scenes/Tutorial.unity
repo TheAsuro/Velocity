@@ -3665,6 +3665,18 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 5cb025783319fe14b9119fbbe02c92bb, type: 2}
+      propertyPath: camDistance.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 5cb025783319fe14b9119fbbe02c92bb, type: 2}
+      propertyPath: camDistance.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 5cb025783319fe14b9119fbbe02c92bb, type: 2}
+      propertyPath: ghostCamPrefab
+      value: 
+      objectReference: {fileID: 100000, guid: f11dc40ee198a214f90c767b786980b9, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5cb025783319fe14b9119fbbe02c92bb, type: 2}
   m_RootGameObject: {fileID: 1117012964}
@@ -4717,6 +4729,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ghostPrefab: {fileID: 100000, guid: a4a93747b7895864ba8bcfb521e1e547, type: 2}
+  ghostCamPrefab: {fileID: 100000, guid: f11dc40ee198a214f90c767b786980b9, type: 2}
+  camDistance: {x: 0, y: 3, z: 5}
 --- !u!1001 &1134430235
 Prefab:
   m_ObjectHideFlags: 0
