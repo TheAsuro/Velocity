@@ -81,11 +81,7 @@ public class GameInfo : MonoBehaviour
 		info = this;
 		Screen.lockCursor = true;
 		setMenuState(MenuState.intro);
-	}
-
-	void Start()
-	{
-		loadPlayerSettings();
+		updateFov();
 	}
 
 	//Don't do movement stuff here, do it in FixedUpdate()
@@ -168,9 +164,9 @@ public class GameInfo : MonoBehaviour
 		{
 			fov = drawHorizontalSlider(0f, -0.1f, 100, 20, 60f, 120f, fov, "FOV: ");
 			fov = Mathf.RoundToInt(fov);
+			updateFov();
 
-			mouseSpeed = drawHorizontalSlider(0f, 0f, 100, 20, 0.5f, 5f, mouseSpeed, "Mouse Speed: ");
-			mouseSpeed = floor(mouseSpeed,1);
+			mouseSpeed = drawHorizontalSlider(0f, 0f, 100, 20, 0.5f, 20f, mouseSpeed, "Mouse Speed: ");
 
 			List<ButtonInfo> settingsButtons = new List<ButtonInfo>()
 			{
@@ -181,10 +177,12 @@ public class GameInfo : MonoBehaviour
 			switch(drawButtonGroup(settingsButtons, 5, 0f, 0.1f))
 			{
 				case "OK":
-					savePlayerSettings();
+					playerObj.GetComponentInChildren<MouseLook>().sensitivityX = mouseSpeed;
+					playerObj.GetComponentInChildren<MouseLook>().sensitivityY = mouseSpeed;
 					setMenuState(MenuState.escmenu);
 					break;
 				case "Cancel":
+					mouseSpeed = playerObj.GetComponentInChildren<MouseLook>().sensitivityX;
 					setMenuState(MenuState.escmenu);
 					break;
 				default:
@@ -198,6 +196,14 @@ public class GameInfo : MonoBehaviour
 		if(!showEscMenu && focusStatus)
 		{
 			Screen.lockCursor = true;
+		}
+	}
+
+	private void updateFov()
+	{
+		foreach(Camera cam in Camera.allCameras)
+		{
+			cam.fieldOfView = fov;
 		}
 	}
 
@@ -358,34 +364,14 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	private void applySettings()
-	{
-		playerObj.GetComponentInChildren<MouseLook>().sensitivityX = mouseSpeed;
-		playerObj.GetComponentInChildren<MouseLook>().sensitivityY = mouseSpeed;
-		
-		foreach(Camera cam in Camera.allCameras)
-		{
-			cam.fieldOfView = fov;
-		}
-	}
-
 	public void savePlayerSettings()
 	{
-		PlayerPrefs.SetFloat("fov", fov);
-		PlayerPrefs.SetFloat("mouseSpeed", mouseSpeed);
 
-		applySettings();
 	}
 
 	public void loadPlayerSettings()
 	{
-		fov = PlayerPrefs.GetFloat("fov");
-		mouseSpeed = PlayerPrefs.GetFloat("mouseSpeed");
 
-		if(fov == 0f) { fov = 60f; }
-		if(mouseSpeed == 0f) { mouseSpeed = 1f; }
-
-		applySettings();
 	}
 	
 	public bool getGamePaused()
@@ -411,37 +397,7 @@ public class GameInfo : MonoBehaviour
 
 	public void PlayLastDemo()
 	{
-		//This is hardcoded shit
 		playerObj.collider.enabled = false;
-		recorder.getDemo().saveToFile("D:/Test/demo.vdem");
 		recorder.PlayDemo(recorder.getDemo());
-	}
-
-	private float floor(float input, int decimalsAfterPoint)
-	{
-		string floatText = input.ToString();
-		if(floatText.ToLower().Contains("e"))
-		{
-			return 0f;
-		}
-		else
-		{
-			if(floatText.Contains("."))
-			{
-				int decimalCount = floatText.Substring(floatText.IndexOf(".")).Length;
-				if(decimalCount <= decimalsAfterPoint)
-				{
-					return input;
-				}
-				else
-				{
-					return float.Parse(floatText.Substring(0, floatText.IndexOf(".") + decimalsAfterPoint + 1));
-				}
-			}
-			else
-			{
-				return input;
-			}
-		}
 	}
 }
