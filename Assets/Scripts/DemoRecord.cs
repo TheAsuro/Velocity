@@ -21,7 +21,6 @@ public class DemoRecord : MonoBehaviour
 	private GameObject ghost;
 	private GameObject ghostCamObj;
 	private GameObject ghostCamChild;
-	private Demo replayDemo;
 
 	void Update()
 	{
@@ -114,7 +113,6 @@ public class DemoRecord : MonoBehaviour
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		ghostCamObj = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		ghostCamChild = ghostCamObj.transform.FindChild("CamObj").gameObject;
-		replayDemo = demo;
 		startPlayTime = Time.time;
 		playing = true;
 	}

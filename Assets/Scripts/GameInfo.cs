@@ -411,9 +411,9 @@ public class GameInfo : MonoBehaviour
 
 	public void PlayLastDemo()
 	{
-		//This is hardcoded shit
+		//TODO make this properly
 		playerObj.collider.enabled = false;
-		recorder.getDemo().saveToFile("D:/Test/demo.vdem");
+		recorder.getDemo().saveToFile(Application.dataPath);
 		recorder.PlayDemo(recorder.getDemo());
 	}
 
