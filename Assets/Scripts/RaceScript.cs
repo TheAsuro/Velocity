@@ -19,10 +19,12 @@ public class RaceScript : MonoBehaviour
 
 	private bool drawCountdown = false;
 	private string countdownText = ":^)";
+	private GUISkin skin;
 	
 	void Awake()
 	{
 		GameInfo.info.setPlayerObject(gameObject);
+		skin = GameInfo.info.skin;
 	}
 
 	void Start()
@@ -119,14 +121,17 @@ public class RaceScript : MonoBehaviour
 	{
 		string tStr ="Time: " + time.ToString().Substring(0,time.ToString().IndexOf('.') + 2);
 		
+		GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, 20f, 100f, 60f));
+
 		if(drawTime && time > 0f && checkpoint != -1 && !finished)
 		{
-			GameInfo.info.drawTextBox(0f,-0.8f,tStr);
+			GUILayout.Box(tStr, skin.box);
 		}
 		if(finished)
 		{
-			GameInfo.info.drawTextBox(0f,-0.8f,time.ToString());
+			GUILayout.Box(time.ToString(), skin.box);
 		}
+
 		if(drawCountdown && !GameInfo.info.getGamePaused())
 		{
 			float remainingFreezeTime = unfreezeTime - Time.time;
@@ -150,7 +155,10 @@ public class RaceScript : MonoBehaviour
 			{
 				drawCountdown = false;
 			}
-			GameInfo.info.drawTextBox(0f, -0.5f, countdownText);
+			
+			GUILayout.Box(countdownText, skin.box);
 		}
+
+		GUILayout.EndArea();
 	}
 }
