@@ -15,6 +15,7 @@ public class GameInfo : MonoBehaviour
 	private bool showEscMenu = false;
 	private bool showSettings = false;
 	private MenuState menuState = MenuState.closed;
+	private bool viewLocked = false;
 	
 	//Debug window (top-left corner, toggle with f8)
 	private List<string> linePrefixes = new List<string>();
@@ -34,7 +35,8 @@ public class GameInfo : MonoBehaviour
 		closed = 0,
 		escmenu = 1,
 		intro = 2,
-		settings = 3
+		settings = 3,
+		demo = 4
 	}
 
 	public class ButtonInfo
@@ -188,7 +190,7 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	private void setMenuState(MenuState state)
+	public void setMenuState(MenuState state)
 	{
 		//Reset all states
 		setGamePaused(true);
@@ -247,12 +249,12 @@ public class GameInfo : MonoBehaviour
 	
 		if(value)
 		{
-			Camera.main.GetComponent<MouseLook>().enabled = false;
+			setMouseView(false);
 			Time.timeScale = 0f;
 		}
 		else
 		{
-			Camera.main.GetComponent<MouseLook>().enabled = true;
+			setMouseView(true);
 			Time.timeScale = 1f;
 		}
 	}
@@ -298,6 +300,11 @@ public class GameInfo : MonoBehaviour
 		recorder = playerObj.GetComponent<DemoRecord>();
 	}
 
+	public GameObject getPlayerObject()
+	{
+		return playerObj;
+	}
+
 	public void StartDemo()
 	{
 		recorder.StartDemo("sweg");
@@ -314,6 +321,25 @@ public class GameInfo : MonoBehaviour
 		playerObj.collider.enabled = false;
 		recorder.getDemo().saveToFile(Application.dataPath);
 		recorder.PlayDemo(recorder.getDemo());
+	}
+
+	public void setMouseView(bool value)
+	{
+		if(!viewLocked)
+		{
+			Camera.main.GetComponent<MouseLook>().enabled = value;
+		}
+	}
+
+	public void lockMouseView(bool value)
+	{
+		Camera.main.GetComponent<MouseLook>().enabled = value;
+		viewLocked = true;
+	}
+
+	public void unlockMouseView()
+	{
+		viewLocked = false;
 	}
 
 	private float floor(float input, int decimalsAfterPoint)

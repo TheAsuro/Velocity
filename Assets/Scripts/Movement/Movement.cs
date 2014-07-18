@@ -19,7 +19,8 @@ public abstract class Movement : MonoBehaviour
 	private bool allowRespawn = true;
 	private bool allowReset = true;
 	private bool allowCrouch = true;
-	private bool allowMove = true;
+	private bool allowMoveHorizontal = true;
+	private bool allowMoveVertical = true;
 
 	private bool jumpKeyPressed = false;
 	private bool respawnKeyPressed = false;
@@ -78,19 +79,21 @@ public abstract class Movement : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if(allowMove)
-		{
-			Vector3 additionalVelocity = calculateAdditionalVelocity();
+		Vector2 input = new Vector2();
+
+		if(allowMoveHorizontal) { input.x = Input.GetAxis("Horizontal"); }
+		if(allowMoveVertical) { input.y = Input.GetAxis("Vertical"); }
+
+		Vector3 additionalVelocity = calculateAdditionalVelocity(input);
 			
-			//Apply
-			if(!rigidbody.isKinematic)
-			{
-				rigidbody.velocity += additionalVelocity;
-			}
+		//Apply
+		if(!rigidbody.isKinematic)
+		{
+			rigidbody.velocity += additionalVelocity;
 		}
 	}
 
-	public virtual Vector3 calculateAdditionalVelocity()
+	public virtual Vector3 calculateAdditionalVelocity(Vector2 input)
 	{
 		return Vector3.zero;
 	}
@@ -225,14 +228,23 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 
-	public void setPlayerControls(bool jump, bool respawn, bool reset, bool crouch, bool move, bool view)
+	public void setPlayerControls(bool jump, bool respawn, bool reset, bool crouch, bool moveH, bool moveV, bool view)
 	{
 		allowJump = jump;
 		allowRespawn = respawn;
 		allowReset = reset;
 		allowCrouch = crouch;
-		allowMove = move;
-		camObj.GetComponent<MouseLook>().enabled = view;
+		allowMoveHorizontal = moveH;
+		allowMoveVertical = moveV;
+		
+		if(!view)
+		{
+			GameInfo.info.lockMouseView(false);
+		}
+		else
+		{
+			GameInfo.info.unlockMouseView();
+		}
 	}
 		
 	private float getVelocity()
