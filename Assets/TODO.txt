@@ -11,6 +11,27 @@
 -[Possible Bug] Error with demo saving on Mac/Linux ?
 -Save last level player was on, player times per level, levels the player has finished
 -Play demo from file
+-Play a premade list of movement commands
+
+Levels:
+
+1. Teach basic movement
+	-turn camera with mouse
+	-wasd to move
+	-space to jump
+	-hold space for continous jumping (faster)
+	-ctrl to crouch
+
+1.5 Seperate players
+	-Normal platform
+	-Extra platform (only accessible with air-strafing) -> skips tutorial
+
+2. Teach air-strafing
+	-Play a level without player control -> player sees fast gameplay and airstrafing
+	-Play the same level, player only controls a and d, camera movement happens automatically -> player controls airstrafing for the first time
+	-Play the level again, player now has to move the mouse while pressing a or d -> Airstrafing happens (this is the important part)
+	-Play the lever for the last time, now with full player controls
+
 
 Credits:
 

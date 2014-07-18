@@ -3,8 +3,6 @@ using System.Collections;
 
 public abstract class Movement : MonoBehaviour
 {
-	public bool canMove = true;
-	public bool autojump = true;
 	public float speed = 1f;
 	public float maxSpeed = 10f;
 	public float jumpForce = 1f;
@@ -16,6 +14,17 @@ public abstract class Movement : MonoBehaviour
 	public bool crouched = false;
 	public float lastJumpPress = -1f;
 	public float jumpPressDuration = 0.1f;
+
+	private bool allowJump = true;
+	private bool allowRespawn = true;
+	private bool allowReset = true;
+	private bool allowCrouch = true;
+	private bool allowMove = true;
+
+	private bool jumpKeyPressed = false;
+	private bool respawnKeyPressed = false;
+	private bool resetKeyPressed = false;
+	private bool crouchKeyPressed = false;
 
 	void Awake()
 	{
@@ -33,21 +42,31 @@ public abstract class Movement : MonoBehaviour
 	
 	void Update()
 	{
-		if(Input.GetButtonDown("Jump") || autojump && Input.GetButton("Jump"))
+		//Set key states
+		if(Input.GetButton("Jump") && allowJump)
+			{ jumpKeyPressed = true; } else { jumpKeyPressed = false; }
+		if(Input.GetButtonDown("Respawn") && allowRespawn)
+			{ respawnKeyPressed = true; } else { respawnKeyPressed = false; }
+		if(Input.GetButtonDown("Reset") && allowReset)
+			{ resetKeyPressed = true; } else { resetKeyPressed = false; }
+		if(Input.GetButton("Crouch") && allowCrouch)
+			{ crouchKeyPressed = true; } else { crouchKeyPressed = false; }
+		
+		if(jumpKeyPressed)
 		{
 			lastJumpPress = Time.time;
 		}
 		
-		if(Input.GetButtonDown("Respawn"))
+		if(respawnKeyPressed)
 		{
 			respawnPlayer();
 		}
-		if(Input.GetButtonDown("Reset"))
+		if(resetKeyPressed)
 		{
 			resetPlayer();
 			WorldInfo.info.reset();
 		}
-		if(Input.GetButton("Crouch"))
+		if(crouchKeyPressed)
 		{
 			setCrouched(true);
 		}
@@ -59,7 +78,7 @@ public abstract class Movement : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if(canMove)
+		if(allowMove)
 		{
 			Vector3 additionalVelocity = calculateAdditionalVelocity();
 			
@@ -204,6 +223,16 @@ public abstract class Movement : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	public void setPlayerControls(bool jump, bool respawn, bool reset, bool crouch, bool move, bool view)
+	{
+		allowJump = jump;
+		allowRespawn = respawn;
+		allowReset = reset;
+		allowCrouch = crouch;
+		allowMove = move;
+		camObj.GetComponent<MouseLook>().enabled = view;
 	}
 		
 	private float getVelocity()
