@@ -16,6 +16,7 @@ public class GameInfo : MonoBehaviour
 	private bool showSettings = false;
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
+	private bool menuLocked = false;
 	
 	//Debug window (top-left corner, toggle with f8)
 	private List<string> linePrefixes = new List<string>();
@@ -29,6 +30,7 @@ public class GameInfo : MonoBehaviour
 	//References
 	private GameObject playerObj;
 	private DemoRecord recorder;
+	private MouseLook mouseLook;
 
 	public enum MenuState
 	{
@@ -36,45 +38,7 @@ public class GameInfo : MonoBehaviour
 		escmenu = 1,
 		intro = 2,
 		settings = 3,
-		demo = 4
-	}
-
-	public class ButtonInfo
-	{
-		private string text;
-		private GUISkin skin;
-		private float width;
-		private float height;
-
-		public ButtonInfo(string pText, GUISkin pSkin)
-		{
-			text = pText;
-			skin = pSkin;
-
-			GUIContent content = new GUIContent(text);
-			width = skin.button.CalcSize(content).x;
-			height = skin.button.CalcSize(content).y;
-		}
-
-		public float getWidth()
-		{
-			return width;
-		}
-
-		public float getHeight()
-		{
-			return height;
-		}
-
-		public string getText()
-		{
-			return text;
-		}
-
-		public GUIStyle getSkin()
-		{
-			return skin.button;
-		}
+		inactive = 4
 	}
 	
 	void Awake()
@@ -110,14 +74,17 @@ public class GameInfo : MonoBehaviour
 		//Debug info in the top-left corner
 		if(showDebug)
 		{
-			GUILayout.BeginVertical();
+			Rect rect = new Rect(0f, 0f, 150f, 200f);
+			GUI.Box(rect, "", skin.box);
+
+			GUILayout.BeginArea(rect);
 
 			for(int i = 0; i < windowLines.Count; i++)
 			{
 				GUILayout.Label(linePrefixes[i] + windowLines[i](), skin.label);
 			}
 
-			GUILayout.EndVertical();
+			GUILayout.EndArea();
 		}
 		
 		if(gamePaused)
@@ -190,33 +157,47 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
+	public void setMenuLocked(bool value)
+	{
+		if(value)
+		{
+			setMenuState(MenuState.inactive);
+		}
+		menuLocked = value;
+	}
+
 	public void setMenuState(MenuState state)
 	{
-		//Reset all states
-		setGamePaused(true);
-		showIntro = false;
-		showEscMenu = false;
-		showSettings = false;
-		Screen.lockCursor = false;
-
-		switch(state)
+		if(!menuLocked)
 		{
-			case MenuState.escmenu:
-				showEscMenu = true;
-				break;
-			case MenuState.intro:
-				showIntro = true;
-				break;
-			case MenuState.settings:
-				showSettings = true;
-				break;
-			default:
-				setGamePaused(false);
-				Screen.lockCursor = true;
-				break;
-		}
+			//Reset all states
+			setGamePaused(true);
+			showIntro = false;
+			showEscMenu = false;
+			showSettings = false;
+			Screen.lockCursor = false;
 
-		menuState = state;
+			switch(state)
+			{
+				case MenuState.escmenu:
+					showEscMenu = true;
+					break;
+				case MenuState.intro:
+					showIntro = true;
+					break;
+				case MenuState.settings:
+					showSettings = true;
+					break;
+				case MenuState.inactive:
+					break;
+				default:
+					setGamePaused(false);
+					Screen.lockCursor = true;
+					break;
+			}
+
+			menuState = state;
+		}
 	}
 
 	private void toggleEscMenu()
@@ -261,8 +242,11 @@ public class GameInfo : MonoBehaviour
 
 	private void applySettings()
 	{
-		playerObj.GetComponentInChildren<MouseLook>().sensitivityX = mouseSpeed;
-		playerObj.GetComponentInChildren<MouseLook>().sensitivityY = mouseSpeed;
+		if(mouseLook != null)
+		{
+			mouseLook.sensitivityX = mouseSpeed;
+			mouseLook.sensitivityY = mouseSpeed;
+		}
 		
 		foreach(Camera cam in Camera.allCameras)
 		{
@@ -298,6 +282,7 @@ public class GameInfo : MonoBehaviour
 	{
 		playerObj = player;
 		recorder = playerObj.GetComponent<DemoRecord>();
+		mouseLook = playerObj.GetComponentInChildren<MouseLook>();
 	}
 
 	public GameObject getPlayerObject()
@@ -318,22 +303,27 @@ public class GameInfo : MonoBehaviour
 	public void PlayLastDemo()
 	{
 		//TODO make this properly
-		playerObj.collider.enabled = false;
 		recorder.getDemo().saveToFile(Application.dataPath);
-		recorder.PlayDemo(recorder.getDemo());
+		recorder.PlayDemo(new Demo("D:/GitHub/Velocity/Assets/sweg-BasicTutorial.vdem"));
 	}
 
 	public void setMouseView(bool value)
 	{
 		if(!viewLocked)
 		{
-			Camera.main.GetComponent<MouseLook>().enabled = value;
+			if(mouseLook != null)
+			{
+				mouseLook.enabled = value;
+			}
 		}
 	}
 
 	public void lockMouseView(bool value)
 	{
-		Camera.main.GetComponent<MouseLook>().enabled = value;
+		if(mouseLook != null)
+		{
+			mouseLook.enabled = value;
+		}
 		viewLocked = true;
 	}
 

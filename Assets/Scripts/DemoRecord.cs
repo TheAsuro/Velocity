@@ -76,6 +76,13 @@ public class DemoRecord : MonoBehaviour
 
 				ghostCamChild.transform.LookAt(ghost.transform.position);
 			}
+
+			if(nextFrameTime == -1f)
+			{
+				playing = false;
+				GameObject.Destroy(ghost);
+				GameObject.Destroy(ghostCamObj);
+			}
 		}
 	}
 

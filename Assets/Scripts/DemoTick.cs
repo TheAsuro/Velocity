@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class DemoTick
 {
 	private float time;
@@ -14,14 +15,29 @@ public class DemoTick
 		rotation = rot;
 	}
 
+	public void setTime(float value)
+	{
+		time = value;
+	}
+
 	public float getTime()
 	{
 		return time;
 	}
 
+	public void setPosition(Vector3 value)
+	{
+		position = value;
+	}
+
 	public Vector3 getPosition()
 	{
 		return position;
+	}
+
+	public void setRotation(Quaternion value)
+	{
+		rotation = value;
 	}
 
 	public Quaternion getRotation()
