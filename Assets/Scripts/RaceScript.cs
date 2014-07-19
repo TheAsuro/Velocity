@@ -48,11 +48,15 @@ public class RaceScript : MonoBehaviour
 	{
 		if(other.tag.Equals("Checkpoint"))
 		{
+			//Get checkpoint info
 			Checkpoint cp = other.GetComponent<Checkpoint>();
 			int nr = cp.checkpointNumber;
 			bool end = cp.isEnd;
 			freezeDuration = cp.freezeTime;
 			drawCountdown = cp.countdown;
+
+			//Save game
+			GameInfo.info.save();
 			
 			if(nr == 0) //Start
 			{

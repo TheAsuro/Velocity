@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class WorldInfo : MonoBehaviour
 {
 	public static WorldInfo info;
+	public GameInfo.MenuState beginState = GameInfo.MenuState.closed;
 	public delegate void Reset();
 
 	private Dictionary<string,Reset> resetList = new Dictionary<string,Reset>();

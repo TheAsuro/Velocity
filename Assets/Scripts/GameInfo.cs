@@ -17,6 +17,9 @@ public class GameInfo : MonoBehaviour
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
 	private bool menuLocked = false;
+
+	//Save file stuff
+	private SaveData currentSave;
 	
 	//Debug window (top-left corner, toggle with f8)
 	private List<string> linePrefixes = new List<string>();
@@ -38,13 +41,22 @@ public class GameInfo : MonoBehaviour
 		escmenu = 1,
 		intro = 2,
 		settings = 3,
-		inactive = 4
+		inactive = 4,
+		demo = 5
 	}
 	
 	void Awake()
 	{
-		//TODO make this a proper singleton thingy stuff
-		info = this;
+		if(GameInfo.info == null)
+		{
+			info = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
+		
 		Screen.lockCursor = true;
 		setMenuState(MenuState.intro);
 	}
@@ -87,14 +99,15 @@ public class GameInfo : MonoBehaviour
 			GUILayout.EndArea();
 		}
 		
+		//Pause notification
 		if(gamePaused)
 		{
-			//Display pause info
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 6f, 100f, 30f));
 			GUILayout.Box("Paused", skin.box);
 			GUILayout.EndArea();
 		}
 		
+		//Esc Menu buttons
 		if(showEscMenu)
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 50f, 100f, 100f));
@@ -107,6 +120,7 @@ public class GameInfo : MonoBehaviour
 			GUILayout.EndArea();
 		}
 		
+		//Into text
 		if(showIntro)
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 100f, Screen.height / 2f - 50f, 200f, 100f));
@@ -117,6 +131,7 @@ public class GameInfo : MonoBehaviour
 			GUILayout.EndArea();
 		}
 
+		//Game settings dialog
 		if(showSettings)
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height / 2f - 50f, 400f, 100f));
@@ -149,6 +164,7 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
+	//Lock cursor after loosing and gaining focus
 	void OnApplicationFocus(bool focusStatus)
 	{
 		if(!showEscMenu && focusStatus)
@@ -157,6 +173,22 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
+	//Set menustate according to current level's worldinfo settings
+	void OnLevelWasLoaded(int level)
+	{
+		setMenuLocked(false);
+		WorldInfo wInfo = WorldInfo.info;
+		if(wInfo != null)
+		{
+			setMenuState(wInfo.beginState);
+		}
+		else
+		{
+			setMenuState(MenuState.inactive);
+		}
+	}
+
+	//Menu can't be accessed until unlocked
 	public void setMenuLocked(bool value)
 	{
 		if(value)
@@ -166,6 +198,7 @@ public class GameInfo : MonoBehaviour
 		menuLocked = value;
 	}
 
+	//Menu state manager
 	public void setMenuState(MenuState state)
 	{
 		if(!menuLocked)
@@ -179,6 +212,10 @@ public class GameInfo : MonoBehaviour
 
 			switch(state)
 			{
+				case MenuState.closed:
+					setGamePaused(false);
+					Screen.lockCursor = true;
+					break;
 				case MenuState.escmenu:
 					showEscMenu = true;
 					break;
@@ -189,8 +226,9 @@ public class GameInfo : MonoBehaviour
 					showSettings = true;
 					break;
 				case MenuState.inactive:
+					setGamePaused(false);
 					break;
-				default:
+				case MenuState.demo:
 					setGamePaused(false);
 					Screen.lockCursor = true;
 					break;
@@ -237,6 +275,23 @@ public class GameInfo : MonoBehaviour
 		{
 			setMouseView(true);
 			Time.timeScale = 1f;
+		}
+	}
+
+	public void setCurrentSave(SaveData data)
+	{
+		currentSave = data;
+	}
+
+	public void save()
+	{
+		if(currentSave != null)
+		{
+			currentSave.save();
+		}
+		else
+		{
+			print("Tried to save, but there is no current save file :o");
 		}
 	}
 
@@ -292,7 +347,7 @@ public class GameInfo : MonoBehaviour
 
 	public void StartDemo()
 	{
-		recorder.StartDemo("sweg");
+		recorder.StartDemo(currentSave.getPlayerName());
 	}
 
 	public void StopDemo()
@@ -318,6 +373,7 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
+	//MouseLook is locked to given value, even if menu states change
 	public void lockMouseView(bool value)
 	{
 		if(mouseLook != null)
@@ -327,11 +383,13 @@ public class GameInfo : MonoBehaviour
 		viewLocked = true;
 	}
 
+	//MouseLook can be changed by menu again
 	public void unlockMouseView()
 	{
 		viewLocked = false;
 	}
 
+	//Returns rounded value of a float
 	private float floor(float input, int decimalsAfterPoint)
 	{
 		string floatText = input.ToString();

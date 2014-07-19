@@ -4,8 +4,12 @@ using System.Collections.Generic;
 
 public class MainMenu : MonoBehaviour
 {
+	private bool drawMainButtons = true;
 	private bool drawSelectNewGame = false;
 	private bool drawSelectLoadGame = false;
+	private bool drawNameField = false;
+	private string nameFieldText = "name";
+	private int selectedNewGameIndex = -1;
 
 	private List<string> saveNames = new List<string>();
 
@@ -13,7 +17,8 @@ public class MainMenu : MonoBehaviour
 	{
 		main = 1,
 		newGame = 2,
-		loadGame = 3
+		loadGame = 3,
+		enterName = 4
 	}
 
 	void Start()
@@ -25,19 +30,24 @@ public class MainMenu : MonoBehaviour
 	{
 		updateSaveInfos();
 
+		drawMainButtons = false;
+		drawSelectNewGame = false;
+		drawSelectLoadGame = false;
+		drawNameField = false;
+
 		switch(state)
 		{
 			case State.main:
-				drawSelectNewGame = false;
-				drawSelectLoadGame = false;
+				drawMainButtons = true;
 				break;
 			case State.newGame:
 				drawSelectNewGame = true;
-				drawSelectLoadGame = false;
 				break;
 			case State.loadGame:
-				drawSelectNewGame = false;
 				drawSelectLoadGame = true;
+				break;
+			case State.enterName:
+				drawNameField = true;
 				break;
 		}
 	}
@@ -63,43 +73,65 @@ public class MainMenu : MonoBehaviour
 	void OnGUI()
 	{
 		//Center
-		Rect centerMenuPos = new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 50f, 100f, 100f);
-		GUI.Box(centerMenuPos, "");
-		GUILayout.BeginArea(centerMenuPos);
-		if(GUILayout.Button("New")) { setState(State.newGame); }
-		if(GUILayout.Button("Load")) { setState(State.loadGame); }
-		if(GUILayout.Button("Quit")) { Application.Quit(); }
-		GUILayout.EndArea();
+		Rect centerMenuPos = new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 75f, 100f, 150f);
+		
+		//Main buttons
+		if(drawMainButtons)
+		{
+			GUI.Box(centerMenuPos, "");
+			GUILayout.BeginArea(centerMenuPos);
+			if(GUILayout.Button("New")) { setState(State.newGame); }
+			if(GUILayout.Button("Load")) { setState(State.loadGame); }
+			if(GUILayout.Button("Quit")) { Application.Quit(); }
+			GUILayout.EndArea();
+		}
 
 		//New game
 		if(drawSelectNewGame)
 		{
-			Rect newGameMenuPos = new Rect(Screen.width / 2f + 55, Screen.height / 2f - 50f, 100f, 100f);
-			GUI.Box(newGameMenuPos, "");
-			GUILayout.BeginArea(newGameMenuPos);
+			GUI.Box(centerMenuPos, "");
+			GUILayout.BeginArea(centerMenuPos);
 			GUILayout.Label("New");
-			if(GUILayout.Button(saveNames[0])) { newGame(1); }
-			if(GUILayout.Button(saveNames[1])) { newGame(2); }
-			if(GUILayout.Button(saveNames[2])) { newGame(3); }
+			if(GUILayout.Button("1: " + saveNames[0])) { selectedNewGameIndex = 1; setState(State.enterName); }
+			if(GUILayout.Button("2: " + saveNames[1])) { selectedNewGameIndex = 2; setState(State.enterName); }
+			if(GUILayout.Button("3: " + saveNames[2])) { selectedNewGameIndex = 3; setState(State.enterName); }
+			if(GUILayout.Button("Back")) { setState(State.main); }
 			GUILayout.EndArea();
 		}
 
 		//Load game
 		if(drawSelectLoadGame)
 		{
-			Rect loadGameMenuPos = new Rect(Screen.width / 2f + 55, Screen.height / 2f - 50f, 100f, 100f);
-			GUI.Box(loadGameMenuPos, "");
-			GUILayout.BeginArea(loadGameMenuPos);
+			GUI.Box(centerMenuPos, "");
+			GUILayout.BeginArea(centerMenuPos);
 			GUILayout.Label("Load");
-			if(GUILayout.Button(saveNames[0])) { loadGame(1); }
-			if(GUILayout.Button(saveNames[1])) { loadGame(2); }
-			if(GUILayout.Button(saveNames[2])) { loadGame(3); }
+			if(GUILayout.Button("1: " + saveNames[0])) { loadGame(1); }
+			if(GUILayout.Button("2: " + saveNames[1])) { loadGame(2); }
+			if(GUILayout.Button("3: " + saveNames[2])) { loadGame(3); }
+			if(GUILayout.Button("Back")) { setState(State.main); }
+			GUILayout.EndArea();
+		}
+
+		//Enter name for new game
+		if(drawNameField)
+		{
+			GUI.Box(centerMenuPos, "");
+			GUILayout.BeginArea(centerMenuPos);
+			GUILayout.Label("Enter name");
+			nameFieldText = GUILayout.TextField(nameFieldText);
+			if(GUILayout.Button("Back")) { setState(State.newGame); }
+			if(GUILayout.Button("OK"))
+			{
+				newGame(selectedNewGameIndex);
+			}
 			GUILayout.EndArea();
 		}
 	}
 
 	private void newGame(int index)
 	{
+		SaveData data = new SaveData(nameFieldText, index);
+		GameInfo.info.setCurrentSave(data);
 		Application.LoadLevel("BasicTutorial");
 	}
 
