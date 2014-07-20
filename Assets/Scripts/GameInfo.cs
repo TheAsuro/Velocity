@@ -377,7 +377,9 @@ public class GameInfo : MonoBehaviour
 
 	public void saveLastDemo()
 	{
+		#if UNITY_STANDALONE_WIN
 		recorder.getDemo().saveToFile(Application.dataPath);
+		#endif
 	}
 
 	public void setMouseView(bool value)
