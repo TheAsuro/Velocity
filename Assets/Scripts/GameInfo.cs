@@ -176,6 +176,7 @@ public class GameInfo : MonoBehaviour
 	//Set menustate according to current level's worldinfo settings
 	void OnLevelWasLoaded(int level)
 	{
+		loadPlayerSettings();
 		setMenuLocked(false);
 		WorldInfo wInfo = WorldInfo.info;
 		if(wInfo != null)
@@ -283,7 +284,7 @@ public class GameInfo : MonoBehaviour
 		currentSave = data;
 	}
 
-	public IEnumerator loadCurrentSave()
+	public void loadCurrentSave()
 	{
 		if(currentSave != null)
 		{
@@ -295,7 +296,6 @@ public class GameInfo : MonoBehaviour
 		{
 			print("Tried to load, but there is no current save file :o");
 		}
-		
 	}
 
 	public void save()
@@ -360,21 +360,24 @@ public class GameInfo : MonoBehaviour
 		return playerObj;
 	}
 
-	public void StartDemo()
+	public void startDemo()
 	{
-		recorder.StartDemo(currentSave.getPlayerName());
+		recorder.startDemo(currentSave.getPlayerName());
 	}
 
-	public void StopDemo()
+	public void stopDemo()
 	{
-		recorder.StopDemo();
+		recorder.stopDemo();
 	}
 
-	public void PlayLastDemo()
+	public void playLastDemo()
 	{
-		//TODO make this properly
+		recorder.playDemo(recorder.getDemo());
+	}
+
+	public void saveLastDemo()
+	{
 		recorder.getDemo().saveToFile(Application.dataPath);
-		recorder.PlayDemo(new Demo("D:/GitHub/Velocity/Assets/sweg-BasicTutorial.vdem"));
 	}
 
 	public void setMouseView(bool value)

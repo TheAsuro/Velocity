@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_STANDALONE_WIN
 using System.IO;
+#endif
 
 public class Demo
 {
@@ -9,9 +11,10 @@ public class Demo
 	private string playerName;
 	private string levelName;
 
+	#if UNITY_STANDALONE_WIN
 	public Demo(string file)
 	{
-		string content = System.IO.File.ReadAllText(file);
+		string content = GetString(System.IO.File.ReadAllBytes(file));
 
 		string[] lines = content.Split('\n');
 		playerName = lines[1];
@@ -33,6 +36,7 @@ public class Demo
 			}
 		}
 	}
+	#endif
 
 	public Demo(List<DemoTick> pTickList, string pPlayerName, string pLevelName)
 	{
@@ -61,39 +65,52 @@ public class Demo
 		return tickList;
 	}
 
+	private static byte[] GetBytes(string str)
+	{
+	    byte[] bytes = new byte[str.Length * sizeof(char)];
+	    System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+	    return bytes;
+	}
+
+	private static string GetString(byte[] bytes)
+	{
+	    char[] chars = new char[bytes.Length / sizeof(char)];
+	    System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+	    return new string(chars);
+	}
+
+	#if UNITY_STANDALONE_WIN
 	public void saveToFile(string path)
 	{
 		string filename = path + "/" + playerName + "-" + levelName + ".vdem";
+		string content = "";
 
-		//Initialize stream
-		StreamWriter writer = File.CreateText(filename);
+		//header
+		content += "VELOCITYDEMO 1.0.0\n" + playerName + "\n" + levelName + "\n";
 
-		//Write header
-		writer.Write("VELOCITYDEMO 1.0.0\n" + playerName + "\n" + levelName + "\n");
-
-		//Write ticks
+		//ticks
 		foreach(DemoTick tick in tickList)
 		{
-			writer.Write(tick.getTime());
-			writer.Write("|");
-			writer.Write(tick.getPosition().x);
-			writer.Write(";");
-			writer.Write(tick.getPosition().y);
-			writer.Write(";");
-			writer.Write(tick.getPosition().z);
-			writer.Write("|");
-			writer.Write(tick.getRotation().x);
-			writer.Write(";");
-			writer.Write(tick.getRotation().y);
-			writer.Write(";");
-			writer.Write(tick.getRotation().z);
-			writer.Write(";");
-			writer.Write(tick.getRotation().w);
-			writer.Write("\n");
+			content += tick.getTime();
+			content += "|";
+			content += tick.getPosition().x;
+			content += ";";
+			content += tick.getPosition().y;
+			content += ";";
+			content += tick.getPosition().z;
+			content += "|";
+			content += tick.getRotation().x;
+			content += ";";
+			content += tick.getRotation().y;
+			content += ";";
+			content += tick.getRotation().z;
+			content += ";";
+			content += tick.getRotation().w;
+			content += "\n";
 		}
 
-		//End Stream
-		writer.Flush();
-		writer.Close();
+		//write
+		File.WriteAllBytes(filename, GetBytes(content));
 	}
+	#endif
 }

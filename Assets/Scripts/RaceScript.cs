@@ -68,11 +68,11 @@ public class RaceScript : MonoBehaviour
 					freeze(freezeDuration);
 					startTime += freezeDuration;
 				}
-				GameInfo.info.StartDemo();
+				GameInfo.info.startDemo();
 			}
 			else if(end && nr == checkpoint + 1 && !finished) //End
 			{
-				GameInfo.info.StopDemo();
+				GameInfo.info.stopDemo();
 				time = Time.time - startTime;
 				finished = true;
 				if(freezeDuration > 0f)

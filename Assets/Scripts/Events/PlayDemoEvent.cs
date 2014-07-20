@@ -5,6 +5,7 @@ public class PlayDemoEvent : Event
 {
 	public override void fire(params object[] parameters)
 	{
-		GameInfo.info.PlayLastDemo();
+		GameInfo.info.saveLastDemo();
+		GameInfo.info.playLastDemo();
 	}
 }

@@ -95,7 +95,7 @@ public class DemoRecord : MonoBehaviour
 		}
 	}
 
-	public void StartDemo(string pPlayerName)
+	public void startDemo(string pPlayerName)
 	{
 		tickList = new List<DemoTick>();
 		playerName = pPlayerName;
@@ -103,7 +103,7 @@ public class DemoRecord : MonoBehaviour
 		recording = true;
 	}
 
-	public void StopDemo()
+	public void stopDemo()
 	{
 		recording = false;
 		completeDemo = new Demo(tickList, playerName, levelName);
@@ -114,7 +114,7 @@ public class DemoRecord : MonoBehaviour
 		return completeDemo;
 	}
 
-	public void PlayDemo(Demo demo)
+	public void playDemo(Demo demo)
 	{
 		Respawn spawn = WorldInfo.info.getFirstSpawn();
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
