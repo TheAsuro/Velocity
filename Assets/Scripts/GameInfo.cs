@@ -283,6 +283,21 @@ public class GameInfo : MonoBehaviour
 		currentSave = data;
 	}
 
+	public IEnumerator loadCurrentSave()
+	{
+		if(currentSave != null)
+		{
+			string level = currentSave.getPlayerLevel();
+			if(level == "") { level = "BasicTutorial"; }
+			Application.LoadLevel(level);
+		}
+		else
+		{
+			print("Tried to load, but there is no current save file :o");
+		}
+		
+	}
+
 	public void save()
 	{
 		if(currentSave != null)

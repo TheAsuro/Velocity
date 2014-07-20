@@ -130,13 +130,15 @@ public class MainMenu : MonoBehaviour
 
 	private void newGame(int index)
 	{
-		SaveData data = new SaveData(nameFieldText, index);
+		SaveData data = new SaveData(index, nameFieldText);
 		GameInfo.info.setCurrentSave(data);
 		Application.LoadLevel("BasicTutorial");
 	}
 
 	private void loadGame(int index)
 	{
-
+		SaveData data = new SaveData(index);
+		GameInfo.info.setCurrentSave(data);
+		GameInfo.info.loadCurrentSave();
 	}
 }
