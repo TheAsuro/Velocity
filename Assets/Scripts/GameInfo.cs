@@ -189,6 +189,13 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
+	//player pressed reset key
+	public void reset()
+	{
+		stopDemo();
+		startDemo();
+	}
+
 	//Menu can't be accessed until unlocked
 	public void setMenuLocked(bool value)
 	{

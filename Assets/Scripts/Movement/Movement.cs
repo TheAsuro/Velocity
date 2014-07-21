@@ -65,7 +65,6 @@ public abstract class Movement : MonoBehaviour
 		if(resetKeyPressed)
 		{
 			resetPlayer();
-			WorldInfo.info.reset();
 		}
 		if(crouchKeyPressed)
 		{
@@ -146,13 +145,25 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 	
+	//Spawns the player at the last checkpoint
 	private void respawnPlayer()
 	{
-		spawnPlayer(WorldInfo.info.getCurrentSpawn());
+		//Resets the game if the last checkpoint was the first anyways
+		if(WorldInfo.info.getCurrentSpawn() == WorldInfo.info.getFirstSpawn())
+		{
+			resetPlayer();
+		}
+		else
+		{
+			spawnPlayer(WorldInfo.info.getCurrentSpawn());
+		}
 	}
 
+	//Resets the game and starts from the beginning of the level
 	private void resetPlayer()
 	{
+		WorldInfo.info.reset();
+		GameInfo.info.reset();
 		spawnPlayer(WorldInfo.info.getFirstSpawn());
 	}
 	

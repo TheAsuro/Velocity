@@ -91,12 +91,13 @@ public class DemoRecord : MonoBehaviour
 		if(recording)
 		{
 			Quaternion rot = Camera.main.transform.rotation;
-			tickList.Add(new DemoTick(Time.time, transform.position, rot));
+			tickList.Add(new DemoTick(Time.time - startPlayTime, transform.position, rot));
 		}
 	}
 
 	public void startDemo(string pPlayerName)
 	{
+		startPlayTime = Time.time;
 		tickList = new List<DemoTick>();
 		playerName = pPlayerName;
 		levelName = Application.loadedLevelName;
