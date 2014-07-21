@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
 	private bool drawSelectNewGame = false;
 	private bool drawSelectLoadGame = false;
 	private bool drawNameField = false;
+	private bool drawSelectMap = false;
 	private string nameFieldText = "name";
 	private int selectedNewGameIndex = -1;
 
@@ -18,7 +19,8 @@ public class MainMenu : MonoBehaviour
 		main = 1,
 		newGame = 2,
 		loadGame = 3,
-		enterName = 4
+		enterName = 4,
+		selectMap = 5
 	}
 
 	void Start()
@@ -34,6 +36,7 @@ public class MainMenu : MonoBehaviour
 		drawSelectNewGame = false;
 		drawSelectLoadGame = false;
 		drawNameField = false;
+		drawSelectMap = false;
 
 		switch(state)
 		{
@@ -48,6 +51,9 @@ public class MainMenu : MonoBehaviour
 				break;
 			case State.enterName:
 				drawNameField = true;
+				break;
+			case State.selectMap:
+				drawSelectMap = true;
 				break;
 		}
 	}
@@ -112,6 +118,18 @@ public class MainMenu : MonoBehaviour
 			GUILayout.EndArea();
 		}
 
+		//select map
+		if(drawSelectMap)
+		{
+			GUI.Box(centerMenuPos, "");
+			GUILayout.BeginArea(centerMenuPos);
+			GUILayout.Label("Map");
+			if(GUILayout.Button("Basic Tutorial")) { loadMap("BasicTutorial"); }
+			if(GUILayout.Button("Air Strafe Tutorial")) { loadMap("StrafeTutorial"); }
+			if(GUILayout.Button("Map 1")) { loadMap("Level3"); }
+			GUILayout.EndArea();
+		}
+
 		//Enter name for new game
 		if(drawNameField)
 		{
@@ -132,13 +150,18 @@ public class MainMenu : MonoBehaviour
 	{
 		SaveData data = new SaveData(index, nameFieldText);
 		GameInfo.info.setCurrentSave(data);
-		Application.LoadLevel("BasicTutorial");
 	}
 
 	private void loadGame(int index)
 	{
 		SaveData data = new SaveData(index);
 		GameInfo.info.setCurrentSave(data);
-		GameInfo.info.loadCurrentSave();
+		setState(State.selectMap);
+
+	}
+
+	private void loadMap(string name)
+	{
+		Application.LoadLevel(name);
 	}
 }
