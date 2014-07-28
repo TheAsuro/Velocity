@@ -80,13 +80,17 @@ public class RaceScript : MonoBehaviour
 					freeze(freezeDuration);
 				}
 			}
-			else if(nr == checkpoint + 1) //Random checkpoint
+			else if(nr == checkpoint + 1) //next checkpoint
 			{
 				checkpoint++;
 				if(freezeDuration > 0f)
 				{
 					freeze(freezeDuration);
 				}
+			}
+			else
+			{
+				print("Entered wrong checkpoint!");
 			}
 		}
 	}

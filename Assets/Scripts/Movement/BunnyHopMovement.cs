@@ -28,6 +28,7 @@ public class BunnyHopMovement : Movement
 		if(Time.time < lastJumpPress + jumpPressDuration && yVelocity < jumpForce && onGround)
 		{
 			lastJumpPress = -1f;
+			GameInfo.info.playSound("jump");
 			return jumpForce - yVelocity;
 		}
 		else
