@@ -81,6 +81,18 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
+      propertyPath: sounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
+      propertyPath: soundNames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
+      propertyPath: soundClips.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -113,6 +125,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
+      propertyPath: soundNames.Array.data[0]
+      value: jump
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
+      propertyPath: soundClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: b7edf35dbb83dbc4e921f861592864a9, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
   m_RootGameObject: {fileID: 1453612870}
@@ -147,6 +167,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: {fileID: 11400000, guid: a2187eef99ad36e46b23c442d417131e, type: 2}
+  soundNames:
+  - jump
+  soundClips:
+  - {fileID: 8300000, guid: b7edf35dbb83dbc4e921f861592864a9, type: 3}
   showHelp: 1
 --- !u!4 &1453612872
 Transform:

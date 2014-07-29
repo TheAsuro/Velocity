@@ -14,9 +14,14 @@ public class GameInfo : MonoBehaviour
 	private bool showIntro = false;
 	private bool showEscMenu = false;
 	private bool showSettings = false;
+	private bool showEndLevel = false;
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
 	private bool menuLocked = false;
+
+	//Sound
+	public List<string> soundNames;
+	public List<AudioClip> soundClips;
 
 	//Save file stuff
 	private SaveData currentSave;
@@ -29,6 +34,7 @@ public class GameInfo : MonoBehaviour
 	private float mouseSpeed = 1f;
 	private float fov = 90f;
 	public bool showHelp = true;
+	private float volume = 0.5f;
 
 	//References
 	private GameObject playerObj;
@@ -42,7 +48,8 @@ public class GameInfo : MonoBehaviour
 		intro = 2,
 		settings = 3,
 		inactive = 4,
-		demo = 5
+		demo = 5,
+		endlevel = 6
 	}
 	
 	void Awake()
@@ -113,6 +120,7 @@ public class GameInfo : MonoBehaviour
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 50f, 100f, 100f));
 
 			if(GUILayout.Button("Continue", skin.button)) { setMenuState(MenuState.closed); }
+			if(GUILayout.Button("Main Menu", skin.button)) { Application.LoadLevel("MainMenu"); }
 			if(GUILayout.Button("Help", skin.button)) { setMenuState(MenuState.intro); }
 			if(GUILayout.Button("Settings", skin.button)) { setMenuState(MenuState.settings); }
 			if(GUILayout.Button("Quit", skin.button)) { Application.Quit(); }
@@ -135,32 +143,44 @@ public class GameInfo : MonoBehaviour
 		if(showSettings)
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height / 2f - 50f, 400f, 100f));
+			GUILayout.BeginVertical();
 
+			//FOV
 			GUILayout.BeginHorizontal();
-
-			GUILayout.BeginVertical();
 			GUILayout.Label("FOV", skin.label);
-			GUILayout.Label("Mouse Sensitivity", skin.label);
-			GUILayout.EndVertical();
-
-			GUILayout.BeginVertical();
 			fov = GUILayout.HorizontalSlider(fov, 60f, 120f);
 			fov = Mathf.RoundToInt(fov);
-			mouseSpeed = GUILayout.HorizontalSlider(mouseSpeed, 0.5f, 10f);
-			mouseSpeed = floor(mouseSpeed, 1);
-			GUILayout.EndVertical();
-
-			GUILayout.BeginVertical();
 			GUILayout.Label(fov.ToString(), skin.label);
-			GUILayout.Label(mouseSpeed.ToString(), skin.label);
-			GUILayout.EndVertical();
-
 			GUILayout.EndHorizontal();
 
+			//Sensitivity
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Mouse Sensitivity", skin.label);
+			mouseSpeed = GUILayout.HorizontalSlider(mouseSpeed, 0.5f, 10f);
+			mouseSpeed = floor(mouseSpeed, 1);
+			GUILayout.Label(mouseSpeed.ToString(), skin.label);
+			GUILayout.EndHorizontal();
+			
+			//Volume
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Volume", skin.label);
+			volume = GUILayout.HorizontalSlider(volume, 0f, 1f);
+			volume = floor(volume, 2);
+			GUILayout.Label(volume.ToString(), skin.label);
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("OK", skin.button)) { savePlayerSettings(); setMenuState(MenuState.escmenu); }
 			if(GUILayout.Button("Cancel", skin.button)) { setMenuState(MenuState.escmenu); }
+			GUILayout.EndHorizontal();
 
+			GUILayout.EndVertical();
 			GUILayout.EndArea();
+		}
+
+		if(showEndLevel)
+		{
+			print("yay");
 		}
 	}
 
@@ -186,6 +206,18 @@ public class GameInfo : MonoBehaviour
 		else
 		{
 			setMenuState(MenuState.inactive);
+		}
+	}
+
+	public void playSound(string name)
+	{
+		for(int i = 0; i < soundNames.Count; i++)
+		{
+			if(soundNames[i] == name)
+			{
+				playerObj.audio.clip = soundClips[i];
+				playerObj.audio.Play();
+			}
 		}
 	}
 
@@ -216,6 +248,7 @@ public class GameInfo : MonoBehaviour
 			showIntro = false;
 			showEscMenu = false;
 			showSettings = false;
+			showEndLevel = false;
 			Screen.lockCursor = false;
 
 			switch(state)
@@ -239,6 +272,9 @@ public class GameInfo : MonoBehaviour
 				case MenuState.demo:
 					setGamePaused(false);
 					Screen.lockCursor = true;
+					break;
+				case MenuState.endlevel:
+					showEndLevel = true;
 					break;
 			}
 
@@ -315,12 +351,18 @@ public class GameInfo : MonoBehaviour
 		{
 			cam.fieldOfView = fov;
 		}
+
+		if(playerObj != null && playerObj.audio != null)
+		{
+			playerObj.audio.volume = volume;
+		}
 	}
 
 	public void savePlayerSettings()
 	{
 		PlayerPrefs.SetFloat("fov", fov);
 		PlayerPrefs.SetFloat("mouseSpeed", mouseSpeed);
+		PlayerPrefs.SetFloat("volume", volume);
 
 		applySettings();
 	}
@@ -329,6 +371,7 @@ public class GameInfo : MonoBehaviour
 	{
 		fov = PlayerPrefs.GetFloat("fov");
 		mouseSpeed = PlayerPrefs.GetFloat("mouseSpeed");
+		volume = PlayerPrefs.GetFloat("volume");
 
 		if(fov == 0f) { fov = 60f; }
 		if(mouseSpeed == 0f) { mouseSpeed = 1f; }

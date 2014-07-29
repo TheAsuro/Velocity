@@ -604,8 +604,8 @@ GameObject:
   - 114: {fileID: 211409764}
   - 114: {fileID: 211409763}
   - 114: {fileID: 211409762}
-  - 82: {fileID: 211409769}
   - 81: {fileID: 211409770}
+  - 82: {fileID: 211409769}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -729,8 +729,9 @@ Transform:
 --- !u!82 &211409769
 AudioSource:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabParentObject: {fileID: 8200000, guid: 5cb025783319fe14b9119fbbe02c92bb,
+    type: 2}
+  m_PrefabInternal: {fileID: 925639999}
   m_GameObject: {fileID: 211409761}
   m_Enabled: 1
   serializedVersion: 3
@@ -787,8 +788,9 @@ AudioSource:
 --- !u!81 &211409770
 AudioListener:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabParentObject: {fileID: 8100002, guid: 5cb025783319fe14b9119fbbe02c92bb,
+    type: 2}
+  m_PrefabInternal: {fileID: 925639999}
   m_GameObject: {fileID: 211409761}
   m_Enabled: 1
 --- !u!1 &237262319

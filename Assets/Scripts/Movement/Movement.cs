@@ -114,22 +114,6 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 
-	void OnCollisionEnter(Collision col)
-	{
-		foreach(ContactPoint point in col.contacts)
-		{
-			//If it's horizontal and the player is not jumping apply friction
-			if(point.normal.y > 0.5f)
-			{
-				col.gameObject.collider.material = friction;
-			}
-			else
-			{
-				col.gameObject.collider.material = noFriction;
-			}
-		}
-	}
-
 	private void spawnPlayer(Respawn spawn)
 	{
 		if(spawn != null)
