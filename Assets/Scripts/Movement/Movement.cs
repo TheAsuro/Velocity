@@ -3,6 +3,8 @@ using System.Collections;
 
 public abstract class Movement : MonoBehaviour
 {
+	public static Movement movement;
+
 	public float speed = 1f;
 	public float maxSpeed = 10f;
 	public float jumpForce = 1f;
@@ -29,6 +31,7 @@ public abstract class Movement : MonoBehaviour
 
 	void Awake()
 	{
+		movement = this;
 		camObj = transform.FindChild("Camera").gameObject;
 	}
 	
@@ -64,7 +67,7 @@ public abstract class Movement : MonoBehaviour
 		}
 		if(resetKeyPressed)
 		{
-			resetPlayer();
+			GameInfo.info.reset();
 		}
 		if(crouchKeyPressed)
 		{
@@ -114,7 +117,7 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 
-	private void spawnPlayer(Respawn spawn)
+	public void spawnPlayer(Respawn spawn)
 	{
 		if(spawn != null)
 		{
@@ -125,7 +128,7 @@ public abstract class Movement : MonoBehaviour
 		}
 		else
 		{
-			print("Tried to respawn, but no spawnpoint selected. RIP :(");
+			print("Tried to spawn, but no spawnpoint selected. RIP :(");
 		}
 	}
 	
@@ -135,20 +138,12 @@ public abstract class Movement : MonoBehaviour
 		//Resets the game if the last checkpoint was the first anyways
 		if(WorldInfo.info.getCurrentSpawn() == WorldInfo.info.getFirstSpawn())
 		{
-			resetPlayer();
+			GameInfo.info.reset();
 		}
 		else
 		{
 			spawnPlayer(WorldInfo.info.getCurrentSpawn());
 		}
-	}
-
-	//Resets the game and starts from the beginning of the level
-	private void resetPlayer()
-	{
-		WorldInfo.info.reset();
-		GameInfo.info.reset();
-		spawnPlayer(WorldInfo.info.getFirstSpawn());
 	}
 	
 	public bool checkGround()

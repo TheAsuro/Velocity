@@ -21,6 +21,8 @@ public class DemoRecord : MonoBehaviour
 	private GameObject ghost;
 	private GameObject ghostCamObj;
 	private GameObject ghostCamChild;
+	public delegate void FinishedPlaying();
+	private FinishedPlaying myFinishedPlaying;
 
 	void Update()
 	{
@@ -82,6 +84,7 @@ public class DemoRecord : MonoBehaviour
 				playing = false;
 				GameObject.Destroy(ghost);
 				GameObject.Destroy(ghostCamObj);
+				myFinishedPlaying();
 			}
 		}
 	}
@@ -115,13 +118,14 @@ public class DemoRecord : MonoBehaviour
 		return completeDemo;
 	}
 
-	public void playDemo(Demo demo)
+	public void playDemo(Demo demo, FinishedPlaying pFinishedPlaying)
 	{
 		Respawn spawn = WorldInfo.info.getFirstSpawn();
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		ghostCamObj = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		ghostCamChild = ghostCamObj.transform.FindChild("CamObj").gameObject;
 		startPlayTime = Time.time;
+		myFinishedPlaying = pFinishedPlaying;
 		playing = true;
 	}
 }

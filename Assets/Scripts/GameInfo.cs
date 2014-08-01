@@ -17,7 +17,7 @@ public class GameInfo : MonoBehaviour
 	private bool showEndLevel = false;
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
-	private bool menuLocked = false;
+	public bool menuLocked = false;
 
 	//Sound
 	public List<string> soundNames;
@@ -180,7 +180,14 @@ public class GameInfo : MonoBehaviour
 
 		if(showEndLevel)
 		{
-			print("yay");
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 50f, 100f, 100f));
+
+			if(GUILayout.Button("Main Menu", skin.button)) { Application.LoadLevel("MainMenu"); }
+			if(GUILayout.Button("Play Demo", skin.button)) { menuLocked = false; setMenuState(MenuState.demo); playLastDemo(); }
+			if(GUILayout.Button("Save Demo", skin.button)) { saveLastDemo(); }
+			if(GUILayout.Button("Restart", skin.button)) { menuLocked = false; reset(); }
+
+			GUILayout.EndArea();
 		}
 	}
 
@@ -197,7 +204,7 @@ public class GameInfo : MonoBehaviour
 	void OnLevelWasLoaded(int level)
 	{
 		loadPlayerSettings();
-		setMenuLocked(false);
+		menuLocked = false;
 		WorldInfo wInfo = WorldInfo.info;
 		if(wInfo != null)
 		{
@@ -225,17 +232,11 @@ public class GameInfo : MonoBehaviour
 	public void reset()
 	{
 		stopDemo();
+		WorldInfo.info.reset();
+		playerObj.GetComponent<PlayerEffects>().stopMoveToPos();
+		Movement.movement.spawnPlayer(WorldInfo.info.getFirstSpawn());
+		setMenuState(MenuState.closed);
 		startDemo();
-	}
-
-	//Menu can't be accessed until unlocked
-	public void setMenuLocked(bool value)
-	{
-		if(value)
-		{
-			setMenuState(MenuState.inactive);
-		}
-		menuLocked = value;
 	}
 
 	//Menu state manager
@@ -271,10 +272,14 @@ public class GameInfo : MonoBehaviour
 					break;
 				case MenuState.demo:
 					setGamePaused(false);
+					setMouseView(false);
 					Screen.lockCursor = true;
 					break;
 				case MenuState.endlevel:
+					setGamePaused(false);
+					setMouseView(false);
 					showEndLevel = true;
+					menuLocked = true;
 					break;
 			}
 
@@ -408,7 +413,12 @@ public class GameInfo : MonoBehaviour
 
 	public void playLastDemo()
 	{
-		recorder.playDemo(recorder.getDemo());
+		recorder.playDemo(recorder.getDemo(), demoPlayEnded);
+	}
+
+	private void demoPlayEnded()
+	{
+		setMenuState(MenuState.endlevel);
 	}
 
 	public void saveLastDemo()

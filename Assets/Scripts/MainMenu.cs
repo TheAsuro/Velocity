@@ -26,7 +26,8 @@ public class MainMenu : MonoBehaviour
 
 	void Start()
 	{
-		GameInfo.info.setMenuLocked(true);
+		GameInfo.info.setMenuState(GameInfo.MenuState.inactive);
+		GameInfo.info.menuLocked = true;
 		skin = GameInfo.info.skin;
 	}
 
