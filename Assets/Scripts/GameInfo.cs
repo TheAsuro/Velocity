@@ -332,6 +332,11 @@ public class GameInfo : MonoBehaviour
 		currentSave = data;
 	}
 
+	public SaveData getCurrentSave()
+	{
+		return currentSave;
+	}
+
 	public void save()
 	{
 		if(currentSave != null)

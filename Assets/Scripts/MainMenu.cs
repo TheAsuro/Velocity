@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class MainMenu : MonoBehaviour
 {
+	public List<string> mapNames = new List<string>();
+
 	private bool drawMainButtons = true;
 	private bool drawSelectNewGame = false;
 	private bool drawSelectLoadGame = false;
@@ -124,13 +126,41 @@ public class MainMenu : MonoBehaviour
 		//select map
 		if(drawSelectMap)
 		{
-			GUI.Box(centerMenuPos, "", skin.box);
-			GUILayout.BeginArea(centerMenuPos);
-			GUILayout.Label("Map");
-			if(GUILayout.Button("Basic Tutorial", skin.button)) { loadMap("BasicTutorial"); }
-			if(GUILayout.Button("Air Strafe Tutorial", skin.button)) { loadMap("StrafeTutorial"); }
-			if(GUILayout.Button("Map 1", skin.button)) { loadMap("Level3"); }
+			Rect mapSelectPos = new Rect(Screen.width / 4f, Screen.height / 2f - 100f, Screen.width / 2f, 200f);
+			Rect mapInfoPos = new Rect(mapSelectPos.x, mapSelectPos.y - 35f, mapSelectPos.width, 22f);
+			float boxWidth = mapSelectPos.width / 3f;
+			int counter = 0;
+
+			//Info box
+			GUI.Box(mapInfoPos, "", skin.box);
+			GUILayout.BeginArea(mapInfoPos);
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Current User: " + GameInfo.info.getCurrentSave().getPlayerName() + " | Select a map.");
+			if(GUILayout.Button("Back")) { setState(State.loadGame); }
+			GUILayout.EndHorizontal();
 			GUILayout.EndArea();
+
+			//Big box for the list of maps
+			GUI.Box(mapSelectPos, "", skin.box);
+
+			//Create three coloumns
+			for(int i = 0; i < 3; i++)
+			{
+				Rect boxRect = new Rect(mapSelectPos.x + i*boxWidth, mapSelectPos.y, boxWidth, mapSelectPos.height);
+				GUILayout.BeginArea(boxRect);
+
+				//Fill them with buttons
+				for(int j = 0; j < 3; j++)
+				{
+					if(counter + j < mapNames.Count)
+					{
+						if(GUILayout.Button(mapNames[counter + j], skin.button)) { loadMap(mapNames[counter + j]); }
+					}
+				}
+				counter += 3;
+
+				GUILayout.EndArea();
+			}
 		}
 
 		//Enter name for new game

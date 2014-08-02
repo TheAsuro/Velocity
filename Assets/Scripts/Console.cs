@@ -19,7 +19,7 @@ public class Console : MonoBehaviour
 
 	void OnGUI()
 	{
-		if(drawConsole)
+		if(drawConsole && GameInfo.info.getMenuState() != GameInfo.MenuState.closed)
 		{
 			consolePos = GUILayout.Window(0, consolePos, DrawConsoleGUI, "Console", GameInfo.info.skin.window);
 		}
