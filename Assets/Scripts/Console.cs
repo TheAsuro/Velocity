@@ -9,6 +9,11 @@ public class Console : MonoBehaviour
 	private string consoleText = "Welcome to Velocity!";
 	private string commandLine = "";
 
+	void Start()
+	{
+		GameInfo.info.setConsole(this);
+	}
+
 	void Update()
 	{
 		if(Input.GetButtonDown("Console"))

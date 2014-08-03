@@ -1,8 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BunnyHopMovement : Movement
 {
+	private List<int> collidingObjects = new List<int>();
+	private bool applyFriction = false;
+	private bool collidedLastFrame = false;
+	private int frameCounter = 0;
+
 	public override Vector3 calculateAdditionalVelocity(Vector2 input)
 	{
 		//Get input and make it a vector
@@ -21,6 +27,18 @@ public class BunnyHopMovement : Movement
 		return new Vector3(correctVelocity.x, getJumpVelocity(rigidbody.velocity.y), correctVelocity.z);
 	}
 
+	public override Vector3 calculateFriction(Vector3 input)
+	{
+		Vector2 temp = new Vector2(input.x, input.z);
+
+		if(applyFriction)
+		{
+			temp *= frictionMultiplier;
+		}
+
+		return new Vector3(temp.x, input.y, temp.y);
+	}
+
 	private float getJumpVelocity(float yVelocity)
 	{
 		bool onGround = checkGround();
@@ -34,6 +52,58 @@ public class BunnyHopMovement : Movement
 		else
 		{
 			return 0f;
+		}
+	}
+
+	public override void FixedMoveUpdate()
+	{
+		if(collidedLastFrame)
+		{
+			frameCounter++;
+		}
+		else
+		{
+			frameCounter = 0;
+		}
+
+		if(collidingObjects.Count == 0)
+		{
+			collidedLastFrame = false;
+		}
+		else
+		{
+			collidedLastFrame = true;
+		}
+
+		if(frameCounter > 3)
+		{
+			applyFriction = true;
+		}
+		else
+		{
+			applyFriction = false;
+		}
+	}
+
+	void OnCollisionEnter(Collision col)
+	{
+		foreach(ContactPoint contact in col)
+		{
+			if(contact.normal.y > 0.7f && !collidingObjects.Contains(contact.otherCollider.gameObject.GetInstanceID()))
+			{
+				collidingObjects.Add(contact.otherCollider.gameObject.GetInstanceID());
+			}
+		}
+	}
+
+	void OnCollisionExit(Collision col)
+	{
+		foreach(ContactPoint contact in col)
+		{
+			if(collidingObjects.Contains(contact.otherCollider.gameObject.GetInstanceID()))
+			{
+				collidingObjects.Remove(contact.otherCollider.gameObject.GetInstanceID());
+			}
 		}
 	}
 }

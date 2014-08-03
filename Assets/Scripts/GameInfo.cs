@@ -40,6 +40,7 @@ public class GameInfo : MonoBehaviour
 	private GameObject playerObj;
 	private DemoRecord recorder;
 	private MouseLook mouseLook;
+	private Console myConsole;
 
 	public enum MenuState
 	{
@@ -347,6 +348,16 @@ public class GameInfo : MonoBehaviour
 		{
 			print("Tried to save, but there is no current save file :o");
 		}
+	}
+
+	public void setConsole(Console pConsole)
+	{
+		myConsole = pConsole;
+	}
+
+	public void writeToConsole(string text)
+	{
+		myConsole.writeToConsole(text);
 	}
 
 	private void applySettings()

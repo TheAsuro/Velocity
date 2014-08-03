@@ -7,10 +7,9 @@ public abstract class Movement : MonoBehaviour
 
 	public float speed = 1f;
 	public float maxSpeed = 10f;
+	public float frictionMultiplier = 0.9f;
 	public float jumpForce = 1f;
 	public LayerMask groundLayers;
-	public PhysicMaterial friction;
-	public PhysicMaterial noFriction;
 
 	public GameObject camObj;
 	public bool crouched = false;
@@ -79,6 +78,11 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 
+	public virtual void FixedMoveUpdate()
+	{
+
+	}
+
 	void FixedUpdate()
 	{
 		Vector2 input = new Vector2();
@@ -86,18 +90,30 @@ public abstract class Movement : MonoBehaviour
 		if(allowMoveHorizontal) { input.x = Input.GetAxis("Horizontal"); }
 		if(allowMoveVertical) { input.y = Input.GetAxis("Vertical"); }
 
+		//Add movement
 		Vector3 additionalVelocity = calculateAdditionalVelocity(input);
+
+		//Substract friction
+		Vector3 tempVelocity = rigidbody.velocity + additionalVelocity;
+		tempVelocity = calculateFriction(tempVelocity);
 			
 		//Apply
 		if(!rigidbody.isKinematic)
 		{
-			rigidbody.velocity += additionalVelocity;
+			rigidbody.velocity = tempVelocity;
 		}
+
+		FixedMoveUpdate();
 	}
 
 	public virtual Vector3 calculateAdditionalVelocity(Vector2 input)
 	{
 		return Vector3.zero;
+	}
+
+	public virtual Vector3 calculateFriction(Vector3 input)
+	{
+		return input;
 	}
 	
 	void OnTriggerEnter(Collider other)
