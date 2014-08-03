@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
+  - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: GameInfo
   m_TagString: Untagged
@@ -40,6 +41,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: {fileID: 11400000, guid: a2187eef99ad36e46b23c442d417131e, type: 2}
+  menuLocked: 0
+  soundNames:
+  - jump
+  soundClips:
+  - {fileID: 8300000, guid: b7edf35dbb83dbc4e921f861592864a9, type: 3}
+  showHelp: 1
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bf8b1d2b8bed2f4a8ea2075f57fafff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawConsole: 0
+  consolePos:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 500
+    height: 500
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

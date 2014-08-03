@@ -74,25 +74,13 @@ NavMeshSettings:
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
   m_NavMesh: {fileID: 0}
---- !u!1001 &500794633
+--- !u!1001 &713208530
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-      propertyPath: sounds.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-      propertyPath: soundNames.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-      propertyPath: soundClips.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -126,13 +114,13 @@ Prefab:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-      propertyPath: soundNames.Array.data[0]
-      value: jump
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-      propertyPath: soundClips.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: b7edf35dbb83dbc4e921f861592864a9, type: 3}
+    - target: {fileID: 11400002, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
   m_RootGameObject: {fileID: 1453612870}
@@ -142,11 +130,12 @@ Prefab:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-  m_PrefabInternal: {fileID: 500794633}
+  m_PrefabInternal: {fileID: 713208530}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1453612872}
   - 114: {fileID: 1453612871}
+  - 114: {fileID: 1453612873}
   m_Layer: 0
   m_Name: GameInfo
   m_TagString: Untagged
@@ -159,7 +148,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559,
     type: 2}
-  m_PrefabInternal: {fileID: 500794633}
+  m_PrefabInternal: {fileID: 713208530}
   m_GameObject: {fileID: 1453612870}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -177,7 +166,7 @@ MonoBehaviour:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-  m_PrefabInternal: {fileID: 500794633}
+  m_PrefabInternal: {fileID: 713208530}
   m_GameObject: {fileID: 1453612870}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -185,6 +174,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &1453612873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: 601e89f6bcc88ed408597f1676905559,
+    type: 2}
+  m_PrefabInternal: {fileID: 713208530}
+  m_GameObject: {fileID: 1453612870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bf8b1d2b8bed2f4a8ea2075f57fafff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawConsole: 0
+  consolePos:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 500
+    height: 500
 --- !u!1 &1974460049
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,7 +206,6 @@ GameObject:
   - 124: {fileID: 1974460051}
   - 81: {fileID: 1974460050}
   - 114: {fileID: 1974460055}
-  - 114: {fileID: 1974460056}
   m_Layer: 0
   m_Name: Cam
   m_TagString: MainCamera
@@ -286,21 +293,3 @@ MonoBehaviour:
   - BasicTutorial
   - StrafeTutorial
   - Level3
---- !u!114 &1974460056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1974460049}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bf8b1d2b8bed2f4a8ea2075f57fafff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drawConsole: 0
-  consolePos:
-    serializedVersion: 2
-    x: 100
-    y: 10
-    width: 500
-    height: 500
