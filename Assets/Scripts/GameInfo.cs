@@ -41,6 +41,8 @@ public class GameInfo : MonoBehaviour
 	private DemoRecord recorder;
 	private MouseLook mouseLook;
 	private Console myConsole;
+	private Server myServer;
+	private Client myClient;
 
 	public enum MenuState
 	{
@@ -64,6 +66,9 @@ public class GameInfo : MonoBehaviour
 		{
 			Destroy(gameObject);
 		}
+
+		myServer = gameObject.GetComponent<Server>();
+		myClient = gameObject.GetComponent<Client>();
 		
 		Screen.lockCursor = true;
 		setMenuState(MenuState.intro);
@@ -195,7 +200,7 @@ public class GameInfo : MonoBehaviour
 	//Lock cursor after loosing and gaining focus
 	void OnApplicationFocus(bool focusStatus)
 	{
-		if(!showEscMenu && focusStatus)
+		if(getMenuState() == MenuState.closed && focusStatus)
 		{
 			Screen.lockCursor = true;
 		}
@@ -217,6 +222,7 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
+	//Plays a sound at the player position
 	public void playSound(string name)
 	{
 		for(int i = 0; i < soundNames.Count; i++)
@@ -229,7 +235,38 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	//player pressed reset key
+	//Start a new multiplayer server
+	public void startServer(string password)
+	{
+		myServer.StartServer(2, 42069, true, password);
+	}
+
+	//Connect to a multiplayer server
+	public void connectToServer(string ip, int port, string password)
+	{
+		if(currentSave != null)
+		{
+			myClient.ConnectToServer(ip, port, password);
+		}
+		else
+		{
+			writeToConsole("You can only connect with a loaded save!");
+		}
+	}
+
+	//Disconnect from current server
+	public void disconnectFromServer()
+	{
+		myClient.DisconnectFromServer();
+	}
+
+	//Stop current server
+	public void stopServer()
+	{
+		myServer.StopServer();
+	}
+
+	//Reset everything in the world to its initial state
 	public void reset()
 	{
 		stopDemo();
@@ -346,7 +383,7 @@ public class GameInfo : MonoBehaviour
 		}
 		else
 		{
-			print("Tried to save, but there is no current save file :o");
+			writeToConsole("Tried to save, but there is no current save file :o");
 		}
 	}
 

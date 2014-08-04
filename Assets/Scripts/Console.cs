@@ -49,14 +49,53 @@ public class Console : MonoBehaviour
 
 	private void executeCommand(string command)
 	{
-		switch(command.ToLower())
+		if(!command.Equals(""))
 		{
-			case "quit":
-				Application.Quit();
-				break;
-			default:
-				writeToConsole("'" + command + "' is not a valid command!");
-				break;
+			string[] commandParts = command.Trim().Split(' ');
+
+			switch(commandParts[0].ToLower())
+			{
+				case "quit": //Quit the game
+					Application.Quit();
+					break;
+				case "connect": //Connect to a server
+					if(commandParts.Length == 3)
+					{
+						GameInfo.info.connectToServer(commandParts[1], int.Parse(commandParts[2]), "");
+					}
+					else if(commandParts.Length == 4)
+					{
+						GameInfo.info.connectToServer(commandParts[1], int.Parse(commandParts[2]), commandParts[3]);
+					}
+					else
+					{
+						writeToConsole("Usage: connect <ip> <port> <optional password>");
+					}
+					break;
+				case "newserver": //Create a new multiplayer server
+					if(commandParts.Length == 1)
+					{
+						GameInfo.info.startServer("");
+					}
+					else if(commandParts.Length == 2)
+					{
+						GameInfo.info.startServer(commandParts[1]);
+					}
+					else
+					{
+						writeToConsole("Usage: newserver <optional password>");
+					}
+					break;
+				case "disconnect": //Leave the current server
+					GameInfo.info.disconnectFromServer();
+					break;
+				case "stopserver": //Stops the current server
+					GameInfo.info.stopServer();
+					break;
+				default:
+					writeToConsole("'" + command + "' is not a valid command!");
+					break;
+			}
 		}
 	}
 
