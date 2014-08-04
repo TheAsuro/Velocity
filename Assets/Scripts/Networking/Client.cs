@@ -8,22 +8,22 @@ public class Client : MonoBehaviour
 
 	private NetworkView view;
 	private bool connected = false;
+	private bool localConnection = false;
 	private bool sendPosition = false;
 	private Vector3 lastPosition = Vector3.zero;
 	private Dictionary<string,GameObject> ghostList;
+	private Server myServer;
 
 	void Start()
 	{
 		ghostList = new Dictionary<string,GameObject>();
 		view = GetComponent<NetworkView>();
+		myServer = GetComponent<Server>();
 		view.observed = this;
 	}
 
 	public void ConnectToServer(string ip, int port, string password)
 	{
-		//Set the network view to observe this script
-		view.observed = this;
-
 		//Connect to server
 		NetworkConnectionError error = Network.Connect(ip, port, password);
 		GameInfo.info.writeToConsole("Trying to connect to server...");
@@ -35,9 +35,7 @@ public class Client : MonoBehaviour
 
 	void OnConnectedToServer()
 	{
-		//Send a message with your name to the server, so it can assign your name to your GUID
-		view.RPC("addPlayer", RPCMode.Server, GameInfo.info.getCurrentSave().getPlayerName());
-		connected = true;
+		JoinServer(false);
 	}
 
 	void FixedUpdate()
@@ -48,9 +46,36 @@ public class Client : MonoBehaviour
 			if(!lastPosition.Equals(playerPos) && sendPosition)
 			{
 				lastPosition = playerPos;
-				view.RPC("setPlayerPosition", RPCMode.Server, playerPos);
+				if(localConnection)
+				{
+					myServer.setLocalPlayerPosition(playerPos);
+				}
+				else
+				{
+					sendMessageToServer("setPlayerPosition", playerPos);
+				}
 			}
 		}
+	}
+
+	public void JoinServer(bool local)
+	{
+		if(local && GameInfo.info.getCurrentSave() != null)
+		{
+			myServer.addLocalPlayer(GameInfo.info.getCurrentSave().getPlayerName());
+		}
+		else
+		{
+			//Send a message with your name to the server, so it can assign your name to your GUID
+			sendMessageToServer("addPlayer", GameInfo.info.getCurrentSave().getPlayerName());
+		}
+		localConnection = local;
+		connected = true;
+	}
+
+	private void sendMessageToServer(string procedure, params object[] parameters)
+	{
+		view.RPC(procedure, RPCMode.Server, parameters);
 	}
 
 	public void DisconnectFromServer()
@@ -88,7 +113,7 @@ public class Client : MonoBehaviour
 	{
 		if(connected)
 		{
-			view.RPC("activatePlayer", RPCMode.Server);
+			sendMessageToServer("activatePlayer");
 		}
 	}
 }

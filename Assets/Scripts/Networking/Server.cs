@@ -5,11 +5,13 @@ using System.Collections.Generic;
 public class Server : MonoBehaviour
 {
 	private NetworkView view;
+	private Client myClient;
 	private List<RemotePlayer> playerList;
 
 	void Start()
 	{
 		view = GetComponent<NetworkView>();
+		myClient = GetComponent<Client>();
 		view.observed = this;
 	}
 
@@ -29,6 +31,12 @@ public class Server : MonoBehaviour
 	{
 		Network.Disconnect();
 		GameInfo.info.writeToConsole("Stopped server.");
+	}
+
+	void OnServerInitialized()
+	{
+		myClient.JoinServer(true);
+		GameInfo.info.writeToConsole("Server initzialized.");
 	}
 
 	void OnPlayerConnected(NetworkPlayer player)
@@ -55,6 +63,14 @@ public class Server : MonoBehaviour
 		view.RPC("ChangeLevel", info.sender, Application.loadedLevel);
 	}
 
+	public void addLocalPlayer(string name)
+	{
+		playerList.Add(new RemotePlayer(name));
+		activateLocalPlayer();
+		myClient.StartTransmitPositions();
+		GameInfo.info.writeToConsole("Local player " + name + " connected.");
+	}
+
 	//Player finished loading the level
 	[RPC]
 	public void activatePlayer(NetworkMessageInfo info)
@@ -68,11 +84,23 @@ public class Server : MonoBehaviour
 		view.RPC("StartTransmitPositions", info.sender);
 	}
 
+	public void activateLocalPlayer()
+	{
+		RemotePlayer player = getLocalPlayer();
+		player.active = true;
+		GameInfo.info.writeToConsole("(Local) Player " + player.name + " has loaded!");
+	}
+
 	//Player has updates his position
 	[RPC]
 	public void setPlayerPosition(Vector3 playerPos, NetworkMessageInfo info)
 	{
 		view.RPC("setGhostPosition", RPCMode.All, playerPos, getPlayerByNetworkPlayer(info.sender).name);
+	}
+
+	public void setLocalPlayerPosition(Vector3 playerPos)
+	{
+		view.RPC("setGhostPosition", RPCMode.All, playerPos, getLocalPlayer().name);
 	}
 
 	private RemotePlayer getPlayerByNetworkPlayer(NetworkPlayer netPlayer)
@@ -85,6 +113,18 @@ public class Server : MonoBehaviour
 			}
 		}
 		GameInfo.info.writeToConsole("Unlisted player!");
+		return null;
+	}
+
+	private RemotePlayer getLocalPlayer()
+	{
+		foreach(RemotePlayer player in playerList)
+		{
+			if(player.isLocal())
+			{
+				return player;
+			}
+		}
 		return null;
 	}
 }
