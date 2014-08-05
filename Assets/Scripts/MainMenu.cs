@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
 	private bool drawSelectLoadGame = false;
 	private bool drawNameField = false;
 	private bool drawSelectMap = false;
+	private bool drawSettings = false;
 	private string nameFieldText = "name";
 	private int selectedNewGameIndex = -1;
 	private GUISkin skin;
@@ -23,7 +24,8 @@ public class MainMenu : MonoBehaviour
 		newGame = 2,
 		loadGame = 3,
 		enterName = 4,
-		selectMap = 5
+		selectMap = 5,
+		settings = 6
 	}
 
 	void Start()
@@ -42,6 +44,7 @@ public class MainMenu : MonoBehaviour
 		drawSelectLoadGame = false;
 		drawNameField = false;
 		drawSelectMap = false;
+		drawSettings = false;
 
 		switch(state)
 		{
@@ -59,6 +62,9 @@ public class MainMenu : MonoBehaviour
 				break;
 			case State.selectMap:
 				drawSelectMap = true;
+				break;
+			case State.settings:
+				drawSettings = true;
 				break;
 		}
 	}
@@ -92,6 +98,7 @@ public class MainMenu : MonoBehaviour
 			GUILayout.BeginArea(centerMenuPos, skin.box);
 			if(GUILayout.Button("New", skin.button)) { setState(State.newGame); }
 			if(GUILayout.Button("Load", skin.button)) { setState(State.loadGame); }
+			if(GUILayout.Button("Settings", skin.button)) { setState(State.settings); }
 			if(GUILayout.Button("Quit", skin.button)) { Application.Quit(); }
 			GUILayout.EndArea();
 		}
@@ -173,6 +180,74 @@ public class MainMenu : MonoBehaviour
 				newGame(selectedNewGameIndex);
 			}
 			GUILayout.EndArea();
+		}
+
+		if(drawSettings)
+		{
+			//Start GUI
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height / 2f - 50f, 400f, 100f), skin.box);
+			GUILayout.BeginVertical();
+
+			//FOV
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("FOV", skin.label);
+			GameInfo.info.fov = GUILayout.HorizontalSlider(GameInfo.info.fov, 60f, 120f, skin.horizontalSlider, skin.horizontalSliderThumb);
+			GameInfo.info.fov = Mathf.RoundToInt(GameInfo.info.fov);
+			GUILayout.Label(GameInfo.info.fov.ToString(), skin.label);
+			GUILayout.EndHorizontal();
+
+			//Sensitivity
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Mouse Sensitivity", skin.label);
+			GameInfo.info.mouseSpeed = GUILayout.HorizontalSlider(GameInfo.info.mouseSpeed, 0.5f, 10f, skin.horizontalSlider, skin.horizontalSliderThumb);
+			GameInfo.info.mouseSpeed = floor(GameInfo.info.mouseSpeed, 1);
+			GUILayout.Label(GameInfo.info.mouseSpeed.ToString(), skin.label);
+			GUILayout.EndHorizontal();
+			
+			//Volume
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Volume", skin.label);
+			GameInfo.info.volume = GUILayout.HorizontalSlider(GameInfo.info.volume, 0f, 1f, skin.horizontalSlider, skin.horizontalSliderThumb);
+			GameInfo.info.volume = floor(GameInfo.info.volume, 2);
+			GUILayout.Label(GameInfo.info.volume.ToString(), skin.label);
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("OK", skin.button)) { GameInfo.info.savePlayerSettings(); setState(State.main); }
+			if(GUILayout.Button("Cancel", skin.button)) { setState(State.main); }
+			GUILayout.EndHorizontal();
+
+			GUILayout.EndVertical();
+			GUILayout.EndArea();
+		}
+	}
+
+	//Returns rounded value of a float
+	private float floor(float input, int decimalsAfterPoint)
+	{
+		string floatText = input.ToString();
+		if(floatText.ToLower().Contains("e"))
+		{
+			return 0f;
+		}
+		else
+		{
+			if(floatText.Contains("."))
+			{
+				int decimalCount = floatText.Substring(floatText.IndexOf(".")).Length;
+				if(decimalCount <= decimalsAfterPoint)
+				{
+					return input;
+				}
+				else
+				{
+					return float.Parse(floatText.Substring(0, floatText.IndexOf(".") + decimalsAfterPoint + 1));
+				}
+			}
+			else
+			{
+				return input;
+			}
 		}
 	}
 

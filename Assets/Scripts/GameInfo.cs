@@ -13,7 +13,6 @@ public class GameInfo : MonoBehaviour
 	private bool gamePaused = false;
 	private bool showIntro = false;
 	private bool showEscMenu = false;
-	private bool showSettings = false;
 	private bool showEndLevel = false;
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
@@ -31,10 +30,10 @@ public class GameInfo : MonoBehaviour
 	private List<InfoString> windowLines = new List<InfoString>();
 
 	//Game settings
-	private float mouseSpeed = 1f;
-	private float fov = 90f;
+	public float mouseSpeed = 1f;
+	public float fov = 90f;
 	public bool showHelp = true;
-	private float volume = 0.5f;
+	public float volume = 0.5f;
 
 	//References
 	private GameObject playerObj;
@@ -49,10 +48,9 @@ public class GameInfo : MonoBehaviour
 		closed = 0,
 		escmenu = 1,
 		intro = 2,
-		settings = 3,
-		inactive = 4,
-		demo = 5,
-		endlevel = 6
+		inactive = 3,
+		demo = 4,
+		endlevel = 5
 	}
 	
 	void Awake()
@@ -119,7 +117,6 @@ public class GameInfo : MonoBehaviour
 			if(GUILayout.Button("Continue", skin.button)) { setMenuState(MenuState.closed); }
 			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
 			if(GUILayout.Button("Help", skin.button)) { setMenuState(MenuState.intro); }
-			if(GUILayout.Button("Settings", skin.button)) { setMenuState(MenuState.settings); }
 			if(GUILayout.Button("Quit", skin.button)) { Application.Quit(); }
 
 			GUILayout.EndArea();
@@ -133,45 +130,6 @@ public class GameInfo : MonoBehaviour
 			string infoText = "Press ESC to toggle the menu.\nPress F8 to toggle debug info.\nPress (or hold) space to jump.\nPress E to grab.\nPress R to respawn.\nPress F1 to reset.";
 			GUILayout.Box(infoText, skin.box);
 
-			GUILayout.EndArea();
-		}
-
-		//Game settings dialog
-		if(showSettings)
-		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height / 2f - 50f, 400f, 100f), skin.box);
-			GUILayout.BeginVertical();
-
-			//FOV
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("FOV", skin.label);
-			fov = GUILayout.HorizontalSlider(fov, 60f, 120f, skin.horizontalSlider, skin.horizontalSliderThumb);
-			fov = Mathf.RoundToInt(fov);
-			GUILayout.Label(fov.ToString(), skin.label);
-			GUILayout.EndHorizontal();
-
-			//Sensitivity
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Mouse Sensitivity", skin.label);
-			mouseSpeed = GUILayout.HorizontalSlider(mouseSpeed, 0.5f, 10f, skin.horizontalSlider, skin.horizontalSliderThumb);
-			mouseSpeed = floor(mouseSpeed, 1);
-			GUILayout.Label(mouseSpeed.ToString(), skin.label);
-			GUILayout.EndHorizontal();
-			
-			//Volume
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Volume", skin.label);
-			volume = GUILayout.HorizontalSlider(volume, 0f, 1f, skin.horizontalSlider, skin.horizontalSliderThumb);
-			volume = floor(volume, 2);
-			GUILayout.Label(volume.ToString(), skin.label);
-			GUILayout.EndHorizontal();
-
-			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("OK", skin.button)) { savePlayerSettings(); setMenuState(MenuState.escmenu); }
-			if(GUILayout.Button("Cancel", skin.button)) { setMenuState(MenuState.escmenu); }
-			GUILayout.EndHorizontal();
-
-			GUILayout.EndVertical();
 			GUILayout.EndArea();
 		}
 
@@ -287,7 +245,6 @@ public class GameInfo : MonoBehaviour
 			setGamePaused(true);
 			showIntro = false;
 			showEscMenu = false;
-			showSettings = false;
 			showEndLevel = false;
 			Screen.lockCursor = false;
 
@@ -302,9 +259,6 @@ public class GameInfo : MonoBehaviour
 					break;
 				case MenuState.intro:
 					showIntro = true;
-					break;
-				case MenuState.settings:
-					showSettings = true;
 					break;
 				case MenuState.inactive:
 					setGamePaused(false);
@@ -507,34 +461,5 @@ public class GameInfo : MonoBehaviour
 	public void unlockMouseView()
 	{
 		viewLocked = false;
-	}
-
-	//Returns rounded value of a float
-	private float floor(float input, int decimalsAfterPoint)
-	{
-		string floatText = input.ToString();
-		if(floatText.ToLower().Contains("e"))
-		{
-			return 0f;
-		}
-		else
-		{
-			if(floatText.Contains("."))
-			{
-				int decimalCount = floatText.Substring(floatText.IndexOf(".")).Length;
-				if(decimalCount <= decimalsAfterPoint)
-				{
-					return input;
-				}
-				else
-				{
-					return float.Parse(floatText.Substring(0, floatText.IndexOf(".") + decimalsAfterPoint + 1));
-				}
-			}
-			else
-			{
-				return input;
-			}
-		}
 	}
 }
