@@ -125,7 +125,7 @@ public class MainMenu : MonoBehaviour
 		if(drawSelectMap)
 		{
 			Rect mapSelectPos = new Rect(Screen.width / 4f, Screen.height / 2f - 100f, Screen.width / 2f, 200f);
-			Rect mapInfoPos = new Rect(mapSelectPos.x, mapSelectPos.y - 35f, mapSelectPos.width, 22f);
+			Rect mapInfoPos = new Rect(mapSelectPos.x, mapSelectPos.y - 35f, mapSelectPos.width, 30f);
 			float boxWidth = mapSelectPos.width / 3f;
 			int counter = 0;
 
