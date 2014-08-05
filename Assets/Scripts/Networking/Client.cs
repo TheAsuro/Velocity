@@ -22,6 +22,7 @@ public class Client : MonoBehaviour
 		view.observed = this;
 	}
 
+	//Tries to create a p2p connection to a server
 	public void ConnectToServer(string ip, int port, string password)
 	{
 		//Connect to server
@@ -33,11 +34,22 @@ public class Client : MonoBehaviour
 		}
 	}
 
+	//p2p connection established
 	void OnConnectedToServer()
 	{
 		JoinServer(false);
 	}
 
+	//Send the server a message that we loaded
+	void OnLevelWasLoaded(int id)
+	{
+		if(connected && !localConnection)
+		{
+			sendMessageToServer("activatePlayer");
+		}
+	}
+
+	//Send the position to create ghosts for other players
 	void FixedUpdate()
 	{
 		if(GameInfo.info.getPlayerObject() != null)
@@ -58,19 +70,28 @@ public class Client : MonoBehaviour
 		}
 	}
 
+	//Send the server a message that we connected and want more info
 	public void JoinServer(bool local)
 	{
-		if(local && GameInfo.info.getCurrentSave() != null)
+		//We can't join without a player name
+		if(GameInfo.info.getCurrentSave() != null)
 		{
-			myServer.addLocalPlayer(GameInfo.info.getCurrentSave().getPlayerName());
+			if(local)
+			{
+				myServer.addLocalPlayer(GameInfo.info.getCurrentSave().getPlayerName());
+			}
+			else
+			{
+				//Send a message with your name to the server, so it can assign your name to your GUID
+				sendMessageToServer("addPlayer", GameInfo.info.getCurrentSave().getPlayerName());
+			}
+			localConnection = local;
+			connected = true;
 		}
 		else
 		{
-			//Send a message with your name to the server, so it can assign your name to your GUID
-			sendMessageToServer("addPlayer", GameInfo.info.getCurrentSave().getPlayerName());
+			GameInfo.info.writeToConsole("Can't connect without a loaded save!");
 		}
-		localConnection = local;
-		connected = true;
 	}
 
 	private void sendMessageToServer(string procedure, params object[] parameters)
@@ -85,18 +106,21 @@ public class Client : MonoBehaviour
 		GameInfo.info.writeToConsole("Disconnected from server.");
 	}
 
+	//Server changed level/Sends level for the first time
 	[RPC]
 	public void ChangeLevel(int levelId)
 	{
 		Application.LoadLevel(levelId);
 	}
 
+	//Server wants us to send positions for ghosts
 	[RPC]
 	public void StartTransmitPositions()
 	{
 		sendPosition = true;
 	}
 
+	//position of a ghost
 	[RPC]
 	public void setGhostPosition(Vector3 position, string name)
 	{
@@ -109,11 +133,8 @@ public class Client : MonoBehaviour
 		ghost.transform.position = position;
 	}
 
-	void OnLevelWasLoaded(int id)
+	public bool isConnected()
 	{
-		if(connected)
-		{
-			sendMessageToServer("activatePlayer");
-		}
+		return connected;
 	}
 }

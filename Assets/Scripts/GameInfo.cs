@@ -100,9 +100,8 @@ public class GameInfo : MonoBehaviour
 		if(showDebug)
 		{
 			Rect rect = new Rect(0f, 0f, 150f, 200f);
-			GUI.Box(rect, "", skin.box);
 
-			GUILayout.BeginArea(rect);
+			GUILayout.BeginArea(rect, skin.box);
 
 			for(int i = 0; i < windowLines.Count; i++)
 			{
@@ -112,21 +111,13 @@ public class GameInfo : MonoBehaviour
 			GUILayout.EndArea();
 		}
 		
-		//Pause notification
-		if(gamePaused)
-		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 6f, 100f, 30f));
-			GUILayout.Box("Paused", skin.box);
-			GUILayout.EndArea();
-		}
-		
 		//Esc Menu buttons
 		if(showEscMenu)
 		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 50f, 100f, 100f));
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 75f, 100f, 150f), skin.box);
 
 			if(GUILayout.Button("Continue", skin.button)) { setMenuState(MenuState.closed); }
-			if(GUILayout.Button("Main Menu", skin.button)) { Application.LoadLevel("MainMenu"); }
+			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
 			if(GUILayout.Button("Help", skin.button)) { setMenuState(MenuState.intro); }
 			if(GUILayout.Button("Settings", skin.button)) { setMenuState(MenuState.settings); }
 			if(GUILayout.Button("Quit", skin.button)) { Application.Quit(); }
@@ -148,13 +139,13 @@ public class GameInfo : MonoBehaviour
 		//Game settings dialog
 		if(showSettings)
 		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height / 2f - 50f, 400f, 100f));
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height / 2f - 50f, 400f, 100f), skin.box);
 			GUILayout.BeginVertical();
 
 			//FOV
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("FOV", skin.label);
-			fov = GUILayout.HorizontalSlider(fov, 60f, 120f);
+			fov = GUILayout.HorizontalSlider(fov, 60f, 120f, skin.horizontalSlider, skin.horizontalSliderThumb);
 			fov = Mathf.RoundToInt(fov);
 			GUILayout.Label(fov.ToString(), skin.label);
 			GUILayout.EndHorizontal();
@@ -162,7 +153,7 @@ public class GameInfo : MonoBehaviour
 			//Sensitivity
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Mouse Sensitivity", skin.label);
-			mouseSpeed = GUILayout.HorizontalSlider(mouseSpeed, 0.5f, 10f);
+			mouseSpeed = GUILayout.HorizontalSlider(mouseSpeed, 0.5f, 10f, skin.horizontalSlider, skin.horizontalSliderThumb);
 			mouseSpeed = floor(mouseSpeed, 1);
 			GUILayout.Label(mouseSpeed.ToString(), skin.label);
 			GUILayout.EndHorizontal();
@@ -170,7 +161,7 @@ public class GameInfo : MonoBehaviour
 			//Volume
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Volume", skin.label);
-			volume = GUILayout.HorizontalSlider(volume, 0f, 1f);
+			volume = GUILayout.HorizontalSlider(volume, 0f, 1f, skin.horizontalSlider, skin.horizontalSliderThumb);
 			volume = floor(volume, 2);
 			GUILayout.Label(volume.ToString(), skin.label);
 			GUILayout.EndHorizontal();
@@ -186,9 +177,9 @@ public class GameInfo : MonoBehaviour
 
 		if(showEndLevel)
 		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 50f, 100f, 100f));
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 75f, 100f, 150f), skin.box);
 
-			if(GUILayout.Button("Main Menu", skin.button)) { Application.LoadLevel("MainMenu"); }
+			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
 			if(GUILayout.Button("Play Demo", skin.button)) { menuLocked = false; setMenuState(MenuState.demo); playLastDemo(); }
 			if(GUILayout.Button("Save Demo", skin.button)) { saveLastDemo(); }
 			if(GUILayout.Button("Restart", skin.button)) { menuLocked = false; reset(); }
@@ -220,6 +211,16 @@ public class GameInfo : MonoBehaviour
 		{
 			setMenuState(MenuState.inactive);
 		}
+	}
+
+	//Load a level, but inform other player if this is a server
+	public void loadLevel(string name)
+	{
+		if(myServer.isRunning())
+		{
+			//TODO
+		}
+		Application.LoadLevel(name);
 	}
 
 	//Plays a sound at the player position

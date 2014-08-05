@@ -84,13 +84,12 @@ public class MainMenu : MonoBehaviour
 	void OnGUI()
 	{
 		//Center
-		Rect centerMenuPos = new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 75f, 100f, 150f);
+		Rect centerMenuPos = new Rect(Screen.width / 2f - 75f, Screen.height / 2f - 75f, 150f, 150f);
 		
 		//Main buttons
 		if(drawMainButtons)
 		{
-			GUI.Box(centerMenuPos, "", skin.box);
-			GUILayout.BeginArea(centerMenuPos);
+			GUILayout.BeginArea(centerMenuPos, skin.box);
 			if(GUILayout.Button("New", skin.button)) { setState(State.newGame); }
 			if(GUILayout.Button("Load", skin.button)) { setState(State.loadGame); }
 			if(GUILayout.Button("Quit", skin.button)) { Application.Quit(); }
@@ -102,7 +101,7 @@ public class MainMenu : MonoBehaviour
 		{
 			GUI.Box(centerMenuPos, "", skin.box);
 			GUILayout.BeginArea(centerMenuPos);
-			GUILayout.Label("New");
+			GUILayout.Label("New", skin.label);
 			if(GUILayout.Button("1: " + saveNames[0], skin.button)) { selectedNewGameIndex = 1; setState(State.enterName); }
 			if(GUILayout.Button("2: " + saveNames[1], skin.button)) { selectedNewGameIndex = 2; setState(State.enterName); }
 			if(GUILayout.Button("3: " + saveNames[2], skin.button)) { selectedNewGameIndex = 3; setState(State.enterName); }
@@ -113,9 +112,8 @@ public class MainMenu : MonoBehaviour
 		//Load game
 		if(drawSelectLoadGame)
 		{
-			GUI.Box(centerMenuPos, "", skin.box);
-			GUILayout.BeginArea(centerMenuPos);
-			GUILayout.Label("Load");
+			GUILayout.BeginArea(centerMenuPos, skin.box);
+			GUILayout.Label("Load", skin.label);
 			if(GUILayout.Button("1: " + saveNames[0], skin.button)) { loadGame(1); }
 			if(GUILayout.Button("2: " + saveNames[1], skin.button)) { loadGame(2); }
 			if(GUILayout.Button("3: " + saveNames[2], skin.button)) { loadGame(3); }
@@ -132,11 +130,10 @@ public class MainMenu : MonoBehaviour
 			int counter = 0;
 
 			//Info box
-			GUI.Box(mapInfoPos, "", skin.box);
-			GUILayout.BeginArea(mapInfoPos);
+			GUILayout.BeginArea(mapInfoPos, skin.box);
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Current User: " + GameInfo.info.getCurrentSave().getPlayerName() + " | Select a map.");
-			if(GUILayout.Button("Back")) { setState(State.loadGame); }
+			GUILayout.Label("Current User: " + GameInfo.info.getCurrentSave().getPlayerName() + " | Select a map.", skin.label);
+			if(GUILayout.Button("Back", skin.button, GUILayout.MaxWidth(100f))) { setState(State.loadGame); }
 			GUILayout.EndHorizontal();
 			GUILayout.EndArea();
 

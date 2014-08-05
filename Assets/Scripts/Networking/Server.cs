@@ -7,6 +7,7 @@ public class Server : MonoBehaviour
 	private NetworkView view;
 	private Client myClient;
 	private List<RemotePlayer> playerList;
+	private bool running = false;
 
 	void Start()
 	{
@@ -29,14 +30,28 @@ public class Server : MonoBehaviour
 
 	public void StopServer()
 	{
+		running = false;
 		Network.Disconnect();
 		GameInfo.info.writeToConsole("Stopped server.");
 	}
 
 	void OnServerInitialized()
 	{
+		running = true;
 		myClient.JoinServer(true);
 		GameInfo.info.writeToConsole("Server initzialized.");
+	}
+
+	void OnLevelWasLoaded(int id)
+	{
+		if(running)
+		{
+			if(!myClient.isConnected())
+			{
+				myClient.JoinServer(true);
+			}
+			view.RPC("ChangeLevel", RPCMode.Others, id);
+		}
 	}
 
 	void OnPlayerConnected(NetworkPlayer player)
@@ -126,5 +141,10 @@ public class Server : MonoBehaviour
 			}
 		}
 		return null;
+	}
+
+	public bool isRunning()
+	{
+		return running;
 	}
 }

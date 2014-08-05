@@ -74,7 +74,7 @@ NavMeshSettings:
     widthInaccuracy: 16.666666
     heightInaccuracy: 10
   m_NavMesh: {fileID: 0}
---- !u!1001 &483196461
+--- !u!1001 &1219189150
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -130,7 +130,7 @@ Prefab:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-  m_PrefabInternal: {fileID: 483196461}
+  m_PrefabInternal: {fileID: 1219189150}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1453612872}
@@ -151,7 +151,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: 601e89f6bcc88ed408597f1676905559,
     type: 2}
-  m_PrefabInternal: {fileID: 483196461}
+  m_PrefabInternal: {fileID: 1219189150}
   m_GameObject: {fileID: 1453612870}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -169,7 +169,7 @@ MonoBehaviour:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400000, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-  m_PrefabInternal: {fileID: 483196461}
+  m_PrefabInternal: {fileID: 1219189150}
   m_GameObject: {fileID: 1453612870}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400002, guid: 601e89f6bcc88ed408597f1676905559,
     type: 2}
-  m_PrefabInternal: {fileID: 483196461}
+  m_PrefabInternal: {fileID: 1219189150}
   m_GameObject: {fileID: 1453612870}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -196,12 +196,13 @@ MonoBehaviour:
     y: 0
     width: 500
     height: 500
+  helpFile: {fileID: 4900000, guid: 933c605057a65b740bc28ac473924361, type: 3}
 --- !u!114 &1453612874
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400004, guid: 601e89f6bcc88ed408597f1676905559,
     type: 2}
-  m_PrefabInternal: {fileID: 483196461}
+  m_PrefabInternal: {fileID: 1219189150}
   m_GameObject: {fileID: 1453612870}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -213,7 +214,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400006, guid: 601e89f6bcc88ed408597f1676905559,
     type: 2}
-  m_PrefabInternal: {fileID: 483196461}
+  m_PrefabInternal: {fileID: 1219189150}
   m_GameObject: {fileID: 1453612870}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -226,7 +227,7 @@ NetworkView:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 14800000, guid: 601e89f6bcc88ed408597f1676905559,
     type: 2}
-  m_PrefabInternal: {fileID: 483196461}
+  m_PrefabInternal: {fileID: 1219189150}
   m_GameObject: {fileID: 1453612870}
   m_Enabled: 1
   m_StateSynchronization: 0
