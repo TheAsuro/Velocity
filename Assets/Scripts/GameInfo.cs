@@ -24,6 +24,7 @@ public class GameInfo : MonoBehaviour
 
 	//Save file stuff
 	private SaveData currentSave;
+	private bool savedLastDemo = false;
 	
 	//Debug window (top-left corner, toggle with f8)
 	private List<string> linePrefixes = new List<string>();
@@ -95,7 +96,7 @@ public class GameInfo : MonoBehaviour
 	void OnGUI()
 	{
 		//Debug info in the top-left corner
-		if(showDebug)
+		if(showDebug && playerObj != null)
 		{
 			Rect rect = new Rect(0f, 0f, 150f, 200f);
 
@@ -137,9 +138,19 @@ public class GameInfo : MonoBehaviour
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 75f, 100f, 150f), skin.box);
 
+			string saveDemoText;
+			if(!savedLastDemo)
+			{
+				saveDemoText = "Save Demo";
+			}
+			else
+			{
+				saveDemoText = "Saved!";
+			}
+
 			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
 			if(GUILayout.Button("Play Demo", skin.button)) { menuLocked = false; setMenuState(MenuState.demo); playLastDemo(); }
-			if(GUILayout.Button("Save Demo", skin.button)) { saveLastDemo(); }
+			if(GUILayout.Button(saveDemoText, skin.button)) { saveLastDemo(); }
 			if(GUILayout.Button("Restart", skin.button)) { menuLocked = false; reset(); }
 
 			GUILayout.EndArea();
@@ -158,6 +169,7 @@ public class GameInfo : MonoBehaviour
 	//Set menustate according to current level's worldinfo settings
 	void OnLevelWasLoaded(int level)
 	{
+		removeAllWindowLines();
 		loadPlayerSettings();
 		menuLocked = false;
 		WorldInfo wInfo = WorldInfo.info;
@@ -230,6 +242,7 @@ public class GameInfo : MonoBehaviour
 	{
 		stopDemo();
 		WorldInfo.info.reset();
+		savedLastDemo = false;
 		playerObj.GetComponent<PlayerEffects>().stopMoveToPos();
 		Movement.movement.spawnPlayer(WorldInfo.info.getFirstSpawn());
 		setMenuState(MenuState.closed);
@@ -302,6 +315,12 @@ public class GameInfo : MonoBehaviour
 	{
 		linePrefixes.Add(prefix);
 		windowLines.Add(stringFunction);
+	}
+
+	private void removeAllWindowLines()
+	{
+		linePrefixes.Clear();
+		windowLines.Clear();
 	}
 	
 	private void setGamePaused(bool value)
@@ -433,6 +452,7 @@ public class GameInfo : MonoBehaviour
 	{
 		#if UNITY_STANDALONE_WIN
 		recorder.getDemo().saveToFile(Application.dataPath);
+		savedLastDemo = true;
 		#endif
 	}
 

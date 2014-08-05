@@ -13,14 +13,7 @@ public class SaveData
 		playerName = pPlayerName;
 	}
 
-	//Creates a new instance with given data (for a later level)
-	public SaveData(int pIndex, string pPlayerName, string pPlayerLevel, Vector3 pPlayerPos)
-	{
-		index = pIndex;
-		playerName = pPlayerName;
-	}
-
-	//Creates a new instance from file saved at index
+	//Loads a new instance from file saved at index
 	public SaveData(int pIndex)
 	{
 		index = pIndex;

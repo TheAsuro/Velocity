@@ -88,10 +88,6 @@ public class RaceScript : MonoBehaviour
 					freeze(freezeDuration);
 				}
 			}
-			else
-			{
-				print("Entered wrong checkpoint!");
-			}
 		}
 	}
 	

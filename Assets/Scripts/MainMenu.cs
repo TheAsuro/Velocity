@@ -254,7 +254,9 @@ public class MainMenu : MonoBehaviour
 	private void newGame(int index)
 	{
 		SaveData data = new SaveData(index, nameFieldText);
+		data.save();
 		GameInfo.info.setCurrentSave(data);
+		setState(State.selectMap);
 	}
 
 	private void loadGame(int index)
