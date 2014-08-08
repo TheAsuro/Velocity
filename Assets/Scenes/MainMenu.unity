@@ -159,12 +159,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: {fileID: 11400000, guid: a2187eef99ad36e46b23c442d417131e, type: 2}
+  secretKey: NotActuallySecret
   menuLocked: 0
   soundNames:
   - jump
   soundClips:
   - {fileID: 8300000, guid: b7edf35dbb83dbc4e921f861592864a9, type: 3}
+  mouseSpeed: 1
+  fov: 90
   showHelp: 1
+  volume: .5
 --- !u!4 &1453612872
 Transform:
   m_ObjectHideFlags: 0

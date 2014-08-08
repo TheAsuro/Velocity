@@ -33,6 +33,10 @@ public class MainMenu : MonoBehaviour
 		GameInfo.info.setMenuState(GameInfo.MenuState.inactive);
 		GameInfo.info.menuLocked = true;
 		skin = GameInfo.info.skin;
+		if(GameInfo.info.getCurrentSave() != null)
+		{
+			setState(State.selectMap);
+		}
 	}
 
 	private void setState(State state)
