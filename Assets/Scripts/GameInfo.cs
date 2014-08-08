@@ -36,6 +36,11 @@ public class GameInfo : MonoBehaviour
 	public float fov = 90f;
 	public bool showHelp = true;
 	public float volume = 0.5f;
+	public bool anisotropicFiltering = false;
+	public float antiAliasing = 0f;
+	public float textureSize = 0f;
+	public float lightingLevel = 0f;
+	public float vsyncLevel = 0f;
 
 	//References
 	private GameObject playerObj;
@@ -389,13 +394,31 @@ public class GameInfo : MonoBehaviour
 		{
 			playerObj.audio.volume = volume;
 		}
+
+		AnisotropicFiltering filter = AnisotropicFiltering.Disable;
+		if(anisotropicFiltering) { filter = AnisotropicFiltering.ForceEnable; }
+
+		QualitySettings.anisotropicFiltering = filter;
+		QualitySettings.antiAliasing = (int)antiAliasing;
+		QualitySettings.masterTextureLimit = (int)textureSize;
+		QualitySettings.pixelLightCount = (int)lightingLevel;
+		QualitySettings.shadowCascades = (int)lightingLevel;
+		QualitySettings.vSyncCount = (int)vsyncLevel;
 	}
 
 	public void savePlayerSettings()
 	{
+		float anisoValue = 0f;
+		if(anisotropicFiltering) { anisoValue = 1f; }
+
 		PlayerPrefs.SetFloat("fov", fov);
 		PlayerPrefs.SetFloat("mouseSpeed", mouseSpeed);
 		PlayerPrefs.SetFloat("volume", volume);
+		PlayerPrefs.SetFloat("aniso", anisoValue);
+		PlayerPrefs.SetFloat("aa", antiAliasing);
+		PlayerPrefs.SetFloat("textureSize", textureSize);
+		PlayerPrefs.SetFloat("lighting", lightingLevel);
+		PlayerPrefs.SetFloat("vsync", vsyncLevel);
 
 		applySettings();
 	}
@@ -405,6 +428,11 @@ public class GameInfo : MonoBehaviour
 		fov = PlayerPrefs.GetFloat("fov");
 		mouseSpeed = PlayerPrefs.GetFloat("mouseSpeed");
 		volume = PlayerPrefs.GetFloat("volume");
+		anisotropicFiltering = (PlayerPrefs.GetFloat("aniso") == 1f);
+		antiAliasing = PlayerPrefs.GetFloat("aa");
+		textureSize = PlayerPrefs.GetFloat("textureSize");
+		lightingLevel = PlayerPrefs.GetFloat("lighting");
+		vsyncLevel = PlayerPrefs.GetFloat("vsync");
 
 		if(fov == 0f) { fov = 60f; }
 		if(mouseSpeed == 0f) { mouseSpeed = 1f; }

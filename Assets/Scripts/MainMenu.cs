@@ -188,40 +188,74 @@ public class MainMenu : MonoBehaviour
 
 		if(drawSettings)
 		{
-			//Start GUI
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height / 2f - 50f, 400f, 100f), skin.box);
-			GUILayout.BeginVertical();
+			//Settings box
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 225f, Screen.height / 2f - 125f, 450f, 250f), skin.box);
 
-			//FOV
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("FOV", skin.label);
+
+			//Descriptions
+			GUILayout.BeginVertical(skin.box);
+			GUILayout.Label("FOV", skin.customStyles[0]);
+			GUILayout.Label("Mouse Sensitivity", skin.customStyles[0]);
+			GUILayout.Label("Volume", skin.customStyles[0]);
+			GUILayout.Label("Anisotropic Filtering", skin.customStyles[0]);
+			GUILayout.Label("Antialiasing", skin.customStyles[0]);
+			GUILayout.Label("Texture Size", skin.customStyles[0]);
+			GUILayout.Label("Lighting Quality", skin.customStyles[0]);
+			GUILayout.Label("VSync Count", skin.customStyles[0]);
+			GUILayout.EndVertical();
+
+			//Sliders
+			GUILayout.BeginVertical(skin.box);
+
 			GameInfo.info.fov = GUILayout.HorizontalSlider(GameInfo.info.fov, 60f, 120f, skin.horizontalSlider, skin.horizontalSliderThumb);
 			GameInfo.info.fov = Mathf.RoundToInt(GameInfo.info.fov);
-			GUILayout.Label(GameInfo.info.fov.ToString(), skin.label);
-			GUILayout.EndHorizontal();
 
-			//Sensitivity
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Mouse Sensitivity", skin.label);
 			GameInfo.info.mouseSpeed = GUILayout.HorizontalSlider(GameInfo.info.mouseSpeed, 0.5f, 10f, skin.horizontalSlider, skin.horizontalSliderThumb);
 			GameInfo.info.mouseSpeed = floor(GameInfo.info.mouseSpeed, 1);
-			GUILayout.Label(GameInfo.info.mouseSpeed.ToString(), skin.label);
-			GUILayout.EndHorizontal();
-			
-			//Volume
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Volume", skin.label);
+
 			GameInfo.info.volume = GUILayout.HorizontalSlider(GameInfo.info.volume, 0f, 1f, skin.horizontalSlider, skin.horizontalSliderThumb);
 			GameInfo.info.volume = floor(GameInfo.info.volume, 2);
-			GUILayout.Label(GameInfo.info.volume.ToString(), skin.label);
-			GUILayout.EndHorizontal();
 
-			GUILayout.BeginHorizontal();
-			if(GUILayout.Button("OK", skin.button)) { GameInfo.info.savePlayerSettings(); setState(State.main); }
-			if(GUILayout.Button("Cancel", skin.button)) { setState(State.main); }
-			GUILayout.EndHorizontal();
+			float tempIn = 0f;
+			if(GameInfo.info.anisotropicFiltering) { tempIn = 1f; }
+			float tempOut = GUILayout.HorizontalSlider(tempIn, 0f, 1f, skin.horizontalSlider, skin.horizontalSliderThumb);
+			GameInfo.info.anisotropicFiltering = (tempOut > 0.5f);
+
+			GameInfo.info.antiAliasing = GUILayout.HorizontalSlider(GameInfo.info.antiAliasing, 0f, 8f, skin.horizontalSlider, skin.horizontalSliderThumb);
+			GameInfo.info.antiAliasing = roundAA(GameInfo.info.antiAliasing);
+
+			GameInfo.info.textureSize = GUILayout.HorizontalSlider(GameInfo.info.textureSize, 2f, 0f, skin.horizontalSlider, skin.horizontalSliderThumb);
+			GameInfo.info.textureSize = floor(GameInfo.info.textureSize, 0);
+
+			GameInfo.info.lightingLevel = GUILayout.HorizontalSlider(GameInfo.info.lightingLevel, 0f, 4f, skin.horizontalSlider, skin.horizontalSliderThumb);
+			GameInfo.info.lightingLevel = floor(GameInfo.info.lightingLevel, 0);
+
+			GameInfo.info.vsyncLevel = GUILayout.HorizontalSlider(GameInfo.info.vsyncLevel, 0f, 2f, skin.horizontalSlider, skin.horizontalSliderThumb);
+			GameInfo.info.vsyncLevel = floor(GameInfo.info.vsyncLevel, 0);
 
 			GUILayout.EndVertical();
+
+			//Value labels
+			GUILayout.BeginVertical(skin.box);
+			GUILayout.Label(GameInfo.info.fov.ToString(), skin.customStyles[1]);
+			GUILayout.Label(GameInfo.info.mouseSpeed.ToString(), skin.customStyles[1]);
+			GUILayout.Label(GameInfo.info.volume.ToString(), skin.customStyles[1]);
+			GUILayout.Label(translateBool(GameInfo.info.anisotropicFiltering), skin.customStyles[1]);
+			GUILayout.Label(GameInfo.info.antiAliasing.ToString(), skin.customStyles[1]);
+			GUILayout.Label(translateTextureSize(GameInfo.info.textureSize), skin.customStyles[1]);
+			GUILayout.Label(GameInfo.info.lightingLevel.ToString(), skin.customStyles[1]);
+			GUILayout.Label(GameInfo.info.vsyncLevel.ToString(), skin.customStyles[1]);
+			GUILayout.EndVertical();
+
+			GUILayout.EndHorizontal();
+
+			//Ok/Cancel buttons
+			GUILayout.BeginHorizontal();
+			if(GUILayout.Button("OK", skin.button)) { GameInfo.info.savePlayerSettings(); setState(State.main); }
+			if(GUILayout.Button("Cancel", skin.button)) { GameInfo.info.loadPlayerSettings(); setState(State.main); }
+			GUILayout.EndHorizontal();
+
 			GUILayout.EndArea();
 		}
 	}
@@ -255,6 +289,59 @@ public class MainMenu : MonoBehaviour
 		}
 	}
 
+	//Return rounded value acceptable for AA
+	private float roundAA(float input)
+	{
+		if(input < 1f)
+		{
+			return 0f;
+		}
+		else if(input < 3f)
+		{
+			return 2f;
+		}
+		else if(input < 6f)
+		{
+			return 4f;
+		}
+		else
+		{
+			return 8f;
+		}
+	}
+
+	private string translateBool(bool input)
+	{
+		if(input)
+		{
+			return "On";
+		}
+		else
+		{
+			return "Off";
+		}
+	}
+
+	private string translateTextureSize(float input)
+	{
+		if(input == 0)
+		{
+			return "Full Size";
+		}
+		else if(input == 1)
+		{
+			return "Half Size";
+		}
+		else if(input == 2)
+		{
+			return "Quarter Size";
+		}
+		else
+		{
+			return "Error";
+		}
+	}
+
 	private void newGame(int index)
 	{
 		SaveData data = new SaveData(index, nameFieldText);
@@ -268,7 +355,6 @@ public class MainMenu : MonoBehaviour
 		SaveData data = new SaveData(index);
 		GameInfo.info.setCurrentSave(data);
 		setState(State.selectMap);
-
 	}
 
 	private void loadMap(string name)
