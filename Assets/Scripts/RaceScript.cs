@@ -18,7 +18,7 @@ public class RaceScript : MonoBehaviour
 	private float unfreezeTime = float.PositiveInfinity;
 
 	private bool drawCountdown = false;
-	private string countdownText = ":^)";
+	private string countdownText;
 	private GUISkin skin;
 	
 	void Awake()
@@ -75,6 +75,7 @@ public class RaceScript : MonoBehaviour
 				GameInfo.info.stopDemo();
 				time = Time.time - startTime;
 				finished = true;
+				GameInfo.info.getCurrentSave().saveIfPersonalBest(time, Application.loadedLevelName);
 				if(freezeDuration > 0f)
 				{
 					freeze(freezeDuration);

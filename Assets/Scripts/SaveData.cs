@@ -25,6 +25,22 @@ public class SaveData
 		PlayerPrefs.SetString("PlayerName" + index.ToString(), playerName);
 	}
 
+	public bool saveIfPersonalBest(float time, string mapName)
+	{
+		float pbTime = getPersonalBest(mapName);
+		if(pbTime == 0f || time < pbTime)
+		{
+			PlayerPrefs.SetFloat(playerName + "_" + mapName, time);
+			return true;
+		}
+		return false;
+	}
+
+	public float getPersonalBest(string mapName)
+	{
+		return PlayerPrefs.GetFloat(playerName + "_" + mapName);
+	}
+
 	public string getPlayerName()
 	{
 		return playerName;

@@ -14,6 +14,7 @@ public class GameInfo : MonoBehaviour
 	private bool gamePaused = false;
 	private bool showIntro = false;
 	private bool showEscMenu = false;
+	private bool showLeaderboard = false;
 	private bool showEndLevel = false;
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
@@ -23,9 +24,10 @@ public class GameInfo : MonoBehaviour
 	public List<string> soundNames;
 	public List<AudioClip> soundClips;
 
-	//Save file stuff
+	//Stuff
 	private SaveData currentSave;
 	private bool savedLastDemo = false;
+	private Vector2 leaderboardScroll = Vector2.zero;
 	
 	//Debug window (top-left corner, toggle with f8)
 	private List<string> linePrefixes = new List<string>();
@@ -57,7 +59,8 @@ public class GameInfo : MonoBehaviour
 		intro = 2,
 		inactive = 3,
 		demo = 4,
-		endlevel = 5
+		leaderboard = 5,
+		endlevel = 6
 	}
 	
 	void Awake()
@@ -119,7 +122,7 @@ public class GameInfo : MonoBehaviour
 		//Esc Menu buttons
 		if(showEscMenu)
 		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 75f, 100f, 150f), skin.box);
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 75f, Screen.height / 2f - 75f, 150f, 150f), skin.box);
 
 			if(GUILayout.Button("Continue", skin.button)) { setMenuState(MenuState.closed); }
 			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
@@ -140,9 +143,29 @@ public class GameInfo : MonoBehaviour
 			GUILayout.EndArea();
 		}
 
+		if(showLeaderboard)
+		{
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 350f, Screen.height / 2f - 250f, 700f, 500f), skin.box);
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Box("Player: " + getCurrentSave().getPlayerName(), skin.box);
+			GUILayout.Box("Map: " + Application.loadedLevelName, skin.box);
+			GUILayout.Box("PB: " + getCurrentSave().getPersonalBest(Application.loadedLevelName).ToString(), skin.box);
+			GUILayout.Box("WR: " + "", skin.box);
+			GUILayout.EndHorizontal();
+
+			leaderboardScroll = GUILayout.BeginScrollView(leaderboardScroll, false, true, skin.horizontalScrollbar, skin.verticalScrollbar, skin.box);
+			GUILayout.Box("*HERE WILL BE LEADERBOARDS SOON*", skin.box);
+			GUILayout.EndScrollView();
+
+			if(GUILayout.Button("OK", skin.button, GUILayout.MaxHeight(30))) { menuLocked = false; setMenuState(MenuState.endlevel); }
+
+			GUILayout.EndArea();
+		}
+
 		if(showEndLevel)
 		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, Screen.height / 2f - 75f, 100f, 150f), skin.box);
+			GUILayout.BeginArea(new Rect(Screen.width / 2f - 75f, Screen.height / 2f - 75f, 150f, 150f), skin.box);
 
 			string saveDemoText;
 			if(!savedLastDemo)
@@ -155,6 +178,7 @@ public class GameInfo : MonoBehaviour
 			}
 
 			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
+			if(GUILayout.Button("Leaderboards", skin.button)) { menuLocked = false; setMenuState(MenuState.leaderboard); }
 			if(GUILayout.Button("Play Demo", skin.button)) { menuLocked = false; setMenuState(MenuState.demo); playLastDemo(); }
 			if(GUILayout.Button(saveDemoText, skin.button)) { saveLastDemo(); }
 			if(GUILayout.Button("Restart", skin.button)) { menuLocked = false; reset(); }
@@ -264,6 +288,7 @@ public class GameInfo : MonoBehaviour
 			setGamePaused(true);
 			showIntro = false;
 			showEscMenu = false;
+			showLeaderboard = false;
 			showEndLevel = false;
 			Screen.lockCursor = false;
 
@@ -286,6 +311,11 @@ public class GameInfo : MonoBehaviour
 					setGamePaused(false);
 					setMouseView(false);
 					Screen.lockCursor = true;
+					break;
+				case MenuState.leaderboard:
+					setMouseView(false);
+					showLeaderboard = true;
+					menuLocked = true;
 					break;
 				case MenuState.endlevel:
 					setGamePaused(false);
