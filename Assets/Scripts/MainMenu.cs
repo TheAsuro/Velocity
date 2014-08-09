@@ -110,8 +110,7 @@ public class MainMenu : MonoBehaviour
 		//New game
 		if(drawSelectNewGame)
 		{
-			GUI.Box(centerMenuPos, "", skin.box);
-			GUILayout.BeginArea(centerMenuPos);
+			GUILayout.BeginArea(centerMenuPos, skin.box);
 			GUILayout.Label("New", skin.label);
 			if(GUILayout.Button("1: " + saveNames[0], skin.button)) { selectedNewGameIndex = 1; setState(State.enterName); }
 			if(GUILayout.Button("2: " + saveNames[1], skin.button)) { selectedNewGameIndex = 2; setState(State.enterName); }
@@ -263,29 +262,14 @@ public class MainMenu : MonoBehaviour
 	//Returns rounded value of a float
 	private float floor(float input, int decimalsAfterPoint)
 	{
-		string floatText = input.ToString();
-		if(floatText.ToLower().Contains("e"))
+		if(decimalsAfterPoint <= 0)
 		{
-			return 0f;
+			return Mathf.Round(input);
 		}
 		else
 		{
-			if(floatText.Contains("."))
-			{
-				int decimalCount = floatText.Substring(floatText.IndexOf(".")).Length;
-				if(decimalCount <= decimalsAfterPoint)
-				{
-					return input;
-				}
-				else
-				{
-					return float.Parse(floatText.Substring(0, floatText.IndexOf(".") + decimalsAfterPoint + 1));
-				}
-			}
-			else
-			{
-				return input;
-			}
+			float temp = input * Mathf.Pow(10, decimalsAfterPoint);
+			return Mathf.Round(temp) / Mathf.Pow(10, decimalsAfterPoint);
 		}
 	}
 
