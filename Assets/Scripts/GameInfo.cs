@@ -239,7 +239,7 @@ public class GameInfo : MonoBehaviour
 	//Start a new multiplayer server
 	public void startServer(string password)
 	{
-		myServer.StartServer(2, 42069, true, password);
+		myServer.StartServer(2, 42069, password);
 	}
 
 	//Connect to a multiplayer server
@@ -497,21 +497,46 @@ public class GameInfo : MonoBehaviour
 		recorder.stopDemo();
 	}
 
-	public void playLastDemo()
+	public void playDemoFromFile(string fileName)
 	{
-		recorder.playDemo(recorder.getDemo(), demoPlayEnded);
+		#if UNITY_STANDALONE_WIN
+
+		stopDemo();
+
+		string fixedFileName = fileName;
+		if(!fixedFileName.ToLower().EndsWith(".vdem")) { fixedFileName += ".vdem"; }
+		
+		Demo myDemo = new Demo(Application.dataPath + "/" + fixedFileName);
+		if(!myDemo.didLoadFromFileFail())
+		{
+			recorder.playDemo(myDemo, consoleDemoPlayEnded);
+		}
+
+		#endif
 	}
 
-	private void demoPlayEnded()
+	public void playLastDemo()
+	{
+		recorder.playDemo(recorder.getDemo(), endLeveldemoPlayEnded);
+	}
+
+	private void endLeveldemoPlayEnded()
 	{
 		setMenuState(MenuState.endlevel);
+	}
+
+	private void consoleDemoPlayEnded()
+	{
+		setMenuState(MenuState.escmenu);
 	}
 
 	public void saveLastDemo()
 	{
 		#if UNITY_STANDALONE_WIN
+
 		recorder.getDemo().saveToFile(Application.dataPath);
 		savedLastDemo = true;
+
 		#endif
 	}
 

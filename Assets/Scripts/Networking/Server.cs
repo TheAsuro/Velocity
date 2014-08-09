@@ -16,12 +16,12 @@ public class Server : MonoBehaviour
 		view.observed = this;
 	}
 
-	public void StartServer(int connections, int port, bool useNat, string password)
+	public void StartServer(int connections, int port, string password)
 	{
 		playerList = new List<RemotePlayer>();
 		Network.incomingPassword = password;
 		Network.InitializeSecurity();
-		NetworkConnectionError error = Network.InitializeServer(connections, port, useNat);
+		NetworkConnectionError error = Network.InitializeServer(connections, port, !Network.HavePublicAddress());
 		if(error != NetworkConnectionError.NoError)
 		{
 			GameInfo.info.writeToConsole("Failed to start server!");

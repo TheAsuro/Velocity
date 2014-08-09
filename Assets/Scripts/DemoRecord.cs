@@ -120,6 +120,7 @@ public class DemoRecord : MonoBehaviour
 
 	public void playDemo(Demo demo, FinishedPlaying pFinishedPlaying)
 	{
+		tickList = demo.getTickList();
 		Respawn spawn = WorldInfo.info.getFirstSpawn();
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		ghostCamObj = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());

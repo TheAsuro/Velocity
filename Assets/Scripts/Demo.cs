@@ -10,30 +10,39 @@ public class Demo
 	private List<DemoTick> tickList;
 	private string playerName;
 	private string levelName;
+	private bool loadFromFileFailed = false;
 
 	#if UNITY_STANDALONE_WIN
 	public Demo(string file)
 	{
-		string content = GetString(System.IO.File.ReadAllBytes(file));
-
-		string[] lines = content.Split('\n');
-		playerName = lines[1];
-		levelName = lines[2];
-		tickList = new List<DemoTick>();
-
-		for(int i = 3; i < lines.Length; i++)
+		try
 		{
-			if(!lines[i].Equals(""))
+			string content = GetString(System.IO.File.ReadAllBytes(file));
+
+			string[] lines = content.Split('\n');
+			playerName = lines[1];
+			levelName = lines[2];
+			tickList = new List<DemoTick>();
+
+			for(int i = 3; i < lines.Length; i++)
 			{
-				string[] lineParts = lines[i].Split('|');
-				float time = float.Parse(lineParts[0]);
-				string[] posParts = lineParts[1].Split(';');
-				Vector3 pos = new Vector3(float.Parse(posParts[0]), float.Parse(posParts[1]), float.Parse(posParts[2]));
-				string[] rotParts = lineParts[2].Split(';');
-				Quaternion rot = new Quaternion(float.Parse(rotParts[0]), float.Parse(rotParts[1]), float.Parse(rotParts[2]), float.Parse(rotParts[3]));
-				DemoTick tick = new DemoTick(time, pos, rot);
-				tickList.Add(tick);
+				if(!lines[i].Equals(""))
+				{
+					string[] lineParts = lines[i].Split('|');
+					float time = float.Parse(lineParts[0]);
+					string[] posParts = lineParts[1].Split(';');
+					Vector3 pos = new Vector3(float.Parse(posParts[0]), float.Parse(posParts[1]), float.Parse(posParts[2]));
+					string[] rotParts = lineParts[2].Split(';');
+					Quaternion rot = new Quaternion(float.Parse(rotParts[0]), float.Parse(rotParts[1]), float.Parse(rotParts[2]), float.Parse(rotParts[3]));
+					DemoTick tick = new DemoTick(time, pos, rot);
+					tickList.Add(tick);
+				}
 			}
+		}
+		catch(FileNotFoundException ex)
+		{
+			GameInfo.info.writeToConsole("'" + file + "' is not a file!");
+			loadFromFileFailed = true;
 		}
 	}
 	#endif
@@ -43,6 +52,11 @@ public class Demo
 		tickList = pTickList;
 		playerName = pPlayerName;
 		levelName = pLevelName;
+	}
+
+	public bool didLoadFromFileFail()
+	{
+		return loadFromFileFailed;
 	}
 
 	public string getPlayerName()

@@ -40,7 +40,7 @@ public class Console : MonoBehaviour
 		GUILayout.TextArea(consoleText, skin.textArea, GUILayout.ExpandHeight(true));
 		GUILayout.EndScrollView();
 		GUI.SetNextControlName("cmd");
-		commandLine = GUILayout.TextField(commandLine);
+		commandLine = GUILayout.TextField(commandLine, skin.textField);
 
 		UnityEngine.Event e = UnityEngine.Event.current;
         if(e.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl().Equals("cmd") && !commandLine.Equals(""))
@@ -100,6 +100,16 @@ public class Console : MonoBehaviour
 					break;
 				case "stopserver": //Stops the current server
 					GameInfo.info.stopServer();
+					break;
+				case "playdemo":
+					if(commandParts.Length == 2)
+					{
+						GameInfo.info.playDemoFromFile(commandParts[1]);
+					}
+					else
+					{
+						writeToConsole("Usage: playdemo <demo name>");
+					}
 					break;
 				default:
 					writeToConsole("'" + command + "' is not a valid command!");
