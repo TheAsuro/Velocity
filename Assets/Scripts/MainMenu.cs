@@ -173,10 +173,9 @@ public class MainMenu : MonoBehaviour
 		//Enter name for new game
 		if(drawNameField)
 		{
-			GUI.Box(centerMenuPos, "", skin.box);
-			GUILayout.BeginArea(centerMenuPos);
+			GUILayout.BeginArea(centerMenuPos, skin.box);
 			GUILayout.Label("Enter name");
-			nameFieldText = GUILayout.TextField(nameFieldText);
+			nameFieldText = GUILayout.TextField(nameFieldText, skin.textField);
 			if(GUILayout.Button("Back", skin.button)) { setState(State.newGame); }
 			if(GUILayout.Button("OK", skin.button))
 			{

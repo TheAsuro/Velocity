@@ -93,9 +93,9 @@ public abstract class Movement : MonoBehaviour
 		//Add movement
 		Vector3 additionalVelocity = calculateAdditionalVelocity(input);
 
-		//Substract friction
+		//Friction and other stuff
 		Vector3 tempVelocity = rigidbody.velocity + additionalVelocity;
-		tempVelocity = calculateFriction(tempVelocity);
+		tempVelocity = overrideVelocity(tempVelocity);
 			
 		//Apply
 		if(!rigidbody.isKinematic)
@@ -111,11 +111,11 @@ public abstract class Movement : MonoBehaviour
 		return Vector3.zero;
 	}
 
-	public virtual Vector3 calculateFriction(Vector3 input)
+	public virtual Vector3 overrideVelocity(Vector3 input)
 	{
 		return input;
 	}
-	
+
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.tag.Equals("Teleporter"))

@@ -60,7 +60,8 @@ public class GameInfo : MonoBehaviour
 		inactive = 3,
 		demo = 4,
 		leaderboard = 5,
-		endlevel = 6
+		endlevel = 6,
+		othermenu = 7
 	}
 	
 	void Awake()
@@ -321,6 +322,9 @@ public class GameInfo : MonoBehaviour
 					setGamePaused(false);
 					setMouseView(false);
 					showEndLevel = true;
+					menuLocked = true;
+					break;
+				case MenuState.othermenu:
 					menuLocked = true;
 					break;
 			}
