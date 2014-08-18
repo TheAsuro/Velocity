@@ -1531,8 +1531,8 @@ Transform:
   m_PrefabInternal: {fileID: 989560909}
   m_GameObject: {fileID: 324169980}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 42.5, z: 0}
-  m_LocalScale: {x: 3, y: 5, z: 3}
+  m_LocalPosition: {x: 0, y: 45, z: 0}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 1150746305}
   m_RootOrder: 3
@@ -3120,7 +3120,7 @@ Transform:
   m_PrefabInternal: {fileID: 1299133416}
   m_GameObject: {fileID: 641810471}
   m_LocalRotation: {x: 0, y: .707106829, z: 0, w: .707106829}
-  m_LocalPosition: {x: 0, y: 43, z: 0}
+  m_LocalPosition: {x: 0, y: 44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1655782519}
@@ -3773,7 +3773,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 686579128}
   m_Layer: 0
-  m_Name: Button
+  m_Name: FloorButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3787,7 +3787,7 @@ Transform:
   m_GameObject: {fileID: 686579127}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12, y: 20, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 5}
+  m_LocalScale: {x: 1, y: 2, z: 6}
   m_Children:
   - {fileID: 1265550521}
   m_Father: {fileID: 713024458}
@@ -4460,6 +4460,9 @@ GameObject:
   - 4: {fileID: 843259146}
   - 114: {fileID: 843259145}
   - 114: {fileID: 843259144}
+  - 114: {fileID: 843259149}
+  - 114: {fileID: 843259148}
+  - 148: {fileID: 843259147}
   m_Layer: 0
   m_Name: GameInfo
   m_TagString: Untagged
@@ -4486,6 +4489,7 @@ MonoBehaviour:
     y: 0
     width: 500
     height: 500
+  helpFile: {fileID: 4900000, guid: 933c605057a65b740bc28ac473924361, type: 3}
 --- !u!114 &843259145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4499,12 +4503,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: {fileID: 11400000, guid: a2187eef99ad36e46b23c442d417131e, type: 2}
+  secretKey: NotActuallySecret
   menuLocked: 0
   soundNames:
   - jump
   soundClips:
   - {fileID: 8300000, guid: b7edf35dbb83dbc4e921f861592864a9, type: 3}
+  mouseSpeed: 1
+  fov: 90
   showHelp: 1
+  volume: .5
+  anisotropicFiltering: 0
+  antiAliasing: 0
+  textureSize: 0
+  lightingLevel: 0
+  vsyncLevel: 0
 --- !u!4 &843259146
 Transform:
   m_ObjectHideFlags: 0
@@ -4517,6 +4530,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+--- !u!148 &843259147
+NetworkView:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 14800000, guid: 601e89f6bcc88ed408597f1676905559,
+    type: 2}
+  m_PrefabInternal: {fileID: 975166158}
+  m_GameObject: {fileID: 843259143}
+  m_Enabled: 1
+  m_StateSynchronization: 0
+  m_Observed: {fileID: 0}
+  m_ViewID:
+    m_ID: 1
+    m_Type: 1
+--- !u!114 &843259148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400004, guid: 601e89f6bcc88ed408597f1676905559,
+    type: 2}
+  m_PrefabInternal: {fileID: 975166158}
+  m_GameObject: {fileID: 843259143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61ae75c41d86d75408cf392b378e1992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &843259149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400006, guid: 601e89f6bcc88ed408597f1676905559,
+    type: 2}
+  m_PrefabInternal: {fileID: 975166158}
+  m_GameObject: {fileID: 843259143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc632e2343e225d4b8909be6c34b04cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostPrefab: {fileID: 100000, guid: a4a93747b7895864ba8bcfb521e1e547, type: 2}
 --- !u!1001 &854006768
 Prefab:
   m_ObjectHideFlags: 0
@@ -5206,7 +5257,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 7ff41760f6b385d4c85584557aaedafe, type: 2}
       propertyPath: m_LocalScale.z
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7ff41760f6b385d4c85584557aaedafe, type: 2}
@@ -5486,7 +5537,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 42.5
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -5526,7 +5577,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 2e1276447c2f36945b95df262afeb94b, type: 2}
       propertyPath: isEnd
@@ -6335,7 +6386,7 @@ GameObject:
   - 23: {fileID: 1265550523}
   - 114: {fileID: 1265550522}
   m_Layer: 12
-  m_Name: DoorTrigger
+  m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6469,7 +6520,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 5cb025783319fe14b9119fbbe02c92bb, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 43
+      value: 44
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 5cb025783319fe14b9119fbbe02c92bb, type: 2}
       propertyPath: m_LocalPosition.z
@@ -7589,6 +7640,7 @@ GameObject:
   - 92: {fileID: 1655782517}
   - 114: {fileID: 1655782516}
   - 114: {fileID: 1655782515}
+  - 114: {fileID: 1655782520}
   m_Layer: 9
   m_Name: Camera
   m_TagString: MainCamera
@@ -7681,6 +7733,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 641810472}
   m_RootOrder: 0
+--- !u!114 &1655782520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400006, guid: 5cb025783319fe14b9119fbbe02c92bb,
+    type: 2}
+  m_PrefabInternal: {fileID: 1299133416}
+  m_GameObject: {fileID: 1655782514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0686038cba7c76e44ab2f8b8c99034b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectLayers:
+    serializedVersion: 2
+    m_Bits: 8192
 --- !u!1 &1665157608
 GameObject:
   m_ObjectHideFlags: 0

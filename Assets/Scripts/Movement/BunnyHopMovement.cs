@@ -63,6 +63,11 @@ public class BunnyHopMovement : Movement
 		return velocity;
 	}
 
+	public void clearCollisionList()
+	{
+		collidingObjects.Clear();
+	}
+
 	private float getJumpVelocity(float yVelocity)
 	{
 		bool onGround = checkGround();

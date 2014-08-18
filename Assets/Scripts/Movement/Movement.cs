@@ -22,6 +22,7 @@ public abstract class Movement : MonoBehaviour
 	private bool allowCrouch = true;
 	private bool allowMoveHorizontal = true;
 	private bool allowMoveVertical = true;
+	private bool frozen = false;
 
 	private bool jumpKeyPressed = false;
 	private bool respawnKeyPressed = false;
@@ -45,42 +46,60 @@ public abstract class Movement : MonoBehaviour
 	
 	void Update()
 	{
-		//Set key states
-		if(Input.GetButton("Jump") && allowJump)
-			{ jumpKeyPressed = true; } else { jumpKeyPressed = false; }
-		if(Input.GetButtonDown("Respawn") && allowRespawn)
-			{ respawnKeyPressed = true; } else { respawnKeyPressed = false; }
-		if(Input.GetButtonDown("Reset") && allowReset)
-			{ resetKeyPressed = true; } else { resetKeyPressed = false; }
-		if(Input.GetButton("Crouch") && allowCrouch)
-			{ crouchKeyPressed = true; } else { crouchKeyPressed = false; }
-		
-		if(jumpKeyPressed)
+		if(!frozen)
 		{
-			lastJumpPress = Time.time;
-		}
-		
-		if(respawnKeyPressed)
-		{
-			respawnPlayer();
-		}
-		if(resetKeyPressed)
-		{
-			GameInfo.info.reset();
-		}
-		if(crouchKeyPressed)
-		{
-			setCrouched(true);
-		}
-		else
-		{
-			setCrouched(false);
+			//Set key states
+			if(Input.GetButton("Jump") && allowJump)
+				{ jumpKeyPressed = true; } else { jumpKeyPressed = false; }
+			if(Input.GetButtonDown("Respawn") && allowRespawn)
+				{ respawnKeyPressed = true; } else { respawnKeyPressed = false; }
+			if(Input.GetButtonDown("Reset") && allowReset)
+				{ resetKeyPressed = true; } else { resetKeyPressed = false; }
+			if(Input.GetButton("Crouch") && allowCrouch)
+				{ crouchKeyPressed = true; } else { crouchKeyPressed = false; }
+			
+			if(jumpKeyPressed)
+			{
+				lastJumpPress = Time.time;
+			}
+			
+			if(respawnKeyPressed)
+			{
+				respawnPlayer();
+			}
+			if(resetKeyPressed)
+			{
+				GameInfo.info.reset();
+			}
+			if(crouchKeyPressed)
+			{
+				setCrouched(true);
+			}
+			else
+			{
+				setCrouched(false);
+			}
 		}
 	}
 
 	public virtual void FixedMoveUpdate()
 	{
 
+	}
+
+	public void freeze()
+	{
+		frozen = true;
+		rigidbody.isKinematic = true;
+	}
+
+	public void unfreeze()
+	{
+		rigidbody.isKinematic = false;
+		//TODO find less hacky way of updating the rigidbody
+		rigidbody.useGravity = false;
+		rigidbody.useGravity = true;
+		frozen = false;
 	}
 
 	void FixedUpdate()

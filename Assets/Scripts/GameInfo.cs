@@ -275,7 +275,9 @@ public class GameInfo : MonoBehaviour
 		WorldInfo.info.reset();
 		savedLastDemo = false;
 		playerObj.GetComponent<PlayerEffects>().stopMoveToPos();
-		Movement.movement.spawnPlayer(WorldInfo.info.getFirstSpawn());
+		Movement move = Movement.movement;
+		move.spawnPlayer(WorldInfo.info.getFirstSpawn());
+		((BunnyHopMovement)move).clearCollisionList();
 		setMenuState(MenuState.closed);
 		startDemo();
 	}

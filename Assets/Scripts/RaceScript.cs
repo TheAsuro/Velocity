@@ -95,17 +95,14 @@ public class RaceScript : MonoBehaviour
 	private void freeze(float duration)
 	{
 		frozen = true;
-		rigidbody.isKinematic = true;
+		Movement.movement.freeze();
 		unfreezeTime = Time.time + duration;
 	}
 	
 	private void unfreeze()
 	{
 		frozen = false;
-		rigidbody.isKinematic = false;
-		//TODO find less hacky way of updating the rigidbody
-		rigidbody.useGravity = false;
-		rigidbody.useGravity = true;
+		Movement.movement.unfreeze();
 	}
 	
 	private string getFrozenString()
