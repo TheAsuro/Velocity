@@ -31,7 +31,7 @@ public class BunnyHopMovement : Movement
 		acceleratorForce = Vector3.zero;
 
 		//Apply jump
-		correctVelocity = new Vector3(correctVelocity.x, correctVelocity.y + getJumpVelocity(rigidbody.velocity.y), correctVelocity.z);
+		correctVelocity += getJumpVelocity(correctVelocity.y);
 
 		//Return
 		return correctVelocity;
@@ -68,10 +68,10 @@ public class BunnyHopMovement : Movement
 		collidingObjects.Clear();
 	}
 
-	private float getJumpVelocity(float yVelocity)
+	private Vector3 getJumpVelocity(float yVelocity)
 	{
 		bool onGround = checkGround();
-		float value = 0f;
+		Vector3 jumpVelocity = Vector3.zero;
 
 		//Calculate jump
 		if(Time.time < lastJumpPress + jumpPressDuration && yVelocity < jumpForce && onGround)
@@ -79,14 +79,10 @@ public class BunnyHopMovement : Movement
 			lastJumpPress = -1f;
 			frameCounter = 0;
 			GameInfo.info.playSound("jump");
-			value = jumpForce - yVelocity;
-		}
-		else
-		{
-			value = 0f;
+			jumpVelocity = collisionAverageNormal * jumpForce;
 		}
 
-		return value;
+		return jumpVelocity;
 	}
 
 	public override void FixedMoveUpdate()

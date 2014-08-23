@@ -29,6 +29,8 @@ public abstract class Movement : MonoBehaviour
 	private bool resetKeyPressed = false;
 	private bool crouchKeyPressed = false;
 
+	public Vector3 collisionAverageNormal = Vector3.zero;
+
 	void Awake()
 	{
 		movement = this;
@@ -195,6 +197,9 @@ public abstract class Movement : MonoBehaviour
 	//rayCount: number of vertices the "circle" will have
 	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount)
 	{
+		bool tempHit = false;
+		collisionAverageNormal = Vector3.zero;
+
 		for(int i = 0; i < rayCount; i++)
 		{
 			Vector3 radius = Quaternion.Euler(new Vector3(0f, i * (360f / rayCount), 0f)) * radiusVector;
@@ -206,10 +211,21 @@ public abstract class Movement : MonoBehaviour
 			//Collided with something
 			if(hasHit)
 			{
-				//Maybe do some angle calculations here to avoid jumping up steep slopes?
-				return true;
+				tempHit = true;
+
+				if(collisionAverageNormal == Vector3.zero)
+				{
+					collisionAverageNormal = hit.normal;
+				}
+				else
+				{
+					collisionAverageNormal = (collisionAverageNormal + hit.normal) / 2f;
+				}
 			}
 		}
+
+
+		if(tempHit) { return true; }
 		return false;
 	}
 	
