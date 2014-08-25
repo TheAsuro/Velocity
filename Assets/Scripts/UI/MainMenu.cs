@@ -5,11 +5,11 @@ using System.Collections.Generic;
 public class MainMenu : MonoBehaviour
 {
 	public List<string> mapNames = new List<string>();
+	public DrawMapButtons buttonDrawThingy;
 
-	private bool drawSelectMap = false;
 	private string nameFieldText = "name";
 	private int selectedIndex = -1;
-	private GUISkin skin;
+	private string selectedMap = "";
 
 	private List<string> saveNames = new List<string>();
 
@@ -35,7 +35,6 @@ public class MainMenu : MonoBehaviour
 	{
 		GameInfo.info.setMenuState(GameInfo.MenuState.inactive);
 		GameInfo.info.menuLocked = true;
-		skin = GameInfo.info.skin;
 		if(GameInfo.info.getCurrentSave() != null)
 		{
 			setState(State.selectMap);
@@ -99,6 +98,8 @@ public class MainMenu : MonoBehaviour
 				break;
 			case State.selectMap:
 				selectMapMenuObj.SetActive(true);
+				buttonDrawThingy.clearButtons();
+				buttonDrawThingy.addButtons(this, mapNames);
 				break;
 			case State.settings:
 				settingsMenuObj.SetActive(true);
@@ -139,51 +140,10 @@ public class MainMenu : MonoBehaviour
 		setSlider("TextureSizeRow", GameInfo.info.textureSize);
 	}
 
+	//Set a specific slider to a value
 	private void setSlider(string rowName, float value)
 	{
 		settingsMenuObj.transform.Find(rowName).Find("Slider").gameObject.GetComponent<UnityEngine.UI.Slider>().value = value;
-	}
-
-	void OnGUI()
-	{
-		//select map
-		if(drawSelectMap)
-		{
-			Rect mapSelectPos = new Rect(Screen.width / 4f, Screen.height / 2f - 100f, Screen.width / 2f, 200f);
-			Rect mapInfoPos = new Rect(mapSelectPos.x, mapSelectPos.y - 35f, mapSelectPos.width, 30f);
-			float boxWidth = mapSelectPos.width / 3f;
-			int counter = 0;
-
-			//Info box
-			GUILayout.BeginArea(mapInfoPos, skin.box);
-			GUILayout.BeginHorizontal();
-			GUILayout.Label("Current User: " + GameInfo.info.getCurrentSave().getPlayerName() + " | Select a map.", skin.label);
-			if(GUILayout.Button("Back", skin.button, GUILayout.MaxWidth(100f))) { setState(State.loadGame); }
-			GUILayout.EndHorizontal();
-			GUILayout.EndArea();
-
-			//Big box for the list of maps
-			GUI.Box(mapSelectPos, "", skin.box);
-
-			//Create three coloumns
-			for(int i = 0; i < 3; i++)
-			{
-				Rect boxRect = new Rect(mapSelectPos.x + i*boxWidth, mapSelectPos.y, boxWidth, mapSelectPos.height);
-				GUILayout.BeginArea(boxRect);
-
-				//Fill them with buttons
-				for(int j = 0; j < 3; j++)
-				{
-					if(counter + j < mapNames.Count)
-					{
-						if(GUILayout.Button(mapNames[counter + j], skin.button)) { loadMap(mapNames[counter + j]); }
-					}
-				}
-				counter += 3;
-
-				GUILayout.EndArea();
-			}
-		}
 	}
 
 	private float boolToFloat(bool input)
@@ -220,6 +180,14 @@ public class MainMenu : MonoBehaviour
 		setState(State.selectMap);
 	}
 
+	public void loadMap()
+	{
+		if(!selectedMap.Equals(""))
+		{
+			loadMap(selectedMap);
+		}
+	}
+
 	private void loadMap(string name)
 	{
 		Application.LoadLevel(name);
@@ -228,5 +196,10 @@ public class MainMenu : MonoBehaviour
 	public void setSelectedIndex(string value)
 	{
 		selectedIndex = int.Parse(value);
+	}
+
+	public void setSelectedMap(string name)
+	{
+		selectedMap = name;
 	}
 }
