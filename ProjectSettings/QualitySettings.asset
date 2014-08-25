@@ -72,7 +72,7 @@ QualitySettings:
     shadowCascades: 4
     shadowDistance: 250
     blendWeights: 4
-    textureQuality: 0
+    textureQuality: 2
     anisotropicTextures: 2
     antiAliasing: 8
     softParticles: 1
@@ -82,11 +82,4 @@ QualitySettings:
     maximumLODLevel: 0
     particleRaycastBudget: 4096
     excludedTargetPlatforms: []
-  m_PerPlatformDefaultQuality:
-    Android: 0
-    BlackBerry: 0
-    Standalone: 0
-    WP8: 0
-    Web: 0
-    Windows Store Apps: 0
-    iPhone: 0
+  m_PerPlatformDefaultQuality: {}

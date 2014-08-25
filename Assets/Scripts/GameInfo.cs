@@ -128,7 +128,7 @@ public class GameInfo : MonoBehaviour
 			if(GUILayout.Button("Continue", skin.button)) { setMenuState(MenuState.closed); }
 			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
 			if(GUILayout.Button("Help", skin.button)) { setMenuState(MenuState.intro); }
-			if(GUILayout.Button("Quit", skin.button)) { Application.Quit(); }
+			if(GUILayout.Button("Quit", skin.button)) { quit(); }
 
 			GUILayout.EndArea();
 		}
@@ -280,6 +280,12 @@ public class GameInfo : MonoBehaviour
 		((BunnyHopMovement)move).clearCollisionList();
 		setMenuState(MenuState.closed);
 		startDemo();
+	}
+
+	//Leave the game
+	public void quit()
+	{
+		Application.Quit();
 	}
 
 	//Menu state manager
@@ -434,9 +440,11 @@ public class GameInfo : MonoBehaviour
 		AnisotropicFiltering filter = AnisotropicFiltering.Disable;
 		if(anisotropicFiltering) { filter = AnisotropicFiltering.ForceEnable; }
 
+		int textureLimit = 2 - (int)textureSize;
+
 		QualitySettings.anisotropicFiltering = filter;
 		QualitySettings.antiAliasing = (int)antiAliasing;
-		QualitySettings.masterTextureLimit = (int)textureSize;
+		QualitySettings.masterTextureLimit = textureLimit;
 		QualitySettings.pixelLightCount = (int)lightingLevel;
 		QualitySettings.shadowCascades = (int)lightingLevel;
 		QualitySettings.vSyncCount = (int)vsyncLevel;
