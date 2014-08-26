@@ -35,10 +35,6 @@ public class MainMenu : MonoBehaviour
 	{
 		GameInfo.info.setMenuState(GameInfo.MenuState.inactive);
 		GameInfo.info.menuLocked = true;
-		if(GameInfo.info.getCurrentSave() != null)
-		{
-			setState(State.selectMap);
-		}
 
 		//Find canvas in children
 		GameObject canvas = transform.Find("Canvas").gameObject;

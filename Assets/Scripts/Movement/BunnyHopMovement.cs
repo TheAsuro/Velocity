@@ -31,7 +31,7 @@ public class BunnyHopMovement : Movement
 		acceleratorForce = Vector3.zero;
 
 		//Apply jump
-		correctVelocity += getJumpVelocity(correctVelocity.y);
+		correctVelocity += getJumpVelocity(rigidbody.velocity.y);
 
 		//Return
 		return correctVelocity;
@@ -79,8 +79,10 @@ public class BunnyHopMovement : Movement
 			lastJumpPress = -1f;
 			frameCounter = 0;
 			GameInfo.info.playSound("jump");
-			jumpVelocity = collisionAverageNormal * jumpForce;
+			jumpVelocity = collisionAverageNormal * (jumpForce - yVelocity);
 		}
+
+		print("Vertical velocity = " + yVelocity);
 
 		return jumpVelocity;
 	}
@@ -151,12 +153,12 @@ public class BunnyHopMovement : Movement
 	void OnTriggerStay(Collider other)
 	{
 		if(other.gameObject.tag.Equals("JumpPad"))
-			{
-				JumpPad pad = other.gameObject.GetComponent<JumpPad>();
-				usePadX = pad.useX;
-				usePadY = pad.useY;
-				usePadZ = pad.useZ;
-				jumpPadForce = pad.jumpVector;
-			}
+		{
+			JumpPad pad = other.gameObject.GetComponent<JumpPad>();
+			usePadX = pad.useX;
+			usePadY = pad.useY;
+			usePadZ = pad.useZ;
+			jumpPadForce = pad.jumpVector;
+		}
 	}
 }

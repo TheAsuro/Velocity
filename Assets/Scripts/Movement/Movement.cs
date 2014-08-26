@@ -224,7 +224,6 @@ public abstract class Movement : MonoBehaviour
 			}
 		}
 
-
 		if(tempHit) { return true; }
 		return false;
 	}
