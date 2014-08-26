@@ -65,56 +65,235 @@ public class Console : MonoBehaviour
 					writeToConsole(helpFile.text);
 					break;
 				case "quit": //Quit the game
-					Application.Quit();
+					GameInfo.info.quit();
 					break;
-				case "connect": //Connect to a server
-					if(commandParts.Length == 3)
-					{
-						GameInfo.info.connectToServer(commandParts[1], int.Parse(commandParts[2]), "");
-					}
-					else if(commandParts.Length == 4)
-					{
-						GameInfo.info.connectToServer(commandParts[1], int.Parse(commandParts[2]), commandParts[3]);
-					}
-					else
-					{
-						writeToConsole("Usage: connect <ip> <port> (<password>)");
-					}
+				case "forcequit":
+					forceQuitCommand(commandParts);
 					break;
-				case "newserver": //Create a new multiplayer server
-					if(commandParts.Length == 1)
-					{
-						GameInfo.info.startServer("");
-					}
-					else if(commandParts.Length == 2)
-					{
-						GameInfo.info.startServer(commandParts[1]);
-					}
-					else
-					{
-						writeToConsole("Usage: newserver (<password>)");
-					}
+				case "connect":
+					connectCommand(commandParts);
 					break;
-				case "disconnect": //Leave the current server
-					GameInfo.info.disconnectFromServer();
+				case "newserver":
+					newServerCommand(commandParts);
 					break;
-				case "stopserver": //Stops the current server
-					GameInfo.info.stopServer();
+				case "disconnect":
+					disconnectCommand(commandParts);
+					break;
+				case "stopserver":
+					stopServerCommand(commandParts);
 					break;
 				case "playdemo":
-					if(commandParts.Length == 2)
-					{
-						GameInfo.info.playDemoFromFile(commandParts[1]);
-					}
-					else
-					{
-						writeToConsole("Usage: playdemo <demo name>");
-					}
+					playDemoCommand(commandParts);
+					break;
+				case "move_friction":
+					frictionCommand(commandParts);
+					break;
+				case "move_speed":
+					speedCommand(commandParts);
+					break;
+				case "move_maxspeed":
+					maxSpeedCommand(commandParts);
+					break;
+				case "move_jumpheight":
+					jumpHeightCommand(commandParts);
+					break;
+				case "move_gravity":
+					gravityCommand(commandParts);
 					break;
 				default:
 					writeToConsole("'" + command + "' is not a valid command!");
 					break;
 			}
+		}
+	}
+
+	//Quits the game no matter what
+	private void forceQuitCommand(string[] input)
+	{
+		Application.Quit();
+	}
+
+	//Connect to a server
+	private void connectCommand(string[] input)
+	{
+		if(input.Length == 3)
+		{
+			GameInfo.info.connectToServer(input[1], int.Parse(input[2]), "");
+		}
+		else if(input.Length == 4)
+		{
+			GameInfo.info.connectToServer(input[1], int.Parse(input[2]), input[3]);
+		}
+		else
+		{
+			writeToConsole("Usage: connect <ip> <port> (password)");
+		}
+	}
+
+	//Leave the current server
+	private void disconnectCommand(string[] input)
+	{
+		GameInfo.info.disconnectFromServer();
+	}
+
+	//Create a new multiplayer server
+	private void newServerCommand(string[] input)
+	{
+		if(input.Length == 1)
+		{
+			GameInfo.info.startServer("");
+		}
+		else if(input.Length == 2)
+		{
+			GameInfo.info.startServer(input[1]);
+		}
+		else
+		{
+			writeToConsole("Usage: newserver (password)");
+		}
+	}
+
+	//Stops the current server
+	private void stopServerCommand(string[] input)
+	{
+		GameInfo.info.stopServer();
+	}
+
+	//Play a demo from a file
+	private void playDemoCommand(string[] input)
+	{
+		if(input.Length == 2)
+		{
+			GameInfo.info.playDemoFromFile(input[1]);
+		}
+		else
+		{
+			writeToConsole("Usage: playdemo <demo name>");
+		}
+	}
+
+	private void frictionCommand(string[] input)
+	{
+		if(Movement.movement == null)
+		{
+			writeToConsole("No movement loaded!");
+			return;
+		}
+		if(input.Length == 1)
+		{
+			writeToConsole("Current friction multiplier: " + Movement.movement.frictionMultiplier);
+		}
+		else if(input.Length == 2)
+		{
+			float newVal;
+			if(float.TryParse(input[1], out newVal))
+			{
+				Movement.movement.frictionMultiplier = newVal;
+			}
+		}
+		else
+		{
+			writeToConsole("Usage: move_friction (new friction multiplier)");
+		}
+	}
+
+	private void speedCommand(string[] input)
+	{
+		if(Movement.movement.Equals(null))
+		{
+			writeToConsole("No movement loaded!");
+			return;
+		}
+		if(input.Length == 1)
+		{
+			writeToConsole("Current input multiplier: " + Movement.movement.speed);
+		}
+		else if(input.Length == 2)
+		{
+			float newVal;
+			if(float.TryParse(input[1], out newVal))
+			{
+				Movement.movement.speed = newVal;
+			}
+		}
+		else
+		{
+			writeToConsole("Usage: move_speed (new input speed)");
+		}
+	}
+
+	private void maxSpeedCommand(string[] input)
+	{
+		if(Movement.movement.Equals(null))
+		{
+			writeToConsole("No movement loaded!");
+			return;
+		}
+		if(input.Length == 1)
+		{
+			writeToConsole("Current speed limit: " + Movement.movement.maxSpeed);
+		}
+		else if(input.Length == 2)
+		{
+			float newVal;
+			if(float.TryParse(input[1], out newVal))
+			{
+				if(newVal == 0f)
+				{
+					writeToConsole("Value can not be 0!");
+					return;
+				}
+				Movement.movement.maxSpeed = newVal;
+			}
+		}
+		else
+		{
+			writeToConsole("Usage: move_maxspeed (new max speed)");
+		}
+	}
+
+	private void jumpHeightCommand(string[] input)
+	{
+		if(Movement.movement.Equals(null))
+		{
+			writeToConsole("No movement loaded!");
+			return;
+		}
+		if(input.Length == 1)
+		{
+			writeToConsole("Current jump height: " + Movement.movement.jumpForce);
+		}
+		else if(input.Length == 2)
+		{
+			float newVal;
+			if(float.TryParse(input[1], out newVal))
+			{
+				Movement.movement.jumpForce = newVal;
+			}
+		}
+		else
+		{
+			writeToConsole("Usage: move_jumpheight (new jump height)");
+		}
+	}
+
+	private void gravityCommand(string[] input)
+	{
+		if(input.Length == 1)
+		{
+			writeToConsole("Current gravity: " + Physics.gravity.y);
+		}
+		else if(input.Length == 2)
+		{
+			float newVal;
+			if(float.TryParse(input[1], out newVal))
+			{
+				Physics.gravity = new Vector3(0f, newVal, 0f);
+			}
+		}
+		else
+		{
+			writeToConsole("Usage: move_gravity (new gravity)");
 		}
 	}
 

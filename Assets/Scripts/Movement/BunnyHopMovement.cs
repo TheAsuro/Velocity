@@ -82,8 +82,6 @@ public class BunnyHopMovement : Movement
 			jumpVelocity = collisionAverageNormal * (jumpForce - yVelocity);
 		}
 
-		print("Vertical velocity = " + yVelocity);
-
 		return jumpVelocity;
 	}
 
