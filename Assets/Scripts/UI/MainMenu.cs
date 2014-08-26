@@ -198,4 +198,9 @@ public class MainMenu : MonoBehaviour
 	{
 		selectedMap = name;
 	}
+
+	public void setSelectedButton(GameObject button)
+	{
+		buttonDrawThingy.setSelectedButton(button);
+	}
 }

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class DrawMapButtons : MonoBehaviour
 {
 	public GameObject buttonPrefab;
+	public Sprite selectedSprite;
+	public Sprite unselectedSprite;
 
 	private List<GameObject> myButtons = new List<GameObject>();
 
@@ -43,5 +45,14 @@ public class DrawMapButtons : MonoBehaviour
 			GameObject.Destroy(button);
 		}
 		myButtons.Clear();
+	}
+
+	public void setSelectedButton(GameObject button)
+	{
+		foreach(GameObject otherButton in myButtons)
+		{
+			otherButton.GetComponent<UnityEngine.UI.Image>().overrideSprite = unselectedSprite;
+		}
+		button.GetComponent<UnityEngine.UI.Image>().overrideSprite = selectedSprite;
 	}
 }

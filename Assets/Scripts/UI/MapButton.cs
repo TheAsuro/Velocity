@@ -12,6 +12,7 @@ public class MapButton : MonoBehaviour
 
 	public void click()
 	{
+		menu.setSelectedButton(transform.parent.gameObject);
 		menu.setSelectedMap(GetComponent<UnityEngine.UI.Text>().text);
 	}
 }
