@@ -17,14 +17,24 @@ public class BunnyHopMovement : Movement
 		//Get input and make it a vector
 		Vector3 camRotation = new Vector3(0f, camObj.transform.rotation.eulerAngles.y, camObj.transform.rotation.eulerAngles.z);
 		Vector3 inputVelocity = Quaternion.Euler(camRotation) * new Vector3(input.x * speed, 0f, input.y * speed);
-		Vector3 additionalVelocity = new Vector3(inputVelocity.x, 0f, inputVelocity.z);
+
+		//Ignore vertical component of rotated input
+		Vector3 alignedInputVelocity = new Vector3(inputVelocity.x, 0f, inputVelocity.z) * Time.deltaTime * airSpeed;
 		
-		//Limit new velocity to the speed maximum
+		//Get current velocity
 		Vector3 currentVelocity = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z);
+
+		//How close the current speed to max velocity is (0 = not moving, 1 = at max speed)
 		float max = 1 - (currentVelocity.magnitude / maxSpeed);
-		float velocityDot = Vector3.Dot(currentVelocity, additionalVelocity);
-		Vector3 modifiedVelocity = additionalVelocity * max;
-		Vector3 correctVelocity = Vector3.Lerp(additionalVelocity, modifiedVelocity, velocityDot);
+
+		//How perpendicular the input to the current velocity is (0 = 90°)
+		float velocityDot = Vector3.Dot(currentVelocity, alignedInputVelocity);
+
+		//Scale the input to the max speed
+		Vector3 modifiedVelocity = alignedInputVelocity * max;
+
+		//The more perpendicular the input is, the more the input velocity will be applied
+		Vector3 correctVelocity = Vector3.Lerp(alignedInputVelocity, modifiedVelocity, velocityDot);
 
 		//Apply accelerator
 		correctVelocity += acceleratorForce;

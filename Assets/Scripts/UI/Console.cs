@@ -94,6 +94,9 @@ public class Console : MonoBehaviour
 				case "move_maxspeed":
 					maxSpeedCommand(commandParts);
 					break;
+				case "move_airspeed":
+					airSpeedCommand(commandParts);
+					break;
 				case "move_jumpheight":
 					jumpHeightCommand(commandParts);
 					break;
@@ -249,6 +252,31 @@ public class Console : MonoBehaviour
 		else
 		{
 			writeToConsole("Usage: move_maxspeed (new max speed)");
+		}
+	}
+
+	private void airSpeedCommand(string[] input)
+	{
+		if(Movement.movement.Equals(null))
+		{
+			writeToConsole("No movement loaded!");
+			return;
+		}
+		if(input.Length == 1)
+		{
+			writeToConsole("Current speed limit: " + Movement.movement.maxSpeed);
+		}
+		else if(input.Length == 2)
+		{
+			float newVal;
+			if(float.TryParse(input[1], out newVal))
+			{
+				Movement.movement.airSpeed = newVal;
+			}
+		}
+		else
+		{
+			writeToConsole("Usage: move_airspeed (new air speed)");
 		}
 	}
 
