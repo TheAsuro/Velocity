@@ -264,7 +264,7 @@ public class Console : MonoBehaviour
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current speed limit: " + Movement.movement.maxSpeed);
+			writeToConsole("Current speed limit: " + Movement.movement.airSpeed);
 		}
 		else if(input.Length == 2)
 		{
