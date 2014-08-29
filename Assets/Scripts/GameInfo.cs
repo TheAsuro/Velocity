@@ -272,12 +272,12 @@ public class GameInfo : MonoBehaviour
 	public void reset()
 	{
 		stopDemo();
-		WorldInfo.info.reset();
 		savedLastDemo = false;
 		playerObj.GetComponent<PlayerEffects>().stopMoveToPos();
 		Movement move = Movement.movement;
 		move.spawnPlayer(WorldInfo.info.getFirstSpawn());
 		((BunnyHopMovement)move).clearCollisionList();
+		WorldInfo.info.reset();
 		setMenuState(MenuState.closed);
 		startDemo();
 	}

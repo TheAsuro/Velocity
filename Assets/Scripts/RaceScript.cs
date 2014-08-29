@@ -21,15 +21,11 @@ public class RaceScript : MonoBehaviour
 	private string countdownText;
 	private GUISkin skin;
 	
+	//This script actually sets the player as an actual player
 	void Awake()
 	{
 		GameInfo.info.setPlayerObject(gameObject);
 		skin = GameInfo.info.skin;
-	}
-
-	void Start()
-	{
-		WorldInfo.info.addResetMethod(reset, "race reset");
 	}
 
 	void Update()
@@ -58,19 +54,7 @@ public class RaceScript : MonoBehaviour
 			//Save game
 			GameInfo.info.save();
 			
-			if(nr == 0) //Start
-			{
-				startTime = Time.time;
-				checkpoint = 0;
-				finished = false;
-				if(freezeDuration > 0f)
-				{
-					freeze(freezeDuration);
-					startTime += freezeDuration;
-				}
-				GameInfo.info.startDemo();
-			}
-			else if(end && nr == checkpoint + 1 && !finished) //End
+			if(end && nr == checkpoint + 1 && !finished) //End
 			{
 				GameInfo.info.stopDemo();
 				time = Time.time - startTime;
@@ -91,6 +75,27 @@ public class RaceScript : MonoBehaviour
 			}
 		}
 	}
+
+	//Starts a new race (resets the current one if there is one)
+	public void startRace(float newFreezeDuration = 0f)
+	{
+		time = -1f;
+		startTime = Time.time;
+		checkpoint = 0;
+		finished = false;
+		freezeDuration = newFreezeDuration;
+		frozen = false;
+		if(freezeDuration > 0f)
+		{
+			freeze(freezeDuration);
+			startTime += freezeDuration;
+			if(freezeDuration == 3f)
+			{
+				drawCountdown = true;
+			}
+		}
+		GameInfo.info.startDemo();
+	}
 	
 	private void freeze(float duration)
 	{
@@ -108,15 +113,6 @@ public class RaceScript : MonoBehaviour
 	private string getFrozenString()
 	{
 		return unfreezeTime.ToString();
-	}
-
-	public void reset()
-	{
-		startTime = -1f;
-		time = -1f;
-		checkpoint = -1;
-		finished = false;
-		frozen = false;
 	}
 	
 	void OnGUI()
