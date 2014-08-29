@@ -89,7 +89,7 @@ public class BunnyHopMovement : Movement
 			lastJumpPress = -1f;
 			frameCounter = 0;
 			GameInfo.info.playSound("jump");
-			jumpVelocity = collisionAverageNormal * (jumpForce - yVelocity);
+			jumpVelocity = new Vector3(0f, jumpForce - yVelocity, 0f);
 		}
 
 		return jumpVelocity;

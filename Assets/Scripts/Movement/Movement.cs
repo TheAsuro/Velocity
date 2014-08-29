@@ -30,8 +30,6 @@ public abstract class Movement : MonoBehaviour
 	private bool resetKeyPressed = false;
 	private bool crouchKeyPressed = false;
 
-	public Vector3 collisionAverageNormal = Vector3.zero;
-
 	void Awake()
 	{
 		movement = this;
@@ -199,7 +197,6 @@ public abstract class Movement : MonoBehaviour
 	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount)
 	{
 		bool tempHit = false;
-		collisionAverageNormal = Vector3.zero;
 
 		for(int i = 0; i < rayCount; i++)
 		{
@@ -212,16 +209,8 @@ public abstract class Movement : MonoBehaviour
 			//Collided with something
 			if(hasHit)
 			{
+				//Check if angle is too steep?
 				tempHit = true;
-
-				if(collisionAverageNormal == Vector3.zero)
-				{
-					collisionAverageNormal = hit.normal;
-				}
-				else
-				{
-					collisionAverageNormal = (collisionAverageNormal + hit.normal) / 2f;
-				}
 			}
 		}
 
