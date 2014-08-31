@@ -13,12 +13,14 @@ public class GameInfo : MonoBehaviour
 	private bool showDebug = false;
 	private bool gamePaused = false;
 	private bool showIntro = false;
-	private bool showEscMenu = false;
 	private bool showLeaderboard = false;
 	private bool showEndLevel = false;
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
 	public bool menuLocked = false;
+
+	//GUI
+	private GameObject escMenu;
 
 	//Sound
 	public List<string> soundNames;
@@ -79,6 +81,8 @@ public class GameInfo : MonoBehaviour
 		myServer = gameObject.GetComponent<Server>();
 		myClient = gameObject.GetComponent<Client>();
 		
+		GameObject canvas = transform.Find("Canvas").gameObject;
+		escMenu = canvas.transform.Find("EscMenu").gameObject;
 		Screen.lockCursor = true;
 		setMenuState(MenuState.intro);
 	}
@@ -116,19 +120,6 @@ public class GameInfo : MonoBehaviour
 			{
 				GUILayout.Label(linePrefixes[i] + windowLines[i](), skin.label);
 			}
-
-			GUILayout.EndArea();
-		}
-		
-		//Esc Menu buttons
-		if(showEscMenu)
-		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 75f, Screen.height / 2f - 75f, 150f, 150f), skin.box);
-
-			if(GUILayout.Button("Continue", skin.button)) { setMenuState(MenuState.closed); }
-			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
-			if(GUILayout.Button("Help", skin.button)) { setMenuState(MenuState.intro); }
-			if(GUILayout.Button("Quit", skin.button)) { quit(); }
 
 			GUILayout.EndArea();
 		}
@@ -288,6 +279,38 @@ public class GameInfo : MonoBehaviour
 		Application.Quit();
 	}
 
+	//Version for new gui
+	public void setMenuState(string state)
+	{
+		switch(state)
+		{
+			case "closed":
+				setMenuState(MenuState.closed);
+				break;
+			case "escmenu":
+				setMenuState(MenuState.escmenu);
+				break;
+			case "intro":
+				setMenuState(MenuState.intro);
+				break;
+			case "inactive":
+				setMenuState(MenuState.inactive);
+				break;
+			case "demo":
+				setMenuState(MenuState.demo);
+				break;
+			case "leaderboard":
+				setMenuState(MenuState.leaderboard);
+				break;
+			case "endlevel":
+				setMenuState(MenuState.endlevel);
+				break;
+			case "othermenu":
+				setMenuState(MenuState.othermenu);
+				break;
+		}
+	}
+
 	//Menu state manager
 	public void setMenuState(MenuState state)
 	{
@@ -296,7 +319,7 @@ public class GameInfo : MonoBehaviour
 			//Reset all states
 			setGamePaused(true);
 			showIntro = false;
-			showEscMenu = false;
+			escMenu.SetActive(false);
 			showLeaderboard = false;
 			showEndLevel = false;
 			Screen.lockCursor = false;
@@ -308,7 +331,7 @@ public class GameInfo : MonoBehaviour
 					Screen.lockCursor = true;
 					break;
 				case MenuState.escmenu:
-					showEscMenu = true;
+					escMenu.SetActive(true);
 					break;
 				case MenuState.intro:
 					showIntro = true;
