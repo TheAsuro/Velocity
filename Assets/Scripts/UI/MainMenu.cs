@@ -9,7 +9,6 @@ public class MainMenu : MonoBehaviour
 
 	private string nameFieldText = "name";
 	private int selectedIndex = -1;
-	private string selectedMap = "";
 
 	private List<string> saveNames = new List<string>();
 
@@ -20,6 +19,9 @@ public class MainMenu : MonoBehaviour
 	private GameObject loadGameMenuObj;
 	private GameObject selectMapMenuObj;
 	private GameObject settingsMenuObj;
+	private GameObject serverSetupMenuObj;
+	private GameObject serverPortObj;
+	private GameObject serverPasswordObj;
 
 	private enum State
 	{
@@ -28,7 +30,8 @@ public class MainMenu : MonoBehaviour
 		loadGame = 3,
 		enterName = 4,
 		selectMap = 5,
-		settings = 6
+		settings = 6,
+		serversetup = 7
 	}
 
 	void Start()
@@ -46,6 +49,9 @@ public class MainMenu : MonoBehaviour
 		loadGameMenuObj = canvas.transform.Find("LoadGame").gameObject;
 		settingsMenuObj = canvas.transform.Find("Settings").gameObject;
 		selectMapMenuObj = canvas.transform.Find("SelectMap").gameObject;
+		serverSetupMenuObj = canvas.transform.Find("ServerSetup").gameObject;
+		serverPortObj = serverSetupMenuObj.transform.Find("PortInput").gameObject;
+		serverPasswordObj = serverSetupMenuObj.transform.Find("PassInput").gameObject;
 
 		//Load menu
 		setState(State.main);
@@ -62,6 +68,7 @@ public class MainMenu : MonoBehaviour
 			case "entername": setState(State.enterName); break;
 			case "selectmap": setState(State.selectMap); break;
 			case "settings": setState(State.settings); break;
+			case "serversetup": setState(State.serversetup); break;
 			default: setState(State.main); break;
 		}
 	}
@@ -77,6 +84,7 @@ public class MainMenu : MonoBehaviour
 		enterNameMenuObj.SetActive(false);
 		selectMapMenuObj.SetActive(false);
 		settingsMenuObj.SetActive(false);
+		serverSetupMenuObj.SetActive(false);
 
 		switch(state)
 		{
@@ -100,6 +108,9 @@ public class MainMenu : MonoBehaviour
 			case State.settings:
 				settingsMenuObj.SetActive(true);
 				loadSettingsMenu();
+				break;
+			case State.serversetup:
+				serverSetupMenuObj.SetActive(true);
 				break;
 		}
 	}
@@ -151,6 +162,17 @@ public class MainMenu : MonoBehaviour
 		return 0f;
 	}
 
+	public void startServer()
+	{
+		int port;
+		bool ok = int.TryParse(serverPortObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>().text, out port);
+		string pass = serverPasswordObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>().text;
+		if(ok)
+		{
+			GameInfo.info.startServer(port, pass, GameInfo.info.getSelectedMap());
+		}
+	}
+
 	public void newGame()
 	{
 		newGame(selectedIndex);
@@ -178,6 +200,7 @@ public class MainMenu : MonoBehaviour
 
 	public void loadMap()
 	{
+		string selectedMap = GameInfo.info.getSelectedMap();
 		if(!selectedMap.Equals(""))
 		{
 			loadMap(selectedMap);
@@ -192,11 +215,6 @@ public class MainMenu : MonoBehaviour
 	public void setSelectedIndex(string value)
 	{
 		selectedIndex = int.Parse(value);
-	}
-
-	public void setSelectedMap(string name)
-	{
-		selectedMap = name;
 	}
 
 	public void setSelectedButton(GameObject button)

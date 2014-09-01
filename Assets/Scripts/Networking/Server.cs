@@ -8,6 +8,7 @@ public class Server : MonoBehaviour
 	private Client myClient;
 	private List<RemotePlayer> playerList;
 	private bool running = false;
+	private int myPort = -1;
 
 	void Start()
 	{
@@ -18,6 +19,7 @@ public class Server : MonoBehaviour
 
 	public void StartServer(int connections, int port, string password)
 	{
+		myPort = port;
 		playerList = new List<RemotePlayer>();
 		Network.incomingPassword = password;
 		Network.InitializeSecurity();
@@ -39,7 +41,7 @@ public class Server : MonoBehaviour
 	{
 		running = true;
 		myClient.JoinServer(true);
-		GameInfo.info.writeToConsole("Server initzialized.");
+		GameInfo.info.writeToConsole("Server initzialized on port " + myPort + ".");
 	}
 
 	void OnLevelWasLoaded(int id)

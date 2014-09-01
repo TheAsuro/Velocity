@@ -21,6 +21,7 @@ public class GameInfo : MonoBehaviour
 
 	//GUI
 	private GameObject escMenu;
+	private string selectedMap;
 
 	//Sound
 	public List<string> soundNames;
@@ -65,6 +66,15 @@ public class GameInfo : MonoBehaviour
 		endlevel = 6,
 		othermenu = 7
 	}
+
+	public enum GameMode
+	{
+		mainmenu = 1,
+		mainmenulobby = 2,
+		singleplayer = 3,
+		maplobby = 4,
+		timeattack = 5
+	}
 	
 	void Awake()
 	{
@@ -92,7 +102,6 @@ public class GameInfo : MonoBehaviour
 		loadPlayerSettings();
 	}
 
-	//Don't do movement stuff here, do it in FixedUpdate()
 	void Update()
 	{
 		if(Input.GetButtonDown("Debug"))
@@ -205,7 +214,7 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	//Load a level, but inform other player if this is a server
+	//Load a level, but inform other players if this is a server
 	public void loadLevel(string name)
 	{
 		if(myServer.isRunning())
@@ -229,9 +238,10 @@ public class GameInfo : MonoBehaviour
 	}
 
 	//Start a new multiplayer server
-	public void startServer(string password)
+	public void startServer(int port, string password, string map)
 	{
-		myServer.StartServer(2, 42069, password);
+		myServer.StartServer(2, port, password);
+		Application.LoadLevel(map);
 	}
 
 	//Connect to a multiplayer server
@@ -603,6 +613,16 @@ public class GameInfo : MonoBehaviour
 	{
 		viewLocked = false;
 	}
+	
+	public void setSelectedMap(string map)
+	{
+		selectedMap = map;
+	}
+
+	public string getSelectedMap()
+	{
+		return selectedMap;
+	}
 
 	public void sendLeaderboardEntry(string name, float time, string map)
 	{
@@ -612,8 +632,8 @@ public class GameInfo : MonoBehaviour
 		form.AddField("MapName", map);
 		string hash = Md5Sum(name + time.ToString() + map + secretKey);
 		form.AddField("Hash", hash);
-		WWW www = new WWW("http://gmanserver.info/random/something.php", form);
-		StartCoroutine(WaitForRequest(www));
+		//WWW www = new WWW("http://gmanserver.info/random/something.php", form);
+		//StartCoroutine(WaitForRequest(www));
 	}
 
 	private IEnumerator WaitForRequest(WWW www)

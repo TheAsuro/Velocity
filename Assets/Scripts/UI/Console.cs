@@ -144,15 +144,19 @@ public class Console : MonoBehaviour
 	{
 		if(input.Length == 1)
 		{
-			GameInfo.info.startServer("");
+			GameInfo.info.startServer(42069, "", input[1]);
 		}
 		else if(input.Length == 2)
 		{
-			GameInfo.info.startServer(input[1]);
+			GameInfo.info.startServer(42069, input[2], input[1]);
+		}
+		else if(input.Length == 3)
+		{
+			GameInfo.info.startServer(int.Parse(input[2]), input[3], input[1]);
 		}
 		else
 		{
-			writeToConsole("Usage: newserver (password)");
+			writeToConsole("Usage: newserver <map> (port) (password)");
 		}
 	}
 
