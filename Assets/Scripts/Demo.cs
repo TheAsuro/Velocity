@@ -41,7 +41,7 @@ public class Demo
 		}
 		catch(FileNotFoundException ex)
 		{
-			GameInfo.info.writeToConsole("'" + file + "' is not a file!");
+			GameInfo.info.writeToConsole(ex.Message + "\n'" + file + "' is not a file!");
 			loadFromFileFailed = true;
 		}
 	}

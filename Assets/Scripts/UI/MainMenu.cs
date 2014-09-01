@@ -20,8 +20,12 @@ public class MainMenu : MonoBehaviour
 	private GameObject selectMapMenuObj;
 	private GameObject settingsMenuObj;
 	private GameObject serverSetupMenuObj;
+	private GameObject serverJoinMenuObj;
 	private GameObject serverPortObj;
 	private GameObject serverPasswordObj;
+	private GameObject serverJoinIpObj;
+	private GameObject serverJoinPortObj;
+	private GameObject serverJoinPasswordObj;
 
 	private enum State
 	{
@@ -31,7 +35,8 @@ public class MainMenu : MonoBehaviour
 		enterName = 4,
 		selectMap = 5,
 		settings = 6,
-		serversetup = 7
+		serversetup = 7,
+		serverjoin = 8
 	}
 
 	void Start()
@@ -50,8 +55,12 @@ public class MainMenu : MonoBehaviour
 		settingsMenuObj = canvas.transform.Find("Settings").gameObject;
 		selectMapMenuObj = canvas.transform.Find("SelectMap").gameObject;
 		serverSetupMenuObj = canvas.transform.Find("ServerSetup").gameObject;
+		serverJoinMenuObj = canvas.transform.Find("ServerJoin").gameObject;
 		serverPortObj = serverSetupMenuObj.transform.Find("PortInput").gameObject;
 		serverPasswordObj = serverSetupMenuObj.transform.Find("PassInput").gameObject;
+		serverJoinIpObj = serverJoinMenuObj.transform.Find("IpInput").gameObject;
+		serverJoinPortObj = serverJoinMenuObj.transform.Find("PortInput").gameObject;
+		serverJoinPasswordObj = serverJoinMenuObj.transform.Find("PassInput").gameObject;
 
 		//Load menu
 		setState(State.main);
@@ -69,6 +78,7 @@ public class MainMenu : MonoBehaviour
 			case "selectmap": setState(State.selectMap); break;
 			case "settings": setState(State.settings); break;
 			case "serversetup": setState(State.serversetup); break;
+			case "serverjoin": setState(State.serverjoin); break;
 			default: setState(State.main); break;
 		}
 	}
@@ -85,6 +95,7 @@ public class MainMenu : MonoBehaviour
 		selectMapMenuObj.SetActive(false);
 		settingsMenuObj.SetActive(false);
 		serverSetupMenuObj.SetActive(false);
+		serverJoinMenuObj.SetActive(false);
 
 		switch(state)
 		{
@@ -111,6 +122,9 @@ public class MainMenu : MonoBehaviour
 				break;
 			case State.serversetup:
 				serverSetupMenuObj.SetActive(true);
+				break;
+			case State.serverjoin:
+				serverJoinMenuObj.SetActive(true);
 				break;
 		}
 	}
@@ -165,11 +179,43 @@ public class MainMenu : MonoBehaviour
 	public void startServer()
 	{
 		int port;
-		bool ok = int.TryParse(serverPortObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>().text, out port);
-		string pass = serverPasswordObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>().text;
+
+		UnityEngine.UI.Text portText = serverPortObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
+		UnityEngine.UI.Text passText = serverPasswordObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
+
+		bool ok = int.TryParse(portText.text, out port);
+		string pass = passText.text;
+
 		if(ok)
 		{
 			GameInfo.info.startServer(port, pass, GameInfo.info.getSelectedMap());
+		}
+		else
+		{
+			portText.text = "42069";
+		}
+	}
+
+	public void joinServer()
+	{
+		string ip;
+		int port;
+		string pass;
+
+		UnityEngine.UI.Text ipText = serverJoinIpObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
+		UnityEngine.UI.Text portText = serverJoinPortObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
+		UnityEngine.UI.Text passText = serverJoinPasswordObj.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
+
+		bool ok = int.TryParse(portText.text, out port);
+		if(ok)
+		{
+			ip = ipText.text;
+			pass = passText.text;
+			GameInfo.info.connectToServer(ip, port, pass);
+		}
+		else
+		{
+			portText.text = "42069";
 		}
 	}
 
@@ -220,5 +266,10 @@ public class MainMenu : MonoBehaviour
 	public void setSelectedButton(GameObject button)
 	{
 		buttonDrawThingy.setSelectedButton(button);
+	}
+
+	public void quit()
+	{
+		GameInfo.info.quit();
 	}
 }
