@@ -219,6 +219,14 @@ public class MainMenu : MonoBehaviour
 		}
 	}
 
+	public void loadServerSetup()
+	{
+		if(!GameInfo.info.getSelectedMap().Equals(""))
+		{
+			setState(State.serversetup);
+		}
+	}
+
 	public void newGame()
 	{
 		newGame(selectedIndex);

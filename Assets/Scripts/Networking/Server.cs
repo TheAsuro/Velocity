@@ -65,6 +65,8 @@ public class Server : MonoBehaviour
 	void OnPlayerDisconnected(NetworkPlayer player)
 	{
 		RemotePlayer rem = getPlayerByNetworkPlayer(player);
+		myClient.RemovePlayer(player.guid);
+		view.RPC("RemovePlayer", RPCMode.Others, player.guid);
 		playerList.Remove(rem);
 		GameInfo.info.writeToConsole("Player " + rem.name + " disconnected.");
 	}
@@ -112,7 +114,7 @@ public class Server : MonoBehaviour
 	[RPC]
 	public void setPlayerPosition(Vector3 playerPos, NetworkMessageInfo info)
 	{
-		view.RPC("setGhostPosition", RPCMode.All, playerPos, getPlayerByNetworkPlayer(info.sender).name);
+		view.RPC("setGhostPosition", RPCMode.All, playerPos, info.sender.guid);
 	}
 
 	public void setLocalPlayerPosition(Vector3 playerPos)

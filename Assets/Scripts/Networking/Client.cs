@@ -13,6 +13,7 @@ public class Client : MonoBehaviour
 	private Vector3 lastPosition = Vector3.zero;
 	private Dictionary<string,GameObject> ghostList;
 	private Server myServer;
+	private string myGuid = "";
 
 	void Start()
 	{
@@ -26,8 +27,9 @@ public class Client : MonoBehaviour
 	public void ConnectToServer(string ip, int port, string password)
 	{
 		//Connect to server
-		NetworkConnectionError error = Network.Connect(ip, port, password);
 		GameInfo.info.writeToConsole("Trying to connect to server...");
+		NetworkConnectionError error = Network.Connect(ip, port, password);
+		
 		if(error != NetworkConnectionError.NoError)
 		{
 			GameInfo.info.writeToConsole("Failed to connect to server!");
@@ -38,6 +40,14 @@ public class Client : MonoBehaviour
 	void OnConnectedToServer()
 	{
 		JoinServer(false);
+	}
+
+	//Disconnected for whatever reason
+	void OnDisconnectedFromServer(NetworkDisconnection info)
+	{
+		GameInfo.info.writeToConsole("Lost Connection!");
+		connected = false;
+		clearGhosts();
 	}
 
 	//Send the server a message that we loaded
@@ -103,7 +113,17 @@ public class Client : MonoBehaviour
 	{
 		connected = false;
 		Network.Disconnect();
+		clearGhosts();
 		GameInfo.info.writeToConsole("Disconnected from server.");
+	}
+
+	private void clearGhosts()
+	{
+		foreach(KeyValuePair<string,GameObject> pair in ghostList)
+		{
+			GameObject.Destroy(pair.Value);
+		}
+		ghostList.Clear();
 	}
 
 	//Server changed level/Sends level for the first time
@@ -122,15 +142,29 @@ public class Client : MonoBehaviour
 
 	//position of a ghost
 	[RPC]
-	public void setGhostPosition(Vector3 position, string name)
+	public void setGhostPosition(Vector3 position, string guid)
 	{
-		if(!ghostList.ContainsKey(name))
+		if(!ghostList.ContainsKey(guid))
 		{
 			GameObject newGhost = (GameObject)GameObject.Instantiate(ghostPrefab, position, new Quaternion());
-			ghostList.Add(name, newGhost);
+			ghostList.Add(guid, newGhost);
 		}
-		GameObject ghost = ghostList[name];
+		GameObject ghost = ghostList[guid];
 		ghost.transform.position = position;
+	}
+
+	[RPC]
+	public void RemovePlayer(string guid)
+	{
+		foreach(KeyValuePair<string,GameObject> pair in ghostList)
+		{
+			if(pair.Key == guid)
+			{
+				GameObject.Destroy(pair.Value);
+				ghostList.Remove(pair.Key);
+				break;
+			}
+		}
 	}
 
 	public bool isConnected()
