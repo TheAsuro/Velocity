@@ -13,7 +13,6 @@ public class Client : MonoBehaviour
 	private Vector3 lastPosition = Vector3.zero;
 	private Dictionary<string,GameObject> ghostList;
 	private Server myServer;
-	private string myGuid = "";
 
 	void Start()
 	{

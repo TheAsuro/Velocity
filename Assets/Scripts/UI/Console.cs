@@ -1,56 +1,87 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class Console : MonoBehaviour
 {
-	public bool drawConsole = false;
-	public Rect consolePos;
 	public TextAsset helpFile;
 
-	private Vector2 scrollPos = Vector2.zero;
-	private GUISkin skin;
-	private string consoleText = "Welcome to Velocity!";
-	private string commandLine = "";
+	private bool visible = false;
+	private GameObject myConsole;
+	private Text myOutput;
+	private InputField myInput;
+
+	private Vector2 clickDelta = Vector2.zero;
+	private bool mouseDown;
 
 	void Start()
 	{
+		//Tell the GameInfo script that this is the console
 		GameInfo.info.setConsole(this);
-		skin = GameInfo.info.skin;
+
+		//Find all parts of the console
+		myConsole = gameObject.transform.Find("Console").gameObject;
+		myOutput = myConsole.transform.Find("ConsoleOutput").Find("Text").GetComponent<Text>();
+		myInput = myConsole.transform.Find("ConsoleInput").GetComponent<InputField>();
+
+		//Registering events
+		myInput.onSubmit.AddListener(inputSubmit);
 	}
 
 	void Update()
 	{
 		if(Input.GetButtonDown("Console"))
 		{
-			drawConsole = !drawConsole;
+			toggleVisibility();
 		}
-	}
 
-	void OnGUI()
-	{
-		if(drawConsole && GameInfo.info.getMenuState() != GameInfo.MenuState.closed)
+		if(Input.GetMouseButtonDown(0))
 		{
-			consolePos = GUILayout.Window(0, consolePos, DrawConsoleGUI, "Console", skin.window);
+			mouseDown = true;
+			RectTransform t = (RectTransform)myConsole.transform;
+			Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+			clickDelta = mousePos - t.anchoredPosition;
+		}
+
+		if(Input.GetMouseButton(0))
+		{
+			if(mouseDown)
+			{
+				RectTransform t = (RectTransform)myConsole.transform;
+				Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+				t.anchoredPosition = mousePos - clickDelta;
+				Vector2 newPos = t.anchoredPosition;
+				if(t.anchoredPosition.x < t.rect.width / 2 ) { newPos.x = t.rect.width / 2; }
+				if(t.anchoredPosition.x > Screen.width - t.rect.width / 2) { newPos.x = Screen.width - t.rect.width / 2; }
+				if(t.anchoredPosition.y > -t.rect.height / 2 ) { newPos.y = -t.rect.height / 2; }
+				if(t.anchoredPosition.y < -Screen.height + t.rect.height / 2) { newPos.y = -Screen.height + t.rect.height / 2; }
+				t.anchoredPosition = newPos;
+			}
+		}
+
+		if(Input.GetMouseButtonUp(0))
+		{
+			mouseDown = false;
 		}
 	}
 
-	void DrawConsoleGUI(int id)
+	private void toggleVisibility()
 	{
-		scrollPos = GUILayout.BeginScrollView(scrollPos, false, true, skin.horizontalScrollbar, skin.verticalScrollbar, skin.box);
-		GUILayout.TextArea(consoleText, skin.textArea, GUILayout.ExpandHeight(true));
-		GUILayout.EndScrollView();
-		GUI.SetNextControlName("cmd");
-		commandLine = GUILayout.TextField(commandLine, skin.textField);
+		visible = !visible;
+		myInput.OnDeselect(null);
+		myConsole.SetActive(visible);
+	}
 
-		UnityEngine.Event e = UnityEngine.Event.current;
-        if(e.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl().Equals("cmd") && !commandLine.Equals(""))
-        {
-        	writeToConsole(">" + commandLine);
-			executeCommand(commandLine);
-			commandLine = "";
-        }
+	public void inputSubmit(string input)
+	{
+		executeCommand(input);
+		myInput.value = "";
+	}
 
-		GUI.DragWindow();
+	public void writeToConsole(string content)
+	{
+		myOutput.text += "\n" + content;
 	}
 
 	private void executeCommand(string command)
@@ -320,17 +351,12 @@ public class Console : MonoBehaviour
 			float newVal;
 			if(float.TryParse(input[1], out newVal))
 			{
-				Physics.gravity = new Vector3(0f, newVal, 0f);
+				GameInfo.info.setGravity(newVal);
 			}
 		}
 		else
 		{
 			writeToConsole("Usage: move_gravity (new gravity)");
 		}
-	}
-
-	public void writeToConsole(string content)
-	{
-		consoleText += "\n" + content; 
 	}
 }
