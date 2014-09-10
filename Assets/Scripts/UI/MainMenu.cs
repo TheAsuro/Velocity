@@ -161,6 +161,11 @@ public class MainMenu : MonoBehaviour
 		setSlider("TextureSizeRow", GameInfo.info.textureSize);
 	}
 
+	public void saveSettingsMenu()
+	{
+		GameInfo.info.savePlayerSettings();
+	}
+
 	//Set a specific slider to a value
 	private void setSlider(string rowName, float value)
 	{

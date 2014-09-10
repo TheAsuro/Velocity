@@ -84,7 +84,7 @@ public class Console : MonoBehaviour
 		myOutput.text += "\n" + content;
 	}
 
-	private void executeCommand(string command)
+	public void executeCommand(string command)
 	{
 		if(!command.Equals(""))
 		{

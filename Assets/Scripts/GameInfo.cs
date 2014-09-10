@@ -447,6 +447,11 @@ public class GameInfo : MonoBehaviour
 		myConsole = pConsole;
 	}
 
+	public Console getConsole()
+	{
+		return myConsole;
+	}
+
 	public void writeToConsole(string text)
 	{
 		myConsole.writeToConsole(text);
