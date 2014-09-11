@@ -70,7 +70,7 @@ public class SettingsSlider : MonoBehaviour
 	}
 
 	//Returns rounded value of a float
-	private float floor(float input, int decimalsAfterPoint)
+	public static float floor(float input, int decimalsAfterPoint)
 	{
 		if(decimalsAfterPoint <= 0)
 		{
@@ -84,7 +84,7 @@ public class SettingsSlider : MonoBehaviour
 	}
 
 	//Return rounded value acceptable for AA
-	private float roundAA(float input)
+	public static float roundAA(float input)
 	{
 		if(input < 1f)
 		{
@@ -105,7 +105,7 @@ public class SettingsSlider : MonoBehaviour
 	}
 
 	//Returns On/Off for float input
-	private string translateFloat(float input)
+	public static string translateFloat(float input)
 	{
 		if(input == 0f)
 		{
@@ -114,7 +114,7 @@ public class SettingsSlider : MonoBehaviour
 		return "On";
 	}
 
-	private string translateTextureSize(float input)
+	public static string translateTextureSize(float input)
 	{
 		if(input == 2)
 		{

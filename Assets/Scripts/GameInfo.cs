@@ -543,7 +543,6 @@ public class GameInfo : MonoBehaviour
 		#if UNITY_STANDALONE_WIN
 
 		recorder.getDemo().saveToFile(Application.dataPath);
-		savedLastDemo = true;
 
 		#endif
 	}

@@ -154,11 +154,11 @@ public class MainMenu : MonoBehaviour
 		setSlider("VolumeRow", GameInfo.info.volume);
 		setSlider("SensitivityRow", GameInfo.info.mouseSpeed);
 		setSlider("FovRow", GameInfo.info.fov);
-		setSlider("VsyncRow", GameInfo.info.vsyncLevel);
+		setSlider("VsyncRow", GameInfo.info.vsyncLevel, SettingsSlider.translateFloat(GameInfo.info.vsyncLevel));
 		setSlider("LightingRow", GameInfo.info.lightingLevel);
 		setSlider("AntiAliasingRow", GameInfo.info.antiAliasing);
-		setSlider("AnisotropicFilteringRow", boolToFloat(GameInfo.info.anisotropicFiltering));
-		setSlider("TextureSizeRow", GameInfo.info.textureSize);
+		setSlider("AnisotropicFilteringRow", boolToFloat(GameInfo.info.anisotropicFiltering), SettingsSlider.translateFloat(boolToFloat(GameInfo.info.anisotropicFiltering)));
+		setSlider("TextureSizeRow", GameInfo.info.textureSize, SettingsSlider.translateTextureSize(GameInfo.info.textureSize));
 	}
 
 	public void saveSettingsMenu()
@@ -167,9 +167,13 @@ public class MainMenu : MonoBehaviour
 	}
 
 	//Set a specific slider to a value
-	private void setSlider(string rowName, float value)
+	private void setSlider(string rowName, float value, string valueString = "")
 	{
-		settingsMenuObj.transform.Find(rowName).Find("Slider").gameObject.GetComponent<UnityEngine.UI.Slider>().value = value;
+		string tempStr = valueString;
+		if(tempStr.Equals("")) { tempStr = value.ToString(); }
+		Transform rowT = settingsMenuObj.transform.Find(rowName);
+		rowT.Find("Slider").gameObject.GetComponent<UnityEngine.UI.Slider>().value = value;
+		rowT.Find("Value").gameObject.GetComponent<UnityEngine.UI.Text>().text = tempStr;
 	}
 
 	private float boolToFloat(bool input)
