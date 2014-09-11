@@ -12,15 +12,14 @@ public class GameInfo : MonoBehaviour
 	//Gamestates
 	private bool showDebug = false;
 	private bool gamePaused = false;
-	private bool showIntro = false;
 	private bool showLeaderboard = false;
-	private bool showEndLevel = false;
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
 	public bool menuLocked = false;
 
 	//GUI
 	private GameObject escMenu;
+	private GameObject endLevel;
 	private string selectedMap;
 
 	//Sound
@@ -29,7 +28,6 @@ public class GameInfo : MonoBehaviour
 
 	//Stuff
 	private SaveData currentSave;
-	private bool savedLastDemo = false;
 	private Vector2 leaderboardScroll = Vector2.zero;
 	
 	//Debug window (top-left corner, toggle with f8)
@@ -57,14 +55,13 @@ public class GameInfo : MonoBehaviour
 
 	public enum MenuState
 	{
-		closed = 0,
-		escmenu = 1,
-		intro = 2,
-		inactive = 3,
-		demo = 4,
-		leaderboard = 5,
-		endlevel = 6,
-		othermenu = 7
+		closed,
+		escmenu,
+		inactive,
+		demo,
+		leaderboard,
+		endlevel,
+		othermenu
 	}
 
 	public enum GameMode
@@ -93,8 +90,9 @@ public class GameInfo : MonoBehaviour
 		
 		GameObject canvas = transform.Find("Canvas").gameObject;
 		escMenu = canvas.transform.Find("EscMenu").gameObject;
+		endLevel = canvas.transform.Find("EndLevel").gameObject;
 		Screen.lockCursor = true;
-		setMenuState(MenuState.intro);
+		setMenuState(MenuState.closed);
 	}
 
 	void Start()
@@ -133,17 +131,6 @@ public class GameInfo : MonoBehaviour
 			GUILayout.EndArea();
 		}
 		
-		//Into text
-		if(showIntro)
-		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 100f, Screen.height / 2f - 50f, 200f, 100f));
-
-			string infoText = "Press ESC to toggle the menu.\nPress F8 to toggle debug info.\nPress (or hold) space to jump.\nPress E to grab.\nPress R to respawn.\nPress F1 to reset.";
-			GUILayout.Box(infoText, skin.box);
-
-			GUILayout.EndArea();
-		}
-
 		if(showLeaderboard)
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 350f, Screen.height / 2f - 250f, 700f, 500f), skin.box);
@@ -160,29 +147,6 @@ public class GameInfo : MonoBehaviour
 			GUILayout.EndScrollView();
 
 			if(GUILayout.Button("OK", skin.button, GUILayout.MaxHeight(30))) { menuLocked = false; setMenuState(MenuState.endlevel); }
-
-			GUILayout.EndArea();
-		}
-
-		if(showEndLevel)
-		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 75f, Screen.height / 2f - 75f, 150f, 150f), skin.box);
-
-			string saveDemoText;
-			if(!savedLastDemo)
-			{
-				saveDemoText = "Save Demo";
-			}
-			else
-			{
-				saveDemoText = "Saved!";
-			}
-
-			if(GUILayout.Button("Main Menu", skin.button)) { loadLevel("MainMenu"); }
-			if(GUILayout.Button("Leaderboards", skin.button)) { menuLocked = false; setMenuState(MenuState.leaderboard); }
-			if(GUILayout.Button("Play Demo", skin.button)) { menuLocked = false; setMenuState(MenuState.demo); playLastDemo(); }
-			if(GUILayout.Button(saveDemoText, skin.button)) { saveLastDemo(); }
-			if(GUILayout.Button("Restart", skin.button)) { menuLocked = false; reset(); }
 
 			GUILayout.EndArea();
 		}
@@ -273,7 +237,6 @@ public class GameInfo : MonoBehaviour
 	public void reset()
 	{
 		stopDemo();
-		savedLastDemo = false;
 		playerObj.GetComponent<PlayerEffects>().stopMoveToPos();
 		Movement move = Movement.movement;
 		move.spawnPlayer(WorldInfo.info.getFirstSpawn());
@@ -300,9 +263,6 @@ public class GameInfo : MonoBehaviour
 			case "escmenu":
 				setMenuState(MenuState.escmenu);
 				break;
-			case "intro":
-				setMenuState(MenuState.intro);
-				break;
 			case "inactive":
 				setMenuState(MenuState.inactive);
 				break;
@@ -328,10 +288,9 @@ public class GameInfo : MonoBehaviour
 		{
 			//Reset all states
 			setGamePaused(true);
-			showIntro = false;
 			escMenu.SetActive(false);
+			endLevel.SetActive(false);
 			showLeaderboard = false;
-			showEndLevel = false;
 			Screen.lockCursor = false;
 
 			switch(state)
@@ -342,9 +301,6 @@ public class GameInfo : MonoBehaviour
 					break;
 				case MenuState.escmenu:
 					escMenu.SetActive(true);
-					break;
-				case MenuState.intro:
-					showIntro = true;
 					break;
 				case MenuState.inactive:
 					setGamePaused(false);
@@ -362,7 +318,7 @@ public class GameInfo : MonoBehaviour
 				case MenuState.endlevel:
 					setGamePaused(false);
 					setMouseView(false);
-					showEndLevel = true;
+					endLevel.SetActive(true);
 					menuLocked = true;
 					break;
 				case MenuState.othermenu:
@@ -617,6 +573,11 @@ public class GameInfo : MonoBehaviour
 	public void unlockMouseView()
 	{
 		viewLocked = false;
+	}
+
+	public void unlockMenu()
+	{
+		menuLocked = false;
 	}
 	
 	public void setSelectedMap(string map)
