@@ -6,6 +6,7 @@ public class WorldInfo : MonoBehaviour
 {
 	public static WorldInfo info;
 	public GameInfo.MenuState beginState = GameInfo.MenuState.closed;
+	public float DeathHeight = 0f;
 	public delegate void Reset();
 
 	private Dictionary<string,Reset> resetList = new Dictionary<string,Reset>();

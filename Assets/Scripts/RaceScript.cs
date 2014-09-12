@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 //Interacts with checkpoint triggers, must be added to every player
 public class RaceScript : MonoBehaviour
@@ -19,13 +20,18 @@ public class RaceScript : MonoBehaviour
 
 	private bool drawCountdown = false;
 	private string countdownText;
-	private GUISkin skin;
+
+	private Text timeTextObj;
+	private Text countdownTextObj;
 	
 	//This script actually sets the player as an actual player
 	void Awake()
 	{
 		GameInfo.info.setPlayerObject(gameObject);
-		skin = GameInfo.info.skin;
+		
+		Transform canvas = gameObject.transform.parent.Find("Canvas");
+		timeTextObj = canvas.Find("Time").Find("Text").GetComponent<Text>();
+		countdownTextObj = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
 	}
 
 	void Update()
@@ -37,6 +43,47 @@ public class RaceScript : MonoBehaviour
 		if(frozen && Time.time >= unfreezeTime)
 		{
 			unfreeze();
+		}
+
+		if(time > 0f && checkpoint != -1 && !finished)
+		{
+			timeTextObj.gameObject.transform.parent.gameObject.SetActive(true);
+			timeTextObj.text = "Time: " + time.ToString().Substring(0,time.ToString().IndexOf('.') + 2);
+		}
+		else if(finished)
+		{
+			timeTextObj.gameObject.transform.parent.gameObject.SetActive(true);
+			timeTextObj.text = time.ToString();
+		}
+		else
+		{
+			timeTextObj.gameObject.transform.parent.gameObject.SetActive(false);
+		}
+
+		float remainingFreezeTime = unfreezeTime - Time.time;
+		if(remainingFreezeTime > freezeDuration * (2f/3f))
+		{
+			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
+			countdownTextObj.text = "3";
+		}
+		else if(remainingFreezeTime > freezeDuration * (1f/3f))
+		{
+			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
+			countdownTextObj.text = "2";
+		}
+		else if(remainingFreezeTime > 0f)
+		{
+			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
+			countdownTextObj.text = "1";
+		}
+		else if(remainingFreezeTime > freezeDuration * (-1f/3f))
+		{
+			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
+			countdownTextObj.text = "GO!";
+		}
+		else
+		{
+			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(false);
 		}
 	}
 	
@@ -113,50 +160,5 @@ public class RaceScript : MonoBehaviour
 	private string getFrozenString()
 	{
 		return unfreezeTime.ToString();
-	}
-	
-	void OnGUI()
-	{
-		string tStr ="Time: " + time.ToString().Substring(0,time.ToString().IndexOf('.') + 2);
-		
-		GUILayout.BeginArea(new Rect(Screen.width / 2f - 50f, 20f, 100f, 60f));
-
-		if(drawTime && time > 0f && checkpoint != -1 && !finished)
-		{
-			GUILayout.Box(tStr, skin.box);
-		}
-		if(finished)
-		{
-			GUILayout.Box(time.ToString(), skin.box);
-		}
-
-		if(drawCountdown && !GameInfo.info.getGamePaused())
-		{
-			float remainingFreezeTime = unfreezeTime - Time.time;
-			if(remainingFreezeTime > freezeDuration * (2f/3f))
-			{
-				countdownText = "3";
-			}
-			else if(remainingFreezeTime > freezeDuration * (1f/3f))
-			{
-				countdownText = "2";
-			}
-			else if(remainingFreezeTime > 0f)
-			{
-				countdownText = "1";
-			}
-			else if(remainingFreezeTime > freezeDuration * (-1f/3f))
-			{
-				countdownText = "GO!";
-			}
-			else
-			{
-				drawCountdown = false;
-			}
-			
-			GUILayout.Box(countdownText, skin.box);
-		}
-
-		GUILayout.EndArea();
 	}
 }
