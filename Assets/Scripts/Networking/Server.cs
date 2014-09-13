@@ -9,6 +9,7 @@ public class Server : MonoBehaviour
 	private List<RemotePlayer> playerList;
 	private bool running = false;
 	private int myPort = -1;
+	private bool securityInitialized = false;
 
 	void Start()
 	{
@@ -22,7 +23,7 @@ public class Server : MonoBehaviour
 		myPort = port;
 		playerList = new List<RemotePlayer>();
 		Network.incomingPassword = password;
-		Network.InitializeSecurity();
+		InitializeSecurity();
 		NetworkConnectionError error = Network.InitializeServer(connections, port, !Network.HavePublicAddress());
 		if(error != NetworkConnectionError.NoError)
 		{
@@ -30,8 +31,18 @@ public class Server : MonoBehaviour
 		}
 	}
 
+	//Only call Network.InitializeSecurity once
+	private void InitializeSecurity()
+	{
+		if(securityInitialized)
+			return;
+		Network.InitializeSecurity();
+		securityInitialized = true;
+	}
+
 	public void StopServer()
 	{
+		myClient.DisconnectFromServer();
 		running = false;
 		Network.Disconnect();
 		GameInfo.info.writeToConsole("Stopped server.");
@@ -48,10 +59,21 @@ public class Server : MonoBehaviour
 	{
 		if(running)
 		{
+			//Join the local player after loading a level
 			if(!myClient.isConnected())
 			{
 				myClient.JoinServer(true);
 			}
+
+			//TODO: Make main menu lobby for server/clients
+			//For now: Disconnect everyone and stop the server
+			if(Application.loadedLevel.Equals("MainMenu"))
+			{
+				StopServer();
+				return;
+			}
+
+			//Tell everyone else to load the level
 			view.RPC("ChangeLevel", RPCMode.Others, id);
 		}
 	}

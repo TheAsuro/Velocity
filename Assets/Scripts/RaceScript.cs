@@ -18,9 +18,6 @@ public class RaceScript : MonoBehaviour
 	private float freezeDuration = 0f;
 	private float unfreezeTime = float.PositiveInfinity;
 
-	private bool drawCountdown = false;
-	private string countdownText;
-
 	private Text timeTextObj;
 	private Text countdownTextObj;
 	
@@ -96,7 +93,6 @@ public class RaceScript : MonoBehaviour
 			int nr = cp.checkpointNumber;
 			bool end = cp.isEnd;
 			freezeDuration = cp.freezeTime;
-			drawCountdown = cp.countdown;
 
 			//Save game
 			GameInfo.info.save();
@@ -136,10 +132,6 @@ public class RaceScript : MonoBehaviour
 		{
 			freeze(freezeDuration);
 			startTime += freezeDuration;
-			if(freezeDuration == 3f)
-			{
-				drawCountdown = true;
-			}
 		}
 		GameInfo.info.startDemo();
 	}
