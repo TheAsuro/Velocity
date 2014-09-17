@@ -58,12 +58,12 @@ public class RaceScript : MonoBehaviour
 		}
 
 		float remainingFreezeTime = unfreezeTime - Time.time;
-		if(remainingFreezeTime > freezeDuration * (2f/3f))
+		if(remainingFreezeTime > 2f)
 		{
 			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
 			countdownTextObj.text = "3";
 		}
-		else if(remainingFreezeTime > freezeDuration * (1f/3f))
+		else if(remainingFreezeTime > 1f)
 		{
 			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
 			countdownTextObj.text = "2";
@@ -73,7 +73,7 @@ public class RaceScript : MonoBehaviour
 			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
 			countdownTextObj.text = "1";
 		}
-		else if(remainingFreezeTime > freezeDuration * (-1f/3f))
+		else if(remainingFreezeTime > -1f)
 		{
 			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
 			countdownTextObj.text = "GO!";
