@@ -40,7 +40,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a375b8bde7fa76345ba819bfc27f0930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beginState: 2
+  beginState: 0
+  DeathHeight: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -52,7 +53,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a8f16e683414245b9f6069fd4c8521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  introLength: 0
   startFreeze: 3
+  introDisplay: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
