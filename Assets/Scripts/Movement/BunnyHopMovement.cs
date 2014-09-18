@@ -127,11 +127,14 @@ public class BunnyHopMovement : Movement
 
 	void OnCollisionEnter(Collision col)
 	{
-		foreach(ContactPoint contact in col)
+		if(!col.gameObject.tag.Equals("Fictionless"))
 		{
-			if(contact.normal.y > 0.7f && !collidingObjects.Contains(contact.otherCollider.gameObject.GetInstanceID()))
+			foreach(ContactPoint contact in col)
 			{
-				collidingObjects.Add(contact.otherCollider.gameObject.GetInstanceID());
+				if(contact.normal.y > 0.75f && !collidingObjects.Contains(contact.otherCollider.gameObject.GetInstanceID()))
+				{
+					collidingObjects.Add(contact.otherCollider.gameObject.GetInstanceID());
+				}
 			}
 		}
 	}

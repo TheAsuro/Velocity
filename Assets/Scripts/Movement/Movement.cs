@@ -209,8 +209,11 @@ public abstract class Movement : MonoBehaviour
 			//Collided with something
 			if(hasHit)
 			{
-				//Check if angle is too steep?
-				tempHit = true;
+				//Only return true if the angle is 40° or lower
+				if(hit.normal.y > 0.75f)
+				{
+					tempHit = true;
+				}
 			}
 		}
 
