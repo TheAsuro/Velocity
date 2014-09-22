@@ -7,7 +7,6 @@ public class MainMenu : MonoBehaviour
 	public List<string> mapNames = new List<string>();
 	public DrawMapButtons buttonDrawThingy;
 
-	private string nameFieldText = "name";
 	private int selectedIndex = -1;
 
 	private List<string> saveNames = new List<string>();
@@ -243,7 +242,7 @@ public class MainMenu : MonoBehaviour
 
 	private void newGame(int index)
 	{
-		SaveData data = new SaveData(index, nameFieldText);
+		SaveData data = new SaveData(index, enterNameMenuObj.transform.Find("InputField").gameObject.GetComponent<UnityEngine.UI.InputField>().text.text);
 		data.save();
 		GameInfo.info.setCurrentSave(data);
 		setState(State.selectMap);
