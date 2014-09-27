@@ -12,6 +12,22 @@ public class ReplaceUiText : MonoBehaviour
 	{
 		initialText = textScript.text;
 
+		//Special case for main menu
+		if(Application.loadedLevelName == "MainMenu")
+		{
+			Transform curTransform = gameObject.transform;
+			while(curTransform.parent != null)
+			{
+				curTransform = curTransform.parent;
+			}
+			curTransform.gameObject.GetComponent<MainMenu>().addUiTextReset(init);
+		}
+
+		init();
+	}
+
+	public void init()
+	{
 		player1 = new SaveData(1);
 		player2 = new SaveData(2);
 		player3 = new SaveData(3);

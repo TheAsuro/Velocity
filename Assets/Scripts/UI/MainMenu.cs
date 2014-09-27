@@ -6,10 +6,11 @@ public class MainMenu : MonoBehaviour
 {
 	public List<string> mapNames = new List<string>();
 	public DrawMapButtons buttonDrawThingy;
+	public delegate void Reset();
 
 	private int selectedIndex = -1;
-
 	private List<string> saveNames = new List<string>();
+	private List<Reset> uiResets = new List<Reset>();
 
 	//GUI objects
 	private GameObject mainMenuObj;
@@ -144,6 +145,21 @@ public class MainMenu : MonoBehaviour
 				name = "Empty Save";
 			}
 			saveNames.Add(name);
+		}
+
+		resetUi();
+	}
+
+	public void addUiTextReset(Reset reset)
+	{
+		uiResets.Add(reset);
+	}
+
+	private void resetUi()
+	{
+		foreach(Reset r in uiResets)
+		{
+			r();
 		}
 	}
 
