@@ -10,12 +10,25 @@ public class Server : MonoBehaviour
 	private bool running = false;
 	private int myPort = -1;
 	private bool securityInitialized = false;
+	private ServerState mySeverState;
+
+	public enum ServerState
+	{
+		lobby = 0,
+		inGame = 1
+	}
 
 	void Start()
 	{
 		view = GetComponent<NetworkView>();
 		myClient = GetComponent<Client>();
 		view.observed = this;
+	}
+
+	private void setServerState(ServerState state)
+	{
+		mySeverState = state;
+		GameInfo.info.writeToConsole("Changed state to " + state.ToString());
 	}
 
 	public void StartServer(int connections, int port, string password)
@@ -29,6 +42,8 @@ public class Server : MonoBehaviour
 		{
 			GameInfo.info.writeToConsole("Failed to start server!");
 		}
+
+		setServerState(ServerState.lobby);
 	}
 
 	//Only call Network.InitializeSecurity once
@@ -73,6 +88,18 @@ public class Server : MonoBehaviour
 				return;
 			}
 
+			//Change server state depending on level
+			if(id == 0)
+			{
+				setServerState(ServerState.lobby);
+				view.RPC("StopTransmitPositions", RPCMode.All);
+			}
+			else
+			{
+				setServerState(ServerState.inGame);
+				view.RPC("StartTransmitPositions", RPCMode.All);
+			}
+
 			//Tell everyone else to load the level
 			view.RPC("ChangeLevel", RPCMode.Others, id);
 		}
@@ -108,7 +135,10 @@ public class Server : MonoBehaviour
 	{
 		playerList.Add(new RemotePlayer(name));
 		activateLocalPlayer();
-		myClient.StartTransmitPositions();
+
+		if(mySeverState == ServerState.inGame)
+			myClient.StartTransmitPositions();
+
 		GameInfo.info.writeToConsole("Local player " + name + " connected.");
 	}
 
@@ -122,7 +152,8 @@ public class Server : MonoBehaviour
 		GameInfo.info.writeToConsole("Player " + player.name + " has loaded!");
 
 		//Send confirmation
-		view.RPC("StartTransmitPositions", info.sender);
+		if(mySeverState == ServerState.inGame)
+			view.RPC("StartTransmitPositions", info.sender);
 	}
 
 	public void activateLocalPlayer()
@@ -136,12 +167,14 @@ public class Server : MonoBehaviour
 	[RPC]
 	public void setPlayerPosition(Vector3 playerPos, NetworkMessageInfo info)
 	{
-		view.RPC("setGhostPosition", RPCMode.All, playerPos, info.sender.guid);
+		if(mySeverState == ServerState.inGame)
+			view.RPC("setGhostPosition", RPCMode.All, playerPos, info.sender.guid);
 	}
 
 	public void setLocalPlayerPosition(Vector3 playerPos)
 	{
-		view.RPC("setGhostPosition", RPCMode.All, playerPos, getLocalPlayer().name);
+		if(mySeverState == ServerState.inGame)
+			view.RPC("setGhostPosition", RPCMode.All, playerPos, getLocalPlayer().name);
 	}
 
 	private RemotePlayer getPlayerByNetworkPlayer(NetworkPlayer netPlayer)

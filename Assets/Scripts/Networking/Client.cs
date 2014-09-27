@@ -139,6 +139,13 @@ public class Client : MonoBehaviour
 		sendPosition = true;
 	}
 
+	//Server doesn't want our position
+	[RPC]
+	public void StopTransmitPositions()
+	{
+		sendPosition = false;
+	}
+
 	//position of a ghost
 	[RPC]
 	public void setGhostPosition(Vector3 position, string guid)
