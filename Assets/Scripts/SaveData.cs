@@ -50,4 +50,10 @@ public class SaveData
 	{
 		return index;
 	}
+
+	public void deleteData()
+	{
+		PlayerPrefs.DeleteKey("PlayerName" + index.ToString());
+		//TODO delete player map times
+	}
 }

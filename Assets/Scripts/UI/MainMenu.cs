@@ -13,12 +13,14 @@ public class MainMenu : MonoBehaviour
 	private List<Reset> uiResets = new List<Reset>();
 
 	//GUI objects
+	private GameObject titleObj;
 	private GameObject mainMenuObj;
 	private GameObject newGameMenuObj;
 	private GameObject enterNameMenuObj;
 	private GameObject loadGameMenuObj;
 	private GameObject selectMapMenuObj;
 	private GameObject settingsMenuObj;
+	private GameObject otherSettingsMenuObj;
 	private GameObject serverSetupMenuObj;
 	private GameObject serverJoinMenuObj;
 	private GameObject serverPortObj;
@@ -29,14 +31,15 @@ public class MainMenu : MonoBehaviour
 
 	private enum State
 	{
-		main = 1,
-		newGame = 2,
-		loadGame = 3,
-		enterName = 4,
-		selectMap = 5,
-		settings = 6,
-		serversetup = 7,
-		serverjoin = 8
+		main,
+		newGame,
+		loadGame,
+		enterName,
+		selectMap,
+		settings,
+		othersettings,
+		serversetup,
+		serverjoin
 	}
 
 	void Start()
@@ -48,11 +51,13 @@ public class MainMenu : MonoBehaviour
 		GameObject canvas = transform.Find("Canvas").gameObject;
 
 		//Find menu objects
+		titleObj = canvas.transform.Find("Title").gameObject;
 		mainMenuObj = canvas.transform.Find("MainMenu").gameObject;
 		newGameMenuObj = canvas.transform.Find("NewGame").gameObject;
 		enterNameMenuObj = canvas.transform.Find("EnterName").gameObject;
 		loadGameMenuObj = canvas.transform.Find("LoadGame").gameObject;
 		settingsMenuObj = canvas.transform.Find("Settings").gameObject;
+		otherSettingsMenuObj = canvas.transform.Find("OtherSettings").gameObject;
 		selectMapMenuObj = canvas.transform.Find("SelectMap").gameObject;
 		serverSetupMenuObj = canvas.transform.Find("ServerSetup").gameObject;
 		serverJoinMenuObj = canvas.transform.Find("ServerJoin").gameObject;
@@ -77,6 +82,7 @@ public class MainMenu : MonoBehaviour
 			case "entername": setState(State.enterName); break;
 			case "selectmap": setState(State.selectMap); break;
 			case "settings": setState(State.settings); break;
+			case "othersettings": setState(State.othersettings); break;
 			case "serversetup": setState(State.serversetup); break;
 			case "serverjoin": setState(State.serverjoin); break;
 			default: setState(State.main); break;
@@ -88,12 +94,14 @@ public class MainMenu : MonoBehaviour
 	{
 		updateSaveInfos();
 
+		titleObj.SetActive(false);
 		mainMenuObj.SetActive(false);
 		newGameMenuObj.SetActive(false);
 		loadGameMenuObj.SetActive(false);
 		enterNameMenuObj.SetActive(false);
 		selectMapMenuObj.SetActive(false);
 		settingsMenuObj.SetActive(false);
+		otherSettingsMenuObj.SetActive(false);
 		serverSetupMenuObj.SetActive(false);
 		serverJoinMenuObj.SetActive(false);
 
@@ -101,6 +109,7 @@ public class MainMenu : MonoBehaviour
 		{
 			case State.main:
 				mainMenuObj.SetActive(true);
+				titleObj.SetActive(true);
 				break;
 			case State.newGame:
 				newGameMenuObj.SetActive(true);
@@ -119,6 +128,9 @@ public class MainMenu : MonoBehaviour
 			case State.settings:
 				settingsMenuObj.SetActive(true);
 				loadSettingsMenu();
+				break;
+			case State.othersettings:
+				otherSettingsMenuObj.SetActive(true);
 				break;
 			case State.serversetup:
 				serverSetupMenuObj.SetActive(true);
@@ -298,6 +310,38 @@ public class MainMenu : MonoBehaviour
 	public void setSelectedButton(GameObject button)
 	{
 		buttonDrawThingy.setSelectedButton(button);
+	}
+
+	public void deletePlayerData(string index)
+	{
+		int parsed;
+		if(int.TryParse(index, out parsed))
+		{
+			deletePlayerData(parsed);
+		}
+	}
+
+	private void deletePlayerData(int index)
+	{
+		SaveData temp = new SaveData(index);
+		temp.deleteData();
+	}
+
+	public void deleteSettings()
+	{
+		PlayerPrefs.DeleteKey("fov");
+		PlayerPrefs.DeleteKey("mouseSpeed");
+		PlayerPrefs.DeleteKey("volume");
+		PlayerPrefs.DeleteKey("aniso");
+		PlayerPrefs.DeleteKey("aa");
+		PlayerPrefs.DeleteKey("textureSize");
+		PlayerPrefs.DeleteKey("lighting");
+		PlayerPrefs.DeleteKey("vsync");
+	}
+
+	public void deleteEverything()
+	{
+		PlayerPrefs.DeleteAll();
 	}
 
 	public void quit()

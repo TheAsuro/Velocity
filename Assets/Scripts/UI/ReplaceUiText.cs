@@ -20,7 +20,10 @@ public class ReplaceUiText : MonoBehaviour
 			{
 				curTransform = curTransform.parent;
 			}
-			curTransform.gameObject.GetComponent<MainMenu>().addUiTextReset(init);
+			if(curTransform.gameObject.GetComponent<MainMenu>() != null)
+			{
+				curTransform.gameObject.GetComponent<MainMenu>().addUiTextReset(init);
+			}
 		}
 
 		init();
