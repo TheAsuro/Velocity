@@ -354,6 +354,7 @@ public class GameInfo : MonoBehaviour
 		windowLines.Add(stringFunction);
 	}
 
+	//Remove everything from the debug window
 	private void removeAllWindowLines()
 	{
 		linePrefixes.Clear();
@@ -386,6 +387,7 @@ public class GameInfo : MonoBehaviour
 		return currentSave;
 	}
 
+	//Apply current data to loaded save file
 	public void save()
 	{
 		if(currentSave != null)
@@ -408,11 +410,13 @@ public class GameInfo : MonoBehaviour
 		return myConsole;
 	}
 
+	//Write a string to the console
 	public void writeToConsole(string text)
 	{
 		myConsole.writeToConsole(text);
 	}
 
+	//Apply loaded settings to the current game
 	private void applySettings()
 	{
 		if(mouseLook != null)
@@ -444,6 +448,7 @@ public class GameInfo : MonoBehaviour
 		QualitySettings.vSyncCount = (int)vsyncLevel;
 	}
 
+	//Save current game settings to playerprefs
 	public void savePlayerSettings()
 	{
 		float anisoValue = 0f;
@@ -461,6 +466,7 @@ public class GameInfo : MonoBehaviour
 		applySettings();
 	}
 
+	//Load game settings from playerprefs, but don't apply them yet
 	public void loadPlayerSettings()
 	{
 		fov = PlayerPrefs.GetFloat("fov");
@@ -589,6 +595,9 @@ public class GameInfo : MonoBehaviour
 		return selectedMap;
 	}
 
+	//Send a leaderboard entry to leaderboard server, with a automatically generated hash.
+	//This includes a secret key that will be included in the final game (and not uploaded to github),
+	//so nobody can send fake entries.
 	public void sendLeaderboardEntry(string name, float time, string map)
 	{
 		WWWForm form = new WWWForm();
@@ -601,19 +610,18 @@ public class GameInfo : MonoBehaviour
 		//StartCoroutine(WaitForRequest(www));
 	}
 
+	//Wait for the server to answer
 	private IEnumerator WaitForRequest(WWW www)
 	{
 		yield return www;
 
-		//check for errors
-		if(www.error == null)
+		if(www.error != null)
 		{
-			Debug.Log("WWW Ok!: " + www.text);
-		} else {
-			Debug.Log("WWW Error: "+ www.error);
+			Debug.Log("WWW Error: " + www.error);
 		}
 	}
 
+	//Create a md5 hash from a string
 	public string Md5Sum(string strToEncrypt)
 	{
 		System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
