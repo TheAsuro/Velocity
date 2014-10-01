@@ -122,6 +122,7 @@ public class MainMenu : MonoBehaviour
 				break;
 			case State.selectMap:
 				selectMapMenuObj.SetActive(true);
+				GameInfo.info.setSelectedMap("");
 				buttonDrawThingy.clearButtons();
 				buttonDrawThingy.addButtons(this, mapNames);
 				break;
@@ -139,6 +140,8 @@ public class MainMenu : MonoBehaviour
 				serverJoinMenuObj.SetActive(true);
 				break;
 		}
+
+		GameInfo.info.log("Changed MainMenu state to '" + state.ToString() + "'");
 	}
 
 	//Get information about current saves
@@ -257,10 +260,12 @@ public class MainMenu : MonoBehaviour
 
 	public void loadServerSetup()
 	{
-		if(!GameInfo.info.getSelectedMap().Equals(""))
+		//Change to world hub if no map is specified
+		if(GameInfo.info.getSelectedMap() == null)
 		{
-			setState(State.serversetup);
+			GameInfo.info.setSelectedMap("WorldHub");
 		}
+		setState(State.serversetup);
 	}
 
 	public void newGame()

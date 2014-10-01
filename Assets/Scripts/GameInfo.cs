@@ -31,6 +31,7 @@ public class GameInfo : MonoBehaviour
 	private Vector2 leaderboardScroll = Vector2.zero;
 	
 	//Debug window (top-left corner, toggle with f8)
+	public bool logToConsole = true;
 	private List<string> linePrefixes = new List<string>();
 	private List<InfoString> windowLines = new List<InfoString>();
 
@@ -327,6 +328,7 @@ public class GameInfo : MonoBehaviour
 			}
 
 			menuState = state;
+			log("Changed MenuState to '" + menuState.ToString() + "'");
 		}
 	}
 
@@ -410,10 +412,19 @@ public class GameInfo : MonoBehaviour
 		return myConsole;
 	}
 
+	public void log(string text)
+	{
+		if(logToConsole)
+		{
+			writeToConsole(text);
+		}
+	}
+
 	//Write a string to the console
 	public void writeToConsole(string text)
 	{
-		myConsole.writeToConsole(text);
+		if(myConsole)
+			myConsole.writeToConsole(text);
 	}
 
 	//Apply loaded settings to the current game

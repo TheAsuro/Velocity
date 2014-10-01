@@ -101,6 +101,9 @@ public class Console : MonoBehaviour
 				case "forcequit":
 					forceQuitCommand(commandParts);
 					break;
+				case "logtoconsole":
+					logCommand(commandParts);
+					break;
 				case "connect":
 					connectCommand(commandParts);
 					break;
@@ -145,6 +148,21 @@ public class Console : MonoBehaviour
 	private void forceQuitCommand(string[] input)
 	{
 		Application.Quit();
+	}
+
+	//Enables logging of certain changes
+	private void logCommand(string[] input)
+	{
+		if(input.Length == 2)
+		{
+			bool value = false;
+			if(input[1].Equals("true") || input[1].Equals("1")) { value = true; }
+			GameInfo.info.logToConsole = value;
+		}
+		else
+		{
+			writeToConsole("Usage: logToConsole <true/false/1/0>");
+		}
 	}
 
 	//Connect to a server

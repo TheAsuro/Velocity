@@ -80,7 +80,6 @@ public class Server : MonoBehaviour
 				myClient.JoinServer(true);
 			}
 
-			//TODO: Make main menu lobby for server/clients
 			//For now: Disconnect everyone and stop the server
 			if(Application.loadedLevel.Equals("MainMenu"))
 			{
