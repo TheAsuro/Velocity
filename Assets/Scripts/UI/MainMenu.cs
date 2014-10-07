@@ -330,6 +330,7 @@ public class MainMenu : MonoBehaviour
 	{
 		SaveData temp = new SaveData(index);
 		temp.deleteData();
+		updateSaveInfos();
 	}
 
 	public void deleteSettings()
