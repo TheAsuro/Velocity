@@ -74,7 +74,7 @@ public class DemoPlay : MonoBehaviour
 
 			if(nextFrameTime == -1f)
 			{
-				stopPlayback(true);
+				stopDemoPlayback(true);
 			}
 		}
 	}
@@ -104,7 +104,14 @@ public class DemoPlay : MonoBehaviour
 		playing = true;
 	}
 
-	public void stopPlayback(bool finished = false)
+	//Public stop, is always counted as an iterrupt
+	public void stopPlayback()
+	{
+		stopDemoPlayback(false);
+	}
+
+	//Private stop, finished will determine if the finishedplaying delegate will be called
+	private void stopDemoPlayback(bool finished)
 	{
 		playing = false;
 		GameObject.Destroy(ghost);
