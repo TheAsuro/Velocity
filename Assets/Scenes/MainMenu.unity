@@ -1642,7 +1642,7 @@ MonoBehaviour:
   keyboardType: 0
   validation: 0
   characterLimit: 0
-  multiLine: 1
+  multiLine: 0
   activeTextColor: {r: 1, g: 1, b: 1, a: 1}
   onSubmit:
     m_PersistentCalls:
@@ -2894,6 +2894,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100020, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400046, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
+      propertyPath: multiLine
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
