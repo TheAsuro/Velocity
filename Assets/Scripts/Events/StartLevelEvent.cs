@@ -24,11 +24,11 @@ public class StartLevelEvent : Event
 			introStartTime = Time.time;
 			waitForIntro = true;
 			introDisplay.SetActive(true);
-			GameInfo.info.getPlayerObject().GetComponent<RaceScript>().startRace(startFreeze + introLength);
+			startIn(startFreeze + introLength);
 		}
 		else
 		{
-			GameInfo.info.getPlayerObject().GetComponent<RaceScript>().startRace(startFreeze);
+			startIn(startFreeze);
 		}
 	}
 
@@ -43,6 +43,12 @@ public class StartLevelEvent : Event
 
 	public override void reset()
 	{
-		GameInfo.info.getPlayerObject().GetComponent<RaceScript>().startRace(startFreeze);
+		startIn(startFreeze);
+	}
+
+	private void startIn(float delay)
+	{
+		GameInfo.info.spawnNewPlayer(WorldInfo.info.getFirstSpawn(), false);
+		GameInfo.info.getPlayerInfo().startRace(delay);
 	}
 }

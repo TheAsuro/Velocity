@@ -12,6 +12,7 @@ public class Demo
 	private string levelName;
 	private bool loadFromFileFailed = false;
 
+	//Load a demo from file (Currently only windows)
 	#if UNITY_STANDALONE_WIN
 	public Demo(string file)
 	{
@@ -47,6 +48,7 @@ public class Demo
 	}
 	#endif
 
+	//Make a demo from a list of ticks
 	public Demo(List<DemoTick> pTickList, string pPlayerName, string pLevelName)
 	{
 		tickList = pTickList;
@@ -54,6 +56,7 @@ public class Demo
 		levelName = pLevelName;
 	}
 
+	//RIP
 	public bool didLoadFromFileFail()
 	{
 		return loadFromFileFailed;
@@ -79,6 +82,7 @@ public class Demo
 		return tickList;
 	}
 
+	//Convert string to bytes (for saving)
 	private static byte[] GetBytes(string str)
 	{
 	    byte[] bytes = new byte[str.Length * sizeof(char)];
@@ -86,6 +90,7 @@ public class Demo
 	    return bytes;
 	}
 
+	//Convert bytes to string (for loading)
 	private static string GetString(byte[] bytes)
 	{
 	    char[] chars = new char[bytes.Length / sizeof(char)];
@@ -93,6 +98,7 @@ public class Demo
 	    return new string(chars);
 	}
 
+	//Save demo to file (Currently only on windows)
 	#if UNITY_STANDALONE_WIN
 	public void saveToFile(string path)
 	{

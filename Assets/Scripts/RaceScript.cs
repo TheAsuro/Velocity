@@ -24,8 +24,6 @@ public class RaceScript : MonoBehaviour
 	//This script actually sets the player as an actual player
 	void Awake()
 	{
-		GameInfo.info.setPlayerObject(gameObject);
-		
 		Transform canvas = gameObject.transform.parent.Find("Canvas");
 		timeTextObj = canvas.Find("Time").Find("Text").GetComponent<Text>();
 		countdownTextObj = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
@@ -33,15 +31,19 @@ public class RaceScript : MonoBehaviour
 
 	void Update()
 	{
+		//Update time
 		if(!finished)
 		{
 			time = Time.time - startTime;
 		}
+
+		//Unfreeze if freeze time is up
 		if(frozen && Time.time >= unfreezeTime)
 		{
 			unfreeze();
 		}
 
+		//Checkpoint system
 		if(time > 0f && checkpoint != -1 && !finished)
 		{
 			timeTextObj.gameObject.transform.parent.gameObject.SetActive(true);
@@ -57,6 +59,7 @@ public class RaceScript : MonoBehaviour
 			timeTextObj.gameObject.transform.parent.gameObject.SetActive(false);
 		}
 
+		//Horribly coded countdown
 		float remainingFreezeTime = unfreezeTime - Time.time;
 		if(remainingFreezeTime > 2f)
 		{

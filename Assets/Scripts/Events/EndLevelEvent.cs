@@ -7,14 +7,11 @@ public class EndLevelEvent : Event
 
 	public override void fire(params object[] stuff)
 	{
-		PlayerEffects effects = GameInfo.info.getPlayerObject().GetComponent<PlayerEffects>();
-		effects.movePlayerTowardsPosition(transform.position + relativeGoalPos, 1f);
-		GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
+		GameInfo.info.levelFinished();
 	}
 
 	public override void reset()
 	{
-		PlayerEffects effects = GameInfo.info.getPlayerObject().GetComponent<PlayerEffects>();
-		effects.stopMoveToPos();
+		
 	}
 }

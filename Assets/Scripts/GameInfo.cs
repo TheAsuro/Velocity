@@ -6,6 +6,7 @@ public class GameInfo : MonoBehaviour
 {
 	public static GameInfo info;
 	public delegate string InfoString();
+	public GameObject playerTemplate;
 	public GUISkin skin;
 	public string secretKey = "NotActuallySecret";
 	
@@ -28,6 +29,7 @@ public class GameInfo : MonoBehaviour
 
 	//Stuff
 	private SaveData currentSave;
+	private Demo lastDemo;
 	private Vector2 leaderboardScroll = Vector2.zero;
 	
 	//Debug window (top-left corner, toggle with f8)
@@ -47,9 +49,8 @@ public class GameInfo : MonoBehaviour
 	public float vsyncLevel = 0f;
 
 	//References
-	private GameObject playerObj;
-	private DemoRecord recorder;
-	private MouseLook mouseLook;
+	private PlayerInfo myPlayer;
+	private DemoPlay myDemoPlayer;
 	private Console myConsole;
 	private Server myServer;
 	private Client myClient;
@@ -88,6 +89,7 @@ public class GameInfo : MonoBehaviour
 
 		myServer = gameObject.GetComponent<Server>();
 		myClient = gameObject.GetComponent<Client>();
+		myDemoPlayer = gameObject.GetComponent<DemoPlay>();
 		
 		GameObject canvas = transform.Find("Canvas").gameObject;
 		escMenu = canvas.transform.Find("EscMenu").gameObject;
@@ -118,7 +120,7 @@ public class GameInfo : MonoBehaviour
 	void OnGUI()
 	{
 		//Debug info in the top-left corner
-		if(showDebug && playerObj != null)
+		if(showDebug && myPlayer != null)
 		{
 			Rect rect = new Rect(0f, 0f, 150f, 200f);
 
@@ -189,15 +191,42 @@ public class GameInfo : MonoBehaviour
 		Application.LoadLevel(name);
 	}
 
+	//Creates a new local player (the one that is controlled by the current user)
+	public void spawnNewPlayer(Respawn spawnpoint, bool killOldPlayer = true)
+	{
+		if(killOldPlayer || getPlayerInfo() == null)
+		{
+			//Remove old player
+			setPlayerInfo(null);
+
+			//Instantiate a new player at the spawnpoint's location
+			GameObject newPlayer = (GameObject)GameObject.Instantiate(playerTemplate, spawnpoint.getSpawnPos(), spawnpoint.getSpawnRot());
+			setPlayerInfo(newPlayer.GetComponent<PlayerInfo>());
+		}
+		
+		applySettings();
+	}
+
+	//Removes player and plays back the demo
+	public void levelFinished()
+	{
+		GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
+		lastDemo = myPlayer.getDemo();
+		setPlayerInfo(null);
+		playLastDemo();
+	}
+
 	//Plays a sound at the player position
 	public void playSound(string name)
 	{
-		for(int i = 0; i < soundNames.Count; i++)
+		if(myPlayer != null)
 		{
-			if(soundNames[i] == name)
+			for(int i = 0; i < soundNames.Count; i++)
 			{
-				playerObj.audio.clip = soundClips[i];
-				playerObj.audio.Play();
+				if(soundNames[i] == name)
+				{
+					myPlayer.playSound(soundClips[i]);
+				}
 			}
 		}
 	}
@@ -238,7 +267,6 @@ public class GameInfo : MonoBehaviour
 	public void reset()
 	{
 		stopDemo();
-		playerObj.GetComponent<PlayerEffects>().stopMoveToPos();
 		Movement move = Movement.movement;
 		move.spawnPlayer(WorldInfo.info.getFirstSpawn());
 		((BunnyHopMovement)move).clearCollisionList();
@@ -430,20 +458,11 @@ public class GameInfo : MonoBehaviour
 	//Apply loaded settings to the current game
 	private void applySettings()
 	{
-		if(mouseLook != null)
+		if(myPlayer != null)
 		{
-			mouseLook.sensitivityX = mouseSpeed;
-			mouseLook.sensitivityY = mouseSpeed;
-		}
-		
-		foreach(Camera cam in Camera.allCameras)
-		{
-			cam.fieldOfView = fov;
-		}
-
-		if(playerObj != null && playerObj.audio != null)
-		{
-			playerObj.audio.volume = volume;
+			myPlayer.setMouseSens(mouseSpeed);
+			myPlayer.setFov(fov);
+			myPlayer.setVolume(volume);
 		}
 
 		AnisotropicFiltering filter = AnisotropicFiltering.Disable;
@@ -500,26 +519,38 @@ public class GameInfo : MonoBehaviour
 		return gamePaused;
 	}
 
-	public void setPlayerObject(GameObject player)
+	//Sets the reference to the player
+	//If info is null, current player will be removed
+	public void setPlayerInfo(PlayerInfo info)
 	{
-		playerObj = player;
-		recorder = playerObj.GetComponent<DemoRecord>();
-		mouseLook = playerObj.GetComponentInChildren<MouseLook>();
+		if(info == null)
+		{
+			if(myPlayer != null)
+			{
+				Destroy(myPlayer.gameObject);
+			}
+			myPlayer = null;
+			return;
+		}
+
+		myPlayer = info;
 	}
 
-	public GameObject getPlayerObject()
+	public PlayerInfo getPlayerInfo()
 	{
-		return playerObj;
+		return myPlayer;
 	}
 
 	public void startDemo()
 	{
-		recorder.startDemo(currentSave.getPlayerName());
+		if(myPlayer != null)
+			myPlayer.startDemo(currentSave.getPlayerName());
 	}
 
 	public void stopDemo()
 	{
-		recorder.stopDemo();
+		if(myPlayer != null)
+			myPlayer.stopDemo();
 	}
 
 	public void playDemoFromFile(string fileName)
@@ -534,7 +565,7 @@ public class GameInfo : MonoBehaviour
 		Demo myDemo = new Demo(Application.dataPath + "/" + fixedFileName);
 		if(!myDemo.didLoadFromFileFail())
 		{
-			recorder.playDemo(myDemo, consoleDemoPlayEnded);
+			myDemoPlayer.playDemo(myDemo, consoleDemoPlayEnded);
 		}
 
 		#endif
@@ -542,7 +573,7 @@ public class GameInfo : MonoBehaviour
 
 	public void playLastDemo()
 	{
-		recorder.playDemo(recorder.getDemo(), endLeveldemoPlayEnded);
+		myDemoPlayer.playDemo(lastDemo, endLeveldemoPlayEnded);
 	}
 
 	private void endLeveldemoPlayEnded()
@@ -559,7 +590,7 @@ public class GameInfo : MonoBehaviour
 	{
 		#if UNITY_STANDALONE_WIN
 
-		recorder.getDemo().saveToFile(Application.dataPath);
+		lastDemo.saveToFile(Application.dataPath);
 
 		#endif
 	}
@@ -568,19 +599,20 @@ public class GameInfo : MonoBehaviour
 	{
 		if(!viewLocked)
 		{
-			if(mouseLook != null)
+			if(myPlayer != null)
 			{
-				mouseLook.enabled = value;
+				myPlayer.setMouseView(value);
 			}
 		}
 	}
 
 	//MouseLook is locked to given value, even if menu states change
+	//Overrides old locked value
 	public void lockMouseView(bool value)
 	{
-		if(mouseLook != null)
+		if(myPlayer != null)
 		{
-			mouseLook.enabled = value;
+			myPlayer.setMouseView(value);
 		}
 		viewLocked = true;
 	}

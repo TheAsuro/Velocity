@@ -2,27 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class DemoRecord : MonoBehaviour
+public class DemoPlay : MonoBehaviour
 {
+	public delegate void FinishedPlaying();
 	public GameObject ghostPrefab;
 	public GameObject ghostCamPrefab;
 	public Vector3 camDistance;
 
-	//Record
-	private List<DemoTick> tickList;
-	private bool recording = false;
-	private Demo completeDemo;
-	private string playerName;
-	private string levelName;
-
-	//Replay
+	private FinishedPlaying myFinishedPlaying;
 	private bool playing = false;
 	private float startPlayTime;
 	private GameObject ghost;
 	private GameObject ghostCamObj;
 	private GameObject ghostCamChild;
-	public delegate void FinishedPlaying();
-	private FinishedPlaying myFinishedPlaying;
+	private List<DemoTick> tickList;
 
 	void Update()
 	{
@@ -87,35 +80,6 @@ public class DemoRecord : MonoBehaviour
 				myFinishedPlaying();
 			}
 		}
-	}
-
-	void FixedUpdate()
-	{
-		if(recording)
-		{
-			Quaternion rot = Camera.main.transform.rotation;
-			tickList.Add(new DemoTick(Time.time - startPlayTime, transform.position, rot));
-		}
-	}
-
-	public void startDemo(string pPlayerName)
-	{
-		startPlayTime = Time.time;
-		tickList = new List<DemoTick>();
-		playerName = pPlayerName;
-		levelName = Application.loadedLevelName;
-		recording = true;
-	}
-
-	public void stopDemo()
-	{
-		recording = false;
-		completeDemo = new Demo(tickList, playerName, levelName);
-	}
-
-	public Demo getDemo()
-	{
-		return completeDemo;
 	}
 
 	public void playDemo(Demo demo, FinishedPlaying pFinishedPlaying)

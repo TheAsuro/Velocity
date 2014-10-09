@@ -61,9 +61,9 @@ public class Client : MonoBehaviour
 	//Send the position to create ghosts for other players
 	void FixedUpdate()
 	{
-		if(GameInfo.info.getPlayerObject() != null)
+		if(GameInfo.info.getPlayerInfo() != null)
 		{
-			Vector3 playerPos = GameInfo.info.getPlayerObject().transform.position;
+			Vector3 playerPos = GameInfo.info.getPlayerInfo().getPosition();
 			if(!lastPosition.Equals(playerPos) && sendPosition)
 			{
 				lastPosition = playerPos;
