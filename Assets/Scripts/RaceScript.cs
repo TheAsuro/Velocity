@@ -142,14 +142,14 @@ public class RaceScript : MonoBehaviour
 	private void freeze(float duration)
 	{
 		frozen = true;
-		Movement.movement.freeze();
+		GameInfo.info.getPlayerInfo().freeze();
 		unfreezeTime = Time.time + duration;
 	}
 	
 	private void unfreeze()
 	{
 		frozen = false;
-		Movement.movement.unfreeze();
+		GameInfo.info.getPlayerInfo().unfreeze();
 	}
 	
 	private string getFrozenString()

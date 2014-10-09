@@ -230,21 +230,23 @@ public class Console : MonoBehaviour
 
 	private void frictionCommand(string[] input)
 	{
-		if(Movement.movement == null)
+		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
+
+		if(myPlayerInfo == null)
 		{
-			writeToConsole("No movement loaded!");
+			writeToConsole("No player loaded!");
 			return;
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current friction multiplier: " + Movement.movement.frictionMultiplier);
+			writeToConsole("Current friction multiplier: " + myPlayerInfo.getFrictionMultiplier());
 		}
 		else if(input.Length == 2)
 		{
 			float newVal;
 			if(float.TryParse(input[1], out newVal))
 			{
-				Movement.movement.frictionMultiplier = newVal;
+				myPlayerInfo.setFrictionMultiplier(newVal);
 			}
 		}
 		else
@@ -255,21 +257,23 @@ public class Console : MonoBehaviour
 
 	private void speedCommand(string[] input)
 	{
-		if(Movement.movement.Equals(null))
+		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
+
+		if(myPlayerInfo == null)
 		{
-			writeToConsole("No movement loaded!");
+			writeToConsole("No player loaded!");
 			return;
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current input multiplier: " + Movement.movement.speed);
+			writeToConsole("Current input multiplier: " + myPlayerInfo.getSpeed());
 		}
 		else if(input.Length == 2)
 		{
 			float newVal;
 			if(float.TryParse(input[1], out newVal))
 			{
-				Movement.movement.speed = newVal;
+				myPlayerInfo.setSpeed(newVal);
 			}
 		}
 		else
@@ -280,14 +284,16 @@ public class Console : MonoBehaviour
 
 	private void maxSpeedCommand(string[] input)
 	{
-		if(Movement.movement.Equals(null))
+		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
+
+		if(myPlayerInfo == null)
 		{
-			writeToConsole("No movement loaded!");
+			writeToConsole("No player loaded!");
 			return;
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current speed limit: " + Movement.movement.maxSpeed);
+			writeToConsole("Current speed limit: " + myPlayerInfo.getMaxSpeed());
 		}
 		else if(input.Length == 2)
 		{
@@ -299,7 +305,7 @@ public class Console : MonoBehaviour
 					writeToConsole("Value can not be 0!");
 					return;
 				}
-				Movement.movement.maxSpeed = newVal;
+				myPlayerInfo.setMaxSpeed(newVal);
 			}
 		}
 		else
@@ -310,21 +316,23 @@ public class Console : MonoBehaviour
 
 	private void airSpeedCommand(string[] input)
 	{
-		if(Movement.movement.Equals(null))
+		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
+
+		if(myPlayerInfo == null)
 		{
-			writeToConsole("No movement loaded!");
+			writeToConsole("No player loaded!");
 			return;
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current speed limit: " + Movement.movement.airSpeed);
+			writeToConsole("Current speed limit: " + myPlayerInfo.getAirSpeed());
 		}
 		else if(input.Length == 2)
 		{
 			float newVal;
 			if(float.TryParse(input[1], out newVal))
 			{
-				Movement.movement.airSpeed = newVal;
+				myPlayerInfo.setAirSpeed(newVal);
 			}
 		}
 		else
@@ -335,21 +343,23 @@ public class Console : MonoBehaviour
 
 	private void jumpHeightCommand(string[] input)
 	{
-		if(Movement.movement.Equals(null))
+		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
+
+		if(myPlayerInfo == null)
 		{
-			writeToConsole("No movement loaded!");
+			writeToConsole("No player loaded!");
 			return;
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current jump height: " + Movement.movement.jumpForce);
+			writeToConsole("Current jump height: " + myPlayerInfo.getJumpForce());
 		}
 		else if(input.Length == 2)
 		{
 			float newVal;
 			if(float.TryParse(input[1], out newVal))
 			{
-				Movement.movement.jumpForce = newVal;
+				myPlayerInfo.setJumpForce(newVal);
 			}
 		}
 		else

@@ -267,9 +267,6 @@ public class GameInfo : MonoBehaviour
 	public void reset()
 	{
 		stopDemo();
-		Movement move = Movement.movement;
-		move.spawnPlayer(WorldInfo.info.getFirstSpawn());
-		((BunnyHopMovement)move).clearCollisionList();
 		WorldInfo.info.reset();
 		setMenuState(MenuState.closed);
 		startDemo();

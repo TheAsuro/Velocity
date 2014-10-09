@@ -8,6 +8,7 @@ public class PlayerInfo : MonoBehaviour
 	private MouseLook myMouseLook;
 	private Camera myCamera;
 	private DemoRecord myRecorder;
+	private Movement myMovement;
 
 	void Awake()
 	{
@@ -16,6 +17,7 @@ public class PlayerInfo : MonoBehaviour
 		myCamera = myMesh.transform.Find("Camera").gameObject.GetComponent<Camera>();
 		myMouseLook = myCamera.gameObject.GetComponent<MouseLook>();
 		myRecorder = myMesh.GetComponent<DemoRecord>();
+		myMovement = myMesh.GetComponent<Movement>();
 	}
 
 	public void startRace(float delay)
@@ -68,5 +70,65 @@ public class PlayerInfo : MonoBehaviour
 	public Demo getDemo()
 	{
 		return myRecorder.getDemo();
+	}
+
+	public void freeze()
+	{
+		myMovement.freeze();
+	}
+
+	public void unfreeze()
+	{
+		myMovement.unfreeze();
+	}
+
+	public void setFrictionMultiplier(float value)
+	{
+		myMovement.frictionMultiplier = value;
+	}
+
+	public float getFrictionMultiplier()
+	{
+		return myMovement.frictionMultiplier;
+	}
+
+	public void setSpeed(float value)
+	{
+		myMovement.speed = value;
+	}
+
+	public float getSpeed()
+	{
+		return myMovement.speed;
+	}
+
+	public void setAirSpeed(float value)
+	{
+		myMovement.airSpeed = value;
+	}
+
+	public float getAirSpeed()
+	{
+		return myMovement.airSpeed;
+	}
+
+	public void setMaxSpeed(float value)
+	{
+		myMovement.maxSpeed = value;
+	}
+
+	public float getMaxSpeed()
+	{
+		return myMovement.maxSpeed;
+	}
+
+	public void setJumpForce(float value)
+	{
+		myMovement.jumpForce = value;
+	}
+
+	public float getJumpForce()
+	{
+		return myMovement.jumpForce;
 	}
 }

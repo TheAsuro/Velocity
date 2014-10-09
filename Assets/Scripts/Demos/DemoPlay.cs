@@ -74,23 +74,44 @@ public class DemoPlay : MonoBehaviour
 
 			if(nextFrameTime == -1f)
 			{
-				playing = false;
-				GameObject.Destroy(ghost);
-				GameObject.Destroy(ghostCamObj);
-				myFinishedPlaying();
+				stopPlayback(true);
 			}
 		}
 	}
 
 	public void playDemo(Demo demo, FinishedPlaying pFinishedPlaying)
 	{
+		//Load demo ticks
 		tickList = demo.getTickList();
+
+		//Get ghost spawn
 		Respawn spawn = WorldInfo.info.getFirstSpawn();
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		ghostCamObj = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		ghostCamChild = ghostCamObj.transform.FindChild("CamObj").gameObject;
+
+		//Set start time to current time
 		startPlayTime = Time.time;
+
+		//Set the finished playing delegate
 		myFinishedPlaying = pFinishedPlaying;
+
+		//Stop playback on world reset
+		WorldInfo.Reset resetPlay = new WorldInfo.Reset(stopPlayback);
+		WorldInfo.info.addResetMethod(resetPlay, "GhostReset");
+
+		//Start playing
 		playing = true;
+	}
+
+	public void stopPlayback(bool finished = false)
+	{
+		playing = false;
+		GameObject.Destroy(ghost);
+		GameObject.Destroy(ghostCamObj);
+		if(finished)
+		{
+			myFinishedPlaying();
+		}
 	}
 }

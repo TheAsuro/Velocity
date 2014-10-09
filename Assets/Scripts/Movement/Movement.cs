@@ -3,8 +3,6 @@ using System.Collections;
 
 public abstract class Movement : MonoBehaviour
 {
-	public static Movement movement;
-
 	public float speed = 1f;
 	public float airSpeed = 1f;
 	public float maxSpeed = 10f;
@@ -32,7 +30,6 @@ public abstract class Movement : MonoBehaviour
 
 	void Awake()
 	{
-		movement = this;
 		camObj = transform.FindChild("Camera").gameObject;
 	}
 	
