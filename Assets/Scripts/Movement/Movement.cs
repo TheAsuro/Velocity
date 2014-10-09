@@ -148,6 +148,10 @@ public abstract class Movement : MonoBehaviour
 				rigidbody.velocity = Vector3.zero;
 			}
 		}
+		else if(other.tag.Equals("Kill"))
+		{
+			respawnPlayer();
+		}
 	}
 
 	public void spawnPlayer(Respawn spawn)
