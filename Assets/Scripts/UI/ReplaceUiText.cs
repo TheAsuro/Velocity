@@ -4,6 +4,7 @@ using System.Collections;
 public class ReplaceUiText : MonoBehaviour
 {
 	public UnityEngine.UI.Text textScript;
+	public bool specialCase = true;
 
 	private string initialText = "";
 	private SaveData player1, player2, player3;
@@ -45,6 +46,8 @@ public class ReplaceUiText : MonoBehaviour
 		else if(temp.Contains("$player2")) { temp = temp.Replace("$player2", player2.getPlayerName()); }
 		else if(temp.Contains("$player3")) { temp = temp.Replace("$player3", player3.getPlayerName()); }
 		else if(temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.getPlayerName()); }
+		if(temp.Contains("$time")) { temp = temp.Replace("$time", GameInfo.info.getLastTime().ToString()); }
+		if(temp.Contains("$map")) { temp = Application.loadedLevelName; }
 
 		temp = temp.Replace("$selectedmap", GameInfo.info.getSelectedMap());
 

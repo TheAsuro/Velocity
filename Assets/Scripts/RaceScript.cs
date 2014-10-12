@@ -102,10 +102,9 @@ public class RaceScript : MonoBehaviour
 			
 			if(end && nr == checkpoint + 1 && !finished) //End
 			{
-				GameInfo.info.stopDemo();
 				time = Time.time - startTime;
 				finished = true;
-				GameInfo.info.getCurrentSave().saveIfPersonalBest(time, Application.loadedLevelName);
+				GameInfo.info.runFinished(time);
 				if(freezeDuration > 0f)
 				{
 					freeze(freezeDuration);

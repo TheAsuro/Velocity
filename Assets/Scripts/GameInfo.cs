@@ -30,6 +30,7 @@ public class GameInfo : MonoBehaviour
 	//Stuff
 	private SaveData currentSave;
 	private Demo lastDemo;
+	private float lastTime = -1f;
 	private Vector2 leaderboardScroll = Vector2.zero;
 	
 	//Debug window (top-left corner, toggle with f8)
@@ -276,6 +277,13 @@ public class GameInfo : MonoBehaviour
 	public void quit()
 	{
 		Application.Quit();
+	}
+
+	public void runFinished(float time)
+	{
+		stopDemo();
+		getCurrentSave().saveIfPersonalBest(time, Application.loadedLevelName);
+		lastTime = time;
 	}
 
 	//Version for new gui
@@ -571,6 +579,11 @@ public class GameInfo : MonoBehaviour
 	public void playLastDemo()
 	{
 		myDemoPlayer.playDemo(lastDemo, endLeveldemoPlayEnded);
+	}
+
+	public float getLastTime()
+	{
+		return lastTime;
 	}
 
 	private void endLeveldemoPlayEnded()
