@@ -620,6 +620,11 @@ public class GameInfo : MonoBehaviour
 		viewLocked = false;
 	}
 
+	public void lockMenu()
+	{
+		menuLocked = true;
+	}
+
 	public void unlockMenu()
 	{
 		menuLocked = false;
