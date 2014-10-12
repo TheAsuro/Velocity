@@ -11,7 +11,6 @@ public class GameInfo : MonoBehaviour
 	public string secretKey = "NotActuallySecret";
 	
 	//Gamestates
-	private bool showDebug = false;
 	private bool gamePaused = false;
 	private bool showLeaderboard = false;
 	private MenuState menuState = MenuState.closed;
@@ -55,6 +54,8 @@ public class GameInfo : MonoBehaviour
 	private Console myConsole;
 	private Server myServer;
 	private Client myClient;
+	private GameObject myDebugWindow;
+	private UnityEngine.UI.Text myDebugWindowText;
 
 	public enum MenuState
 	{
@@ -91,10 +92,12 @@ public class GameInfo : MonoBehaviour
 		myServer = gameObject.GetComponent<Server>();
 		myClient = gameObject.GetComponent<Client>();
 		myDemoPlayer = gameObject.GetComponent<DemoPlay>();
-		
+
 		GameObject canvas = transform.Find("Canvas").gameObject;
 		escMenu = canvas.transform.Find("EscMenu").gameObject;
 		endLevel = canvas.transform.Find("EndLevel").gameObject;
+		myDebugWindow = canvas.transform.Find("Debug").gameObject;
+		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
 		Screen.lockCursor = true;
 		setMenuState(MenuState.closed);
 	}
@@ -108,33 +111,35 @@ public class GameInfo : MonoBehaviour
 	{
 		if(Input.GetButtonDown("Debug"))
 		{
-			showDebug = !showDebug;
+			myDebugWindow.SetActive(!myDebugWindow.activeSelf);
 		}
 		
 		if(Input.GetButtonDown("Menu"))
 		{
 			toggleEscMenu();
 		}
+
+		//Draw debug window lines
+		if(getPlayerInfo() != null)
+		{
+			string str = "";
+		
+			for(int i = 0; i < windowLines.Count; i++)
+			{
+				str += linePrefixes[i] + windowLines[i]() + "\n";
+			}
+
+			myDebugWindowText.text = str;
+		}
+		else
+		{
+			myDebugWindowText.text = "No player";
+		}
 	}
 	
 	//Draw the HUD
 	void OnGUI()
 	{
-		//Debug info in the top-left corner
-		if(showDebug && myPlayer != null)
-		{
-			Rect rect = new Rect(0f, 0f, 150f, 200f);
-
-			GUILayout.BeginArea(rect, skin.box);
-
-			for(int i = 0; i < windowLines.Count; i++)
-			{
-				GUILayout.Label(linePrefixes[i] + windowLines[i](), skin.label);
-			}
-
-			GUILayout.EndArea();
-		}
-		
 		if(showLeaderboard)
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 350f, Screen.height / 2f - 250f, 700f, 500f), skin.box);
@@ -268,6 +273,7 @@ public class GameInfo : MonoBehaviour
 	public void reset()
 	{
 		stopDemo();
+		removeAllWindowLines();
 		WorldInfo.info.reset();
 		setMenuState(MenuState.closed);
 		startDemo();
