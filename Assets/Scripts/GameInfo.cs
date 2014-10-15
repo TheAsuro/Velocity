@@ -566,7 +566,7 @@ public class GameInfo : MonoBehaviour
 
 	public void playDemoFromFile(string fileName)
 	{
-		#if UNITY_STANDALONE_WIN
+		#if UNITY_STANDALONE
 
 		stopDemo();
 
@@ -604,7 +604,7 @@ public class GameInfo : MonoBehaviour
 
 	public void saveLastDemo()
 	{
-		#if UNITY_STANDALONE_WIN
+		#if UNITY_STANDALONE
 
 		lastDemo.saveToFile(Application.dataPath);
 

@@ -53,6 +53,7 @@ public class BunnyHopMovement : Movement
 		Vector2 frictionTemp = new Vector2(input.x, input.z);
 
 		//Friction
+		//TODO friction is shit make it gud
 		if(applyFriction)
 		{
 			frictionTemp *= frictionMultiplier;

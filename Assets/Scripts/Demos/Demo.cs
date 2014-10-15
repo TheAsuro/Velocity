@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-#if UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE
 using System.IO;
 #endif
 
@@ -12,8 +12,8 @@ public class Demo
 	private string levelName;
 	private bool loadFromFileFailed = false;
 
-	//Load a demo from file (Currently only windows)
-	#if UNITY_STANDALONE_WIN
+	//Load a demo from file
+	#if UNITY_STANDALONE
 	public Demo(string file)
 	{
 		try
@@ -99,7 +99,7 @@ public class Demo
 	}
 
 	//Save demo to file (Currently only on windows)
-	#if UNITY_STANDALONE_WIN
+	#if UNITY_STANDALONE
 	public void saveToFile(string path)
 	{
 		string filename = path + "/" + playerName + "-" + levelName + ".vdem";
