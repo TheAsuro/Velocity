@@ -172,15 +172,8 @@ public abstract class Movement : MonoBehaviour
 	//Spawns the player at the last checkpoint
 	private void respawnPlayer()
 	{
-		//Resets the game if the last checkpoint was the first anyways
-		if(WorldInfo.info.getCurrentSpawn() == WorldInfo.info.getFirstSpawn())
-		{
-			GameInfo.info.reset();
-		}
-		else
-		{
-			spawnPlayer(WorldInfo.info.getCurrentSpawn());
-		}
+		//Don't reset the game, just spawn the player at the last (possibly first checkpoint)
+		spawnPlayer(WorldInfo.info.getCurrentSpawn());
 	}
 	
 	public bool checkGround()
