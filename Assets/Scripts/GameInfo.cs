@@ -119,6 +119,8 @@ public class GameInfo : MonoBehaviour
 			toggleEscMenu();
 		}
 
+		myDebugWindowText.text = Mathf.RoundToInt(1 / Time.smoothDeltaTime).ToString() + '\n';
+
 		//Draw debug window lines
 		if(getPlayerInfo() != null)
 		{
@@ -129,11 +131,11 @@ public class GameInfo : MonoBehaviour
 				str += linePrefixes[i] + windowLines[i]() + "\n";
 			}
 
-			myDebugWindowText.text = str;
+			myDebugWindowText.text += str;
 		}
 		else
 		{
-			myDebugWindowText.text = "No player";
+			myDebugWindowText.text += "No player";
 		}
 	}
 	
