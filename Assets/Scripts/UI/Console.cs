@@ -38,10 +38,17 @@ public class Console : MonoBehaviour
 
 		if(Input.GetMouseButtonDown(0))
 		{
-			mouseDown = true;
-			RectTransform t = (RectTransform)myConsole.transform;
 			Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-			clickDelta = mousePos - t.anchoredPosition;
+			Rect titleRect = GameInfo.info.getConsoleTitleRect();
+
+			if(titleRect.x <= mousePos.x && mousePos.x <= titleRect.x + titleRect.width &&
+			   titleRect.y <= mousePos.y && mousePos.y <= titleRect.y + titleRect.height)
+			{
+				mouseDown = true;
+				RectTransform t = (RectTransform)myConsole.transform;
+				
+				clickDelta = mousePos - t.anchoredPosition;
+			}
 		}
 
 		if(Input.GetMouseButton(0))

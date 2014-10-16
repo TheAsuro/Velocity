@@ -54,6 +54,8 @@ public class GameInfo : MonoBehaviour
 	private PlayerInfo myPlayer;
 	private DemoPlay myDemoPlayer;
 	private Console myConsole;
+	private GameObject myCanvas;
+	private GameObject myConsoleWindow;
 	private Server myServer;
 	private Client myClient;
 	private GameObject myDebugWindow;
@@ -95,10 +97,11 @@ public class GameInfo : MonoBehaviour
 		myClient = gameObject.GetComponent<Client>();
 		myDemoPlayer = gameObject.GetComponent<DemoPlay>();
 
-		GameObject canvas = transform.Find("Canvas").gameObject;
-		escMenu = canvas.transform.Find("EscMenu").gameObject;
-		endLevel = canvas.transform.Find("EndLevel").gameObject;
-		myDebugWindow = canvas.transform.Find("Debug").gameObject;
+		myCanvas = transform.Find("Canvas").gameObject;
+		escMenu = myCanvas.transform.Find("EscMenu").gameObject;
+		endLevel = myCanvas.transform.Find("EndLevel").gameObject;
+		myConsoleWindow = myCanvas.transform.Find("Console").gameObject;
+		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
 		Screen.lockCursor = true;
 		setMenuState(MenuState.closed);
@@ -304,6 +307,19 @@ public class GameInfo : MonoBehaviour
 	public bool isConsoleOpen()
 	{
 		return myConsole.isVisible();
+	}
+
+	public Rect getConsoleTitleRect()
+	{
+		Canvas c = myCanvas.GetComponent<Canvas>();
+		RectTransform titleTransform = myConsoleWindow.transform.Find("Title").gameObject.GetComponent<RectTransform>();
+		Rect r = new Rect(titleTransform.position.x * c.scaleFactor - (titleTransform.rect.width / 2f),
+		                  titleTransform.position.y * c.scaleFactor - (titleTransform.rect.height / 2f),
+		                  titleTransform.rect.width,
+		                  titleTransform.rect.height
+		                  );
+		print(r);
+		return r;
 	}
 
 	//Version for new gui
