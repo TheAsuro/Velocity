@@ -63,7 +63,7 @@ public abstract class Movement : MonoBehaviour
 			
 			if(respawnKeyPressed)
 			{
-				respawnPlayer();
+				respawnPlayer(false);
 			}
 			if(resetKeyPressed)
 			{
@@ -150,7 +150,7 @@ public abstract class Movement : MonoBehaviour
 		}
 		else if(other.tag.Equals("Kill"))
 		{
-			respawnPlayer();
+			respawnPlayer(true);
 		}
 	}
 
@@ -170,8 +170,15 @@ public abstract class Movement : MonoBehaviour
 	}
 	
 	//Spawns the player at the last checkpoint
-	private void respawnPlayer()
+	private void respawnPlayer(bool resetAtStart)
 	{
+		//Restart race if it is wanted and we would go to the first checkpoint
+		if(resetAtStart && WorldInfo.info.getCurrentSpawn() == WorldInfo.info.getFirstSpawn())
+		{
+			GameInfo.info.reset();
+			return;
+		}
+
 		//Don't reset the game, just spawn the player at the last (possibly first checkpoint)
 		spawnPlayer(WorldInfo.info.getCurrentSpawn());
 	}

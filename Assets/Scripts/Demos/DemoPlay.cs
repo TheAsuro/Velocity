@@ -81,6 +81,9 @@ public class DemoPlay : MonoBehaviour
 
 	public void playDemo(Demo demo, FinishedPlaying pFinishedPlaying)
 	{
+		//Reset if currently playing
+		stopPlayback();
+
 		//Load demo ticks
 		tickList = demo.getTickList();
 
@@ -104,7 +107,7 @@ public class DemoPlay : MonoBehaviour
 		playing = true;
 	}
 
-	//Public stop, is always counted as an iterrupt
+	//Public stop, which always counts as an iterrupt
 	public void stopPlayback()
 	{
 		stopDemoPlayback(false);
