@@ -269,6 +269,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 232c9b3d243dac840832738023507577, type: 2}
+    - target: {fileID: 100000, guid: 293b8f0be7db2464982ddac4b700038f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 293b8f0be7db2464982ddac4b700038f, type: 3}
   m_RootGameObject: {fileID: 1948608221}
@@ -463,7 +467,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!23 &1948608222
 Renderer:

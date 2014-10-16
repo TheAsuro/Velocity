@@ -34,6 +34,8 @@ public class GameInfo : MonoBehaviour
 	
 	//Debug window (top-left corner, toggle with f8)
 	public bool logToConsole = true;
+	private float lastFps = 0f;
+	private float lastFpsRecordTime = -1f;
 	private List<string> linePrefixes = new List<string>();
 	private List<InfoString> windowLines = new List<InfoString>();
 
@@ -119,7 +121,12 @@ public class GameInfo : MonoBehaviour
 			toggleEscMenu();
 		}
 
-		myDebugWindowText.text = Mathf.RoundToInt(1 / Time.smoothDeltaTime).ToString() + '\n';
+		if(lastFpsRecordTime + 0.1f < Time.time || lastFpsRecordTime < 0f)
+		{
+			lastFps = Mathf.RoundToInt(1 / Time.smoothDeltaTime);
+			lastFpsRecordTime = Time.time;
+		}
+		myDebugWindowText.text = lastFps.ToString() + " FPS\n";
 
 		//Draw debug window lines
 		if(getPlayerInfo() != null)
