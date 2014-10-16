@@ -44,7 +44,7 @@ public abstract class Movement : MonoBehaviour
 	
 	void Update()
 	{
-		if(!frozen)
+		if(!frozen && !GameInfo.info.isConsoleOpen())
 		{
 			//Set key states
 			if(Input.GetButton("Jump") && allowJump)

@@ -301,6 +301,11 @@ public class GameInfo : MonoBehaviour
 		lastTime = time;
 	}
 
+	public bool isConsoleOpen()
+	{
+		return myConsole.isVisible();
+	}
+
 	//Version for new gui
 	public void setMenuState(string state)
 	{

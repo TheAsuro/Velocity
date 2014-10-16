@@ -84,6 +84,11 @@ public class Console : MonoBehaviour
 		myOutput.text += "\n" + content;
 	}
 
+	public bool isVisible()
+	{
+		return visible;
+	}
+
 	public void executeCommand(string command)
 	{
 		if(!command.Equals(""))
