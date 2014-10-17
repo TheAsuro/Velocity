@@ -316,9 +316,7 @@ public class GameInfo : MonoBehaviour
 		Rect r = new Rect(titleTransform.position.x * c.scaleFactor - (titleTransform.rect.width / 2f),
 		                  titleTransform.position.y * c.scaleFactor - (titleTransform.rect.height / 2f),
 		                  titleTransform.rect.width,
-		                  titleTransform.rect.height
-		                  );
-		print(r);
+		                  titleTransform.rect.height);
 		return r;
 	}
 
