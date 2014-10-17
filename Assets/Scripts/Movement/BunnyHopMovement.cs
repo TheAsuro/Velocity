@@ -4,10 +4,7 @@ using System.Collections.Generic;
 
 public class BunnyHopMovement : Movement
 {
-	private List<int> collidingObjects = new List<int>();
 	private bool applyFriction = false;
-	private bool collidedLastFrame = false;
-	private int frameCounter = 0;
 	private Vector3 acceleratorForce = Vector3.zero;
 	private Vector3 jumpPadForce = Vector3.zero;
 	private bool usePadX, usePadY, usePadZ;
@@ -53,8 +50,7 @@ public class BunnyHopMovement : Movement
 		Vector2 frictionTemp = new Vector2(input.x, input.z);
 
 		//Friction
-		//TODO friction is shit make it gud
-		if(applyFriction)
+		if(applyFriction && !getJumpKeyPressed())
 		{
 			frictionTemp *= frictionMultiplier;
 			velocity = new Vector3(frictionTemp.x, velocity.y, frictionTemp.y);
@@ -74,11 +70,6 @@ public class BunnyHopMovement : Movement
 		return velocity;
 	}
 
-	public void clearCollisionList()
-	{
-		collidingObjects.Clear();
-	}
-
 	private Vector3 getJumpVelocity(float yVelocity)
 	{
 		bool onGround = checkGround();
@@ -88,7 +79,6 @@ public class BunnyHopMovement : Movement
 		if(Time.time < lastJumpPress + jumpPressDuration && yVelocity < jumpForce && onGround)
 		{
 			lastJumpPress = -1f;
-			frameCounter = 0;
 			GameInfo.info.playSound("jump");
 			jumpVelocity = new Vector3(0f, jumpForce - yVelocity, 0f);
 		}
@@ -98,57 +88,8 @@ public class BunnyHopMovement : Movement
 
 	public override void FixedMoveUpdate()
 	{
-		if(collidedLastFrame)
-		{
-			frameCounter++;
-		}
-		else
-		{
-			frameCounter = 0;
-		}
-
-		if(collidingObjects.Count == 0)
-		{
-			collidedLastFrame = false;
-		}
-		else
-		{
-			collidedLastFrame = true;
-		}
-
-		if(frameCounter > 3)
-		{
-			applyFriction = true;
-		}
-		else
-		{
-			applyFriction = false;
-		}
-	}
-
-	void OnCollisionEnter(Collision col)
-	{
-		if(!col.gameObject.tag.Equals("Fictionless"))
-		{
-			foreach(ContactPoint contact in col)
-			{
-				if(contact.normal.y > 0.75f && !collidingObjects.Contains(contact.otherCollider.gameObject.GetInstanceID()))
-				{
-					collidingObjects.Add(contact.otherCollider.gameObject.GetInstanceID());
-				}
-			}
-		}
-	}
-
-	void OnCollisionExit(Collision col)
-	{
-		foreach(ContactPoint contact in col)
-		{
-			if(collidingObjects.Contains(contact.otherCollider.gameObject.GetInstanceID()))
-			{
-				collidingObjects.Remove(contact.otherCollider.gameObject.GetInstanceID());
-			}
-		}
+		if(checkGround()) { applyFriction = true; }
+		else { applyFriction = false; }
 	}
 
 	void OnCollisionStay(Collision col)

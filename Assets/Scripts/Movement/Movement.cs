@@ -182,18 +182,23 @@ public abstract class Movement : MonoBehaviour
 		//Don't reset the game, just spawn the player at the last (possibly first checkpoint)
 		spawnPlayer(WorldInfo.info.getCurrentSpawn());
 	}
+
+	public bool getJumpKeyPressed()
+	{
+		return jumpKeyPressed;
+	}
 	
 	public bool checkGround()
 	{
 		Vector3 pos = new Vector3(transform.position.x, transform.position.y - collider.bounds.extents.y + 0.05f, transform.position.z);
 		Vector3 radiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
+		Debug.DrawLine(pos, new Vector3(pos.x, pos.y - 0.1f, pos.z), Color.blue, 0.01f);
 		return checkCylinder(pos, radiusVector, -0.1f, 8);
 	}
 
 	//Doesn't actually check the volume of a cylinder, instead executes a given number of raycasts in a circle
 	//origin: center of the circle from which will be cast
 	//radiusVector: radius of the circle
-	//verticalDirection: 1 = up, -1 = down
 	//rayCount: number of vertices the "circle" will have
 	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount)
 	{
