@@ -12,7 +12,6 @@ public class GameInfo : MonoBehaviour
 	
 	//Gamestates
 	private bool gamePaused = false;
-	private bool showLeaderboard = false;
 	private MenuState menuState = MenuState.closed;
 	private bool viewLocked = false;
 	public bool menuLocked = false;
@@ -20,6 +19,8 @@ public class GameInfo : MonoBehaviour
 	//GUI
 	private GameObject escMenu;
 	private GameObject endLevel;
+	private GameObject myLeaderboardObj;
+	private Leaderboard myLeaderboard;
 	private string selectedMap;
 
 	//Sound
@@ -30,7 +31,6 @@ public class GameInfo : MonoBehaviour
 	private SaveData currentSave;
 	private Demo lastDemo;
 	private float lastTime = -1f;
-	private Vector2 leaderboardScroll = Vector2.zero;
 	
 	//Debug window (top-left corner, toggle with f8)
 	public bool logToConsole = true;
@@ -103,6 +103,8 @@ public class GameInfo : MonoBehaviour
 		myConsoleWindow = myCanvas.transform.Find("Console").gameObject;
 		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
+		myLeaderboardObj = myCanvas.transform.Find("Leaderboard").gameObject;
+		myLeaderboard = myLeaderboardObj.GetComponent<Leaderboard>();
 		Screen.lockCursor = true;
 		setMenuState(MenuState.closed);
 	}
@@ -146,30 +148,6 @@ public class GameInfo : MonoBehaviour
 		else
 		{
 			myDebugWindowText.text += "No player";
-		}
-	}
-	
-	//Draw the HUD
-	void OnGUI()
-	{
-		if(showLeaderboard)
-		{
-			GUILayout.BeginArea(new Rect(Screen.width / 2f - 350f, Screen.height / 2f - 250f, 700f, 500f), skin.box);
-
-			GUILayout.BeginHorizontal();
-			GUILayout.Box("Player: " + getCurrentSave().getPlayerName(), skin.box);
-			GUILayout.Box("Map: " + Application.loadedLevelName, skin.box);
-			GUILayout.Box("PB: " + getCurrentSave().getPersonalBest(Application.loadedLevelName).ToString(), skin.box);
-			GUILayout.Box("WR: " + "", skin.box);
-			GUILayout.EndHorizontal();
-
-			leaderboardScroll = GUILayout.BeginScrollView(leaderboardScroll, false, true, skin.horizontalScrollbar, skin.verticalScrollbar, skin.box);
-			GUILayout.Box("*HERE WILL BE LEADERBOARDS SOON*", skin.box);
-			GUILayout.EndScrollView();
-
-			if(GUILayout.Button("OK", skin.button, GUILayout.MaxHeight(30))) { menuLocked = false; setMenuState(MenuState.endlevel); }
-
-			GUILayout.EndArea();
 		}
 	}
 
@@ -228,6 +206,7 @@ public class GameInfo : MonoBehaviour
 	//Removes player and plays back the demo
 	public void levelFinished()
 	{
+		sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName);
 		GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
 		lastDemo = myPlayer.getDemo();
 		setPlayerInfo(null);
@@ -358,7 +337,7 @@ public class GameInfo : MonoBehaviour
 			setGamePaused(true);
 			escMenu.SetActive(false);
 			endLevel.SetActive(false);
-			showLeaderboard = false;
+			myLeaderboardObj.SetActive(false);
 			Screen.lockCursor = false;
 
 			switch(state)
@@ -380,7 +359,9 @@ public class GameInfo : MonoBehaviour
 					break;
 				case MenuState.leaderboard:
 					setMouseView(false);
-					showLeaderboard = true;
+					endLevel.SetActive(true);
+					myLeaderboardObj.SetActive(true);
+					myLeaderboard.getLeaderboardEntries(Application.loadedLevelName);
 					menuLocked = true;
 					break;
 				case MenuState.endlevel:
@@ -409,6 +390,16 @@ public class GameInfo : MonoBehaviour
 		{
 			setMenuState(MenuState.closed);
 		}
+	}
+
+	public void toggleLeaderboard()
+	{
+		if(myLeaderboardObj.activeSelf)
+		{
+			setMenuState(MenuState.endlevel);
+			return;
+		}
+		setMenuState(MenuState.leaderboard);
 	}
 
 	public MenuState getMenuState()
@@ -690,27 +681,18 @@ public class GameInfo : MonoBehaviour
 	//Send a leaderboard entry to leaderboard server, with a automatically generated hash.
 	//This includes a secret key that will be included in the final game (and not uploaded to github),
 	//so nobody can send fake entries.
-	public void sendLeaderboardEntry(string name, float time, string map)
+	private void sendLeaderboardEntry(string name, float time, string map)
 	{
 		WWWForm form = new WWWForm();
-		form.AddField("PlayerName", name);
-		form.AddField("MapTime", time.ToString());
-		form.AddField("MapName", map);
 		string hash = Md5Sum(name + time.ToString() + map + secretKey);
+
+		form.AddField("Player", name);
+		form.AddField("Time", time.ToString());
+		form.AddField("Map", map);
 		form.AddField("Hash", hash);
-		//WWW www = new WWW("http://gmanserver.info/random/something.php", form);
-		//StartCoroutine(WaitForRequest(www));
-	}
 
-	//Wait for the server to answer
-	private IEnumerator WaitForRequest(WWW www)
-	{
-		yield return www;
-
-		if(www.error != null)
-		{
-			Debug.Log("WWW Error: " + www.error);
-		}
+		WWW www = new WWW("http://localhost/newentry.php", form);
+		StartCoroutine(myLeaderboard.SendLeaderboardData(www));
 	}
 
 	//Create a md5 hash from a string
