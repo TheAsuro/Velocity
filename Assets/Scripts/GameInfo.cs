@@ -198,6 +198,8 @@ public class GameInfo : MonoBehaviour
 			//Instantiate a new player at the spawnpoint's location
 			GameObject newPlayer = (GameObject)GameObject.Instantiate(playerTemplate, spawnpoint.getSpawnPos(), spawnpoint.getSpawnRot());
 			setPlayerInfo(newPlayer.GetComponent<PlayerInfo>());
+
+			myPlayer.setWorldBackgroundColor(WorldInfo.info.worldBackgroundColor);
 		}
 		
 		applySettings();

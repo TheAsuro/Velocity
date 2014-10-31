@@ -131,4 +131,9 @@ public class PlayerInfo : MonoBehaviour
 	{
 		return myMovement.jumpForce;
 	}
+
+	public void setWorldBackgroundColor(Color color)
+	{
+		myCamera.backgroundColor = color;
+	}
 }

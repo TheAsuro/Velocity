@@ -13,10 +13,10 @@ public class Leaderboard : MonoBehaviour
 
 	void Awake()
 	{
-		myNumbers = transform.Find("Numbers").gameObject.GetComponent<Text>();
-		myTimes = transform.Find("Times").gameObject.GetComponent<Text>();
-		myPlayers = transform.Find("Players").gameObject.GetComponent<Text>();
-		myInfo = transform.Find("Info").gameObject.GetComponent<Text>();
+		myNumbers = transform.Find("Numbers").Find("Text").gameObject.GetComponent<Text>();
+		myTimes = transform.Find("Times").Find("Text").gameObject.GetComponent<Text>();
+		myPlayers = transform.Find("Players").Find("Text").gameObject.GetComponent<Text>();
+		myInfo = transform.Find("Info").Find("Text").gameObject.GetComponent<Text>();
 	}
 
 	//Request leaderboard entries from the server
@@ -37,10 +37,19 @@ public class Leaderboard : MonoBehaviour
 
 		if(www.error != null)
 		{
-			Debug.Log("WWW Error: " + www.error);
+			if(www.error.Equals("couldn't connect to host"))
+			{
+				myPlayers.text = "No connection to leaderboard server :/";
+			}
+			else
+			{
+				Debug.Log("WWW Error: " + www.error);
+			}
 		}
-
-		processEntries(www.text, index);
+		else
+		{
+			processEntries(www.text, index);
+		}
 	}
 
 	//Server answered, display recieved data
@@ -56,6 +65,7 @@ public class Leaderboard : MonoBehaviour
 		}
 
 		string[] rows = entries.Split('\n');
+
 		foreach(string row in rows)
 		{
 			string[] items = row.Split('|');

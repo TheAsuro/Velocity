@@ -93,6 +93,9 @@ public class DemoPlay : MonoBehaviour
 		ghostCamObj = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 		ghostCamChild = ghostCamObj.transform.FindChild("CamObj").gameObject;
 
+		//Set up camera
+		ghostCamChild.GetComponent<Camera>().backgroundColor = WorldInfo.info.worldBackgroundColor;
+
 		//Set start time to current time
 		startPlayTime = Time.time;
 
