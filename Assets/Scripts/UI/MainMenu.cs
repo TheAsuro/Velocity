@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class MainMenu : MonoBehaviour
 {
 	public List<string> mapNames = new List<string>();
+	public List<string> mapAuthors = new List<string>();
 	public DrawMapButtons buttonDrawThingy;
 	public delegate void Reset();
 

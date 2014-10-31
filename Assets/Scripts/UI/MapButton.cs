@@ -13,6 +13,13 @@ public class MapButton : MonoBehaviour
 	public void click()
 	{
 		menu.setSelectedButton(transform.parent.gameObject);
-		GameInfo.info.setSelectedMap(GetComponent<UnityEngine.UI.Text>().text);
+		string myText = GetComponent<UnityEngine.UI.Text>().text;
+		string myAuthor = "?";
+		int mapIndex = menu.mapNames.IndexOf(myText);
+		if(menu.mapAuthors.Count > mapIndex)
+		{
+			myAuthor = menu.mapAuthors[mapIndex];
+		}
+		GameInfo.info.setSelectedMap(myText, myAuthor);
 	}
 }

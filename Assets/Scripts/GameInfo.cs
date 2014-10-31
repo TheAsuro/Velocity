@@ -22,6 +22,7 @@ public class GameInfo : MonoBehaviour
 	private GameObject myLeaderboardObj;
 	private Leaderboard myLeaderboard;
 	private string selectedMap;
+	private string selectedAuthor = "?";
 
 	//Sound
 	public List<string> soundNames;
@@ -670,14 +671,20 @@ public class GameInfo : MonoBehaviour
 		menuLocked = false;
 	}
 	
-	public void setSelectedMap(string map)
+	public void setSelectedMap(string map, string author = "?")
 	{
 		selectedMap = map;
+		selectedAuthor = author;
 	}
 
 	public string getSelectedMap()
 	{
 		return selectedMap;
+	}
+
+	public string getSelectedAuthor()
+	{
+		return selectedAuthor;
 	}
 
 	//Send a leaderboard entry to leaderboard server, with a automatically generated hash.
