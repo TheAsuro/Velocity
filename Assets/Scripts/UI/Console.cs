@@ -23,7 +23,7 @@ public class Console : MonoBehaviour
 
 		//Find all parts of the console
 		myConsole = gameObject.transform.Find("Console").gameObject;
-		myOutput = myConsole.transform.Find("ConsoleOutput").Find("Text").GetComponent<Text>();
+		myOutput = myConsole.transform.Find("ConsoleOutput").Find("Mask").Find("Text").GetComponent<Text>();
 		myInput = myConsole.transform.Find("ConsoleInput").GetComponent<InputField>();
 
 		//Registering events
