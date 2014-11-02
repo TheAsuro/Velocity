@@ -17,6 +17,7 @@ public class RaceScript : MonoBehaviour
 
 	private Text timeText;
 	private Text speedText;
+	private Text nameText;
 	private Text countdownText;
 	
 	//This script actually sets the player as an actual player
@@ -25,6 +26,7 @@ public class RaceScript : MonoBehaviour
 		Transform canvas = gameObject.transform.parent.Find("Canvas");
 		timeText = canvas.Find("Time").Find("Text").GetComponent<Text>();
 		speedText = canvas.Find("Speed").Find("Text").GetComponent<Text>();
+		nameText = canvas.Find("Player").Find("Text").GetComponent<Text>();
 		countdownText = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
 	}
 
@@ -60,6 +62,9 @@ public class RaceScript : MonoBehaviour
 
 		//Display speed
 		speedText.text = GameInfo.info.getPlayerInfo().getCurrentSpeed().ToString() + " m/s";
+
+		//Display player name
+		nameText.text = GameInfo.info.getCurrentSave().getPlayerName();
 
 		//Horribly coded countdown
 		float remainingFreezeTime = unfreezeTime - Time.time;

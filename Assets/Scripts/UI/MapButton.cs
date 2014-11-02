@@ -16,7 +16,7 @@ public class MapButton : MonoBehaviour
 		string myText = GetComponent<UnityEngine.UI.Text>().text;
 		string myAuthor = "?";
 		int mapIndex = menu.mapNames.IndexOf(myText);
-		if(menu.mapAuthors.Count > mapIndex)
+		if(menu.mapAuthors.Count > mapIndex && mapIndex != -1)
 		{
 			myAuthor = menu.mapAuthors[mapIndex];
 		}

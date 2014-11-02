@@ -49,7 +49,15 @@ public class ReplaceUiText : MonoBehaviour
 		if(temp.Contains("$map")) { temp = Application.loadedLevelName; }
 
 		temp = temp.Replace("$selectedmap", GameInfo.info.getSelectedMap());
-		temp = temp.Replace("$selectedauthor", GameInfo.info.getSelectedAuthor());
+		string aut = GameInfo.info.getSelectedAuthor();
+		if(! aut.Equals("?"))
+		{
+			temp = temp.Replace("$selectedauthor", "by " + aut);
+		}
+		else
+		{
+			temp = temp.Replace("$selectedauthor", "");
+		}
 
 		textScript.text = temp;
 	}
