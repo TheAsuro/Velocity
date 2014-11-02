@@ -141,8 +141,6 @@ public class MainMenu : MonoBehaviour
 				serverJoinMenuObj.SetActive(true);
 				break;
 		}
-
-		GameInfo.info.log("Changed MainMenu state to '" + state.ToString() + "'");
 	}
 
 	//Get information about current saves

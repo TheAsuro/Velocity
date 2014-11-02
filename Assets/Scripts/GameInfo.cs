@@ -197,9 +197,11 @@ public class GameInfo : MonoBehaviour
 			setPlayerInfo(null);
 
 			//Instantiate a new player at the spawnpoint's location
-			GameObject newPlayer = (GameObject)GameObject.Instantiate(playerTemplate, spawnpoint.getSpawnPos(), spawnpoint.getSpawnRot());
+			GameObject newPlayer = (GameObject)GameObject.Instantiate(playerTemplate, Vector3.zero, Quaternion.identity);
 			setPlayerInfo(newPlayer.GetComponent<PlayerInfo>());
 
+			//Set up player
+			myPlayer.resetPosition(spawnpoint.getSpawnPos(), spawnpoint.getSpawnRot());
 			myPlayer.setWorldBackgroundColor(WorldInfo.info.worldBackgroundColor);
 		}
 		
@@ -379,7 +381,6 @@ public class GameInfo : MonoBehaviour
 			}
 
 			menuState = state;
-			log("Changed MenuState to '" + menuState.ToString() + "'");
 		}
 	}
 

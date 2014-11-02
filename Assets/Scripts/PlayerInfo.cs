@@ -20,6 +20,13 @@ public class PlayerInfo : MonoBehaviour
 		myMovement = myMesh.GetComponent<Movement>();
 	}
 
+	public void resetPosition(Vector3 pos, Quaternion rot)
+	{
+		transform.position = Vector3.zero;
+		myMesh.transform.position = pos;
+		myMesh.transform.rotation = rot;
+	}
+
 	public void startRace(float delay)
 	{
 		myRaceScript.startRace(delay);

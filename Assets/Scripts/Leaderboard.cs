@@ -68,9 +68,12 @@ public class Leaderboard : MonoBehaviour
 
 		foreach(string row in rows)
 		{
-			string[] items = row.Split('|');
-			addRow(indexCounter.ToString(), items[0], items[1], items[2]);
-			indexCounter++;
+			if(!row.Equals(""))
+			{
+				string[] items = row.Split('|');
+				addRow(indexCounter.ToString(), items[0], items[1], items[2]);
+				indexCounter++;
+			}
 		}
 	}
 
