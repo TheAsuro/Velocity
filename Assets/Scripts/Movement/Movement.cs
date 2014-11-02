@@ -192,7 +192,6 @@ public abstract class Movement : MonoBehaviour
 	{
 		Vector3 pos = new Vector3(transform.position.x, transform.position.y - collider.bounds.extents.y + 0.05f, transform.position.z);
 		Vector3 radiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
-		Debug.DrawLine(pos, new Vector3(pos.x, pos.y - 0.1f, pos.z), Color.blue, 0.01f);
 		return checkCylinder(pos, radiusVector, -0.1f, 8);
 	}
 
@@ -291,7 +290,7 @@ public abstract class Movement : MonoBehaviour
 		return Vector3.Magnitude(rigidbody.velocity);
 	}
 	
-	private string getXzVelocityString()
+	public string getXzVelocityString()
 	{
 		float mag = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z).magnitude;
 		string magstr = mag.ToString();
@@ -302,7 +301,7 @@ public abstract class Movement : MonoBehaviour
 		return roundString(magstr, 2);
 	}
 	
-	private string getYVelocityString()
+	public string getYVelocityString()
 	{
 		string v = rigidbody.velocity.y.ToString();
 		if(v.ToLower().Contains("e"))

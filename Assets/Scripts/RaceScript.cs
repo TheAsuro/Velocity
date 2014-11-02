@@ -5,9 +5,6 @@ using UnityEngine.UI;
 //Interacts with checkpoint triggers, must be added to every player
 public class RaceScript : MonoBehaviour
 {
-	//Draw the timer
-	public bool drawTime = true;
-
 	private float startTime = -1f;
 	private float time = -1f;
 
@@ -18,15 +15,17 @@ public class RaceScript : MonoBehaviour
 	private float freezeDuration = 0f;
 	private float unfreezeTime = float.PositiveInfinity;
 
-	private Text timeTextObj;
-	private Text countdownTextObj;
+	private Text timeText;
+	private Text speedText;
+	private Text countdownText;
 	
 	//This script actually sets the player as an actual player
 	void Awake()
 	{
 		Transform canvas = gameObject.transform.parent.Find("Canvas");
-		timeTextObj = canvas.Find("Time").Find("Text").GetComponent<Text>();
-		countdownTextObj = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
+		timeText = canvas.Find("Time").Find("Text").GetComponent<Text>();
+		speedText = canvas.Find("Speed").Find("Text").GetComponent<Text>();
+		countdownText = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
 	}
 
 	void Update()
@@ -46,44 +45,47 @@ public class RaceScript : MonoBehaviour
 		//Checkpoint system
 		if(time > 0f && checkpoint != -1 && !finished)
 		{
-			timeTextObj.gameObject.transform.parent.gameObject.SetActive(true);
-			timeTextObj.text = "Time: " + time.ToString().Substring(0,time.ToString().IndexOf('.') + 2);
+			timeText.gameObject.transform.parent.gameObject.SetActive(true);
+			timeText.text = "Time: " + time.ToString().Substring(0,time.ToString().IndexOf('.') + 2);
 		}
 		else if(finished)
 		{
-			timeTextObj.gameObject.transform.parent.gameObject.SetActive(true);
-			timeTextObj.text = time.ToString();
+			timeText.gameObject.transform.parent.gameObject.SetActive(true);
+			timeText.text = time.ToString();
 		}
 		else
 		{
-			timeTextObj.gameObject.transform.parent.gameObject.SetActive(false);
+			timeText.gameObject.transform.parent.gameObject.SetActive(false);
 		}
+
+		//Display speed
+		speedText.text = GameInfo.info.getPlayerInfo().getCurrentSpeed().ToString() + " m/s";
 
 		//Horribly coded countdown
 		float remainingFreezeTime = unfreezeTime - Time.time;
 		if(remainingFreezeTime > 2f)
 		{
-			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
-			countdownTextObj.text = "3";
+			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
+			countdownText.text = "3";
 		}
 		else if(remainingFreezeTime > 1f)
 		{
-			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
-			countdownTextObj.text = "2";
+			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
+			countdownText.text = "2";
 		}
 		else if(remainingFreezeTime > 0f)
 		{
-			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
-			countdownTextObj.text = "1";
+			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
+			countdownText.text = "1";
 		}
 		else if(remainingFreezeTime > -1f)
 		{
-			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(true);
-			countdownTextObj.text = "GO!";
+			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
+			countdownText.text = "GO!";
 		}
 		else
 		{
-			countdownTextObj.gameObject.transform.parent.gameObject.SetActive(false);
+			countdownText.gameObject.transform.parent.gameObject.SetActive(false);
 		}
 	}
 	

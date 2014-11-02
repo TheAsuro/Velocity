@@ -38,6 +38,11 @@ public class PlayerInfo : MonoBehaviour
 		myMesh.audio.Play();
 	}
 
+	public string getCurrentSpeed()
+	{
+		return myMovement.getXzVelocityString();
+	}
+
 	public void setMouseSens(float sensitivity)
 	{
 		myMouseLook.sensitivityX = sensitivity;
@@ -104,6 +109,7 @@ public class PlayerInfo : MonoBehaviour
 		myMovement.speed = value;
 	}
 
+	//Gets input multiplier, not current speed!
 	public float getSpeed()
 	{
 		return myMovement.speed;
