@@ -6,6 +6,7 @@ using System.Collections;
 public class Console : MonoBehaviour
 {
 	public TextAsset helpFile;
+	public int rowCount = 22;
 
 	private bool visible = false;
 	private GameObject myConsole;

@@ -497,7 +497,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1834412144}
   m_Direction: 3
   m_Value: 0
-  m_Size: .100000001
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2790,13 +2790,13 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 49b95b425cba7904aad8f265eb233c6e, type: 3}
-    m_FontSize: 14
+    m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 0
-    m_RichText: 0
+    m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
@@ -7729,7 +7729,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &974179084
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11530,6 +11530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   helpFile: {fileID: 4900000, guid: 933c605057a65b740bc28ac473924361, type: 3}
+  rowCount: 22
 --- !u!1 &1455753089
 GameObject:
   m_ObjectHideFlags: 0
@@ -14806,7 +14807,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1776977310
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16611,7 +16612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1986666076
 RectTransform:
   m_ObjectHideFlags: 0

@@ -2283,6 +2283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beginState: 0
+  worldBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!4 &417749715
 Transform:
   m_ObjectHideFlags: 0
@@ -6508,10 +6509,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1331421615}
-  - 33: {fileID: 1331421614}
-  - 23: {fileID: 1331421613}
   - 65: {fileID: 1331421612}
   - 114: {fileID: 1331421611}
+  - 23: {fileID: 1331421613}
+  - 33: {fileID: 1331421614}
   m_Layer: 12
   m_Name: End
   m_TagString: Checkpoint
@@ -6555,13 +6556,13 @@ Renderer:
     type: 2}
   m_PrefabInternal: {fileID: 1551262015}
   m_GameObject: {fileID: 1331421610}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 076966d5d7548fb4e94e55d1f9d9271d, type: 2}
+  - {fileID: 2100000, guid: 929cdb4ba5a7d8e4a957dc79fb9864e7, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6572,9 +6573,8 @@ Renderer:
 --- !u!33 &1331421614
 MeshFilter:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: 7c89078e864139a4fb7cf1aa522599a3,
-    type: 2}
-  m_PrefabInternal: {fileID: 1551262015}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1331421610}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1331421615
