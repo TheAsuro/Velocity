@@ -26,7 +26,7 @@ public class Leaderboard : MonoBehaviour
 		form.AddField("Map", map);
 		form.AddField("Index", currentIndex);
 
-		WWW www = new WWW("http://localhost/mapleaderboard.php", form);
+		WWW www = new WWW("http://theasuro.net76.net/mapleaderboard.php", form);
 		StartCoroutine(WaitForLeaderboardData(www, currentIndex));
 	}
 
@@ -68,9 +68,12 @@ public class Leaderboard : MonoBehaviour
 
 		foreach(string row in rows)
 		{
-			string[] items = row.Split('|');
-			addRow(indexCounter.ToString(), items[0], items[1], items[2]);
-			indexCounter++;
+			if(!row.Equals(""))
+			{
+				string[] items = row.Split('|');
+				addRow(indexCounter.ToString(), items[0], items[1], items[2]);
+				indexCounter++;
+			}
 		}
 	}
 

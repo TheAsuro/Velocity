@@ -701,7 +701,7 @@ public class GameInfo : MonoBehaviour
 		form.AddField("Map", map);
 		form.AddField("Hash", hash);
 
-		WWW www = new WWW("http://localhost/newentry.php", form);
+		WWW www = new WWW("http://theasuro.net76.net/newentry.php", form);
 		StartCoroutine(myLeaderboard.SendLeaderboardData(www));
 	}
 
