@@ -1,23 +1,28 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerInfo : MonoBehaviour
 {
 	private GameObject myMesh;
+	private Canvas myCanvas;
 	private RaceScript myRaceScript;
 	private MouseLook myMouseLook;
 	private Camera myCamera;
 	private DemoRecord myRecorder;
 	private Movement myMovement;
+	private Image myCrosshair;
 
 	void Awake()
 	{
 		myMesh = transform.Find("Mesh").gameObject;
+		myCanvas = transform.Find("Canvas").GetComponent<Canvas>();
 		myRaceScript = myMesh.GetComponent<RaceScript>();
 		myCamera = myMesh.transform.Find("Camera").gameObject.GetComponent<Camera>();
 		myMouseLook = myCamera.gameObject.GetComponent<MouseLook>();
 		myRecorder = myMesh.GetComponent<DemoRecord>();
 		myMovement = myMesh.GetComponent<Movement>();
+		myCrosshair = myCanvas.transform.Find("Crosshair").GetComponent<Image>();
 	}
 
 	public void resetPosition(Vector3 pos, Quaternion rot)
@@ -148,5 +153,10 @@ public class PlayerInfo : MonoBehaviour
 	public void setWorldBackgroundColor(Color color)
 	{
 		myCamera.backgroundColor = color;
+	}
+
+	public void setCrosshairColor(Color color)
+	{
+		myCrosshair.color = color;
 	}
 }

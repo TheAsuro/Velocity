@@ -150,6 +150,18 @@ public class GameInfo : MonoBehaviour
 		{
 			myDebugWindowText.text += "No player";
 		}
+
+		//Color player crosshair
+		if(getPlayerInfo() != null)
+		{
+			float speedA = Mathf.Min(float.Parse(getPlayerInfo().getCurrentSpeed()), 35f);
+			float speedB = Mathf.Max(speedA - 7f, 0f);
+			float speedC = speedB / 28f;
+			
+			Color c = new Color(1f - speedC, 1f - speedC, 1f);
+			
+			getPlayerInfo().setCrosshairColor(c);
+		}
 	}
 
 	//Lock cursor after loosing and gaining focus
