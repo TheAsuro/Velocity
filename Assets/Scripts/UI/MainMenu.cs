@@ -69,7 +69,14 @@ public class MainMenu : MonoBehaviour
 		serverJoinPasswordObj = serverJoinMenuObj.transform.Find("PassInput").gameObject;
 
 		//Load menu
-		setState(State.main);
+		if(GameInfo.info.getCurrentSave() != null)
+		{
+			setState(State.selectMap);
+		}
+		else
+		{
+			setState(State.main);
+		}
 	}
 
 	//Translate string to menu state, necessary because new gui
