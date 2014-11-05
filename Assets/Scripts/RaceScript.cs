@@ -66,6 +66,9 @@ public class RaceScript : MonoBehaviour
 		//Display player name
 		nameText.text = GameInfo.info.getCurrentSave().getPlayerName();
 
+		//Display crosshair
+		drawCrosshair();
+
 		//Horribly coded countdown
 		float remainingFreezeTime = unfreezeTime - Time.time;
 		if(remainingFreezeTime > 2f)
@@ -126,6 +129,29 @@ public class RaceScript : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	private void drawCrosshair()
+	{
+		PlayerInfo pi = GameInfo.info.getPlayerInfo();
+		float speed = float.Parse(pi.getCurrentSpeed());
+
+		float lvl1Speed = Mathf.Min(speed, 7f) / 7f;
+		pi.getCrosshairCircle().fillAmount = lvl1Speed;
+
+		float lvl2Speed = Mathf.Max(Mathf.Min(speed - 7f, 21f), 0f) / 14f;
+		pi.getCrosshairCircle2().fillAmount = lvl2Speed;
+
+		Color c = new Color(1f, 1f, 1f);
+		if(speed <= 7f)
+		{
+			c = new Color(1f - lvl1Speed / 2f, 1f - lvl1Speed / 2f, 1f);
+		}
+		if(speed >= 7f)
+		{
+			c = new Color(0.5f + lvl2Speed / 2f, 0.5f, 1f - lvl2Speed / 2f);
+		}
+		pi.setCrosshairColor(c);
 	}
 
 	//Starts a new race (resets the current one if there is one)

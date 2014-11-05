@@ -12,6 +12,8 @@ public class PlayerInfo : MonoBehaviour
 	private DemoRecord myRecorder;
 	private Movement myMovement;
 	private Image myCrosshair;
+	private Image myCrosshairCircle;
+	private Image myCrosshairCircle2;
 
 	void Awake()
 	{
@@ -23,6 +25,8 @@ public class PlayerInfo : MonoBehaviour
 		myRecorder = myMesh.GetComponent<DemoRecord>();
 		myMovement = myMesh.GetComponent<Movement>();
 		myCrosshair = myCanvas.transform.Find("Crosshair").GetComponent<Image>();
+		myCrosshairCircle = myCanvas.transform.Find("CrosshairCircle").GetComponent<Image>();
+		myCrosshairCircle2 = myCanvas.transform.Find("CrosshairCircle2").GetComponent<Image>();
 	}
 
 	public void resetPosition(Vector3 pos, Quaternion rot)
@@ -158,5 +162,17 @@ public class PlayerInfo : MonoBehaviour
 	public void setCrosshairColor(Color color)
 	{
 		myCrosshair.color = color;
+		myCrosshairCircle.color = color;
+		myCrosshairCircle2.color = color;
+	}
+
+	public Image getCrosshairCircle()
+	{
+		return myCrosshairCircle;
+	}
+
+	public Image getCrosshairCircle2()
+	{
+		return myCrosshairCircle2;
 	}
 }
