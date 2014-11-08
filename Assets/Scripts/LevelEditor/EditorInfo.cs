@@ -6,14 +6,11 @@ public class EditorInfo : MonoBehaviour
 {
 	public LayerMask clickLayers;
 
-	private GameObject loadedPrefab;
+	private GameObject selectedPrefab;
 
 	//GUI
 	private Transform canvasT;
 	private Transform topT;
-	private Transform objectButtonT;
-	private Text objectButtonText;
-	private Transform objectSelectionT;
 	private InputField prefabText;
 	private Toggle snapToggle;
 
@@ -25,9 +22,6 @@ public class EditorInfo : MonoBehaviour
 	{
 		canvasT = transform.parent.Find("Canvas");
 		topT = canvasT.Find("Top");
-		objectButtonT = topT.Find("ObjectButton");
-		objectButtonText = objectButtonT.Find("Text").GetComponent<Text>();
-		objectSelectionT = canvasT.Find("ObjectSelection");
 		prefabText = topT.Find("PrefabInput").GetComponent<InputField>();
 		prefabText.onSubmit.AddListener(PrefabSubmit);
 		snapToggle = topT.Find("SnapToGrid").GetComponent<Toggle>();
@@ -38,8 +32,8 @@ public class EditorInfo : MonoBehaviour
 		//Spawn with left click
 		if(Input.GetMouseButtonDown(0))
 		{
-			if(loadedPrefab != null)
-				SpawnPrefabAtMouse(loadedPrefab);
+			if(selectedPrefab != null)
+				SpawnPrefabAtMouse(selectedPrefab);
 		}
 
 		//Move spawn plane with scroll wheel
@@ -49,7 +43,7 @@ public class EditorInfo : MonoBehaviour
 
 	private void PrefabSubmit(string sub)
 	{
-		LoadPrefab(sub);
+		SelectPrefab(sub);
 	}
 
 	public void UpdateSnap()
@@ -57,23 +51,9 @@ public class EditorInfo : MonoBehaviour
 		snapToGrid = snapToggle.isOn;
 	}
 
-	public void ToggleObjectSelection()
+	private void SelectPrefab(string name)
 	{
-		if(objectSelectionT.gameObject.activeSelf)
-		{
-			objectSelectionT.gameObject.SetActive(false);
-			objectButtonText.text = "˅";
-		}
-		else
-		{
-			objectSelectionT.gameObject.SetActive(true);
-			objectButtonText.text = "˄";
-		}
-	}
-
-	private void LoadPrefab(string name)
-	{
-		loadedPrefab = (GameObject)Resources.Load(name, typeof(GameObject));
+		selectedPrefab = EditorObjects.OBJ.GetPrefabByName(name);
 	}
 
 	private void SpawnPrefab(GameObject prefab, Vector3 pos, Quaternion rot, bool alignToGround = false, bool overrideSnap = false)
