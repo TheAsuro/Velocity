@@ -323,6 +323,11 @@ public class MainMenu : MonoBehaviour
 		buttonDrawThingy.setSelectedButton(button);
 	}
 
+	public void loadEditor()
+	{
+		Application.LoadLevel("LevelEditor");
+	}
+
 	public void deletePlayerData(string index)
 	{
 		int parsed;
