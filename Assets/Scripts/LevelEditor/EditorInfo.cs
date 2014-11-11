@@ -13,10 +13,13 @@ public class EditorInfo : MonoBehaviour
 	private Transform topT;
 	private InputField prefabText;
 	private Toggle snapToggle;
+	private InputField snapInput;
+	private GameObject selectionPlane;
 
 	private static Vector3 NaV = new Vector3(float.NaN, float.NaN, float.NaN);
 
-	private bool snapToGrid;
+	private bool snapToGrid = true;
+	private float snapValue = 1f;
 
 	void Awake()
 	{
@@ -25,6 +28,7 @@ public class EditorInfo : MonoBehaviour
 		prefabText = topT.Find("PrefabInput").GetComponent<InputField>();
 		prefabText.onSubmit.AddListener(PrefabSubmit);
 		snapToggle = topT.Find("SnapToGrid").GetComponent<Toggle>();
+		snapInput = topT.Find("SnapInput").GetComponent<InputField>();
 	}
 
 	void Update()
@@ -49,6 +53,12 @@ public class EditorInfo : MonoBehaviour
 	public void UpdateSnap()
 	{
 		snapToGrid = snapToggle.isOn;
+	}
+
+	public void UpdateSnapValue()
+	{
+		SetSnapValue(float.Parse(snapInput.text.text));
+		EditorObjects.OBJ.SetSelectionPlaneRelativeMaterialScale(1f / snapValue);
 	}
 
 	private void SelectPrefab(string name)
@@ -99,13 +109,50 @@ public class EditorInfo : MonoBehaviour
 		return hitInfo.point;
 	}
 
+	public void SetSnapValue(float value)
+	{
+		snapValue = value;
+	}
+
 	private float RoundToGrid(float input)
 	{
-		float floor = Mathf.Floor(input);
-		float rest = input - floor;
-		if(rest < 0.5f)
-			return floor;
+		//Find out the next lowest mutliple of the grid
+		int sign = (int)Mathf.Sign(input);
+		int counter = 0;
+		float lowResult = float.NaN;
+		float highResult = float.NaN;
+		bool hit = false;
 
-		return Mathf.Ceil(input);
+		while(!hit)
+		{
+			float i = counter * sign * snapValue;
+
+			if(i == input)
+			{
+				hit = true;
+				lowResult = counter * snapValue * sign;
+			}
+			else if(i > input && sign == 1)
+			{
+				hit = true;
+				lowResult = (counter - 1) * snapValue * sign;
+			}
+			else if(i < input && sign == -1)
+			{
+				hit = true;
+				lowResult = counter * snapValue * sign;
+			}
+
+			counter++;
+		}
+
+		//Decide in what direction to round
+		highResult = lowResult + snapValue;
+
+		if(input >= lowResult + snapValue / 2f)
+		{
+			return highResult;
+		}
+		return lowResult;
 	}
 }

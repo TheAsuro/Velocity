@@ -8,6 +8,7 @@ public class EditorObjects : MonoBehaviour
 
 	private GameObject mySun;
 	private GameObject mySelectionPlane;
+	private Vector2 mySelectionPlaneScale;
 
 	private List<GameObject> loadedObjects;
 	private List<GameObject> addedObjects;
@@ -31,6 +32,11 @@ public class EditorObjects : MonoBehaviour
 		mySelectionPlane = transform.Find("SelectionPlane").gameObject;
 	}
 
+	void Start()
+	{
+		mySelectionPlaneScale = mySelectionPlane.renderer.material.GetTextureScale("_MainTex");
+	}
+
 	public void SetSunRotation(Quaternion rot)
 	{
 		mySun.transform.rotation = rot;
@@ -39,6 +45,12 @@ public class EditorObjects : MonoBehaviour
 	public void AddSelectionPlanePosition(Vector3 addVector)
 	{
 		mySelectionPlane.transform.position += addVector;
+	}
+
+	public void SetSelectionPlaneRelativeMaterialScale(float scale)
+	{
+		Vector2 realScale = new Vector2(scale * mySelectionPlaneScale.x, scale * mySelectionPlaneScale.y);
+		mySelectionPlane.renderer.material.SetTextureScale("_MainTex", realScale);
 	}
 
 	public List<string> GetAllPrefabNames()
