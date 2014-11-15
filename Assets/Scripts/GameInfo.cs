@@ -32,6 +32,8 @@ public class GameInfo : MonoBehaviour
 	private SaveData currentSave;
 	private Demo lastDemo;
 	private float lastTime = -1f;
+	private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
+	private bool runValid = false;
 	
 	//Debug window (top-left corner, toggle with f8)
 	public bool logToConsole = true;
@@ -577,6 +579,8 @@ public class GameInfo : MonoBehaviour
 
 	public void startDemo()
 	{
+		resetRun();
+
 		if(myPlayer != null)
 			myPlayer.startDemo(currentSave.getPlayerName());
 	}
@@ -693,16 +697,24 @@ public class GameInfo : MonoBehaviour
 	//so nobody can send fake entries.
 	private void sendLeaderboardEntry(string name, float time, string map)
 	{
-		WWWForm form = new WWWForm();
-		string hash = Md5Sum(name + time.ToString() + map + secretKey);
+		invalidRunCheck();
+		if(runValid)
+		{
+			WWWForm form = new WWWForm();
+			string hash = Md5Sum(name + time.ToString() + map + secretKey);
 
-		form.AddField("Player", name);
-		form.AddField("Time", time.ToString());
-		form.AddField("Map", map);
-		form.AddField("Hash", hash);
+			form.AddField("Player", name);
+			form.AddField("Time", time.ToString());
+			form.AddField("Map", map);
+			form.AddField("Hash", hash);
 
-		WWW www = new WWW("http://theasuro.net76.net/newentry.php", form);
-		StartCoroutine(myLeaderboard.SendLeaderboardData(www));
+			WWW www = new WWW("http://theasuro.net76.net/newentry.php", form);
+			StartCoroutine(myLeaderboard.SendLeaderboardData(www));
+		}
+		else
+		{
+			print("Invalid run!");
+		}	
 	}
 
 	//Create a md5 hash from a string
@@ -729,5 +741,26 @@ public class GameInfo : MonoBehaviour
 	public void setGravity(float value)
 	{
 		Physics.gravity = new Vector3(0f, value, 0f);
+		invalidateRun();
+	}
+
+	public void invalidateRun()
+	{
+		runValid = false;
+	}
+
+	private void invalidRunCheck()
+	{
+		if(!getPlayerInfo().validatePlayerVariables())
+			runValid = false;
+
+		if(Physics.gravity != defGravity)
+			runValid = false;
+	}
+
+	private void resetRun()
+	{
+		runValid = true;
+		invalidRunCheck();
 	}
 }

@@ -4,6 +4,7 @@ using System.Collections;
 
 public class PlayerInfo : MonoBehaviour
 {
+	//References
 	private GameObject myMesh;
 	private Canvas myCanvas;
 	private RaceScript myRaceScript;
@@ -14,6 +15,10 @@ public class PlayerInfo : MonoBehaviour
 	private Image myCrosshair;
 	private Image myCrosshairCircle;
 	private Image myCrosshairCircle2;
+
+	//Default values for movement variables
+	//Speed, AirSpeed, MaxSpeed, Friction, Jump
+	private static float[] defaults = { 5f, 10f, 7f, 0.9f, 5f };
 
 	void Awake()
 	{
@@ -106,6 +111,7 @@ public class PlayerInfo : MonoBehaviour
 	public void setFrictionMultiplier(float value)
 	{
 		myMovement.frictionMultiplier = value;
+		GameInfo.info.invalidateRun();
 	}
 
 	public float getFrictionMultiplier()
@@ -116,6 +122,7 @@ public class PlayerInfo : MonoBehaviour
 	public void setSpeed(float value)
 	{
 		myMovement.speed = value;
+		GameInfo.info.invalidateRun();
 	}
 
 	//Gets input multiplier, not current speed!
@@ -127,6 +134,7 @@ public class PlayerInfo : MonoBehaviour
 	public void setAirSpeed(float value)
 	{
 		myMovement.airSpeed = value;
+		GameInfo.info.invalidateRun();
 	}
 
 	public float getAirSpeed()
@@ -137,6 +145,7 @@ public class PlayerInfo : MonoBehaviour
 	public void setMaxSpeed(float value)
 	{
 		myMovement.maxSpeed = value;
+		GameInfo.info.invalidateRun();
 	}
 
 	public float getMaxSpeed()
@@ -147,6 +156,7 @@ public class PlayerInfo : MonoBehaviour
 	public void setJumpForce(float value)
 	{
 		myMovement.jumpForce = value;
+		GameInfo.info.invalidateRun();
 	}
 
 	public float getJumpForce()
@@ -174,5 +184,16 @@ public class PlayerInfo : MonoBehaviour
 	public Image getCrosshairCircle2()
 	{
 		return myCrosshairCircle2;
+	}
+
+	public bool validatePlayerVariables()
+	{
+		float[] currentValues = { getSpeed(), getAirSpeed(), getMaxSpeed(), getFrictionMultiplier(), getJumpForce() };
+		for(int i = 0; i < 5; i++)
+		{
+			if(defaults[i] != currentValues[i])
+				return false;
+		}
+		return true;
 	}
 }

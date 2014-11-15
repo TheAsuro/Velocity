@@ -159,6 +159,7 @@ public class RaceScript : MonoBehaviour
 	{
 		time = -1f;
 		startTime = Time.time;
+
 		checkpoint = 0;
 		finished = false;
 		freezeDuration = newFreezeDuration;
@@ -168,6 +169,7 @@ public class RaceScript : MonoBehaviour
 			freeze(freezeDuration);
 			startTime += freezeDuration;
 		}
+
 		GameInfo.info.startDemo();
 	}
 	
