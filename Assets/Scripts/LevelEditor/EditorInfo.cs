@@ -42,7 +42,7 @@ public class EditorInfo : MonoBehaviour
 
 		//Move spawn plane with scroll wheel
 		float scrollCount = Input.GetAxis("Mouse ScrollWheel");
-		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f, 0f));
+		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * snapValue, 0f));
 	}
 
 	private void PrefabSubmit(string sub)
