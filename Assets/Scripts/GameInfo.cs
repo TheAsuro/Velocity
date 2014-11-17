@@ -72,7 +72,8 @@ public class GameInfo : MonoBehaviour
 		demo,
 		leaderboard,
 		endlevel,
-		othermenu
+		othermenu,
+		editor
 	}
 
 	public enum GameMode
@@ -379,6 +380,10 @@ public class GameInfo : MonoBehaviour
 					break;
 				case MenuState.othermenu:
 					menuLocked = true;
+					break;
+				case MenuState.editor:
+					menuLocked = true;
+					setGamePaused(false);
 					break;
 			}
 
