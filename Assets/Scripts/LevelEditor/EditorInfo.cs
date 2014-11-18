@@ -21,6 +21,12 @@ public class EditorInfo : MonoBehaviour
 	private bool snapToGrid = true;
 	private float snapValue = 1f;
 
+	public enum PlaceMode
+	{
+		ground,
+		objects
+	}
+
 	void Awake()
 	{
 		canvasT = transform.parent.Find("Canvas");
