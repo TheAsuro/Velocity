@@ -5,6 +5,7 @@ using System.Collections;
 public class EditorInfo : MonoBehaviour
 {
 	public LayerMask clickLayers;
+	public GameObject selectionBoxPrefab;
 
 	private GameObject selectedPrefab;
 
@@ -15,6 +16,9 @@ public class EditorInfo : MonoBehaviour
 	private Toggle snapToggle;
 	private InputField snapInput;
 	private GameObject selectionPlane;
+
+	//Selection
+	private GameObject selectionBox = null;
 
 	private static Vector3 NaV = new Vector3(float.NaN, float.NaN, float.NaN);
 
@@ -39,6 +43,29 @@ public class EditorInfo : MonoBehaviour
 
 	void Update()
 	{
+		//Draw box on mouse selection
+		Vector3 selectionPos = GetMouseOnSelectionPlane();
+
+		if(!selectionPos.Equals(NaV))
+		{
+			Vector3 roundedSelectionPos = RoundToGrid(selectionPos);
+			print(roundedSelectionPos);
+
+			if(selectionBox == null)
+			{
+				selectionBox = (GameObject)GameObject.Instantiate(selectionBoxPrefab, roundedSelectionPos, Quaternion.identity);
+			}
+			else
+			{
+				selectionBox.transform.position = roundedSelectionPos;
+			}
+		}
+		else
+		{
+			GameObject.Destroy(selectionBox);
+			selectionBox = null;
+		}
+
 		//Spawn with left click
 		if(Input.GetMouseButtonDown(0))
 		{
@@ -84,7 +111,7 @@ public class EditorInfo : MonoBehaviour
 
 		if(snapToGrid && !overrideSnap)
 		{
-			newPos = new Vector3(RoundToGrid(newPos.x), newPos.y, RoundToGrid(newPos.z));
+			newPos = RoundToGrid(newPos);
 		}
 		
 		GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, rot);
@@ -118,6 +145,11 @@ public class EditorInfo : MonoBehaviour
 	public void SetSnapValue(float value)
 	{
 		snapValue = value;
+	}
+
+	private Vector3 RoundToGrid(Vector3 input)
+	{
+		return new Vector3(RoundToGrid(input.x), input.y, RoundToGrid(input.z));
 	}
 
 	private float RoundToGrid(float input)
