@@ -69,22 +69,18 @@ public class RaceScript : MonoBehaviour
 		//Display crosshair
 		drawCrosshair();
 
-		//Horribly coded countdown
+		//Skip countdown
+		if(Input.GetButtonDown("Jump"))
+		{
+			unfreezeTime = Time.time;
+		}
+
+		//countdown
 		float remainingFreezeTime = unfreezeTime - Time.time;
-		if(remainingFreezeTime > 2f)
+		if(remainingFreezeTime > 0f)
 		{
 			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-			countdownText.text = "3";
-		}
-		else if(remainingFreezeTime > 1f)
-		{
-			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-			countdownText.text = "2";
-		}
-		else if(remainingFreezeTime > 0f)
-		{
-			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-			countdownText.text = "1";
+			countdownText.text = Mathf.Ceil(remainingFreezeTime).ToString();
 		}
 		else if(remainingFreezeTime > -1f)
 		{
