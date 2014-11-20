@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class Leaderboard : MonoBehaviour
 {
+	public delegate void processString(string wr);
+
+	private Transform myLeaderboardObj;
 	private Text myNumbers;
 	private Text myTimes;
 	private Text myPlayers;
@@ -13,10 +16,11 @@ public class Leaderboard : MonoBehaviour
 
 	void Awake()
 	{
-		myNumbers = transform.Find("Numbers").Find("Text").gameObject.GetComponent<Text>();
-		myTimes = transform.Find("Times").Find("Text").gameObject.GetComponent<Text>();
-		myPlayers = transform.Find("Players").Find("Text").gameObject.GetComponent<Text>();
-		myInfo = transform.Find("Info").Find("Text").gameObject.GetComponent<Text>();
+		myLeaderboardObj = transform.Find("Leaderboard");
+		myNumbers = myLeaderboardObj.transform.Find("Numbers").Find("Text").gameObject.GetComponent<Text>();
+		myTimes = myLeaderboardObj.transform.Find("Times").Find("Text").gameObject.GetComponent<Text>();
+		myPlayers = myLeaderboardObj.transform.Find("Players").Find("Text").gameObject.GetComponent<Text>();
+		myInfo = myLeaderboardObj.transform.Find("Info").Find("Text").gameObject.GetComponent<Text>();
 	}
 
 	//Request leaderboard entries from the server
@@ -74,6 +78,29 @@ public class Leaderboard : MonoBehaviour
 				addRow(indexCounter.ToString(), items[0], items[1], items[2]);
 				indexCounter++;
 			}
+		}
+	}
+
+	public void getMapRecord(string map, processString proc)
+	{
+		WWWForm form = new WWWForm();
+		form.AddField("Map", map);
+
+		WWW www = new WWW("http://theasuro.net76.net/wr.php", form);
+		StartCoroutine(waitForRecordData(www, proc));
+	}
+
+	private IEnumerator waitForRecordData(WWW www, processString proc)
+	{
+		yield return www;
+
+		if(www.error != null)
+		{
+			Debug.Log("WWW Error: " + www.error);
+		}
+		else
+		{
+			proc(www.text);
 		}
 	}
 

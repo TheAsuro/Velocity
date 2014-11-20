@@ -108,7 +108,7 @@ public class GameInfo : MonoBehaviour
 		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
 		myLeaderboardObj = myCanvas.transform.Find("Leaderboard").gameObject;
-		myLeaderboard = myLeaderboardObj.GetComponent<Leaderboard>();
+		myLeaderboard = myCanvas.GetComponent<Leaderboard>();
 		Screen.lockCursor = true;
 		setMenuState(MenuState.closed);
 	}
@@ -720,6 +720,11 @@ public class GameInfo : MonoBehaviour
 		{
 			print("Invalid run!");
 		}	
+	}
+
+	public void loadMapRecord(string map, Leaderboard.processString proc)
+	{
+		myLeaderboard.getMapRecord(map, proc);
 	}
 
 	//Create a md5 hash from a string

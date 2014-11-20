@@ -8300,7 +8300,6 @@ GameObject:
   - 224: {fileID: 1084525218}
   - 222: {fileID: 1084525220}
   - 114: {fileID: 1084525219}
-  - 114: {fileID: 1084525221}
   m_Layer: 5
   m_Name: Leaderboard
   m_TagString: Untagged
@@ -8362,17 +8361,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1084525217}
   m_HideIfInvisible: 0
---- !u!114 &1084525221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1084525217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6351436712ee0c41a371b27c64e0b19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1092927614
 GameObject:
   m_ObjectHideFlags: 0
@@ -9770,7 +9758,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1084525221}
+      - m_Target: {fileID: 1453612880}
         m_MethodName: down
         m_Mode: 1
         m_Arguments:
@@ -10442,7 +10430,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1084525221}
+      - m_Target: {fileID: 1453612880}
         m_MethodName: up
         m_Mode: 1
         m_Arguments:
@@ -11427,6 +11415,7 @@ GameObject:
   - 223: {fileID: 1453612878}
   - 114: {fileID: 1453612875}
   - 114: {fileID: 1453612879}
+  - 114: {fileID: 1453612880}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -11614,6 +11603,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   helpFile: {fileID: 4900000, guid: 933c605057a65b740bc28ac473924361, type: 3}
   rowCount: 22
+--- !u!114 &1453612880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1453612870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6351436712ee0c41a371b27c64e0b19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1455753089
 GameObject:
   m_ObjectHideFlags: 0

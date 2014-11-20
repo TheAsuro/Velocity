@@ -7,6 +7,9 @@ public class ReplaceUiText : MonoBehaviour
 
 	private string initialText = "";
 	private SaveData player1, player2, player3;
+	private string wr = "";
+	private bool loadingWr = false;
+	private string pb = "";
 
 	void Start()
 	{
@@ -48,17 +51,47 @@ public class ReplaceUiText : MonoBehaviour
 		if(temp.Contains("$time")) { temp = temp.Replace("$time", GameInfo.info.getLastTime().ToString()); }
 		if(temp.Contains("$map")) { temp = Application.loadedLevelName; }
 
-		temp = temp.Replace("$selectedmap", GameInfo.info.getSelectedMap());
-		string aut = GameInfo.info.getSelectedAuthor();
-		if(! aut.Equals("?"))
+		if(temp.Contains("$selectedmap")) { temp = temp.Replace("$selectedmap", GameInfo.info.getSelectedMap()); }
+		
+		if(temp.Contains("$selectedauthor"))
 		{
-			temp = temp.Replace("$selectedauthor", "by " + aut);
+			string aut = GameInfo.info.getSelectedAuthor();
+			if(! aut.Equals("?"))
+			{
+				temp = temp.Replace("$selectedauthor", "by " + aut);
+			}
+			else
+			{
+				temp = temp.Replace("$selectedauthor", "");
+			}
 		}
-		else
+		
+		if(temp.Contains("$wr"))
 		{
-			temp = temp.Replace("$selectedauthor", "");
+			if(wr.Equals("") && !loadingWr)
+				loadWr();
+		}
+
+		if(temp.Contains("$wr") && !wr.Equals(""))
+		{
+			temp = temp.Replace("$wr", wr);
 		}
 
 		textScript.text = temp;
+	}
+
+	private void loadWr()
+	{
+		loadingWr = true;
+		GameInfo.info.loadMapRecord(Application.loadedLevelName, setWr);
+	}
+
+	private void setWr(string text)
+	{
+		loadingWr = false;
+		string temp = text.Split('\n')[0];
+		string[] temp2 = temp.Split('|');
+
+		wr = temp2[1] + " by " + temp2[0];
 	}
 }
