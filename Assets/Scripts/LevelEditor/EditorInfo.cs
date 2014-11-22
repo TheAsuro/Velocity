@@ -19,6 +19,7 @@ public class EditorInfo : MonoBehaviour
 
 	//Selection
 	private GameObject selectionBox = null;
+	private Vector3 selectionStartPos = NaV;
 
 	private static Vector3 NaV = new Vector3(float.NaN, float.NaN, float.NaN);
 
@@ -49,7 +50,6 @@ public class EditorInfo : MonoBehaviour
 		if(!selectionPos.Equals(NaV))
 		{
 			Vector3 roundedSelectionPos = RoundToGrid(selectionPos);
-			print(roundedSelectionPos);
 
 			if(selectionBox == null)
 			{
@@ -66,11 +66,42 @@ public class EditorInfo : MonoBehaviour
 			selectionBox = null;
 		}
 
-		//Spawn with left click
+		//Start selection (or just click)
 		if(Input.GetMouseButtonDown(0))
 		{
-			if(selectedPrefab != null)
-				SpawnPrefabAtMouse(selectedPrefab);
+			selectionStartPos = RoundToGrid(GetMouseOnSelectionPlane());
+		}
+
+		//Spawn with left click
+		if(Input.GetMouseButtonUp(0) && selectedPrefab != null)
+		{
+			//Spawn in a rectangle if snap to grid is on
+			if(snapToGrid)
+			{
+				Vector3 selectionEndPos = RoundToGrid(GetMouseOnSelectionPlane());
+
+				if(!selectionStartPos.Equals(NaV) && !selectionEndPos.Equals(NaV))
+				{
+					Vector3 difference = selectionEndPos - selectionStartPos;
+
+					for(int i = 0; i <= Mathf.Abs(difference.x); i++)
+					{
+						for(int j = 0; j <= Mathf.Abs(difference.z); j++)
+						{
+							Vector3 pos = selectionStartPos + new Vector3(i * Mathf.Sign(difference.x), 0f, j * Mathf.Sign(difference.z));
+							SpawnPrefab(selectedPrefab, pos, Quaternion.identity, true);
+						}
+					}
+				}
+			}
+			else //Spawn only a single entity
+			{
+				Vector3 pos = GetMouseOnSelectionPlane();
+				if(!pos.Equals(NaV))
+				{
+					SpawnPrefab(selectedPrefab, pos, Quaternion.identity, true);
+				}
+			}
 		}
 
 		//Move spawn plane with scroll wheel
@@ -78,27 +109,32 @@ public class EditorInfo : MonoBehaviour
 		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * snapValue, 0f));
 	}
 
+	//Called when player submits the selection textbox
 	private void PrefabSubmit(string sub)
 	{
 		SelectPrefab(sub);
 	}
 
+	//Toggles snap on/off depending on gui button
 	public void UpdateSnap()
 	{
 		snapToGrid = snapToggle.isOn;
 	}
 
+	//Public function that also scales the selection plane material
 	public void UpdateSnapValue()
 	{
 		SetSnapValue(float.Parse(snapInput.text.text));
 		EditorObjects.OBJ.SetSelectionPlaneRelativeMaterialScale(1f / snapValue);
 	}
 
+	//Selects the prefab by name
 	private void SelectPrefab(string name)
 	{
 		selectedPrefab = EditorObjects.OBJ.GetPrefabByName(name);
 	}
 
+	//Instantiates a new prefab
 	private void SpawnPrefab(GameObject prefab, Vector3 pos, Quaternion rot, bool alignToGround = false, bool overrideSnap = false)
 	{
 		Vector3 newPos = pos;
@@ -118,15 +154,7 @@ public class EditorInfo : MonoBehaviour
 		EditorObjects.OBJ.AddObject(instance);
 	}
 
-	private void SpawnPrefabAtMouse(GameObject prefab)
-	{
-		Vector3 pos = GetMouseOnSelectionPlane();
-		if(!pos.Equals(NaV))
-		{
-			SpawnPrefab(prefab, pos, Quaternion.identity, true);
-		}
-	}
-
+	//Get the position the mouse is over
 	private Vector3 GetMouseOnSelectionPlane()
 	{
 		Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, camera.nearClipPlane);
@@ -142,18 +170,25 @@ public class EditorInfo : MonoBehaviour
 		return hitInfo.point;
 	}
 
+	//Set the value that RoundToGrid will snap to
 	public void SetSnapValue(float value)
 	{
 		snapValue = value;
 	}
 
+	//Round a vector
 	private Vector3 RoundToGrid(Vector3 input)
 	{
 		return new Vector3(RoundToGrid(input.x), input.y, RoundToGrid(input.z));
 	}
 
+	//Round a float so it snaps to the grid
 	private float RoundToGrid(float input)
 	{
+		//rip
+		if(input.Equals(float.NaN))
+			return float.NaN;
+
 		//Find out the next lowest mutliple of the grid
 		int sign = (int)Mathf.Sign(input);
 		int counter = 0;
