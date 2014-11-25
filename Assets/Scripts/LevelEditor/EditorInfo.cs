@@ -57,7 +57,7 @@ public class EditorInfo : MonoBehaviour
 		}
 
 		//Spawn ground/object when releasing lmb
-		if(Input.GetMouseButtonUp(0) && selectedPrefab != null)
+		if(Input.GetMouseButtonUp(0))
 		{
 			if(currentPlaceMode == PlaceMode.ground)
 			{
@@ -65,7 +65,7 @@ public class EditorInfo : MonoBehaviour
 				Vector3 selectionEndPos = GetMouseOnSelectionPlane();
 				SpawnGround(selectionStartPos, selectionEndPos);
 			}
-			else if(currentPlaceMode == PlaceMode.objects)
+			else if(currentPlaceMode == PlaceMode.objects && selectedPrefab != null)
 			{
 				//Spawn object at mouse release point
 				Vector3 pos = GetMouseOnSelectionPlane();
