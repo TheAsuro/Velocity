@@ -9,7 +9,7 @@ public class ReplaceUiText : MonoBehaviour
 	private SaveData player1, player2, player3;
 	private string wr = "";
 	private bool loadingWr = false;
-	private string pb = "";
+	private string pb = ""; //TODO
 
 	void Start()
 	{
