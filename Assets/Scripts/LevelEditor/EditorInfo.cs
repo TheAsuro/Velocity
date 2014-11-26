@@ -109,6 +109,7 @@ public class EditorInfo : MonoBehaviour
 		}
 	}
 
+	//Destroys the object the mouse is over
 	private void RemoveSelectedObject()
 	{
 		RaycastHit hitInfo;
@@ -116,8 +117,23 @@ public class EditorInfo : MonoBehaviour
 
 		if(hit)
 		{
-			GameObject.Destroy(hitInfo.collider.gameObject);
+			Transform transformToDelete = hitInfo.collider.gameObject.transform;
+			while(transformToDelete.parent != null)
+			{
+				transformToDelete = transformToDelete.parent;
+			}
+			DestroyRecursive(transformToDelete.gameObject);
 		}
+	}
+
+	//Destroys all children of an object
+	private void DestroyRecursive(GameObject go)
+	{
+		foreach(Transform childTransform in go.transform)
+		{
+			DestroyRecursive(childTransform.gameObject);
+		}
+		GameObject.Destroy(go);
 	}
 
 	//Called when player submits the selection textbox
