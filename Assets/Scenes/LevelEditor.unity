@@ -353,7 +353,7 @@ GameObject:
   - 81: {fileID: 345505595}
   - 114: {fileID: 345505600}
   - 114: {fileID: 345505601}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -436,9 +436,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95b5a0450238611498c7735178f196c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickLayers:
+  spawnLayers:
     serializedVersion: 2
-    m_Bits: 16384
+    m_Bits: 16641
+  removeLayers:
+    serializedVersion: 2
+    m_Bits: 257
   selectionBoxPrefab: {fileID: 100000, guid: 79e5c4b05f87ff74680711ccc4558d22, type: 2}
   groundPrefab: {fileID: 100000, guid: bc5324f34a806b849a963a2768061188, type: 2}
 --- !u!114 &345505601
@@ -594,7 +597,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 588152803}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: MainCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -931,7 +934,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 870696504}
   - 108: {fileID: 870696505}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Sun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1426,7 +1429,7 @@ GameObject:
   - 114: {fileID: 1288984726}
   - 114: {fileID: 1288984725}
   - 114: {fileID: 1288984724}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1496,7 +1499,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1328052926}
   - 114: {fileID: 1328052927}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: EditorObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}

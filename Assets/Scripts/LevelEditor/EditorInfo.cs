@@ -4,7 +4,8 @@ using System.Collections;
 
 public class EditorInfo : MonoBehaviour
 {
-	public LayerMask clickLayers;
+	public LayerMask spawnLayers;
+	public LayerMask removeLayers;
 	public GameObject selectionBoxPrefab;
 	public GameObject groundPrefab;
 
@@ -17,7 +18,6 @@ public class EditorInfo : MonoBehaviour
 	private Toggle snapToggle;
 	private Toggle placeModeToggle;
 	private InputField snapInput;
-	private GameObject selectionPlane;
 
 	//Selection
 	private GameObject selectionBox = null;
@@ -73,6 +73,12 @@ public class EditorInfo : MonoBehaviour
 			}
 		}
 
+		//Remove object with shift + lmb
+		if(Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonUp(1))
+		{
+			RemoveSelectedObject();
+		}
+
 		//Move spawn plane with scroll wheel
 		float scrollCount = Input.GetAxis("Mouse ScrollWheel");
 		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * snapValue, 0f));
@@ -83,7 +89,7 @@ public class EditorInfo : MonoBehaviour
 	{
 		Vector3 selectionPos = GetMouseOnSelectionPlane();
 
-		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1))
+		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift))
 		{
 			Vector3 roundedSelectionPos = RoundToGrid(selectionPos);
 
@@ -100,6 +106,17 @@ public class EditorInfo : MonoBehaviour
 		{
 			GameObject.Destroy(selectionBox);
 			selectionBox = null;
+		}
+	}
+
+	private void RemoveSelectedObject()
+	{
+		RaycastHit hitInfo;
+		bool hit = MouseRaycast(removeLayers, out hitInfo);
+
+		if(hit)
+		{
+			GameObject.Destroy(hitInfo.collider.gameObject);
 		}
 	}
 
@@ -188,24 +205,29 @@ public class EditorInfo : MonoBehaviour
 			}
 			
 			GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, rot);
-			EditorObjects.OBJ.AddObject(instance);
 		}
 	}
 
 	//Get the position the mouse is over
 	private Vector3 GetMouseOnSelectionPlane()
 	{
+		RaycastHit hitInfo;
+		bool hit = MouseRaycast(spawnLayers, out hitInfo);
+		if(!hit)
+			return NaV;
+
+		return hitInfo.point;
+	}
+
+	//Casts a ray from the camera into the direction of the mouse cursor
+	private bool MouseRaycast(LayerMask layers, out RaycastHit hit, float length = Mathf.Infinity)
+	{
 		Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, camera.nearClipPlane);
 		Vector3 worldPos = camera.ScreenToWorldPoint(mousePos);
 		Vector3 camPos = camera.transform.position;
 		Vector3 rayDirection = worldPos - camPos;
 		Ray clickRay = new Ray(camPos, rayDirection);
-		RaycastHit hitInfo;
-		bool hit = Physics.Raycast(clickRay, out hitInfo, Mathf.Infinity, clickLayers);
-		if(!hit)
-			return NaV;
-
-		return hitInfo.point;
+		return Physics.Raycast(clickRay, out hit, length, layers);
 	}
 
 	//Set the value that RoundToGrid will snap to
