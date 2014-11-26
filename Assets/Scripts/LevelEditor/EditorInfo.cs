@@ -5,6 +5,7 @@ using System.Collections;
 public class EditorInfo : MonoBehaviour
 {
 	public LayerMask spawnLayers;
+	public LayerMask groundLayers;
 	public LayerMask removeLayers;
 	public GameObject selectionBoxPrefab;
 	public GameObject groundPrefab;
@@ -53,7 +54,15 @@ public class EditorInfo : MonoBehaviour
 		//Start selection with lmb
 		if(Input.GetMouseButtonDown(0))
 		{
-			selectionStartPos = GetMouseOnSelectionPlane();
+			switch(currentPlaceMode)
+			{
+				case PlaceMode.ground:
+					selectionStartPos = GetMouseOnSelectionPlane(groundLayers);
+					break;
+				default:
+					selectionStartPos = GetMouseOnSelectionPlane();
+					break;
+			}			
 		}
 
 		//Spawn ground/object when releasing lmb
@@ -62,7 +71,7 @@ public class EditorInfo : MonoBehaviour
 			if(currentPlaceMode == PlaceMode.ground)
 			{
 				//Spawn ground area from mouse down point to mouse up point
-				Vector3 selectionEndPos = GetMouseOnSelectionPlane();
+				Vector3 selectionEndPos = GetMouseOnSelectionPlane(groundLayers);
 				SpawnGround(selectionStartPos, selectionEndPos);
 			}
 			else if(currentPlaceMode == PlaceMode.objects && selectedPrefab != null)
@@ -89,7 +98,9 @@ public class EditorInfo : MonoBehaviour
 	{
 		Vector3 selectionPos = GetMouseOnSelectionPlane() + new Vector3(0f, selectionBoxPrefab.transform.localScale.y / 2f, 0f);
 
-		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift))
+		//Draw box only when cursor is on a valid square, rmb and shift are not pressed
+		// and snap to grid is active or we are placing ground
+		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && (snapToGrid || currentPlaceMode == PlaceMode.ground))
 		{
 			Vector3 roundedSelectionPos = RoundToGrid(selectionPos);
 
@@ -229,6 +240,16 @@ public class EditorInfo : MonoBehaviour
 	{
 		RaycastHit hitInfo;
 		bool hit = MouseRaycast(spawnLayers, out hitInfo);
+		if(!hit)
+			return NaV;
+
+		return hitInfo.point;
+	}
+
+	private Vector3 GetMouseOnSelectionPlane(LayerMask layers)
+	{
+		RaycastHit hitInfo;
+		bool hit = MouseRaycast(layers, out hitInfo);
 		if(!hit)
 			return NaV;
 
