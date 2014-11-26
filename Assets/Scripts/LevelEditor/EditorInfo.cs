@@ -87,7 +87,7 @@ public class EditorInfo : MonoBehaviour
 	//Draws a box where the cursor is/a rectangle of the selected area (TODO)
 	private void DrawSelectionBox()
 	{
-		Vector3 selectionPos = GetMouseOnSelectionPlane();
+		Vector3 selectionPos = GetMouseOnSelectionPlane() + new Vector3(0f, selectionBoxPrefab.transform.localScale.y / 2f, 0f);
 
 		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift))
 		{
