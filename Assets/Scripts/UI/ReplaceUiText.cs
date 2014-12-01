@@ -9,7 +9,7 @@ public class ReplaceUiText : MonoBehaviour
 	private SaveData player1, player2, player3;
 	private string wr = "";
 	private bool loadingWr = false;
-	private string pb = ""; //TODO
+	private string pb = "";
 
 	void Start()
 	{
@@ -72,10 +72,14 @@ public class ReplaceUiText : MonoBehaviour
 				loadWr();
 		}
 
-		if(temp.Contains("$wr") && !wr.Equals(""))
+		if(pb.Equals("") && playerSave != null)
 		{
-			temp = temp.Replace("$wr", wr);
+			pb = GameInfo.info.getCurrentSave().getPersonalBest(Application.loadedLevelName).ToString();
+			if(pb == "0") { pb = "-"; }
 		}
+
+		if(temp.Contains("$wr")) { temp = temp.Replace("$wr", wr); }
+		if(temp.Contains("$pb")) { temp = temp.Replace("$pb", pb); }
 
 		textScript.text = temp;
 	}

@@ -72,7 +72,7 @@ public class RaceScript : MonoBehaviour
 		drawCrosshair();
 
 		//Skip countdown
-		if(Input.GetButtonDown("Jump"))
+		if(Input.GetButtonDown("Jump") && startTime > Time.time)
 		{
 			startTime = Time.time;
 			unfreeze();
