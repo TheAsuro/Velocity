@@ -315,7 +315,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 927.383972, y: 773.613831, z: -28.0442543}
+  m_LocalPosition: {x: -365.302307, y: 918.286682, z: -720.071655}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400004}
@@ -622,7 +622,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'WR: $wr'
+  m_Text: 'WR: $wr
+
+    PB: $pb'
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1004,8 +1006,8 @@ RectTransform:
   m_RootOrder: 4
   m_AnchorMin: {x: .5, y: .75}
   m_AnchorMax: {x: .5, y: .75}
-  m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 250, y: 40}
+  m_AnchoredPosition: {x: 0, y: -50}
+  m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22400002
 RectTransform:

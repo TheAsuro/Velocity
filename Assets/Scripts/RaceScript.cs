@@ -19,6 +19,7 @@ public class RaceScript : MonoBehaviour
 	private Text speedText;
 	private Text nameText;
 	private Text countdownText;
+	private Text wrText;
 	
 	//This script actually sets the player as an actual player
 	void Awake()
@@ -28,6 +29,7 @@ public class RaceScript : MonoBehaviour
 		speedText = canvas.Find("Speed").Find("Text").GetComponent<Text>();
 		nameText = canvas.Find("Player").Find("Text").GetComponent<Text>();
 		countdownText = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
+		wrText = canvas.Find("WR").Find("Text").GetComponent<Text>();
 	}
 
 	void Update()
@@ -72,7 +74,8 @@ public class RaceScript : MonoBehaviour
 		//Skip countdown
 		if(Input.GetButtonDown("Jump"))
 		{
-			unfreezeTime = Time.time;
+			startTime = Time.time;
+			unfreeze();
 		}
 
 		//countdown
@@ -80,16 +83,19 @@ public class RaceScript : MonoBehaviour
 		if(remainingFreezeTime > 0f)
 		{
 			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
+			wrText.gameObject.transform.parent.gameObject.SetActive(true);
 			countdownText.text = Mathf.Ceil(remainingFreezeTime).ToString();
 		}
 		else if(remainingFreezeTime > -1f)
 		{
 			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
+			wrText.gameObject.transform.parent.gameObject.SetActive(true);
 			countdownText.text = "GO!";
 		}
 		else
 		{
 			countdownText.gameObject.transform.parent.gameObject.SetActive(false);
+			wrText.gameObject.transform.parent.gameObject.SetActive(false);
 		}
 	}
 	
@@ -180,6 +186,7 @@ public class RaceScript : MonoBehaviour
 	{
 		frozen = false;
 		GameInfo.info.getPlayerInfo().unfreeze();
+		unfreezeTime = Time.time;
 	}
 	
 	private string getFrozenString()
