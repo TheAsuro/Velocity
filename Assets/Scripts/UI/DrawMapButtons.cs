@@ -24,7 +24,7 @@ public class DrawMapButtons : MonoBehaviour
 
 				//Move button to desired position
 				RectTransform newTransform = (RectTransform)newButton.transform;
-				newTransform.parent = gameObject.transform;
+				newTransform.SetParent(gameObject.transform, false);
 				newTransform.anchoredPosition = new Vector2(80f + 155f * i, -40f - 75f * j);
 
 				//Change button text

@@ -41,7 +41,7 @@ public class EditorInfo : MonoBehaviour
 		canvasT = transform.parent.Find("Canvas");
 		topT = canvasT.Find("Top");
 		prefabText = topT.Find("PrefabInput").GetComponent<InputField>();
-		prefabText.onSubmit.AddListener(PrefabSubmit);
+		prefabText.onEndEdit.AddListener(PrefabSubmit);
 		placeModeToggle = topT.Find("PlaceMode").GetComponent<Toggle>();
 		snapToggle = topT.Find("SnapToGrid").GetComponent<Toggle>();
 		snapInput = topT.Find("SnapInput").GetComponent<InputField>();
@@ -175,7 +175,7 @@ public class EditorInfo : MonoBehaviour
 	//Public function that also scales the selection plane material
 	public void UpdateSnapValue()
 	{
-		SetSnapValue(float.Parse(snapInput.text.text));
+		SetSnapValue(float.Parse(snapInput.text));
 		EditorObjects.OBJ.SetSelectionPlaneRelativeMaterialScale(1f / snapValue);
 	}
 

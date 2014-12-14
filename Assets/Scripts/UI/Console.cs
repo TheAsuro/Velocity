@@ -27,7 +27,7 @@ public class Console : MonoBehaviour
 		myInput = myConsole.transform.Find("ConsoleInput").GetComponent<InputField>();
 
 		//Registering events
-		myInput.onSubmit.AddListener(inputSubmit);
+		myInput.onEndEdit.AddListener(inputSubmit);
 	}
 
 	void Update()
@@ -84,7 +84,7 @@ public class Console : MonoBehaviour
 	public void inputSubmit(string input)
 	{
 		executeCommand(input);
-		myInput.value = "";
+		myInput.text = "";
 	}
 
 	public void writeToConsole(string content)

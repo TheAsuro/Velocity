@@ -281,7 +281,7 @@ public class MainMenu : MonoBehaviour
 
 	private void newGame(int index)
 	{
-		SaveData data = new SaveData(index, enterNameMenuObj.transform.Find("InputField").gameObject.GetComponent<UnityEngine.UI.InputField>().text.text);
+		SaveData data = new SaveData(index, enterNameMenuObj.transform.Find("InputField").gameObject.GetComponent<UnityEngine.UI.InputField>().text);
 		data.save();
 		GameInfo.info.setCurrentSave(data);
 		setState(State.selectMap);
