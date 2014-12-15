@@ -156,19 +156,25 @@ public class EditorInfo : MonoBehaviour
 	//Toggles snap on/off depending on gui button
 	public void UpdateSnap()
 	{
-		snapToGrid = snapToggle.isOn;
+		if(snapToggle != null)
+		{
+			snapToGrid = snapToggle.isOn;
+		}
 	}
 
 	//Toggles ground mode on/off (gui button)
 	public void UpdateGroundMode()
 	{
-		if(placeModeToggle.isOn)
+		if(placeModeToggle != null)
 		{
-			currentPlaceMode = PlaceMode.ground;
-		}
-		else
-		{
-			currentPlaceMode = PlaceMode.objects;
+			if(placeModeToggle.isOn)
+			{
+				currentPlaceMode = PlaceMode.ground;
+			}
+			else
+			{
+				currentPlaceMode = PlaceMode.objects;
+			}
 		}
 	}
 
