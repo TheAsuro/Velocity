@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TransparentRed
-  m_Shader: {fileID: 30, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: StartBox
+  m_Shader: {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -17,7 +17,7 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 4b64c18968c2854408eca262afa80698, type: 3}
+          m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats: {}
@@ -25,4 +25,4 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 1, g: 0, b: 0, a: .501960814}
+        second: {r: .161656559, g: .95588237, b: .298592061, a: 1}

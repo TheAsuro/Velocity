@@ -6,11 +6,12 @@ public class EditorObjects : MonoBehaviour
 {
 	public static EditorObjects OBJ;
 
-	public TextAsset objectExtentsFile;
+	public TextAsset objectInfoFile;
 
 	private GameObject mySun;
 	private GameObject mySelectionPlane;
 	private Vector2 mySelectionPlaneScale;
+	private BlockInfo bInfo;
 
 	private Dictionary<Vector3,GameObject> gridObjects;
 	private List<GameObject> loadedObjects;
@@ -36,6 +37,7 @@ public class EditorObjects : MonoBehaviour
 		}
 
 		gridObjects = new Dictionary<Vector3,GameObject>();
+		bInfo = new BlockInfo(objectInfoFile);
 	}
 
 	void Start()
@@ -43,17 +45,14 @@ public class EditorObjects : MonoBehaviour
 		mySelectionPlaneScale = mySelectionPlane.renderer.material.GetTextureScale("_MainTex");
 	}
 
-	public Vector3[] GetObjectExtentsByName(string name)
+	public Vector3[] GetObjectExtentsByName(string blockName)
 	{
-		string[] extentsFileLines = objectExtentsFile.text.Split('\n');
-		foreach(string line in extentsFileLines)
-		{
-			if(line.StartsWith(name + "="))
-			{
-				return ParseObjectExtentsString(line.Substring(line.IndexOf("=") + 1));
-			}
-		}
-		return null;
+		return bInfo.GetBlockExtents(blockName);
+	}
+
+	public float GetObjectHeightByName(string blockName)
+	{
+		return bInfo.GetBlockHeight(blockName);
 	}
 
 	private Vector3[] ParseObjectExtentsString(string str)
