@@ -221,6 +221,11 @@ public class EditorInfo : MonoBehaviour
 		snapValue = value;
 	}
 
+	public void ExitEditor()
+	{
+		Application.LoadLevel("MainMenu");
+	}
+
 	//Round a vector
 	private Vector3 RoundToGrid(Vector3 input)
 	{
