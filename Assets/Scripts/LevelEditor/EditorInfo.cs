@@ -107,7 +107,7 @@ public class EditorInfo : MonoBehaviour
 				transformToDelete = transformToDelete.parent;
 			}
 			
-			EditorObjects.OBJ.RemoveObjectFromGrid(transformToDelete.position);
+			EditorObjects.OBJ.RemoveObjectFromGrid(transformToDelete.gameObject);
 			DestroyRecursive(transformToDelete.gameObject);
 		}
 	}
@@ -177,6 +177,7 @@ public class EditorInfo : MonoBehaviour
 			}
 			
 			GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, rot);
+			instance.name = prefab.name;
 
 			EditorObjects.OBJ.AddObjectToGrid(instance);
 		}

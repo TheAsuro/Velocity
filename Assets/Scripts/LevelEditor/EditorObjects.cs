@@ -59,12 +59,9 @@ public class EditorObjects : MonoBehaviour
 	private Vector3[] ParseObjectExtentsString(string str)
 	{
 		string[] extentPositions = str.Split('|');
-		
-		int length = extentPositions.Length;
-		Vector3[] extentsArray = new Vector3[length + 1];
-		extentsArray[length] = Vector3.zero;
+		Vector3[] extentsArray = new Vector3[extentPositions.Length];
 
-		for(int i = 0; i < length; i++)
+		for(int i = 0; i < extentPositions.Length; i++)
 		{
 			extentsArray[i] = StringToVector(extentPositions[i]);
 		}
@@ -93,16 +90,21 @@ public class EditorObjects : MonoBehaviour
 
 	public void AddObjectToGrid(GameObject obj)
 	{
-		gridObjects.Add(RoundVectorToGrid(obj.transform.position), obj);
+		Vector3 pos = RoundVectorToGrid(obj.transform.position);
+
+		foreach(Vector3 addPos in GetObjectExtentsByName(obj.name))
+		{
+			gridObjects.Add(pos + RoundVectorToGrid(addPos), obj);
+		}
 	}
 
-	public void RemoveObjectFromGrid(Vector3 pos)
+	public void RemoveObjectFromGrid(GameObject obj)
 	{
-		Vector3 rPos = RoundVectorToGrid(pos);
-		if(!gridObjects.Remove(rPos))
+		Vector3 pos = RoundVectorToGrid(obj.transform.position);
+
+		foreach(Vector3 addPos in GetObjectExtentsByName(obj.name))
 		{
-			print("Failed to remove " + pos.ToString());
-			print(rPos.y);
+			gridObjects.Remove(pos + RoundVectorToGrid(addPos));
 		}
 	}
 
