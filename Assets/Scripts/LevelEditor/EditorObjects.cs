@@ -118,9 +118,13 @@ public class EditorObjects : MonoBehaviour
 		return gridObjects[RoundVectorToGrid(position)];
 	}
 
-	private static Vector3 RoundVectorToGrid(Vector3 input)
+	public static Vector3 SafeRoundToGrid(Vector3 input)
 	{
+		return new Vector3(Mathf.RoundToInt(input.x), Mathf.RoundToInt(input.y), Mathf.RoundToInt(input.z));
+	}
 
+	public static Vector3 RoundVectorToGrid(Vector3 input)
+	{
 		return new Vector3(roundFloat(input.x), roundFloat(input.y), roundFloat(input.z));
 	}
 
@@ -132,10 +136,11 @@ public class EditorObjects : MonoBehaviour
 			temp -= Mathf.Sign(temp) * 1f;
 		}
 		
-		if(temp > 0.99f)
+		if(Mathf.Abs(temp) > 0.99f)
 		{
 			return Mathf.RoundToInt(input) + 1;
 		}
+
 		return Mathf.RoundToInt(input);
 	}
 

@@ -15,7 +15,6 @@ public class EditorInfo : MonoBehaviour
 	private Transform topT;
 	private InputField prefabText;
 	private Toggle snapToggle;
-	private InputField snapInput;
 
 	//Selection
 	private GameObject selectionBox = null;
@@ -26,7 +25,6 @@ public class EditorInfo : MonoBehaviour
 
 	//Values set by GUI
 	private bool snapToGrid = true;
-	private float snapValue = 1f;
 
 	void Awake()
 	{
@@ -35,7 +33,6 @@ public class EditorInfo : MonoBehaviour
 		prefabText = topT.Find("PrefabInput").GetComponent<InputField>();
 		prefabText.onEndEdit.AddListener(PrefabSubmit);
 		snapToggle = topT.Find("SnapToGrid").GetComponent<Toggle>();
-		snapInput = topT.Find("SnapInput").GetComponent<InputField>();
 	}
 
 	void Update()
@@ -64,18 +61,18 @@ public class EditorInfo : MonoBehaviour
 
 		//Move spawn plane with scroll wheel
 		float scrollCount = Input.GetAxis("Mouse ScrollWheel");
-		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * snapValue, 0f));
+		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f, 0f));
 	}
 
 	//Draws a box where the cursor is/a rectangle of the selected area (TODO)
 	private void DrawSelectionBox()
 	{
-		Vector3 selectionPos = GetMouseOnSelectionPlane() + new Vector3(0f, selectionBoxPrefab.transform.localScale.y / 2f, 0f);
+		Vector3 selectionPos = GetMouseOnSelectionPlane();
 
 		//Draw box only when cursor is on a valid square, rmb and shift are not pressed and snap to grid
 		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && snapToGrid)
 		{
-			Vector3 roundedSelectionPos = RoundToGrid(selectionPos);
+			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos) + new Vector3(0f, 0.5f, 0f);
 
 			if(selectionBox == null)
 			{
@@ -137,13 +134,6 @@ public class EditorInfo : MonoBehaviour
 		}
 	}
 
-	//Public function that also scales the selection plane material
-	public void UpdateSnapValue()
-	{
-		SetSnapValue(float.Parse(snapInput.text));
-		EditorObjects.OBJ.SetSelectionPlaneRelativeMaterialScale(1f / snapValue);
-	}
-
 	//Selects the prefab by name
 	private void SelectPrefab(string name)
 	{
@@ -165,7 +155,7 @@ public class EditorInfo : MonoBehaviour
 
 			if(snapToGrid)
 			{
-				newPos = RoundToGrid(newPos);
+				newPos = EditorObjects.RoundVectorToGrid(newPos);
 			}
 
 			Vector3[] prefabExtents = EditorObjects.OBJ.GetObjectExtentsByName(prefab.name);
@@ -215,72 +205,13 @@ public class EditorInfo : MonoBehaviour
 		return Physics.Raycast(clickRay, out hit, length, layers);
 	}
 
-	//Set the value that RoundToGrid will snap to
-	public void SetSnapValue(float value)
-	{
-		snapValue = value;
-	}
-
 	public void ExitEditor()
 	{
 		Application.LoadLevel("MainMenu");
 	}
 
-	//Round a vector
-	private Vector3 RoundToGrid(Vector3 input)
-	{
-		return new Vector3(RoundToGrid(input.x), input.y, RoundToGrid(input.z));
-	}
-
 	private Vector3 SimpleVectorMultiply(Vector3 a, Vector3 b)
 	{
 		return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
-	}
-
-	//Round a float so it snaps to the grid
-	private float RoundToGrid(float input)
-	{
-		//rip
-		if(input.Equals(float.NaN))
-			return float.NaN;
-
-		//Find out the next lowest mutliple of the grid
-		int sign = (int)Mathf.Sign(input);
-		int counter = 0;
-		float lowResult = float.NaN;
-		float highResult = float.NaN;
-		bool hit = false;
-
-		while(!hit)
-		{
-			float i = counter * sign * snapValue;
-
-			if(i == input)
-			{
-				hit = true;
-				lowResult = counter * snapValue * sign;
-			}
-			else if(i > input && sign == 1)
-			{
-				hit = true;
-				lowResult = (counter - 1) * snapValue * sign;
-			}
-			else if(i < input && sign == -1)
-			{
-				hit = true;
-				lowResult = counter * snapValue * sign;
-			}
-
-			counter++;
-		}
-
-		//Decide in what direction to round
-		highResult = lowResult + snapValue;
-
-		if(input >= lowResult + snapValue / 2f)
-		{
-			return highResult;
-		}
-		return lowResult;
 	}
 }
