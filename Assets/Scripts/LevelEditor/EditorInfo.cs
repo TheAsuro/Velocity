@@ -5,10 +5,8 @@ using System.Collections;
 public class EditorInfo : MonoBehaviour
 {
 	public LayerMask spawnLayers;
-	public LayerMask groundLayers;
 	public LayerMask removeLayers;
 	public GameObject selectionBoxPrefab;
-	public GameObject groundPrefab;
 
 	private GameObject selectedPrefab;
 
@@ -17,24 +15,18 @@ public class EditorInfo : MonoBehaviour
 	private Transform topT;
 	private InputField prefabText;
 	private Toggle snapToggle;
-	private Toggle placeModeToggle;
 	private InputField snapInput;
 
 	//Selection
 	private GameObject selectionBox = null;
-	private Vector3 selectionStartPos = NaV;
+	private Vector3 selectionStartPos = NaV; //unused now, may be useful for area spawning
 
-	private static Vector3 NaV = new Vector3(float.NaN, float.NaN, float.NaN);
+	//Thing that tells you something went wrong
+	public static Vector3 NaV = new Vector3(float.NaN, float.NaN, float.NaN);
 
+	//Values set by GUI
 	private bool snapToGrid = true;
 	private float snapValue = 1f;
-	private PlaceMode currentPlaceMode = PlaceMode.objects;
-
-	public enum PlaceMode
-	{
-		ground,
-		objects
-	}
 
 	void Awake()
 	{
@@ -42,7 +34,6 @@ public class EditorInfo : MonoBehaviour
 		topT = canvasT.Find("Top");
 		prefabText = topT.Find("PrefabInput").GetComponent<InputField>();
 		prefabText.onEndEdit.AddListener(PrefabSubmit);
-		placeModeToggle = topT.Find("PlaceMode").GetComponent<Toggle>();
 		snapToggle = topT.Find("SnapToGrid").GetComponent<Toggle>();
 		snapInput = topT.Find("SnapInput").GetComponent<InputField>();
 	}
@@ -54,32 +45,15 @@ public class EditorInfo : MonoBehaviour
 		//Start selection with lmb
 		if(Input.GetMouseButtonDown(0))
 		{
-			switch(currentPlaceMode)
-			{
-				case PlaceMode.ground:
-					selectionStartPos = GetMouseOnSelectionPlane(groundLayers);
-					break;
-				default:
-					selectionStartPos = GetMouseOnSelectionPlane();
-					break;
-			}			
+			selectionStartPos = GetMouseOnSelectionPlane();
 		}
 
-		//Spawn ground/object when releasing lmb
+		//Spawn object when releasing lmb
 		if(Input.GetMouseButtonUp(0))
 		{
-			if(currentPlaceMode == PlaceMode.ground)
-			{
-				//Spawn ground area from mouse down point to mouse up point
-				Vector3 selectionEndPos = GetMouseOnSelectionPlane(groundLayers);
-				SpawnGround(selectionStartPos, selectionEndPos);
-			}
-			else if(currentPlaceMode == PlaceMode.objects && selectedPrefab != null)
-			{
-				//Spawn object at mouse release point
-				Vector3 pos = GetMouseOnSelectionPlane();
-				SpawnPrefab(selectedPrefab, pos, Quaternion.identity, true);
-			}
+			//Spawn object at mouse release point
+			Vector3 pos = GetMouseOnSelectionPlane();
+			SpawnPrefab(selectedPrefab, pos, Quaternion.identity);
 		}
 
 		//Remove object with shift + lmb
@@ -98,9 +72,8 @@ public class EditorInfo : MonoBehaviour
 	{
 		Vector3 selectionPos = GetMouseOnSelectionPlane() + new Vector3(0f, selectionBoxPrefab.transform.localScale.y / 2f, 0f);
 
-		//Draw box only when cursor is on a valid square, rmb and shift are not pressed
-		// and snap to grid is active or we are placing ground
-		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && (snapToGrid || currentPlaceMode == PlaceMode.ground))
+		//Draw box only when cursor is on a valid square, rmb and shift are not pressed and snap to grid
+		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && snapToGrid)
 		{
 			Vector3 roundedSelectionPos = RoundToGrid(selectionPos);
 
@@ -133,6 +106,8 @@ public class EditorInfo : MonoBehaviour
 			{
 				transformToDelete = transformToDelete.parent;
 			}
+			
+			EditorObjects.OBJ.RemoveObjectFromGrid(transformToDelete.position);
 			DestroyRecursive(transformToDelete.gameObject);
 		}
 	}
@@ -162,22 +137,6 @@ public class EditorInfo : MonoBehaviour
 		}
 	}
 
-	//Toggles ground mode on/off (gui button)
-	public void UpdateGroundMode()
-	{
-		if(placeModeToggle != null)
-		{
-			if(placeModeToggle.isOn)
-			{
-				currentPlaceMode = PlaceMode.ground;
-			}
-			else
-			{
-				currentPlaceMode = PlaceMode.objects;
-			}
-		}
-	}
-
 	//Public function that also scales the selection plane material
 	public void UpdateSnapValue()
 	{
@@ -191,53 +150,35 @@ public class EditorInfo : MonoBehaviour
 		selectedPrefab = EditorObjects.OBJ.GetPrefabByName(name);
 	}
 
-	//Creates ground in a specified rectangle (auto snap to grid)
-	private void SpawnGround(Vector3 start, Vector3 end)
-	{
-		if(!start.Equals(NaV) && !end.Equals(NaV))
-		{
-			//Round start and end point
-			Vector3 snapStart = RoundToGrid(start);
-			Vector3 snapEnd = RoundToGrid(end);
-
-			//Calculate difference and add 1 to the size
-			Vector3 diff = snapEnd - snapStart;
-			Vector3 addVector = new Vector3(Mathf.Sign(diff.x), Mathf.Sign(diff.y), Mathf.Sign(diff.z));
-
-			//Spawn the ground object in the center of the rectangle and add it's saved location
-			Vector3 newPos = snapStart + (diff) / 2f + groundPrefab.transform.position;
-
-			//Scale the ground object to the size of the rectangle but keep it's saved size
-			Vector3 newScale = SimpleVectorMultiply(snapEnd - snapStart + addVector, groundPrefab.transform.localScale);
-
-			//Don't rotate the ground
-			Quaternion newRot = Quaternion.identity;
-
-			//Instantiate it
-			GameObject groundInstance = (GameObject)GameObject.Instantiate(groundPrefab, newPos, newRot);
-			groundInstance.transform.localScale = newScale;
-		}
-	}
-
 	//Instantiates a new prefab
-	private void SpawnPrefab(GameObject prefab, Vector3 pos, Quaternion rot, bool alignToGround = false, bool overrideSnap = false)
+	private void SpawnPrefab(GameObject prefab, Vector3 pos, Quaternion rot)
 	{
 		if(!pos.Equals(NaV))
 		{
 			Vector3 newPos = pos;
 
-			if(alignToGround && prefab.collider != null)
+			if(prefab.collider != null)
 			{
 				float additionalHeight = prefab.collider.bounds.extents.y;
 				newPos = new Vector3(pos.x, pos.y + additionalHeight, pos.z);
 			}
 
-			if(snapToGrid && !overrideSnap)
+			if(snapToGrid)
 			{
 				newPos = RoundToGrid(newPos);
 			}
+
+			Vector3[] prefabExtents = EditorObjects.OBJ.GetObjectExtentsByName(prefab.name);
+			foreach(Vector3 ex in prefabExtents)
+			{
+				Vector3 actualPos = newPos + ex;
+				if(!EditorObjects.OBJ.IsGridPositionFree(actualPos))
+					return;
+			}
 			
 			GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, rot);
+
+			EditorObjects.OBJ.AddObjectToGrid(instance);
 		}
 	}
 
