@@ -149,13 +149,13 @@ public class EditorInfo : MonoBehaviour
 
 			if(prefab.collider != null)
 			{
-				float additionalHeight = prefab.collider.bounds.extents.y;
+				float additionalHeight = EditorObjects.OBJ.GetObjectHeightByName(prefab.name);
 				newPos = new Vector3(pos.x, pos.y + additionalHeight, pos.z);
 			}
 
 			if(snapToGrid)
 			{
-				newPos = EditorObjects.RoundVectorToGrid(newPos);
+				newPos = EditorObjects.RoundXZToGrid(newPos);
 			}
 
 			Vector3[] prefabExtents = EditorObjects.OBJ.GetObjectExtentsByName(prefab.name);

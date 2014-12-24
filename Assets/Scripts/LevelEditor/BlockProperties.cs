@@ -50,7 +50,7 @@ public class BlockProperties
 			case "extent":
 				SetExtents(propertyContent);
 				break;
-			case "height":
+			case "y_offset":
 				SetHeight(propertyContent);
 				break;
 			default:

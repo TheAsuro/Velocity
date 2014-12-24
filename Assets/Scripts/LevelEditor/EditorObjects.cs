@@ -127,6 +127,11 @@ public class EditorObjects : MonoBehaviour
 		return new Vector3(roundFloat(input.x), roundFloat(input.y), roundFloat(input.z));
 	}
 
+	public static Vector3 RoundXZToGrid(Vector3 input)
+	{
+		return new Vector3(roundFloat(input.x), input.y, roundFloat(input.z));
+	}
+
 	private static int roundFloat(float input)
 	{
 		float temp = input;
