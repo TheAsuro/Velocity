@@ -5,6 +5,8 @@ using UnityEngine.UI;
 //Interacts with checkpoint triggers, must be added to every player
 public class RaceScript : MonoBehaviour
 {
+	private bool editorMode = false;
+
 	private float startTime = -1f;
 	private float time = -1f;
 
@@ -66,12 +68,15 @@ public class RaceScript : MonoBehaviour
 		speedText.text = GameInfo.info.getPlayerInfo().getCurrentSpeed().ToString() + " m/s";
 
 		//Display player name
-		nameText.text = GameInfo.info.getCurrentSave().getPlayerName();
+		if(!editorMode)
+			nameText.text = GameInfo.info.getCurrentSave().getPlayerName();
+		else
+			nameText.text = "Editor";
 
 		//Display crosshair
 		drawCrosshair();
 
-		//Skip countdown
+		//Skip countdown with jump key
 		if(Input.GetButtonDown("Jump") && startTime > Time.time)
 		{
 			startTime = Time.time;
@@ -109,7 +114,7 @@ public class RaceScript : MonoBehaviour
 			bool end = cp.isEnd;
 			freezeDuration = cp.freezeTime;
 
-			//Save game
+			//Save game (pretty sure i can remove this. TODO check if unnecessary)
 			GameInfo.info.save();
 			
 			if(end && nr == checkpoint + 1 && !finished) //End
@@ -192,5 +197,10 @@ public class RaceScript : MonoBehaviour
 	private string getFrozenString()
 	{
 		return unfreezeTime.ToString();
+	}
+
+	public void enableEditorMode()
+	{
+		editorMode = true;
 	}
 }

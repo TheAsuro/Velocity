@@ -196,4 +196,9 @@ public class PlayerInfo : MonoBehaviour
 		}
 		return true;
 	}
+
+	public void enableEditorMode()
+	{
+		myRaceScript.enableEditorMode();
+	}
 }

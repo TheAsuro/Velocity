@@ -192,7 +192,7 @@ public class GameInfo : MonoBehaviour
 	}
 
 	//Creates a new local player (the one that is controlled by the current user)
-	public void spawnNewPlayer(Respawn spawnpoint, bool killOldPlayer = true)
+	public void spawnNewPlayer(Respawn spawnpoint, bool killOldPlayer = true, bool startInEditorMode = false)
 	{
 		if(killOldPlayer || getPlayerInfo() == null)
 		{
@@ -206,6 +206,11 @@ public class GameInfo : MonoBehaviour
 			//Set up player
 			myPlayer.resetPosition(spawnpoint.getSpawnPos(), spawnpoint.getSpawnRot());
 			myPlayer.setWorldBackgroundColor(WorldInfo.info.worldBackgroundColor);
+		}
+
+		if(startInEditorMode)
+		{
+			myPlayer.enableEditorMode();
 		}
 		
 		applySettings();
@@ -586,7 +591,8 @@ public class GameInfo : MonoBehaviour
 	{
 		resetRun();
 
-		if(myPlayer != null)
+		//check if there is a player and we are not in editor
+		if(myPlayer != null && getMenuState() != MenuState.editor)
 			myPlayer.startDemo(currentSave.getPlayerName());
 	}
 

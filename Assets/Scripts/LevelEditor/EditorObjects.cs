@@ -10,7 +10,6 @@ public class EditorObjects : MonoBehaviour
 
 	private GameObject mySun;
 	private GameObject mySelectionPlane;
-	private Vector2 mySelectionPlaneScale;
 	private BlockInfo bInfo;
 
 	private Dictionary<Vector3,GameObject> gridObjects;
@@ -42,11 +41,6 @@ public class EditorObjects : MonoBehaviour
 		gridObjects = new Dictionary<Vector3,GameObject>();
 		nonGridObjects = new List<GameObject>();
 		bInfo = new BlockInfo(objectInfoFile);
-	}
-
-	void Start()
-	{
-		mySelectionPlaneScale = mySelectionPlane.renderer.material.GetTextureScale("_MainTex");
 	}
 
 	public Vector3[] GetObjectExtentsByName(string blockName)
@@ -205,13 +199,6 @@ public class EditorObjects : MonoBehaviour
 		mySelectionPlane.transform.position += addVector;
 	}
 
-	//Scale the material of the selection plane
-	public void SetSelectionPlaneRelativeMaterialScale(float scale)
-	{
-		Vector2 realScale = new Vector2(scale * mySelectionPlaneScale.x, scale * mySelectionPlaneScale.y);
-		mySelectionPlane.renderer.material.SetTextureScale("_MainTex", realScale);
-	}
-
 	//Returns a list of all loadable prefabs
 	public List<string> GetAllPrefabNames()
 	{
@@ -278,5 +265,10 @@ public class EditorObjects : MonoBehaviour
 		}
 
 		return temp;
+	}
+
+	public void SetSelectionPlaneVisibility(bool value)
+	{
+		mySelectionPlane.SetActive(value);
 	}
 }

@@ -64,7 +64,13 @@ public class EditorInfo : MonoBehaviour
 		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f, 0f));
 	}
 
-	//Draws a box where the cursor is/a rectangle of the selected area (TODO)
+	private void SetInterfaceActive(bool value)
+	{
+		canvasT.gameObject.SetActive(value);
+		EditorObjects.OBJ.SetSelectionPlaneVisibility(value);
+	}
+
+	//Draws a box where the cursor is/a rectangle of the selected area
 	private void DrawSelectionBox()
 	{
 		Vector3 selectionPos = GetMouseOnSelectionPlane();
@@ -140,8 +146,9 @@ public class EditorInfo : MonoBehaviour
 		GameObject startSpawn = EditorObjects.OBJ.GetStartSpawn();
 		if(startSpawn != null)
 		{
-			GameInfo.info.spawnNewPlayer(startSpawn.GetComponent<Respawn>());
+			GameInfo.info.spawnNewPlayer(startSpawn.GetComponent<Respawn>(), true, true);
 		}
+		SetInterfaceActive(false);
 	}
 
 	//Selects the prefab by name
