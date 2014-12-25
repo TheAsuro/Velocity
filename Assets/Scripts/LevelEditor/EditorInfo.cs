@@ -105,6 +105,7 @@ public class EditorInfo : MonoBehaviour
 			}
 			
 			EditorObjects.OBJ.RemoveObjectFromGrid(transformToDelete.gameObject);
+			EditorObjects.OBJ.RemoveNonGridObject(transformToDelete.gameObject);
 			DestroyRecursive(transformToDelete.gameObject);
 		}
 	}
@@ -134,6 +135,15 @@ public class EditorInfo : MonoBehaviour
 		}
 	}
 
+	public void TestLevel()
+	{
+		GameObject startSpawn = EditorObjects.OBJ.GetStartSpawn();
+		if(startSpawn != null)
+		{
+			GameInfo.info.spawnNewPlayer(startSpawn.GetComponent<Respawn>());
+		}
+	}
+
 	//Selects the prefab by name
 	private void SelectPrefab(string name)
 	{
@@ -143,7 +153,7 @@ public class EditorInfo : MonoBehaviour
 	//Instantiates a new prefab
 	private void SpawnPrefab(GameObject prefab, Vector3 pos, Quaternion rot)
 	{
-		if(!pos.Equals(NaV))
+		if(!pos.Equals(NaV) && prefab != null)
 		{
 			Vector3 newPos = pos;
 
@@ -169,7 +179,14 @@ public class EditorInfo : MonoBehaviour
 			GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, rot);
 			instance.name = prefab.name;
 
-			EditorObjects.OBJ.AddObjectToGrid(instance);
+			if(snapToGrid)
+			{
+				EditorObjects.OBJ.AddObjectToGrid(instance);
+			}
+			else
+			{
+				EditorObjects.OBJ.AddNonGridObject(instance);
+			}
 		}
 	}
 

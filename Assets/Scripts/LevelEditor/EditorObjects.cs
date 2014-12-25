@@ -14,7 +14,10 @@ public class EditorObjects : MonoBehaviour
 	private BlockInfo bInfo;
 
 	private Dictionary<Vector3,GameObject> gridObjects;
+	private List<GameObject> nonGridObjects;
 	private List<GameObject> loadedObjects;
+
+	private GameObject startSpawn;
 
 	void Awake()
 	{
@@ -37,6 +40,7 @@ public class EditorObjects : MonoBehaviour
 		}
 
 		gridObjects = new Dictionary<Vector3,GameObject>();
+		nonGridObjects = new List<GameObject>();
 		bInfo = new BlockInfo(objectInfoFile);
 	}
 
@@ -87,6 +91,43 @@ public class EditorObjects : MonoBehaviour
 		return new Vector3(parsedValues[0], parsedValues[1], parsedValues[2]);
 	}
 
+	public GameObject GetStartSpawn()
+	{
+		return startSpawn;
+	}
+
+	private void SpecialObjectCheck(GameObject obj)
+	{
+		switch(obj.name)
+		{
+			case "Start":
+				startSpawn = obj;
+				break;
+		}
+	}
+
+	private void RemoveSpecialObjectCheck(GameObject obj)
+	{
+		switch(obj.name)
+		{
+			case "Start":
+				startSpawn = null;
+				break;
+		}
+	}
+
+	public void AddNonGridObject(GameObject obj)
+	{
+		nonGridObjects.Add(obj);
+		SpecialObjectCheck(obj);
+	}
+
+	public void RemoveNonGridObject(GameObject obj)
+	{
+		nonGridObjects.Remove(obj);
+		RemoveSpecialObjectCheck(obj);
+	}
+
 	public void AddObjectToGrid(GameObject obj)
 	{
 		Vector3 pos = RoundVectorToGrid(obj.transform.position);
@@ -95,6 +136,8 @@ public class EditorObjects : MonoBehaviour
 		{
 			gridObjects.Add(pos + RoundVectorToGrid(addPos), obj);
 		}
+
+		SpecialObjectCheck(obj);
 	}
 
 	public void RemoveObjectFromGrid(GameObject obj)
@@ -105,6 +148,8 @@ public class EditorObjects : MonoBehaviour
 		{
 			gridObjects.Remove(pos + RoundVectorToGrid(addPos));
 		}
+
+		RemoveSpecialObjectCheck(obj);
 	}
 
 	public bool IsGridPositionFree(Vector3 position)
