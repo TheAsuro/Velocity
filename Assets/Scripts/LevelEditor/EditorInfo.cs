@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EditorInfo : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class EditorInfo : MonoBehaviour
 
 	//Selection
 	private GameObject selectionBox = null;
-	private Vector3 selectionStartPos = NaV; //unused now, may be useful for area spawning
+	//private Vector3 selectionStartPos = NaV; //unused now, may be useful for area spawning
 
 	//Thing that tells you something went wrong
 	public static Vector3 NaV = new Vector3(float.NaN, float.NaN, float.NaN);
@@ -42,7 +43,7 @@ public class EditorInfo : MonoBehaviour
 		//Start selection with lmb
 		if(Input.GetMouseButtonDown(0))
 		{
-			selectionStartPos = GetMouseOnSelectionPlane();
+			//selectionStartPos = GetMouseOnSelectionPlane();
 		}
 
 		//Spawn object when releasing lmb
@@ -161,21 +162,25 @@ public class EditorInfo : MonoBehaviour
 	//Instantiates a new prefab
 	private void SpawnPrefab(GameObject prefab, Vector3 pos, Quaternion rot)
 	{
+		//Check if we have a valid position and object
 		if(!pos.Equals(NaV) && prefab != null)
 		{
 			Vector3 newPos = pos;
 
+			//If object has a collider, align it to ground
 			if(prefab.collider != null)
 			{
 				float additionalHeight = EditorObjects.OBJ.GetObjectHeightByName(prefab.name);
 				newPos = new Vector3(pos.x, pos.y + additionalHeight, pos.z);
 			}
 
+			//Round position to grid
 			if(snapToGrid)
 			{
 				newPos = EditorObjects.RoundXZToGrid(newPos);
 			}
 
+			//The extents of the prefab will prevent placement of other blocks
 			Vector3[] prefabExtents = EditorObjects.OBJ.GetObjectExtentsByName(prefab.name);
 			foreach(Vector3 ex in prefabExtents)
 			{
@@ -184,9 +189,13 @@ public class EditorInfo : MonoBehaviour
 					return;
 			}
 			
+			//Create the object
 			GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, rot);
+			
+			//Set the name to the prefab's name so we know from wich one we created it
 			instance.name = prefab.name;
 
+			//Add to the list of objects in grid
 			if(snapToGrid)
 			{
 				EditorObjects.OBJ.AddObjectToGrid(instance);

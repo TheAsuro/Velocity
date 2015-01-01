@@ -187,6 +187,24 @@ public class EditorObjects : MonoBehaviour
 		return Mathf.RoundToInt(input);
 	}
 
+	//Saves the current level to a xml file
+	public void SaveLevelToFile(string path)
+	{
+		List<ObjectData> allObj = new List<ObjectData>();
+		foreach(GameObject obj in GetAllObjects())
+		{
+			ObjectData oData = new ObjectData();
+			oData.name = obj.name;
+			oData.position = obj.transform.localPosition;
+			oData.rotation = obj.transform.localRotation;
+			oData.scale = obj.transform.localScale;
+			allObj.Add(oData);
+		}
+		LevelData data = new LevelData();
+		data.levelObjects = allObj;
+		data.WriteToFile(path);
+	}
+
 	//Rotate the sun (the only directional light)
 	public void SetSunRotation(Quaternion rot)
 	{
@@ -265,6 +283,18 @@ public class EditorObjects : MonoBehaviour
 		}
 
 		return temp;
+	}
+
+	public List<GameObject> GetAllObjects()
+	{
+		List<GameObject> objs = nonGridObjects;
+		foreach(GameObject obj in gridObjects.Values)
+		{
+			//Dont include duplicates created by extents
+			if(!objs.Contains(obj))
+				objs.Add(obj);
+		}
+		return objs;
 	}
 
 	public void SetSelectionPlaneVisibility(bool value)
