@@ -4,6 +4,7 @@ using System.Collections;
 
 public class StartLevelEvent : Event
 {
+	public bool inEditor = false;
 	public float introLength = 0f;
 	public float startFreeze = 0f;
 	public GameObject introDisplay;
@@ -14,7 +15,8 @@ public class StartLevelEvent : Event
 	void Start()
 	{
 		WorldInfo.info.addResetMethod(reset, "start level reset");
-		fire(null);
+		if(!inEditor)
+			fire(null);
 	}
 
 	public override void fire(params object[] parameters)
@@ -48,7 +50,7 @@ public class StartLevelEvent : Event
 
 	private void startIn(float delay)
 	{
-		GameInfo.info.spawnNewPlayer(WorldInfo.info.getFirstSpawn());
+		GameInfo.info.spawnNewPlayer(WorldInfo.info.getFirstSpawn(), true, inEditor);
 		GameInfo.info.getPlayerInfo().startRace(delay);
 	}
 }

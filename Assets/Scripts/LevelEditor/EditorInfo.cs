@@ -147,6 +147,7 @@ public class EditorInfo : MonoBehaviour
 		if(startSpawn != null)
 		{
 			GameInfo.info.spawnNewPlayer(startSpawn.GetComponent<Respawn>(), true, true);
+			GameInfo.info.getPlayerInfo().startRace(1f);
 		}
 		SetInterfaceActive(false);
 	}

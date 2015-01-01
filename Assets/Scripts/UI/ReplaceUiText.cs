@@ -96,6 +96,7 @@ public class ReplaceUiText : MonoBehaviour
 		string temp = text.Split('\n')[0];
 		string[] temp2 = temp.Split('|');
 
-		wr = temp2[1] + " by " + temp2[0];
+		if(temp2.Length == 2)
+			wr = temp2[1] + " by " + temp2[0];
 	}
 }
