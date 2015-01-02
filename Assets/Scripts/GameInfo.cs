@@ -277,10 +277,16 @@ public class GameInfo : MonoBehaviour
 	public void reset()
 	{
 		stopDemo();
-		removeAllWindowLines();
+		cleanUpPlayer();
 		WorldInfo.info.reset();
 		setMenuState(MenuState.closed);
 		startDemo();
+	}
+
+	//Removes all leftover things that could reference the player
+	public void cleanUpPlayer()
+	{
+		removeAllWindowLines();
 	}
 
 	//Leave the game
@@ -292,6 +298,7 @@ public class GameInfo : MonoBehaviour
 	public void runFinished(float time)
 	{
 		stopDemo();
+		cleanUpPlayer();
 		getCurrentSave().saveIfPersonalBest(time, Application.loadedLevelName);
 		lastTime = time;
 	}
@@ -575,8 +582,6 @@ public class GameInfo : MonoBehaviour
 			{
 				Destroy(myPlayer.gameObject);
 			}
-			myPlayer = null;
-			return;
 		}
 
 		myPlayer = info;

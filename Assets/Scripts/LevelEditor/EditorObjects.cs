@@ -205,13 +205,13 @@ public class EditorObjects : MonoBehaviour
 		data.WriteToFile(path);
 	}
 
-	//Rotate the sun (the only directional light)
+	//Rotate the sun (the directional light)
 	public void SetSunRotation(Quaternion rot)
 	{
 		mySun.transform.rotation = rot;
 	}
 
-	//Move selection plane [up or down]
+	//Move selection plane (currently just up/down)
 	public void AddSelectionPlanePosition(Vector3 addVector)
 	{
 		mySelectionPlane.transform.position += addVector;

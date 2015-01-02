@@ -60,6 +60,12 @@ public class EditorInfo : MonoBehaviour
 			RemoveSelectedObject();
 		}
 
+		//Quit with esc if in test mode
+		if(Input.GetKey(KeyCode.Escape))
+		{
+			EndTest();
+		}
+
 		//Move spawn plane with scroll wheel
 		float scrollCount = Input.GetAxis("Mouse ScrollWheel");
 		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f, 0f));
@@ -142,6 +148,7 @@ public class EditorInfo : MonoBehaviour
 		}
 	}
 
+	//Start playing the level
 	public void TestLevel()
 	{
 		GameObject startSpawn = EditorObjects.OBJ.GetStartSpawn();
@@ -151,6 +158,14 @@ public class EditorInfo : MonoBehaviour
 			GameInfo.info.getPlayerInfo().startRace(1f);
 		}
 		SetInterfaceActive(false);
+	}
+
+	//Stop playing the level
+	public void EndTest()
+	{
+		GameInfo.info.setPlayerInfo(null);
+		GameInfo.info.cleanUpPlayer();
+		SetInterfaceActive(true);
 	}
 
 	//Selects the prefab by name
