@@ -130,6 +130,7 @@ public class GameInfo : MonoBehaviour
 			toggleEscMenu();
 		}
 
+		//Update fps every 0.1 seconds
 		if(lastFpsRecordTime + 0.1f < Time.time || lastFpsRecordTime < 0f)
 		{
 			lastFps = Mathf.RoundToInt(1 / Time.smoothDeltaTime);
@@ -155,7 +156,7 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	//Lock cursor after loosing and gaining focus
+	//Lock cursor after game window lost and gained focus
 	void OnApplicationFocus(bool focusStatus)
 	{
 		if(getMenuState() == MenuState.closed && focusStatus)
@@ -164,7 +165,7 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	//Set menustate according to current level's worldinfo settings
+	//Prepare for new level
 	void OnLevelWasLoaded(int level)
 	{
 		removeAllWindowLines();
@@ -460,6 +461,7 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
+	//Load infos like player name, pb's, etc.
 	public void setCurrentSave(SaveData data)
 	{
 		currentSave = data;
@@ -491,14 +493,6 @@ public class GameInfo : MonoBehaviour
 	public Console getConsole()
 	{
 		return myConsole;
-	}
-
-	public void log(string text)
-	{
-		if(logToConsole)
-		{
-			writeToConsole(text);
-		}
 	}
 
 	//Write a string to the console
@@ -607,6 +601,7 @@ public class GameInfo : MonoBehaviour
 			myPlayer.stopDemo();
 	}
 
+	//Plays a demo from a ".vdem" file, does not work in web player
 	public void playDemoFromFile(string fileName)
 	{
 		#if UNITY_STANDALONE
@@ -635,16 +630,19 @@ public class GameInfo : MonoBehaviour
 		return lastTime;
 	}
 
+	//Will be called after demo finished (demo started from endlevel menu)
 	private void endLeveldemoPlayEnded()
 	{
 		setMenuState(MenuState.endlevel);
 	}
 
+	//Will be called after demo finished (demo started from console)
 	private void consoleDemoPlayEnded()
 	{
 		setMenuState(MenuState.escmenu);
 	}
 
+	//Save demo to ".vdem" file, does not work in web player
 	public void saveLastDemo()
 	{
 		#if UNITY_STANDALONE
@@ -654,6 +652,8 @@ public class GameInfo : MonoBehaviour
 		#endif
 	}
 
+	//Can the player move the camera with the mouse
+	//Can be blocked by lockMouseView
 	public void setMouseView(bool value)
 	{
 		if(!viewLocked)
@@ -682,6 +682,7 @@ public class GameInfo : MonoBehaviour
 		viewLocked = false;
 	}
 
+	//MenuState can not be changed
 	public void lockMenu()
 	{
 		menuLocked = true;
@@ -692,6 +693,7 @@ public class GameInfo : MonoBehaviour
 		menuLocked = false;
 	}
 	
+	//Map selection in main menu
 	public void setSelectedMap(string map, string author = "?")
 	{
 		selectedMap = map;
@@ -765,6 +767,7 @@ public class GameInfo : MonoBehaviour
 		invalidateRun();
 	}
 
+	//Run will not be uploaded to leaderboards
 	public void invalidateRun()
 	{
 		runValid = false;
@@ -773,10 +776,10 @@ public class GameInfo : MonoBehaviour
 	private void invalidRunCheck()
 	{
 		if(!getPlayerInfo().validatePlayerVariables())
-			runValid = false;
+			invalidateRun();
 
 		if(Physics.gravity != defGravity)
-			runValid = false;
+			invalidateRun();
 	}
 
 	private void resetRun()

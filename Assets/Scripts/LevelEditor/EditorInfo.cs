@@ -61,7 +61,7 @@ public class EditorInfo : MonoBehaviour
 		}
 
 		//Quit with esc if in test mode
-		if(Input.GetKey(KeyCode.Escape))
+		if(Input.GetButtonDown("Menu"))
 		{
 			EndTest();
 		}
