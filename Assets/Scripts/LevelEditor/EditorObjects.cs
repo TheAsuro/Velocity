@@ -156,14 +156,9 @@ public class EditorObjects : MonoBehaviour
 		return gridObjects[RoundVectorToGrid(position)];
 	}
 
-	public static Vector3 SafeRoundToGrid(Vector3 input)
-	{
-		return new Vector3(Mathf.RoundToInt(input.x), Mathf.RoundToInt(input.y), Mathf.RoundToInt(input.z));
-	}
-
 	public static Vector3 RoundVectorToGrid(Vector3 input)
 	{
-		return new Vector3(roundFloat(input.x), roundFloat(input.y), roundFloat(input.z));
+		return new Vector3(Mathf.RoundToInt(input.x), Mathf.RoundToInt(input.y), Mathf.RoundToInt(input.z));
 	}
 
 	public static Vector3 RoundXZToGrid(Vector3 input)

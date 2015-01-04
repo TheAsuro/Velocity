@@ -5,9 +5,6 @@ using System.Collections.Generic;
 public class BunnyHopMovement : Movement
 {
 	private bool applyFriction = false;
-	private Vector3 acceleratorForce = Vector3.zero;
-	private Vector3 jumpPadForce = Vector3.zero;
-	private bool usePadX, usePadY, usePadZ;
 
 	public override Vector3 calculateAdditionalVelocity(Vector2 input)
 	{
@@ -33,10 +30,6 @@ public class BunnyHopMovement : Movement
 		//The more perpendicular the input is, the more the input velocity will be applied
 		Vector3 correctVelocity = Vector3.Lerp(alignedInputVelocity, modifiedVelocity, velocityDot);
 
-		//Apply accelerator
-		correctVelocity += acceleratorForce;
-		acceleratorForce = Vector3.zero;
-
 		//Apply jump
 		correctVelocity += getJumpVelocity(rigidbody.velocity.y);
 
@@ -54,17 +47,6 @@ public class BunnyHopMovement : Movement
 		{
 			frictionTemp *= frictionMultiplier;
 			velocity = new Vector3(frictionTemp.x, velocity.y, frictionTemp.y);
-		}
-
-		//Apply jumppad
-		if(jumpPadForce != Vector3.zero)
-		{
-			float tempX = velocity.x, tempY = velocity.y, tempZ = velocity.z;
-			if(usePadX) { tempX = jumpPadForce.x; }
-			if(usePadY) { tempY = jumpPadForce.y; }
-			if(usePadZ) { tempZ = jumpPadForce.z; }
-			velocity = new Vector3(tempX, tempY, tempZ);
-			jumpPadForce = Vector3.zero;
 		}
 
 		return velocity;
@@ -90,28 +72,5 @@ public class BunnyHopMovement : Movement
 	{
 		if(checkGround()) { applyFriction = true; }
 		else { applyFriction = false; }
-	}
-
-	void OnCollisionStay(Collision col)
-	{
-		foreach(ContactPoint contact in col)
-		{
-			if(contact.otherCollider.gameObject.tag.Equals("Accelerator"))
-			{
-				acceleratorForce = contact.otherCollider.gameObject.GetComponent<Accelerator>().accelerationVector;
-			}
-		}
-	}
-
-	void OnTriggerStay(Collider other)
-	{
-		if(other.gameObject.tag.Equals("JumpPad"))
-		{
-			JumpPad pad = other.gameObject.GetComponent<JumpPad>();
-			usePadX = pad.useX;
-			usePadY = pad.useY;
-			usePadZ = pad.useZ;
-			jumpPadForce = pad.jumpVector;
-		}
 	}
 }
