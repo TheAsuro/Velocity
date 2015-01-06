@@ -35,7 +35,8 @@ public class EditorObjects : MonoBehaviour
 
 		foreach(Object go in Resources.LoadAll("EditorPrefabs"))
 		{
-			loadedObjects.Add((GameObject)go);
+			if(go.GetType() == typeof(GameObject))
+				loadedObjects.Add((GameObject)go);
 		}
 
 		gridObjects = new Dictionary<Vector3,GameObject>();

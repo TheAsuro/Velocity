@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class BunnyHopMovement : Movement
 {
+	private Vector2 lastInput;
 	private bool applyFriction = false;
 	private bool onGround = false;
 
@@ -11,6 +12,7 @@ public class BunnyHopMovement : Movement
 	{
 		//Update variables
 		onGround = checkGround();
+		lastInput = input;
 
 		//Different acceleration values for ground and air
 		float curAccel = accel;
@@ -51,19 +53,11 @@ public class BunnyHopMovement : Movement
 		return correctVelocity;
 	}
 
-	public override Vector3 overrideVelocity(Vector3 input)
+	public override Vector3 overrideVelocity(Vector3 currentVelocity)
 	{
-		Vector3 velocity = input;
-		Vector2 frictionTemp = new Vector2(input.x, input.z);
+		Vector3 newVelocity = currentVelocity;
 
-		//Friction
-		if(applyFriction && !getJumpKeyPressed())
-		{
-			frictionTemp *= frictionMultiplier;
-			velocity = new Vector3(frictionTemp.x, velocity.y, frictionTemp.y);
-		}
-
-		return velocity;
+		return newVelocity;
 	}
 
 	private Vector3 getJumpVelocity(float yVelocity)
