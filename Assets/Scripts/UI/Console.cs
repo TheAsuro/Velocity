@@ -135,14 +135,17 @@ public class Console : MonoBehaviour
 				case "move_friction":
 					frictionCommand(commandParts);
 					break;
-				case "move_speed":
-					speedCommand(commandParts);
+				case "move_accel":
+					accelerationCommand(commandParts);
+					break;
+				case "move_airaccel":
+					airAccelerationCommand(commandParts);
 					break;
 				case "move_maxspeed":
 					maxSpeedCommand(commandParts);
 					break;
-				case "move_airspeed":
-					airSpeedCommand(commandParts);
+				case "move_maxairspeed":
+					maxAirSpeedCommand(commandParts);
 					break;
 				case "move_jumpheight":
 					jumpHeightCommand(commandParts);
@@ -268,7 +271,7 @@ public class Console : MonoBehaviour
 		}
 	}
 
-	private void speedCommand(string[] input)
+	private void accelerationCommand(string[] input)
 	{
 		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
 
@@ -279,19 +282,46 @@ public class Console : MonoBehaviour
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current input multiplier: " + myPlayerInfo.getSpeed());
+			writeToConsole("Current acceleration: " + myPlayerInfo.getAcceleration());
 		}
 		else if(input.Length == 2)
 		{
 			float newVal;
 			if(float.TryParse(input[1], out newVal))
 			{
-				myPlayerInfo.setSpeed(newVal);
+				myPlayerInfo.setAcceleration(newVal);
 			}
 		}
 		else
 		{
-			writeToConsole("Usage: move_speed (new input speed)");
+			writeToConsole("Usage: move_accel (new accel)");
+		}
+	}
+
+	private void airAccelerationCommand(string[] input)
+	{
+		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
+
+		if(myPlayerInfo == null)
+		{
+			writeToConsole("No player loaded!");
+			return;
+		}
+		if(input.Length == 1)
+		{
+			writeToConsole("Current air acceleration: " + myPlayerInfo.getAirAcceleration());
+		}
+		else if(input.Length == 2)
+		{
+			float newVal;
+			if(float.TryParse(input[1], out newVal))
+			{
+				myPlayerInfo.setAirAcceleration(newVal);
+			}
+		}
+		else
+		{
+			writeToConsole("Usage: move_airaccel (new air acceleration)");
 		}
 	}
 
@@ -327,7 +357,7 @@ public class Console : MonoBehaviour
 		}
 	}
 
-	private void airSpeedCommand(string[] input)
+	private void maxAirSpeedCommand(string[] input)
 	{
 		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
 
@@ -338,19 +368,24 @@ public class Console : MonoBehaviour
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current speed limit: " + myPlayerInfo.getAirSpeed());
+			writeToConsole("Current air speed limit: " + myPlayerInfo.getMaxAirSpeed());
 		}
 		else if(input.Length == 2)
 		{
 			float newVal;
 			if(float.TryParse(input[1], out newVal))
 			{
-				myPlayerInfo.setAirSpeed(newVal);
+				if(newVal == 0f)
+				{
+					writeToConsole("Value can not be 0!");
+					return;
+				}
+				myPlayerInfo.setMaxAirSpeed(newVal);
 			}
 		}
 		else
 		{
-			writeToConsole("Usage: move_airspeed (new air speed)");
+			writeToConsole("Usage: move_maxairspeed (new max air speed)");
 		}
 	}
 

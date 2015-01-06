@@ -18,7 +18,7 @@ public class PlayerInfo : MonoBehaviour
 
 	//Default values for movement variables
 	//Speed, AirSpeed, MaxSpeed, Friction, Jump
-	private static float[] defaults = { 5f, 10f, 7f, 0.9f, 5f };
+	private static float[] defaults = { 200f, 200f, 6.4f, 0.6f, 0.9f, 5f };
 
 	void Awake()
 	{
@@ -119,27 +119,27 @@ public class PlayerInfo : MonoBehaviour
 		return myMovement.frictionMultiplier;
 	}
 
-	public void setSpeed(float value)
+	public void setAcceleration(float value)
 	{
-		myMovement.speed = value;
+		myMovement.accel = value;
 		GameInfo.info.invalidateRun();
 	}
 
 	//Gets input multiplier, not current speed!
-	public float getSpeed()
+	public float getAcceleration()
 	{
-		return myMovement.speed;
+		return myMovement.accel;
 	}
 
-	public void setAirSpeed(float value)
+	public void setAirAcceleration(float value)
 	{
-		myMovement.airSpeed = value;
+		myMovement.airAccel = value;
 		GameInfo.info.invalidateRun();
 	}
 
-	public float getAirSpeed()
+	public float getAirAcceleration()
 	{
-		return myMovement.airSpeed;
+		return myMovement.airAccel;
 	}
 
 	public void setMaxSpeed(float value)
@@ -151,6 +151,17 @@ public class PlayerInfo : MonoBehaviour
 	public float getMaxSpeed()
 	{
 		return myMovement.maxSpeed;
+	}
+
+	public void setMaxAirSpeed(float value)
+	{
+		myMovement.maxAirSpeed = value;
+		GameInfo.info.invalidateRun();
+	}
+
+	public float getMaxAirSpeed()
+	{
+		return myMovement.maxAirSpeed;
 	}
 
 	public void setJumpForce(float value)
@@ -188,7 +199,7 @@ public class PlayerInfo : MonoBehaviour
 
 	public bool validatePlayerVariables()
 	{
-		float[] currentValues = { getSpeed(), getAirSpeed(), getMaxSpeed(), getFrictionMultiplier(), getJumpForce() };
+		float[] currentValues = { getAcceleration(), getAirAcceleration(), getMaxSpeed(), getMaxAirSpeed(), getFrictionMultiplier(), getJumpForce() };
 		for(int i = 0; i < 5; i++)
 		{
 			if(defaults[i] != currentValues[i])
