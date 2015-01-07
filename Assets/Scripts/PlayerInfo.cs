@@ -18,7 +18,7 @@ public class PlayerInfo : MonoBehaviour
 
 	//Default values for movement variables
 	//Speed, AirSpeed, MaxSpeed, Friction, Jump
-	private static float[] defaults = { 200f, 200f, 6.4f, 0.6f, 4f, 5f };
+	private static float[] defaults = { 200f, 200f, 6.4f, 0.6f, 8f, 5f };
 
 	void Awake()
 	{

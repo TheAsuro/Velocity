@@ -3,11 +3,11 @@ using System.Collections;
 
 public abstract class Movement : MonoBehaviour
 {
-	public float accel = 60f;
-	public float airAccel = 60f;
-	public float maxSpeed = 6f;
+	public float accel = 200f;
+	public float airAccel = 200f;
+	public float maxSpeed = 6.4f;
 	public float maxAirSpeed = 0.6f;
-	public float friction = 4;
+	public float friction = 8f;
 	public float jumpForce = 5f;
 	public LayerMask groundLayers;
 

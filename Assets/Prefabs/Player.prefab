@@ -528,9 +528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0686038cba7c76e44ab2f8b8c99034b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectLayers:
-    serializedVersion: 2
-    m_Bits: 8192
+  detectLayers: {}
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -589,7 +587,7 @@ MonoBehaviour:
   airAccel: 200
   maxSpeed: 6.4000001
   maxAirSpeed: .600000024
-  frictionMultiplier: .899999976
+  friction: 8
   jumpForce: 5
   groundLayers:
     serializedVersion: 2
