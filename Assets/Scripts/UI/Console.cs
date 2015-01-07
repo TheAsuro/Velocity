@@ -255,19 +255,19 @@ public class Console : MonoBehaviour
 		}
 		if(input.Length == 1)
 		{
-			writeToConsole("Current friction multiplier: " + myPlayerInfo.getFrictionMultiplier());
+			writeToConsole("Current friction: " + myPlayerInfo.getFriction());
 		}
 		else if(input.Length == 2)
 		{
 			float newVal;
 			if(float.TryParse(input[1], out newVal))
 			{
-				myPlayerInfo.setFrictionMultiplier(newVal);
+				myPlayerInfo.setFriction(newVal);
 			}
 		}
 		else
 		{
-			writeToConsole("Usage: move_friction (new friction multiplier)");
+			writeToConsole("Usage: move_friction (new friction)");
 		}
 	}
 

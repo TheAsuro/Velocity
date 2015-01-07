@@ -18,7 +18,7 @@ public class PlayerInfo : MonoBehaviour
 
 	//Default values for movement variables
 	//Speed, AirSpeed, MaxSpeed, Friction, Jump
-	private static float[] defaults = { 200f, 200f, 6.4f, 0.6f, 0.9f, 5f };
+	private static float[] defaults = { 200f, 200f, 6.4f, 0.6f, 4f, 5f };
 
 	void Awake()
 	{
@@ -108,15 +108,15 @@ public class PlayerInfo : MonoBehaviour
 		myMovement.unfreeze();
 	}
 
-	public void setFrictionMultiplier(float value)
+	public void setFriction(float value)
 	{
-		myMovement.frictionMultiplier = value;
+		myMovement.friction = value;
 		GameInfo.info.invalidateRun();
 	}
 
-	public float getFrictionMultiplier()
+	public float getFriction()
 	{
-		return myMovement.frictionMultiplier;
+		return myMovement.friction;
 	}
 
 	public void setAcceleration(float value)
@@ -199,7 +199,7 @@ public class PlayerInfo : MonoBehaviour
 
 	public bool validatePlayerVariables()
 	{
-		float[] currentValues = { getAcceleration(), getAirAcceleration(), getMaxSpeed(), getMaxAirSpeed(), getFrictionMultiplier(), getJumpForce() };
+		float[] currentValues = { getAcceleration(), getAirAcceleration(), getMaxSpeed(), getMaxAirSpeed(), getFriction(), getJumpForce() };
 		for(int i = 0; i < 5; i++)
 		{
 			if(defaults[i] != currentValues[i])

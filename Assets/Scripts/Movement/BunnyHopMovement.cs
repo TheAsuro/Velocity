@@ -4,15 +4,33 @@ using System.Collections.Generic;
 
 public class BunnyHopMovement : Movement
 {
-	private Vector2 lastInput;
-	private bool applyFriction = false;
 	private bool onGround = false;
+
+	public override Vector3 overrideVelocity(Vector3 currentVelocity)
+	{
+		onGround = checkGround();
+		float speed = currentVelocity.magnitude; 
+
+		if(onGround && !Input.GetButton("Jump"))
+		{
+			if(speed > 2f)
+			{
+				speed *= (1f - friction * Time.deltaTime);
+			}
+			else
+			{
+				speed -= 2f * friction * Time.deltaTime;
+			}
+
+			speed = Mathf.Max(0f, speed);
+		}
+
+		return currentVelocity.normalized * speed;
+	}
 
 	public override Vector3 calculateAdditionalVelocity(Vector2 input)
 	{
-		//Update variables
 		onGround = checkGround();
-		lastInput = input;
 
 		//Different acceleration values for ground and air
 		float curAccel = accel;
@@ -53,13 +71,6 @@ public class BunnyHopMovement : Movement
 		return correctVelocity;
 	}
 
-	public override Vector3 overrideVelocity(Vector3 currentVelocity)
-	{
-		Vector3 newVelocity = currentVelocity;
-
-		return newVelocity;
-	}
-
 	private Vector3 getJumpVelocity(float yVelocity)
 	{
 		Vector3 jumpVelocity = Vector3.zero;
@@ -77,7 +88,6 @@ public class BunnyHopMovement : Movement
 
 	public override void FixedMoveUpdate()
 	{
-		if(checkGround()) { applyFriction = true; }
-		else { applyFriction = false; }
+		
 	}
 }

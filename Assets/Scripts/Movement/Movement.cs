@@ -7,7 +7,7 @@ public abstract class Movement : MonoBehaviour
 	public float airAccel = 60f;
 	public float maxSpeed = 6f;
 	public float maxAirSpeed = 0.6f;
-	public float frictionMultiplier = 0.9f;
+	public float friction = 4;
 	public float jumpForce = 5f;
 	public LayerMask groundLayers;
 
@@ -108,12 +108,11 @@ public abstract class Movement : MonoBehaviour
 		if(allowMoveHorizontal) { input.x = Input.GetAxis("Horizontal"); }
 		if(allowMoveVertical) { input.y = Input.GetAxis("Vertical"); }
 
-		//Add movement
-		Vector3 additionalVelocity = calculateAdditionalVelocity(input);
+		//Friction
+		Vector3 tempVelocity = overrideVelocity(rigidbody.velocity);
 
-		//Friction and other stuff
-		Vector3 tempVelocity = rigidbody.velocity + additionalVelocity;
-		tempVelocity = overrideVelocity(tempVelocity);
+		//Add movement
+		tempVelocity += calculateAdditionalVelocity(input);		
 			
 		//Apply
 		if(!rigidbody.isKinematic)

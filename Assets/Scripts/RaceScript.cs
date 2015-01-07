@@ -76,8 +76,8 @@ public class RaceScript : MonoBehaviour
 		//Display crosshair
 		drawCrosshair();
 
-		//Skip countdown with jump key
-		if(Input.GetButtonDown("Jump") && startTime > Time.time)
+		//Skip countdown with use key
+		if(Input.GetButtonDown("Skip") && startTime > Time.time)
 		{
 			startTime = Time.time;
 			unfreeze();
