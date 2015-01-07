@@ -8,7 +8,7 @@ public class GameInfo : MonoBehaviour
 	public delegate string InfoString();
 	public GameObject playerTemplate;
 	public GUISkin skin;
-	public string secretKey = "NotActuallySecret";
+	public string secretKey = "";
 	
 	//Gamestates
 	private bool gamePaused = false;
