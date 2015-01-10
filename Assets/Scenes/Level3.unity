@@ -188,7 +188,7 @@ GameObject:
   - 33: {fileID: 53238537}
   - 23: {fileID: 53238536}
   - 64: {fileID: 53238535}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +313,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -385,7 +385,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -900,7 +900,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1129,7 +1129,7 @@ GameObject:
   - 33: {fileID: 439433459}
   - 23: {fileID: 439433458}
   - 65: {fileID: 439433457}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1304,7 +1304,7 @@ GameObject:
   - 33: {fileID: 566064660}
   - 23: {fileID: 566064659}
   - 65: {fileID: 566064658}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1453,7 +1453,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1556,7 +1556,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1638,7 +1638,7 @@ GameObject:
   - 65: {fileID: 650468397}
   - 114: {fileID: 650468396}
   - 114: {fileID: 650468395}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ExitTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1669,7 +1669,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38fd1e484e21a8748b33eab2296e0187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relativeGoalPos: {x: 0, y: 2, z: 0}
 --- !u!114 &650468396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1773,6 +1772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beginState: 0
+  worldBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!4 &739678414
 Transform:
   m_ObjectHideFlags: 0
@@ -1797,6 +1797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a8f16e683414245b9f6069fd4c8521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inEditor: 0
   introLength: 0
   startFreeze: 3
   introDisplay: {fileID: 0}
@@ -1980,7 +1981,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2083,7 +2084,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2162,7 +2163,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 873586237}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EndLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2210,7 +2211,7 @@ GameObject:
   - 33: {fileID: 896946484}
   - 23: {fileID: 896946483}
   - 65: {fileID: 896946482}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2282,7 +2283,7 @@ GameObject:
   - 33: {fileID: 898955849}
   - 23: {fileID: 898955848}
   - 64: {fileID: 898955847}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2355,7 +2356,7 @@ GameObject:
   - 33: {fileID: 906319822}
   - 23: {fileID: 906319821}
   - 64: {fileID: 906319820}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2552,7 +2553,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2739,6 +2740,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
+  m_DragThreshold: 5
 --- !u!4 &1028037206
 Transform:
   m_ObjectHideFlags: 0
@@ -2762,7 +2764,7 @@ GameObject:
   - 33: {fileID: 1031561417}
   - 23: {fileID: 1031561416}
   - 65: {fileID: 1031561415}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2855,7 +2857,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2958,7 +2960,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3111,7 +3113,7 @@ GameObject:
   - 33: {fileID: 1162056031}
   - 23: {fileID: 1162056030}
   - 65: {fileID: 1162056029}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3183,7 +3185,7 @@ GameObject:
   - 33: {fileID: 1231796690}
   - 23: {fileID: 1231796689}
   - 65: {fileID: 1231796688}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3255,7 +3257,7 @@ GameObject:
   - 33: {fileID: 1237849503}
   - 23: {fileID: 1237849502}
   - 65: {fileID: 1237849501}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3467,7 +3469,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3879,7 +3881,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3982,7 +3984,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -4064,7 +4066,7 @@ GameObject:
   - 33: {fileID: 1451177641}
   - 23: {fileID: 1451177640}
   - 65: {fileID: 1451177639}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4260,7 +4262,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -4613,7 +4615,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -5313,7 +5315,7 @@ GameObject:
   - 33: {fileID: 1722664434}
   - 23: {fileID: 1722664433}
   - 65: {fileID: 1722664432}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6003,7 +6005,7 @@ GameObject:
   - 33: {fileID: 1863696668}
   - 23: {fileID: 1863696667}
   - 65: {fileID: 1863696666}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6131,7 +6133,7 @@ GameObject:
   - 33: {fileID: 1889406860}
   - 23: {fileID: 1889406859}
   - 65: {fileID: 1889406858}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_011
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6203,7 +6205,7 @@ GameObject:
   - 33: {fileID: 1917963813}
   - 23: {fileID: 1917963812}
   - 65: {fileID: 1917963811}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6596,7 +6598,7 @@ GameObject:
   - 33: {fileID: 2065998081}
   - 23: {fileID: 2065998080}
   - 64: {fileID: 2065998079}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6793,7 +6795,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: d3a2c056b21fda848acb6b9f63f6375c, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6875,7 +6877,7 @@ GameObject:
   - 33: {fileID: 2140754094}
   - 23: {fileID: 2140754093}
   - 64: {fileID: 2140754092}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
