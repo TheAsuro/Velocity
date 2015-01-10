@@ -15,6 +15,7 @@ public class PlayerInfo : MonoBehaviour
 	private Image myCrosshair;
 	private Image myCrosshairCircle;
 	private Image myCrosshairCircle2;
+	private Image myCrosshairCircle3;
 
 	//Default values for movement variables
 	//Speed, AirSpeed, MaxSpeed, Friction, Jump
@@ -32,6 +33,7 @@ public class PlayerInfo : MonoBehaviour
 		myCrosshair = myCanvas.transform.Find("Crosshair").GetComponent<Image>();
 		myCrosshairCircle = myCanvas.transform.Find("CrosshairCircle").GetComponent<Image>();
 		myCrosshairCircle2 = myCanvas.transform.Find("CrosshairCircle2").GetComponent<Image>();
+		myCrosshairCircle3 = myCanvas.transform.Find("CrosshairCircle3").GetComponent<Image>();
 	}
 
 	public void resetPosition(Vector3 pos, Quaternion rot)
@@ -185,6 +187,7 @@ public class PlayerInfo : MonoBehaviour
 		myCrosshair.color = color;
 		myCrosshairCircle.color = color;
 		myCrosshairCircle2.color = color;
+		myCrosshairCircle3.color = color;
 	}
 
 	public Image getCrosshairCircle()
@@ -195,6 +198,11 @@ public class PlayerInfo : MonoBehaviour
 	public Image getCrosshairCircle2()
 	{
 		return myCrosshairCircle2;
+	}
+
+	public Image getCrosshairCircle3()
+	{
+		return myCrosshairCircle3;
 	}
 
 	public bool validatePlayerVariables()
