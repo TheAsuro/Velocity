@@ -53,6 +53,11 @@ public class GameInfo : MonoBehaviour
 	public float lightingLevel = 0f;
 	public float vsyncLevel = 0f;
 
+	//GUI settings
+	public float speedCircle1 = 10f;
+	public float speedCircle2 = 20f;
+	public float speedCircle3 = 30f;
+
 	//References
 	private PlayerInfo myPlayer;
 	private DemoPlay myDemoPlayer;

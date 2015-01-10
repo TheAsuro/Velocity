@@ -140,6 +140,8 @@ public class RaceScript : MonoBehaviour
 
 	private void drawCrosshair()
 	{
+		//TODO put gameinfo circle speed in here and make a third circle
+
 		PlayerInfo pi = GameInfo.info.getPlayerInfo();
 		float speed = float.Parse(pi.getCurrentSpeed());
 

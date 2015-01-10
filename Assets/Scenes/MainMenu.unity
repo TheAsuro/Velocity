@@ -1632,7 +1632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTemplate: {fileID: 100002, guid: 5cb025783319fe14b9119fbbe02c92bb, type: 2}
   skin: {fileID: 11400000, guid: a2187eef99ad36e46b23c442d417131e, type: 2}
-  secretKey: NotActuallySecret
+  secretKey: 
   menuLocked: 0
   soundNames:
   - jump
@@ -1648,6 +1648,9 @@ MonoBehaviour:
   textureSize: 0
   lightingLevel: 0
   vsyncLevel: 0
+  speedCircle1: 10
+  speedCircle2: 20
+  speedCircle3: 30
 --- !u!1 &172095300
 GameObject:
   m_ObjectHideFlags: 0
@@ -4929,7 +4932,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &582943237
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4942,10 +4945,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 510783741}
   m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: 1}
-  m_AnchorMax: {x: .5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 150, y: 50}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -50}
+  m_SizeDelta: {x: -60, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &582943238
 MonoBehaviour:
@@ -16545,11 +16548,13 @@ MonoBehaviour:
   - Level2
   - Level3
   - Level4
+  - Level5
   - v_tempel_v1
   mapAuthors:
   - TheAsuro
   - TheAsuro
   - TheAsuro
+  - sndrec32.exe
   - sndrec32.exe
   - walllucas
   buttonDrawThingy: {fileID: 688831430}
