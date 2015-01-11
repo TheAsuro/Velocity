@@ -594,10 +594,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!23 &166160966
 Renderer:
@@ -611,7 +610,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -656,6 +655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beginState: 0
+  worldBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!4 &170045931
 Transform:
   m_ObjectHideFlags: 0
@@ -680,6 +680,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a8f16e683414245b9f6069fd4c8521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inEditor: 0
   introLength: 0
   startFreeze: 3
   introDisplay: {fileID: 0}
@@ -929,7 +930,7 @@ GameObject:
   - 33: {fileID: 243878329}
   - 23: {fileID: 243878328}
   - 65: {fileID: 243878327}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1050,6 +1051,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
+  m_DragThreshold: 5
 --- !u!4 &247016784
 Transform:
   m_ObjectHideFlags: 0
@@ -1145,7 +1147,7 @@ GameObject:
   - 23: {fileID: 285466935}
   - 114: {fileID: 285466934}
   - 65: {fileID: 285466933}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: Respawn
   m_TagString: Respawn
   m_Icon: {fileID: 0}
@@ -1277,10 +1279,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!23 &286650597
 Renderer:
@@ -1294,7 +1295,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1462,7 +1463,7 @@ GameObject:
   - 33: {fileID: 314154688}
   - 23: {fileID: 314154687}
   - 65: {fileID: 314154686}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2116,10 +2117,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 386510485}
-  - 33: {fileID: 386510490}
-  - 23: {fileID: 386510489}
   - 65: {fileID: 386510488}
   - 114: {fileID: 386510487}
+  - 23: {fileID: 386510489}
   m_Layer: 12
   m_Name: End
   m_TagString: Checkpoint
@@ -2175,13 +2175,13 @@ Renderer:
     type: 2}
   m_PrefabInternal: {fileID: 743336244}
   m_GameObject: {fileID: 386510484}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 076966d5d7548fb4e94e55d1f9d9271d, type: 2}
+  - {fileID: 2100000, guid: 929cdb4ba5a7d8e4a957dc79fb9864e7, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2189,14 +2189,6 @@ Renderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &386510490
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: 7c89078e864139a4fb7cf1aa522599a3,
-    type: 2}
-  m_PrefabInternal: {fileID: 743336244}
-  m_GameObject: {fileID: 386510484}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &403452345
 GameObject:
   m_ObjectHideFlags: 0
@@ -2280,7 +2272,7 @@ GameObject:
   - 23: {fileID: 410310587}
   - 114: {fileID: 410310586}
   - 65: {fileID: 410310585}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: Respawn
   m_TagString: Respawn
   m_Icon: {fileID: 0}
@@ -2754,7 +2746,7 @@ GameObject:
   - 33: {fileID: 489327820}
   - 23: {fileID: 489327819}
   - 65: {fileID: 489327818}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2826,7 +2818,7 @@ GameObject:
   - 33: {fileID: 528729800}
   - 23: {fileID: 528729799}
   - 65: {fileID: 528729798}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2941,10 +2933,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!23 &548098301
 Renderer:
@@ -2958,7 +2949,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3074,7 +3065,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 560050651}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EndLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3343,7 +3334,7 @@ GameObject:
   - 33: {fileID: 645633124}
   - 23: {fileID: 645633123}
   - 65: {fileID: 645633122}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3579,7 +3570,7 @@ GameObject:
   - 33: {fileID: 664708109}
   - 23: {fileID: 664708108}
   - 64: {fileID: 664708107}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3709,7 +3700,7 @@ GameObject:
   - 33: {fileID: 668771116}
   - 23: {fileID: 668771115}
   - 65: {fileID: 668771114}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3778,7 +3769,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 686579128}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FloorButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3809,7 +3800,7 @@ GameObject:
   - 33: {fileID: 688632278}
   - 23: {fileID: 688632277}
   - 65: {fileID: 688632276}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3881,7 +3872,7 @@ GameObject:
   - 65: {fileID: 701208796}
   - 114: {fileID: 701208795}
   - 114: {fileID: 701208794}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ExitTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3912,7 +3903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38fd1e484e21a8748b33eab2296e0187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relativeGoalPos: {x: 0, y: 2, z: 0}
 --- !u!114 &701208795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3953,7 +3943,7 @@ GameObject:
   - 33: {fileID: 705636415}
   - 23: {fileID: 705636414}
   - 65: {fileID: 705636413}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4459,7 +4449,7 @@ GameObject:
   - 33: {fileID: 803592048}
   - 23: {fileID: 803592047}
   - 65: {fileID: 803592046}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4697,10 +4687,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!65 &885621992
 BoxCollider:
@@ -4726,7 +4715,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -4752,7 +4741,7 @@ GameObject:
   - 33: {fileID: 893476972}
   - 23: {fileID: 893476971}
   - 65: {fileID: 893476970}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5024,10 +5013,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!23 &912556732
 Renderer:
@@ -5041,7 +5029,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -5483,7 +5471,7 @@ GameObject:
   - 33: {fileID: 974063850}
   - 23: {fileID: 974063849}
   - 65: {fileID: 974063848}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_011
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5906,7 +5894,7 @@ GameObject:
   - 33: {fileID: 1132051055}
   - 23: {fileID: 1132051054}
   - 64: {fileID: 1132051053}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6337,7 +6325,7 @@ GameObject:
   - 33: {fileID: 1265199734}
   - 23: {fileID: 1265199733}
   - 64: {fileID: 1265199732}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6411,7 +6399,7 @@ GameObject:
   - 65: {fileID: 1265550524}
   - 23: {fileID: 1265550523}
   - 114: {fileID: 1265550522}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7201,10 +7189,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!23 &1377218575
 Renderer:
@@ -7218,7 +7205,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -7299,10 +7286,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!23 &1403850162
 Renderer:
@@ -7316,7 +7302,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -7738,7 +7724,7 @@ GameObject:
   - 33: {fileID: 1550776622}
   - 23: {fileID: 1550776621}
   - 64: {fileID: 1550776620}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8177,7 +8163,7 @@ GameObject:
   - 33: {fileID: 1665157612}
   - 23: {fileID: 1665157611}
   - 65: {fileID: 1665157610}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8863,7 +8849,7 @@ GameObject:
   - 23: {fileID: 1730449460}
   - 114: {fileID: 1730449459}
   - 65: {fileID: 1730449458}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: Respawn
   m_TagString: Respawn
   m_Icon: {fileID: 0}
@@ -8983,10 +8969,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!23 &1803487913
 Renderer:
@@ -9000,7 +8985,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -9081,10 +9066,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
-  - _BumpMap
   scaleMode: 1
 --- !u!23 &1808019409
 Renderer:
@@ -9098,7 +9082,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: d939a21c4942d4b41b5ae33c61b5b873, type: 2}
+  - {fileID: 2100000, guid: b34df7c6fa04680479369f481bbba397, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -9217,7 +9201,7 @@ GameObject:
   - 33: {fileID: 1816228637}
   - 23: {fileID: 1816228636}
   - 64: {fileID: 1816228635}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
