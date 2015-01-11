@@ -199,31 +199,56 @@ public abstract class Movement : MonoBehaviour
 	//origin: center of the circle from which will be cast
 	//radiusVector: radius of the circle
 	//rayCount: number of vertices the "circle" will have
-	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount)
+	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount, out float dist, bool slopeCheck = true)
 	{
 		bool tempHit = false;
+		float tempDist = -1f;
 
-		for(int i = 0; i < rayCount; i++)
+		for(int i = -1; i < rayCount; i++)
 		{
-			Vector3 radius = Quaternion.Euler(new Vector3(0f, i * (360f / rayCount), 0f)) * radiusVector;
-			Vector3 circlePoint = origin + radius;
+			RaycastHit hit;
+			bool hasHit = false;
 			float verticalDirection = Mathf.Sign(verticalLength);
 
-			RaycastHit hit;
-			bool hasHit = Physics.Raycast(circlePoint, Vector3.up * verticalDirection, out hit, Mathf.Abs(verticalLength), groundLayers);
+			if(i == -1) //Check directly from origin
+			{
+				hasHit = Physics.Raycast(origin, Vector3.up * verticalDirection, out hit, Mathf.Abs(verticalLength), groundLayers);
+			}
+			else //Check in a circle around the origin
+			{
+				Vector3 radius = Quaternion.Euler(new Vector3(0f, i * (360f / rayCount), 0f)) * radiusVector;
+				Vector3 circlePoint = origin + radius;
+
+				hasHit = Physics.Raycast(circlePoint, Vector3.up * verticalDirection, out hit, Mathf.Abs(verticalLength), groundLayers);
+			}
+			
 			//Collided with something
 			if(hasHit)
 			{
-				//Only return true if the angle is 40° or lower
-				if(hit.normal.y > 0.75f)
+				//Assign tempDist to the shortest distance
+				if(tempDist == -1f)
+					tempDist = hit.distance;
+				else if(tempDist > hit.distance)
+					tempDist = hit.distance;
+
+				//Only return true if the angle is 40° or lower (if slopeCheck is active)
+				if(!slopeCheck || hit.normal.y > 0.75f)
 				{
 					tempHit = true;
 				}
 			}
 		}
 
+		dist = tempDist;
+
 		if(tempHit) { return true; }
 		return false;
+	}
+
+	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount, bool slopeCheck = true)
+	{
+		float dist;
+		return checkCylinder(origin, radiusVector, verticalLength, rayCount, out dist, slopeCheck);
 	}
 	
 	private void setCrouched(bool state)
@@ -243,7 +268,7 @@ public abstract class Movement : MonoBehaviour
 			//extend down if not on ground
 			Vector3 lowerPos = transform.position + new Vector3(0f, (collider.bounds.extents.y * -1f) + 0.05f, 0f);
 			Vector3 lowerRadiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
-			if(!checkCylinder(lowerPos, lowerRadiusVector, -1.05f, 8))
+			if(!checkCylinder(lowerPos, lowerRadiusVector, -1.05f, 8, false))
 			{
 				col.transform.localScale = new Vector3(col.transform.localScale.x, 1f, col.transform.localScale.z);
 				transform.position += new Vector3(0f,-0.5f,0f);
@@ -255,7 +280,8 @@ public abstract class Movement : MonoBehaviour
 				//extend up if there is space
 				Vector3 upperPos = transform.position + new Vector3(0f, collider.bounds.extents.y - 0.05f, 0f);
 				Vector3 upperRadiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
-				if(!checkCylinder(upperPos, upperRadiusVector, 1.05f, 8))
+
+				if(!checkCylinder(upperPos, upperRadiusVector, 1.05f, 8, false))
 				{
 					col.transform.localScale = new Vector3(col.transform.localScale.x, 1f, col.transform.localScale.z);
 					transform.position += new Vector3(0f,0.5f,0f);

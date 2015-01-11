@@ -731,13 +731,13 @@ public class GameInfo : MonoBehaviour
 			form.AddField("Map", map);
 			form.AddField("Hash", hash);
 
-			WWW www = new WWW("http://theasuro.net76.net/newentry.php", form);
+			WWW www = new WWW("http://informatik0r.ddns.net/Velocity/newentry.php", form);
 			StartCoroutine(myLeaderboard.SendLeaderboardData(www));
 		}
 		else
 		{
 			print("Invalid run!");
-		}	
+		}
 	}
 
 	public void loadMapRecord(string map, Leaderboard.processString proc)
