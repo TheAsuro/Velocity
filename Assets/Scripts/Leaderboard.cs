@@ -30,7 +30,7 @@ public class Leaderboard : MonoBehaviour
 		form.AddField("Map", map);
 		form.AddField("Index", currentIndex);
 
-		WWW www = new WWW("http://theasuro.net76.net/mapleaderboard.php", form);
+		WWW www = new WWW("http://theasuro.de/Velocity/mapleaderboard.php", form);
 		StartCoroutine(WaitForLeaderboardData(www, currentIndex));
 	}
 
@@ -41,17 +41,11 @@ public class Leaderboard : MonoBehaviour
 
 		if(www.error != null)
 		{
-			if(www.error.Equals("couldn't connect to host"))
-			{
-				myPlayers.text = "No connection to leaderboard server :/";
-			}
-			else
-			{
-				Debug.Log("WWW Error: " + www.error);
-			}
+			Debug.Log("Leaderboard data www error: " + www.error);
 		}
 		else
 		{
+			Debug.Log("Got leaderboard data: " + www.text);
 			processEntries(www.text, index);
 		}
 	}
@@ -86,7 +80,7 @@ public class Leaderboard : MonoBehaviour
 		WWWForm form = new WWWForm();
 		form.AddField("Map", map);
 
-		WWW www = new WWW("http://theasuro.net76.net/wr.php", form);
+		WWW www = new WWW("http://theasuro.de/Velocity/wr.php", form);
 		StartCoroutine(waitForRecordData(www, proc));
 	}
 
@@ -96,7 +90,7 @@ public class Leaderboard : MonoBehaviour
 
 		if(www.error != null)
 		{
-			Debug.Log("WWW Error: " + www.error);
+			Debug.Log("Record data www error: " + www.error);
 		}
 		else
 		{
@@ -131,10 +125,10 @@ public class Leaderboard : MonoBehaviour
 
 		if(www.error != null)
 		{
-			Debug.Log("WWW Error: " + www.error);
+			Debug.Log("Send leaderboard data www error: " + www.error);
 		}
 
-		Debug.Log(www.text);
+		Debug.Log("Sent leaderboard data, got: " + www.text);
 	}
 
 	public void up()
