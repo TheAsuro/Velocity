@@ -37,10 +37,16 @@ public class BunnyHopMovement : Movement
 		if(!onGround)
 			curAccel = airAccel;
 
-		//Different max speed values for ground and air
+		//Ground speed
 		float curMaxSpeed = maxSpeed;
+
+		//Air speed
 		if(!onGround)
 			curMaxSpeed = maxAirSpeed;
+
+		//Crouched speed on ground
+		else if(crouched)
+			curMaxSpeed = maxSpeed / 3f;
 
 		//Get input and make it a vector
 		Vector3 camRotation = new Vector3(0f, camObj.transform.rotation.eulerAngles.y, camObj.transform.rotation.eulerAngles.z);
