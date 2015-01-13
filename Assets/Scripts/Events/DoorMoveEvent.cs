@@ -7,6 +7,7 @@ public class DoorMoveEvent : Event
 	public List<Vector3> positions = new List<Vector3>();
 	public float movementTime = 2.5f;
 	public bool addToResetList = true;
+	public bool repeat = false;
 
 	private Vector3 initialPos;
 	private Vector3 startPos;
@@ -37,7 +38,15 @@ public class DoorMoveEvent : Event
 				positionCounter++;
 				if(positionCounter >= positions.Count)
 				{
-					stop();
+					if(repeat)
+					{
+						reset();
+						fire(null);
+					}
+					else
+					{
+						stop();
+					}
 				}
 				else
 				{

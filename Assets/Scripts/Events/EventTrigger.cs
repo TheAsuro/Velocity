@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public abstract class EventTrigger : MonoBehaviour
 {
 	public float delay = 0f;
+	public List<Event> eventComponent;
 
 	private float delayEnd = -1f; //values < 0 decativate delayed execution
 	private Event tempEventComponent;
