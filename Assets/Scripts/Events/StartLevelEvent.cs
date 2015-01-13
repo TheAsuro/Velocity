@@ -51,6 +51,6 @@ public class StartLevelEvent : Event
 	private void startIn(float delay)
 	{
 		GameInfo.info.spawnNewPlayer(WorldInfo.info.getFirstSpawn(), true, inEditor);
-		GameInfo.info.getPlayerInfo().startRace(delay);
+		GameInfo.info.getPlayerInfo().prepareRace(delay);
 	}
 }

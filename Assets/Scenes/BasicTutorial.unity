@@ -2120,6 +2120,7 @@ GameObject:
   - 65: {fileID: 386510488}
   - 114: {fileID: 386510487}
   - 23: {fileID: 386510489}
+  - 33: {fileID: 386510486}
   m_Layer: 12
   m_Name: End
   m_TagString: Checkpoint
@@ -2135,10 +2136,18 @@ Transform:
   m_GameObject: {fileID: 386510484}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2, y: 22, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 12}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children: []
   m_Father: {fileID: 1424483828}
   m_RootOrder: 1
+--- !u!33 &386510486
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 3325282, guid: 7c89078e864139a4fb7cf1aa522599a3,
+    type: 2}
+  m_PrefabInternal: {fileID: 743336244}
+  m_GameObject: {fileID: 386510484}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &386510487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3916,9 +3925,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
-  addToResetList: 1
   eventComponent:
   - {fileID: 701208794}
+  addToResetList: 1
 --- !u!65 &701208796
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5291,6 +5300,10 @@ Prefab:
       propertyPath: m_LightmapTilingOffset.w
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 7ff41760f6b385d4c85584557aaedafe, type: 2}
+      propertyPath: addToResetList
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7ff41760f6b385d4c85584557aaedafe, type: 2}
   m_RootGameObject: {fileID: 686579127}
@@ -6431,10 +6444,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 0
-  addToResetList: 1
   eventComponent:
   - {fileID: 1849404952}
   - {fileID: 1630277609}
+  addToResetList: 0
 --- !u!23 &1265550523
 Renderer:
   m_ObjectHideFlags: 0
@@ -8086,6 +8099,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   movementTime: 2.5
   addToResetList: 1
+  repeat: 0
 --- !u!4 &1630277610
 Transform:
   m_ObjectHideFlags: 0
@@ -8093,7 +8107,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1630277608}
   m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
-  m_LocalPosition: {x: 12, y: 22, z: -4}
+  m_LocalPosition: {x: 12.25, y: 22, z: -4}
   m_LocalScale: {x: .5, y: 8, z: 4}
   m_Children: []
   m_Father: {fileID: 713024458}
@@ -9392,6 +9406,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   movementTime: 2.5
   addToResetList: 1
+  repeat: 0
 --- !u!4 &1849404953
 Transform:
   m_ObjectHideFlags: 0
@@ -9399,7 +9414,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1849404951}
   m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
-  m_LocalPosition: {x: 12, y: 22, z: 4}
+  m_LocalPosition: {x: 12.25, y: 22, z: 4}
   m_LocalScale: {x: .5, y: 8, z: 4}
   m_Children: []
   m_Father: {fileID: 713024458}

@@ -7,8 +7,10 @@ public class WorldInfo : MonoBehaviour
 	public static WorldInfo info;
 	public GameInfo.MenuState beginState = GameInfo.MenuState.closed;
 	public Color worldBackgroundColor = Color.black;
+	public delegate void Start();
 	public delegate void Reset();
 
+	private Dictionary<string,Start> startList = new Dictionary<string,Start>();
 	private Dictionary<string,Reset> resetList = new Dictionary<string,Reset>();
 
 	//Respawn with r
@@ -18,6 +20,15 @@ public class WorldInfo : MonoBehaviour
 	void Awake()
 	{
 		info = this;
+	}
+
+	public void addStartMethod(Start start, string id)
+	{
+		if(startList.ContainsKey(id))
+		{
+			startList.Remove(id);
+		}
+		startList.Add(id, start);
 	}
 
 	public void addResetMethod(Reset reset, string id)
@@ -52,6 +63,14 @@ public class WorldInfo : MonoBehaviour
 	public Respawn getFirstSpawn()
 	{
 		return firstSpawn;
+	}
+
+	public void DoStart()
+	{
+		foreach(Start s in startList.Values)
+		{
+			s();
+		}
 	}
 
 	public void reset()

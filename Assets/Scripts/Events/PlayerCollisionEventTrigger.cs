@@ -4,16 +4,6 @@ using System.Collections.Generic;
 
 public class PlayerCollisionEventTrigger : EventTrigger
 {
-	public bool addToResetList = true;
-
-	void Start()
-	{
-		if(addToResetList)
-		{
-			WorldInfo.info.addResetMethod(reset, "reset PlayerCollisionEventTrigger " + GetInstanceID().ToString());
-		}
-	}
-
 	void OnTriggerEnter(Collider col)
 	{
 		if(col.tag.Equals("Player"))

@@ -16,10 +16,13 @@ public class DoorMoveEvent : Event
 	private bool running = false;
 	private int positionCounter = 0;
 
-	void Start()
+	void Awake()
 	{
 		initialPos = transform.position;
+	}
 
+	void Start()
+	{
 		if(addToResetList)
 		{
 			WorldInfo.info.addResetMethod(reset, "reset door " + GetInstanceID().ToString());

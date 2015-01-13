@@ -43,9 +43,9 @@ public class PlayerInfo : MonoBehaviour
 		myMesh.transform.rotation = rot;
 	}
 
-	public void startRace(float delay)
+	public void prepareRace(float delay)
 	{
-		myRaceScript.startRace(delay);
+		myRaceScript.prepareRace(delay);
 	}
 
 	public void playSound(AudioClip pClip)

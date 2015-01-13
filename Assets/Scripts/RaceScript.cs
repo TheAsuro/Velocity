@@ -42,10 +42,10 @@ public class RaceScript : MonoBehaviour
 			time = Time.time - startTime;
 		}
 
-		//Unfreeze if freeze time is up
+		//Freeze time is up, start the race!
 		if(frozen && Time.time >= unfreezeTime)
 		{
-			unfreeze();
+			startRace();
 		}
 
 		//Checkpoint system
@@ -79,8 +79,7 @@ public class RaceScript : MonoBehaviour
 		//Skip countdown with use key
 		if(Input.GetButtonDown("Skip") && startTime > Time.time)
 		{
-			startTime = Time.time;
-			unfreeze();
+			startRace();
 		}
 
 		//countdown
@@ -171,7 +170,7 @@ public class RaceScript : MonoBehaviour
 	}
 
 	//Starts a new race (resets the current one if there is one)
-	public void startRace(float newFreezeDuration = 0f)
+	public void prepareRace(float newFreezeDuration = 0f)
 	{
 		time = -1f;
 		startTime = Time.time;
@@ -187,6 +186,13 @@ public class RaceScript : MonoBehaviour
 		}
 
 		GameInfo.info.startDemo();
+	}
+
+	private void startRace()
+	{
+		startTime = Time.time;
+		WorldInfo.info.DoStart();
+		unfreeze();
 	}
 	
 	private void freeze(float duration)
