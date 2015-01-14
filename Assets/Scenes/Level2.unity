@@ -382,7 +382,7 @@ GameObject:
   - 33: {fileID: 25507670}
   - 23: {fileID: 25507669}
   - 64: {fileID: 25507668}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -453,7 +453,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 47338187}
   - 65: {fileID: 47338186}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: KillTrigger
   m_TagString: Kill
   m_Icon: {fileID: 0}
@@ -754,7 +754,7 @@ GameObject:
   - 33: {fileID: 112809577}
   - 23: {fileID: 112809576}
   - 65: {fileID: 112809575}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1435,7 +1435,7 @@ GameObject:
   - 33: {fileID: 278381484}
   - 23: {fileID: 278381483}
   - 65: {fileID: 278381482}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1765,7 +1765,7 @@ GameObject:
   - 33: {fileID: 341865218}
   - 23: {fileID: 341865217}
   - 64: {fileID: 341865216}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2201,7 +2201,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 410355439}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EndLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2267,6 +2267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a8f16e683414245b9f6069fd4c8521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inEditor: 0
   introLength: 0
   startFreeze: 3
   introDisplay: {fileID: 0}
@@ -2284,6 +2285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beginState: 0
   worldBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  deathHeight: -60
 --- !u!4 &417749715
 Transform:
   m_ObjectHideFlags: 0
@@ -2393,7 +2395,7 @@ GameObject:
   - 33: {fileID: 437882163}
   - 23: {fileID: 437882162}
   - 65: {fileID: 437882161}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2605,7 +2607,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 483935843}
   - 65: {fileID: 483935842}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: KillTrigger
   m_TagString: Kill
   m_Icon: {fileID: 0}
@@ -2648,7 +2650,7 @@ GameObject:
   - 33: {fileID: 487153514}
   - 23: {fileID: 487153513}
   - 65: {fileID: 487153512}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3388,7 +3390,7 @@ GameObject:
   - 33: {fileID: 612980868}
   - 23: {fileID: 612980867}
   - 65: {fileID: 612980866}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5293,7 +5295,7 @@ GameObject:
   - 33: {fileID: 934797506}
   - 23: {fileID: 934797505}
   - 65: {fileID: 934797504}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5365,7 +5367,7 @@ GameObject:
   - 33: {fileID: 981138348}
   - 23: {fileID: 981138347}
   - 65: {fileID: 981138346}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5437,7 +5439,7 @@ GameObject:
   - 65: {fileID: 992409591}
   - 114: {fileID: 992409590}
   - 114: {fileID: 992409589}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ExitTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5468,7 +5470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38fd1e484e21a8748b33eab2296e0187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relativeGoalPos: {x: 0, y: 2, z: 0}
 --- !u!114 &992409590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5481,8 +5482,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec9cb8c95a776642848e7b6f522f563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0
-  addToResetList: 1
   eventComponent:
   - {fileID: 992409589}
 --- !u!65 &992409591
@@ -6177,7 +6176,7 @@ GameObject:
   - 33: {fileID: 1237536175}
   - 23: {fileID: 1237536174}
   - 65: {fileID: 1237536173}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_011
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6339,6 +6338,10 @@ Prefab:
     - target: {fileID: 400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
+      propertyPath: deathHeight
+      value: -60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
@@ -6512,6 +6515,7 @@ GameObject:
   - 65: {fileID: 1331421612}
   - 114: {fileID: 1331421611}
   - 23: {fileID: 1331421613}
+  - 33: {fileID: 1331421616}
   - 33: {fileID: 1331421614}
   m_Layer: 12
   m_Name: End
@@ -6589,6 +6593,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+--- !u!33 &1331421616
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 3325282, guid: 7c89078e864139a4fb7cf1aa522599a3,
+    type: 2}
+  m_PrefabInternal: {fileID: 1551262015}
+  m_GameObject: {fileID: 1331421610}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1337099923
 GameObject:
   m_ObjectHideFlags: 0
@@ -7613,7 +7625,7 @@ GameObject:
   - 33: {fileID: 1633356744}
   - 23: {fileID: 1633356743}
   - 65: {fileID: 1633356742}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7771,7 +7783,7 @@ GameObject:
   - 33: {fileID: 1672442314}
   - 23: {fileID: 1672442313}
   - 65: {fileID: 1672442312}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8323,7 +8335,7 @@ GameObject:
   - 33: {fileID: 1734822000}
   - 23: {fileID: 1734821999}
   - 64: {fileID: 1734821998}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8459,7 +8471,7 @@ GameObject:
   - 33: {fileID: 1820555118}
   - 23: {fileID: 1820555117}
   - 65: {fileID: 1820555116}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8617,7 +8629,7 @@ GameObject:
   - 33: {fileID: 1837131089}
   - 23: {fileID: 1837131088}
   - 64: {fileID: 1837131087}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8974,6 +8986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
+  m_DragThreshold: 5
 --- !u!4 &1869878308
 Transform:
   m_ObjectHideFlags: 0
@@ -9067,7 +9080,7 @@ GameObject:
   - 33: {fileID: 1876932501}
   - 23: {fileID: 1876932500}
   - 64: {fileID: 1876932499}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10081,7 +10094,7 @@ GameObject:
   - 33: {fileID: 2071040599}
   - 23: {fileID: 2071040598}
   - 65: {fileID: 2071040597}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_008
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1501,8 +1501,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec9cb8c95a776642848e7b6f522f563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0
-  addToResetList: 1
   eventComponent:
   - {fileID: 1042050809}
 --- !u!65 &1042050811
@@ -1643,6 +1641,10 @@ Prefab:
     - target: {fileID: 400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
+      propertyPath: deathHeight
+      value: -115
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
@@ -2142,6 +2144,7 @@ GameObject:
   - 65: {fileID: 1542510026}
   - 114: {fileID: 1542510025}
   - 23: {fileID: 1542510024}
+  - 33: {fileID: 1542510029}
   - 33: {fileID: 1542510028}
   m_Layer: 12
   m_Name: End
@@ -2217,6 +2220,14 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1542510023}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &1542510029
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 3325282, guid: 7c89078e864139a4fb7cf1aa522599a3,
+    type: 2}
+  m_PrefabInternal: {fileID: 40607636}
   m_GameObject: {fileID: 1542510023}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1573097677
@@ -2638,6 +2649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beginState: 0
   worldBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  deathHeight: -115
 --- !u!4 &1911262115
 Transform:
   m_ObjectHideFlags: 0

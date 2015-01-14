@@ -170,7 +170,7 @@ public abstract class Movement : MonoBehaviour
 	}
 	
 	//Spawns the player at the last checkpoint
-	private void respawnPlayer(bool resetAtStart)
+	public void respawnPlayer(bool resetAtStart)
 	{
 		//Restart race if it is wanted and we would go to the first checkpoint
 		if(resetAtStart && WorldInfo.info.getCurrentSpawn() == WorldInfo.info.getFirstSpawn())

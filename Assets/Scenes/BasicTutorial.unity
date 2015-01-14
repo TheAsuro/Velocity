@@ -656,6 +656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beginState: 0
   worldBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  deathHeight: -10
 --- !u!4 &170045931
 Transform:
   m_ObjectHideFlags: 0
@@ -3924,10 +3925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec9cb8c95a776642848e7b6f522f563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0
   eventComponent:
   - {fileID: 701208794}
-  addToResetList: 1
 --- !u!65 &701208796
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4557,6 +4556,10 @@ Prefab:
     - target: {fileID: 400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
       propertyPath: m_RootOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
+      propertyPath: deathHeight
+      value: -10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
@@ -6443,11 +6446,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec9cb8c95a776642848e7b6f522f563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0
   eventComponent:
   - {fileID: 1849404952}
   - {fileID: 1630277609}
-  addToResetList: 0
 --- !u!23 &1265550523
 Renderer:
   m_ObjectHideFlags: 0

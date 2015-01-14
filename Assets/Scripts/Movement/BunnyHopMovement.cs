@@ -94,6 +94,7 @@ public class BunnyHopMovement : Movement
 
 	public override void FixedMoveUpdate()
 	{
-		
+		if(transform.position.y <= WorldInfo.info.deathHeight)
+			respawnPlayer(true);
 	}
 }

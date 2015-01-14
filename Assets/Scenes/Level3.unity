@@ -1104,6 +1104,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
+      propertyPath: deathHeight
+      value: -15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
   m_RootGameObject: {fileID: 739678412}
@@ -1669,8 +1673,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec9cb8c95a776642848e7b6f522f563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0
-  addToResetList: 1
   eventComponent:
   - {fileID: 650468395}
 --- !u!65 &650468397
@@ -1761,6 +1763,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beginState: 0
   worldBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  deathHeight: -15
 --- !u!4 &739678414
 Transform:
   m_ObjectHideFlags: 0

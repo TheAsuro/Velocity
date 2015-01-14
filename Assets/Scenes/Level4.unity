@@ -85,7 +85,7 @@ GameObject:
   - 33: {fileID: 109047000}
   - 23: {fileID: 109046999}
   - 64: {fileID: 109046998}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - 33: {fileID: 124149912}
   - 23: {fileID: 124149911}
   - 65: {fileID: 124149910}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   - 33: {fileID: 148181902}
   - 23: {fileID: 148181901}
   - 65: {fileID: 148181900}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -335,7 +335,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!1001 &153047195
 Prefab:
   m_ObjectHideFlags: 0
@@ -374,6 +374,10 @@ Prefab:
     - target: {fileID: 400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
+      propertyPath: deathHeight
+      value: -115
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
@@ -454,7 +458,7 @@ GameObject:
   - 33: {fileID: 334507381}
   - 23: {fileID: 334507380}
   - 65: {fileID: 334507379}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -578,7 +582,7 @@ GameObject:
   - 33: {fileID: 469446795}
   - 23: {fileID: 469446794}
   - 65: {fileID: 469446793}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -650,7 +654,7 @@ GameObject:
   - 33: {fileID: 665226591}
   - 23: {fileID: 665226590}
   - 65: {fileID: 665226589}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -722,7 +726,7 @@ GameObject:
   - 33: {fileID: 700877425}
   - 23: {fileID: 700877424}
   - 65: {fileID: 700877423}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -850,7 +854,7 @@ GameObject:
   - 33: {fileID: 801420338}
   - 23: {fileID: 801420337}
   - 64: {fileID: 801420336}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -967,7 +971,7 @@ GameObject:
   - 33: {fileID: 1036343712}
   - 23: {fileID: 1036343711}
   - 65: {fileID: 1036343710}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1039,6 +1043,7 @@ GameObject:
   - 65: {fileID: 1086239073}
   - 114: {fileID: 1086239072}
   - 23: {fileID: 1086239071}
+  - 33: {fileID: 1086239075}
   m_Layer: 12
   m_Name: End
   m_TagString: Checkpoint
@@ -1107,7 +1112,15 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
+--- !u!33 &1086239075
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 3325282, guid: 7c89078e864139a4fb7cf1aa522599a3,
+    type: 2}
+  m_PrefabInternal: {fileID: 755038931}
+  m_GameObject: {fileID: 1086239070}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1131957275
 GameObject:
   m_ObjectHideFlags: 0
@@ -1116,7 +1129,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1131957276}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EndLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1164,7 +1177,7 @@ GameObject:
   - 33: {fileID: 1226306978}
   - 23: {fileID: 1226306977}
   - 64: {fileID: 1226306976}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1286,6 +1299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
+  m_DragThreshold: 5
 --- !u!4 &1376386812
 Transform:
   m_ObjectHideFlags: 0
@@ -1309,7 +1323,7 @@ GameObject:
   - 65: {fileID: 1416031935}
   - 114: {fileID: 1416031934}
   - 114: {fileID: 1416031933}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ExitTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1352,8 +1366,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec9cb8c95a776642848e7b6f522f563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 0
-  addToResetList: 1
   eventComponent:
   - {fileID: 1416031933}
 --- !u!65 &1416031935
@@ -1380,7 +1392,7 @@ GameObject:
   - 33: {fileID: 1616357281}
   - 23: {fileID: 1616357280}
   - 64: {fileID: 1616357279}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1453,7 +1465,7 @@ GameObject:
   - 33: {fileID: 1635848714}
   - 23: {fileID: 1635848713}
   - 65: {fileID: 1635848712}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1525,7 +1537,7 @@ GameObject:
   - 33: {fileID: 1703925228}
   - 23: {fileID: 1703925227}
   - 65: {fileID: 1703925226}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_011
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1597,7 +1609,7 @@ GameObject:
   - 33: {fileID: 1779459503}
   - 23: {fileID: 1779459502}
   - 64: {fileID: 1779459501}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1688,6 +1700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a8f16e683414245b9f6069fd4c8521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inEditor: 0
   introLength: 0
   startFreeze: 3
   introDisplay: {fileID: 0}
@@ -1705,6 +1718,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beginState: 0
   worldBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  deathHeight: -115
 --- !u!4 &1789739069
 Transform:
   m_ObjectHideFlags: 0
@@ -1716,7 +1730,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!1 &1907089123
 GameObject:
   m_ObjectHideFlags: 0
@@ -1728,7 +1742,7 @@ GameObject:
   - 33: {fileID: 1907089127}
   - 23: {fileID: 1907089126}
   - 65: {fileID: 1907089125}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1800,7 +1814,7 @@ GameObject:
   - 33: {fileID: 1938301158}
   - 23: {fileID: 1938301157}
   - 65: {fileID: 1938301156}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1919,7 +1933,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!64 &1948608225
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1988,7 +2002,7 @@ GameObject:
   - 33: {fileID: 2124039645}
   - 23: {fileID: 2124039644}
   - 65: {fileID: 2124039643}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
