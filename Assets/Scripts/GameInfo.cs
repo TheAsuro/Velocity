@@ -222,7 +222,16 @@ public class GameInfo : MonoBehaviour
 		applySettings();
 	}
 
-	//Removes player and plays back the demo
+	//Player hit the goal
+	public void runFinished(float time)
+	{
+		stopDemo();
+		cleanUpPlayer();
+		getCurrentSave().saveIfPersonalBest(time, Application.loadedLevelName);
+		lastTime = time;
+	}
+
+	//Player hit the exit trigger
 	public void levelFinished()
 	{
 		sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName);
@@ -299,14 +308,6 @@ public class GameInfo : MonoBehaviour
 	public void quit()
 	{
 		Application.Quit();
-	}
-
-	public void runFinished(float time)
-	{
-		stopDemo();
-		cleanUpPlayer();
-		getCurrentSave().saveIfPersonalBest(time, Application.loadedLevelName);
-		lastTime = time;
 	}
 
 	public bool isConsoleOpen()

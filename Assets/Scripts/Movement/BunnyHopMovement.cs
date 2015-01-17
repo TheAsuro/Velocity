@@ -13,6 +13,8 @@ public class BunnyHopMovement : Movement
 
 		if(onGround && !Input.GetButton("Jump"))
 		{
+			speed += friction * Time.deltaTime;
+
 			if(speed > 2f)
 			{
 				speed *= (1f - friction * Time.deltaTime);

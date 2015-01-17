@@ -23,9 +23,15 @@ public class BlockInfo
 		return b.GetExtents();
 	}
 
-	public float GetBlockHeight(string blockName)
+	public Vector3 GetBlockRotation(string blockName)
 	{
 		BlockProperties b = blocks[blockName];
-		return b.GetHeight();
+		return b.GetRotation();
+	}
+
+	public Vector3 GetBlockOffset(string blockName)
+	{
+		BlockProperties b = blocks[blockName];
+		return b.GetOffset();
 	}
 }

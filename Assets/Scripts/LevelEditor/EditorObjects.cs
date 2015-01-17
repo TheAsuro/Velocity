@@ -49,21 +49,14 @@ public class EditorObjects : MonoBehaviour
 		return bInfo.GetBlockExtents(blockName);
 	}
 
-	public float GetObjectHeightByName(string blockName)
+	public Vector3 GetObjectRotationByName(string blockName)
 	{
-		return bInfo.GetBlockHeight(blockName);
+		return bInfo.GetBlockRotation(blockName);
 	}
 
-	private Vector3[] ParseObjectExtentsString(string str)
+	public Vector3 GetObjectOffsetByName(string blockName)
 	{
-		string[] extentPositions = str.Split('|');
-		Vector3[] extentsArray = new Vector3[extentPositions.Length];
-
-		for(int i = 0; i < extentPositions.Length; i++)
-		{
-			extentsArray[i] = StringToVector(extentPositions[i]);
-		}
-		return extentsArray;
+		return bInfo.GetBlockOffset(blockName);
 	}
 
 	private Vector3 StringToVector(string input)

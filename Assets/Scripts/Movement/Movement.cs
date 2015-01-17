@@ -123,14 +123,16 @@ public abstract class Movement : MonoBehaviour
 		FixedMoveUpdate();
 	}
 
-	public virtual Vector3 calculateAdditionalVelocity(Vector2 input)
-	{
-		return Vector3.zero;
-	}
-
+	//Will be executed before "calculateAdditionalVelocity", do things like friciton here
 	public virtual Vector3 overrideVelocity(Vector3 input)
 	{
 		return input;
+	}
+
+	//Do movement input here
+	public virtual Vector3 calculateAdditionalVelocity(Vector2 input)
+	{
+		return Vector3.zero;
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -154,6 +156,7 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 
+	//Spawn at a specific checkpoint
 	public void spawnPlayer(Respawn spawn)
 	{
 		if(spawn != null)
@@ -169,7 +172,7 @@ public abstract class Movement : MonoBehaviour
 		}
 	}
 	
-	//Spawns the player at the last checkpoint
+	//Reset and spawn at the last checkpoint
 	public void respawnPlayer(bool resetAtStart)
 	{
 		//Restart race if it is wanted and we would go to the first checkpoint

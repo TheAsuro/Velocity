@@ -182,12 +182,8 @@ public class EditorInfo : MonoBehaviour
 		{
 			Vector3 newPos = pos;
 
-			//If object has a collider, align it to ground
-			if(prefab.collider != null)
-			{
-				float additionalHeight = EditorObjects.OBJ.GetObjectHeightByName(prefab.name);
-				newPos = new Vector3(pos.x, pos.y + additionalHeight, pos.z);
-			}
+			//Rotate the object if it's saved with a wrong rotation
+			Quaternion newRot = Quaternion.Euler(EditorObjects.OBJ.GetObjectRotationByName(prefab.name)) * rot;
 
 			//Round position to grid
 			if(snapToGrid)
@@ -205,7 +201,7 @@ public class EditorInfo : MonoBehaviour
 			}
 			
 			//Create the object
-			GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, rot);
+			GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, newRot);
 			
 			//Set the name to the prefab's name so we know from wich one we created it
 			instance.name = prefab.name;
@@ -219,6 +215,9 @@ public class EditorInfo : MonoBehaviour
 			{
 				EditorObjects.OBJ.AddNonGridObject(instance);
 			}
+
+			//Offset object
+			instance.transform.localPosition += EditorObjects.OBJ.GetObjectOffsetByName(prefab.name);
 		}
 	}
 

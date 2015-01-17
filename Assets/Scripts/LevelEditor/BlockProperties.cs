@@ -4,7 +4,8 @@ public class BlockProperties
 {
 	private string name;
 	private Vector3[] extents;
-	private float height;
+	private Vector3 rotation;
+	private Vector3 offset;
 
 	public BlockProperties(string description)
 	{
@@ -32,11 +33,12 @@ public class BlockProperties
 		}
 	}
 
-	public BlockProperties(string pName, Vector3[] pExtents, float pHeight)
+	public BlockProperties(string pName, Vector3[] pExtents, Vector3 pRotation, Vector3 pOffset)
 	{
 		name = pName;
 		extents = pExtents;
-		height = pHeight;
+		rotation = pRotation;
+		offset = pOffset;
 	}
 
 	private void ReadProperty(string propertyDesc)
@@ -50,8 +52,11 @@ public class BlockProperties
 			case "extent":
 				SetExtents(propertyContent);
 				break;
-			case "y_offset":
-				SetHeight(propertyContent);
+			case "rotation":
+				SetRotation(propertyContent);
+				break;
+			case "offset":
+				SetOffset(propertyContent);
 				break;
 			default:
 				Debug.Log("rip: " + propertyName);
@@ -73,9 +78,16 @@ public class BlockProperties
 		extents = vectors;
 	}
 
-	private void SetHeight(string heightDesc)
+	private void SetRotation(string rotDesc)
 	{
-		height = float.Parse(heightDesc);
+		string[] rotValues = rotDesc.Split(',');
+		rotation = new Vector3(float.Parse(rotValues[0]), float.Parse(rotValues[1]), float.Parse(rotValues[2]));
+	}
+
+	private void SetOffset(string offsetDesc)
+	{
+		string[] offsetValues = offsetDesc.Split(',');
+		offset = new Vector3(float.Parse(offsetValues[0]), float.Parse(offsetValues[1]), float.Parse(offsetValues[2]));
 	}
 
 	public string GetName()
@@ -88,8 +100,13 @@ public class BlockProperties
 		return extents;
 	}
 
-	public float GetHeight()
+	public Vector3 GetRotation()
 	{
-		return height;
+		return rotation;
+	}
+
+	public Vector3 GetOffset()
+	{
+		return offset;
 	}
 }
