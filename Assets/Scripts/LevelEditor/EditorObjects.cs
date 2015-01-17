@@ -130,11 +130,20 @@ public class EditorObjects : MonoBehaviour
 
 	public void RemoveObjectFromGrid(GameObject obj)
 	{
-		Vector3 pos = RoundVectorToGrid(obj.transform.position);
+		List<Vector3> removeList = new List<Vector3>();
 
-		foreach(Vector3 addPos in GetObjectExtentsByName(obj.name))
+		foreach(KeyValuePair<Vector3,GameObject> pair in gridObjects)
 		{
-			gridObjects.Remove(pos + RoundVectorToGrid(addPos));
+			if(pair.Value == obj)
+			{
+				removeList.Add(pair.Key);
+			}
+		}
+
+		while(removeList.Count > 0)
+		{
+			gridObjects.Remove(removeList[0]);
+			removeList.RemoveAt(0);
 		}
 
 		RemoveSpecialObjectCheck(obj);
