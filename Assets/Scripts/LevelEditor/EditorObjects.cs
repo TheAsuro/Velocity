@@ -14,7 +14,7 @@ public class EditorObjects : MonoBehaviour
 
 	private Dictionary<Vector3,GameObject> gridObjects;
 	private List<GameObject> nonGridObjects;
-	private List<GameObject> loadedObjects;
+	private List<GameObject> loadedObjects; //Loaded prefabs
 
 	private GameObject startSpawn;
 

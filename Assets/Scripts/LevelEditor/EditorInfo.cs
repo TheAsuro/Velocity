@@ -19,7 +19,7 @@ public class EditorInfo : MonoBehaviour
 
 	//Selection
 	private GameObject selectionBox = null;
-	//private Vector3 selectionStartPos = NaV; //unused now, may be useful for area spawning
+	private int rotationDirection = 0; //0 = positive z (forward), 1 = positive x (right), 2 = negative z (back), 3 = negative x (left) [TODO]
 
 	//Thing that tells you something went wrong
 	public static Vector3 NaV = new Vector3(float.NaN, float.NaN, float.NaN);
