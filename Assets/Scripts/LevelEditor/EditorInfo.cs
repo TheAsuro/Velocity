@@ -15,6 +15,7 @@ public class EditorInfo : MonoBehaviour
 	private Transform canvasT;
 	private Transform topT;
 	private InputField prefabText;
+	private InputField levelNameText;
 	private Toggle snapToggle;
 
 	//Selection
@@ -33,6 +34,7 @@ public class EditorInfo : MonoBehaviour
 		topT = canvasT.Find("Top");
 		prefabText = topT.Find("PrefabInput").GetComponent<InputField>();
 		prefabText.onEndEdit.AddListener(PrefabSubmit);
+		levelNameText = topT.Find("LevelNameInput").GetComponent<InputField>();
 		snapToggle = topT.Find("SnapToGrid").GetComponent<Toggle>();
 	}
 
@@ -148,6 +150,18 @@ public class EditorInfo : MonoBehaviour
 		}
 	}
 
+	//Script-intern way to toggle snap (updates button too)
+	private void SetSnap(bool doSnap)
+	{
+		snapToGrid = doSnap;
+		snapToggle.isOn = doSnap;
+	}
+
+	public void ClearLevel()
+	{
+		EditorObjects.OBJ.DestroyAllObjects();
+	}
+
 	//Start playing the level
 	public void TestLevel()
 	{
@@ -158,6 +172,23 @@ public class EditorInfo : MonoBehaviour
 			GameInfo.info.getPlayerInfo().prepareRace(1f);
 		}
 		SetInterfaceActive(false);
+	}
+
+	public void SaveLevel()
+	{
+		EditorObjects.OBJ.SaveLevelToFile(levelNameText.text + ".vlvl");
+	}
+
+	public void LoadLevel()
+	{
+		SetSnap(false); //Todo save and load grid placement (needed?)
+		ClearLevel();
+		LevelData data = EditorObjects.OBJ.LoadLevelFromFile(levelNameText.text + ".vlvl");
+
+		foreach(ObjectData oData in data.levelObjects)
+		{
+			SpawnPrefabFromFile(EditorObjects.OBJ.GetPrefabByName(oData.name), oData.position, oData.rotation, oData.scale);
+		}
 	}
 
 	//Stop playing the level
@@ -172,6 +203,15 @@ public class EditorInfo : MonoBehaviour
 	private void SelectPrefab(string name)
 	{
 		selectedPrefab = EditorObjects.OBJ.GetPrefabByName(name);
+	}
+
+	//Spawns a gameobject that was saved in a file
+	private void SpawnPrefabFromFile(GameObject prefab, Vector3 pos, Quaternion rot, Vector3 scale)
+	{
+		GameObject instance = (GameObject)GameObject.Instantiate(prefab, pos, rot);
+		instance.transform.localScale = scale;
+		instance.name = prefab.name;
+		EditorObjects.OBJ.AddNonGridObject(instance);
 	}
 
 	//Instantiates a new prefab

@@ -203,6 +203,11 @@ public class EditorObjects : MonoBehaviour
 		data.WriteToFile(path);
 	}
 
+	public LevelData LoadLevelFromFile(string path)
+	{
+		return LevelData.CreateFromFile(path);
+	}
+
 	//Rotate the sun (the directional light)
 	public void SetSunRotation(Quaternion rot)
 	{
@@ -293,6 +298,21 @@ public class EditorObjects : MonoBehaviour
 				objs.Add(obj);
 		}
 		return objs;
+	}
+
+	public void DestroyAllObjects()
+	{
+		foreach(GameObject obj in gridObjects.Values)
+		{
+			Destroy(obj);
+		}
+		gridObjects.Clear();
+
+		foreach(GameObject obj in nonGridObjects)
+		{
+			Destroy(obj);
+		}
+		nonGridObjects.Clear();
 	}
 
 	public void SetSelectionPlaneVisibility(bool value)
