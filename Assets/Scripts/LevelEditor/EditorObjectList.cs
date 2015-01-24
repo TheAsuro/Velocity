@@ -43,7 +43,14 @@ public class EditorObjectList : MonoBehaviour
 		{
 			int itemPosition = i + pageNumber * 6;
 			if (itemPosition < currentCollectionObjects.Count)
+			{
 				displays[i].SetObject(currentCollectionObjects[itemPosition]);
+			}
+			else
+			{
+				displays[i].SetText("");
+				displays[i].SetImage(null);
+			}	
 		}
 	}
 

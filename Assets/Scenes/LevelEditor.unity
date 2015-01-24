@@ -748,7 +748,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Basic
+  m_Text: 'Platforms
+
+'
 --- !u!222 &299307486
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1847,7 +1849,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Trigger
+  m_Text: Special
 --- !u!222 &774610765
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2811,7 +2813,7 @@ GameObject:
   - 114: {fileID: 1098806774}
   - 114: {fileID: 1098806773}
   m_Layer: 5
-  m_Name: Cubes
+  m_Name: Blocks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2884,7 +2886,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Cubes
+          m_StringArgument: Blocks
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -3401,7 +3403,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ramps
+  m_Text: Blocks
 --- !u!222 &1267306036
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3584,18 +3586,64 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectInfoFile: {fileID: 4900000, guid: fc92861e74ff2d54e8200cdbbf252554, type: 3}
   objectGroups:
+  - name: Blocks
+    objects:
+    - {fileID: 103976, guid: 7efba52dacb7fd74f9f3e7e910f5958c, type: 2}
+    - {fileID: 184216, guid: a94e9bda0b324c34ea12970b5489ef3e, type: 2}
+    - {fileID: 186810, guid: e594375993b920946abb2b0baeef44e1, type: 2}
+    - {fileID: 114590, guid: a091335406a1ff146b8ccaf499b47340, type: 2}
+    - {fileID: 156436, guid: 2d5a8f340ede69b448e2456c1e5268f8, type: 2}
+    - {fileID: 139366, guid: 6430b5a7caa367c41aac50beaa77aecb, type: 2}
+    - {fileID: 130660, guid: b99775a3bc138e84088ef35e0f15ba25, type: 2}
+    - {fileID: 120804, guid: 24db6fdefb9663c469ae1dcdf2a8b6ff, type: 2}
+    - {fileID: 184496, guid: 35525dd270e53744898f0c32953abffe, type: 2}
+    - {fileID: 180298, guid: 3525b9e782c0d5b4780a734a2d94a836, type: 2}
+    - {fileID: 100532, guid: 10fe8b48f7c2e5748be06415cc911e4d, type: 2}
+    - {fileID: 156914, guid: a9d97f1c889b6d94e9f1a0a24e1940b6, type: 2}
+    - {fileID: 119366, guid: 991cbf45e49d52d4da931071ba728012, type: 2}
+    - {fileID: 181940, guid: 98a6b3c81b12f0a43a30a3fc54705ce4, type: 2}
+    - {fileID: 182778, guid: c3b098b332f890742a33fc2e0cc9f55e, type: 2}
+    - {fileID: 138694, guid: 542dfce0825d2424eaf3e8e5dae0883a, type: 2}
+    - {fileID: 156416, guid: ca61bc7cd0f090f4aa8aa278a478d10e, type: 2}
+    - {fileID: 167302, guid: 58965f50e32a9a844982e7f6b9c31b2a, type: 2}
+    - {fileID: 111384, guid: cbfc4b4c182ee7e4ea9865727c62ae25, type: 2}
+    - {fileID: 105048, guid: ba8211369142e8c4d8a9f7c79f1db593, type: 2}
+    - {fileID: 195530, guid: 91bb8b84634ba2043a1e781a60f12137, type: 2}
+    - {fileID: 138226, guid: 3994cf1be534f6f41a2c94f352dac97d, type: 2}
+    - {fileID: 190348, guid: ad6c4a5f0d481a34e83061bfee1ddfba, type: 2}
+    - {fileID: 110718, guid: 7fc2f59b9e0c0dd4da9ce297ddc2c905, type: 2}
+    - {fileID: 140238, guid: c682c80a5d3ea9b4f9e6f19410fa3a93, type: 2}
+    - {fileID: 191504, guid: 6307db398e721fc4fbdb1541277071e6, type: 2}
+    - {fileID: 169866, guid: 4ee564dbb167b5049add92d28eab21db, type: 2}
+    - {fileID: 146224, guid: 8602d4f47b40ee64f945cabb839609ef, type: 2}
+    - {fileID: 122784, guid: 667be731c1baa0543a37b662446957cf, type: 2}
+    - {fileID: 154892, guid: 2a3a7dbb282913841a7287d170796600, type: 2}
+    - {fileID: 150130, guid: a8e0748661e1da446b406a926ec8a67a, type: 2}
+    - {fileID: 115038, guid: 783363a848e9c474f942375930be9372, type: 2}
+    - {fileID: 164366, guid: a36e9f14e8b022a478704b80660f3402, type: 2}
+    - {fileID: 195022, guid: be48661fc3e9ba74d94b9af4d145fe1b, type: 2}
+    - {fileID: 125208, guid: 032d26273fff8274aa34f5111fdf3fb7, type: 2}
+    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
   - name: Platforms
     objects:
-    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
-  - name: Cubes
-    objects:
-    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
+    - {fileID: 196848, guid: 65f0e8ed185b721449d0367263aefc29, type: 2}
+    - {fileID: 130966, guid: 65dbb5039646caa45a108cf4c70e0e09, type: 2}
+    - {fileID: 140304, guid: 38e4438a84b24b842b4b656d4e124360, type: 2}
+    - {fileID: 194076, guid: 2783413d1e1d2874b963798a2c4829e5, type: 2}
+    - {fileID: 198634, guid: d6978cc0fdebbb54ab42a20a96263a1a, type: 2}
+    - {fileID: 128472, guid: 37cb9b873547e21458d99d817968d51c, type: 2}
+    - {fileID: 173154, guid: 6412171f3aae2e94aa022d82ff94b307, type: 2}
+    - {fileID: 167034, guid: 58d51a55344689e479c3bed7c1243f65, type: 2}
+    - {fileID: 144540, guid: e3e9caa033b005f489cd264a5fef5f56, type: 2}
+    - {fileID: 154768, guid: 3d8b9db6ead9dd8469581a605c4062ea, type: 2}
+    - {fileID: 104658, guid: 6e7ef174a169dfd47a742497f5331881, type: 2}
   - name: Ramps
-    objects:
-    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
+    objects: []
   - name: Special
     objects:
-    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
+    - {fileID: 165792, guid: d3fbde93359889b46b92a633ca1c6ae2, type: 2}
+    - {fileID: 100000, guid: e9ea35b948101d14db296be0d6d75ee9, type: 2}
+    - {fileID: 100028, guid: ca4c4804349bf0144830cf119d3649ee, type: 2}
   - name: Custom
     objects:
     - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
@@ -4221,7 +4269,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Special
+  m_Text: Ramps
 --- !u!222 &1547100057
 CanvasRenderer:
   m_ObjectHideFlags: 0
