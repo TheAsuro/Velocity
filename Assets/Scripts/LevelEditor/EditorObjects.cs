@@ -7,6 +7,7 @@ public class EditorObjects : MonoBehaviour
 	public static EditorObjects OBJ;
 
 	public TextAsset objectInfoFile;
+	public List<GameObjectGroup> objectGroups;
 
 	private GameObject mySun;
 	private GameObject mySelectionPlane;
@@ -14,7 +15,6 @@ public class EditorObjects : MonoBehaviour
 
 	private Dictionary<Vector3,GameObject> gridObjects;
 	private List<GameObject> nonGridObjects;
-	private List<GameObject> loadedObjects; //Loaded prefabs
 
 	private GameObject startSpawn;
 
@@ -30,18 +30,25 @@ public class EditorObjects : MonoBehaviour
 		mySun = transform.Find("Sun").gameObject;
 		mySelectionPlane = transform.Find("SelectionPlane").gameObject;
 
-		//Load all prefabs into a list
-		loadedObjects = new List<GameObject>();
-
-		foreach(Object go in Resources.LoadAll("EditorPrefabs"))
-		{
-			if(go.GetType() == typeof(GameObject))
-				loadedObjects.Add((GameObject)go);
-		}
-
 		gridObjects = new Dictionary<Vector3,GameObject>();
 		nonGridObjects = new List<GameObject>();
 		bInfo = new BlockInfo(objectInfoFile);
+	}
+
+	public GameObject GetPrefabByName(string name)
+	{
+		foreach(GameObjectGroup group in objectGroups)
+		{
+			foreach(GameObject go in group.objects)
+			{
+				if(go.name.Equals(name))
+				{
+					return go;
+				}
+			}
+		}
+
+		throw new System.Exception("Prefab with name " + name + " not found!");
 	}
 
 	public Vector3[] GetObjectExtentsByName(string blockName)
@@ -218,47 +225,6 @@ public class EditorObjects : MonoBehaviour
 	public void AddSelectionPlanePosition(Vector3 addVector)
 	{
 		mySelectionPlane.transform.position += addVector;
-	}
-
-	//Returns a list of all loadable prefabs
-	public List<string> GetAllPrefabNames()
-	{
-		List<string> nameList = new List<string>();
-
-		foreach(GameObject go in loadedObjects)
-		{
-			nameList.Add(go.name);
-		}
-
-		return nameList;
-	}
-
-	//Returns a list of all loadable prefabs that start with the given string
-	public List<string> GetAllPrefabNames(string start)
-	{
-		List<string> nameList = new List<string>();
-
-		foreach(GameObject go in loadedObjects)
-		{
-			if(go.name.StartsWith(start))
-				nameList.Add(go.name);
-		}
-
-		return nameList;
-	}
-
-	//Return the prefab that has this name
-	public GameObject GetPrefabByName(string name)
-	{
-		foreach(GameObject go in loadedObjects)
-		{
-			if(go.name.Equals(name))
-			{
-				return go;
-			}
-		}
-
-		return null;
 	}
 
 	public static List<Vector3> GetGridPositions(Vector3 start, Vector3 end)

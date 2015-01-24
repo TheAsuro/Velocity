@@ -5,8 +5,6 @@ using System.Collections.Generic;
 [System.Serializable]
 public class EditorObjectList : MonoBehaviour
 {
-	public List<GameObjectGroup> objectGroups;
-
 	private string currentCollectionName = "";
 	private EditorObjectDisplay[] displays;
 
