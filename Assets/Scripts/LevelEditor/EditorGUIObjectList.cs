@@ -1,9 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EditorGUIObjectList : MonoBehaviour
 {
 	private string currentCollectionName = "";
+	private EditorGUIObjectDisplay[] displays;
+
+	void Awake()
+	{
+		displays = new EditorGUIObjectDisplay[6];
+
+		for(int i = 0; i < 6; i++)
+		{
+			displays[i] = transform.Find("Obj" + (i + 1).ToString()).GetComponent<EditorGUIObjectDisplay>();
+		}
+	}
 
 	public void ToggleToCollection(string collectionName)
 	{
@@ -19,6 +31,7 @@ public class EditorGUIObjectList : MonoBehaviour
 		SetVerticalPositionByCollectionName();
 
 		//TODO do stuff
+		
 	}
 
 	public void SetVisible(bool visible)
@@ -63,6 +76,6 @@ public class EditorGUIObjectList : MonoBehaviour
 	{
 		//TODO fix this
 		RectTransform rt = (RectTransform)gameObject.transform;
-		rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, -95f - slot * ((Screen.height - 40f) / 5f ));
+		rt.position = new Vector3(rt.position.x, -95f - slot * ((Screen.height - 40f) / 5f ), 0f);
 	}
 }
