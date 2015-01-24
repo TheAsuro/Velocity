@@ -2,18 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class EditorGUIObjectList : MonoBehaviour
+[System.Serializable]
+public class EditorObjectList : MonoBehaviour
 {
+	public List<GameObjectGroup> objectGroups;
+
 	private string currentCollectionName = "";
-	private EditorGUIObjectDisplay[] displays;
+	private EditorObjectDisplay[] displays;
 
 	void Awake()
 	{
-		displays = new EditorGUIObjectDisplay[6];
+		displays = new EditorObjectDisplay[6];
 
 		for(int i = 0; i < 6; i++)
 		{
-			displays[i] = transform.Find("Obj" + (i + 1).ToString()).GetComponent<EditorGUIObjectDisplay>();
+			displays[i] = transform.Find("Obj" + (i + 1).ToString()).GetComponent<EditorObjectDisplay>();
 		}
 	}
 

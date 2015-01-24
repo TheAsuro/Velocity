@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class EditorGUIObjectDisplay : MonoBehaviour
+public class EditorObjectDisplay : MonoBehaviour
 {
 	public void SetText(string text)
 	{
