@@ -35,6 +35,19 @@ public class EditorObjects : MonoBehaviour
 		bInfo = new BlockInfo(objectInfoFile);
 	}
 
+	public List<GameObject> GetObjectGroupByName(string name)
+	{
+		foreach(GameObjectGroup group in objectGroups)
+		{
+			if(group.name.Equals(name))
+			{
+				return group.objects;
+			}
+		}
+
+		throw new System.Exception("Object group with name " + name + " not found!");
+	}
+
 	public GameObject GetPrefabByName(string name)
 	{
 		foreach(GameObjectGroup group in objectGroups)

@@ -225,7 +225,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: custom
+          m_StringArgument: Custom
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -269,7 +269,7 @@ GameObject:
   - 114: {fileID: 69810421}
   - 114: {fileID: 69810420}
   m_Layer: 5
-  m_Name: Trigger
+  m_Name: Special
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -342,7 +342,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: trigger
+          m_StringArgument: Special
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -2036,7 +2036,7 @@ GameObject:
   - 114: {fileID: 870151004}
   - 114: {fileID: 870151003}
   m_Layer: 5
-  m_Name: Special
+  m_Name: Ramps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2109,7 +2109,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: special
+          m_StringArgument: Ramps
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -2811,7 +2811,7 @@ GameObject:
   - 114: {fileID: 1098806774}
   - 114: {fileID: 1098806773}
   m_Layer: 5
-  m_Name: Ramps
+  m_Name: Cubes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2884,7 +2884,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: ramps
+          m_StringArgument: Cubes
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -3583,6 +3583,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectInfoFile: {fileID: 4900000, guid: fc92861e74ff2d54e8200cdbbf252554, type: 3}
+  objectGroups:
+  - name: Platforms
+    objects:
+    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
+  - name: Cubes
+    objects:
+    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
+  - name: Ramps
+    objects:
+    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
+  - name: Special
+    objects:
+    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
+  - name: Custom
+    objects:
+    - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
 --- !u!1 &1335289684
 GameObject:
   m_ObjectHideFlags: 0
@@ -3621,9 +3637,9 @@ RectTransform:
   - {fileID: 1730600402}
   m_Father: {fileID: 560605318}
   m_RootOrder: 3
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -450, y: -95}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -450, y: 55}
   m_SizeDelta: {x: 680, y: 110}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1335289686
@@ -3664,19 +3680,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85001e048646211438a97b253f31de07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectGroups:
-  - name: Platforms
-    objects: []
-  - name: Blocks
-    objects: []
-  - name: Ramps
-    objects: []
-  - name: Special
-    objects: []
-  - name: Trigger
-    objects: []
-  - name: Custom
-    objects: []
 --- !u!1 &1368413013
 GameObject:
   m_ObjectHideFlags: 0
@@ -3689,7 +3692,7 @@ GameObject:
   - 114: {fileID: 1368413015}
   - 114: {fileID: 1368413017}
   m_Layer: 5
-  m_Name: Basic
+  m_Name: Platforms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3789,7 +3792,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: basic
+          m_StringArgument: Platforms
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -3865,7 +3868,7 @@ GameObject:
   - 222: {fileID: 1405944468}
   - 114: {fileID: 1405944467}
   m_Layer: 5
-  m_Name: ObjectSelection
+  m_Name: GoupSelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
