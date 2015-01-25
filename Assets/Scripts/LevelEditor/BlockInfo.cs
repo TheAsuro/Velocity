@@ -19,19 +19,15 @@ public class BlockInfo
 
 	public Vector3[] GetBlockExtents(string blockName)
 	{
-		BlockProperties b = blocks[blockName];
-		return b.GetExtents();
-	}
-
-	public Vector3 GetBlockRotation(string blockName)
-	{
-		BlockProperties b = blocks[blockName];
-		return b.GetRotation();
-	}
-
-	public Vector3 GetBlockOffset(string blockName)
-	{
-		BlockProperties b = blocks[blockName];
-		return b.GetOffset();
+		if(blocks.ContainsKey(blockName))
+		{
+			BlockProperties b = blocks[blockName];
+			return b.GetExtents();
+		}
+		else
+		{
+			Vector3[] defaultExtents = { Vector3.zero };
+			return defaultExtents;
+		}
 	}
 }

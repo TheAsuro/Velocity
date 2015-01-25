@@ -234,11 +234,14 @@ public class GameInfo : MonoBehaviour
 	//Player hit the exit trigger
 	public void levelFinished()
 	{
-		sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName);
-		GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
-		lastDemo = myPlayer.getDemo();
-		setPlayerInfo(null);
-		playLastDemo();
+		if(getCurrentSave() != null)
+		{
+			sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName);
+			GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
+			lastDemo = myPlayer.getDemo();
+			setPlayerInfo(null);
+			playLastDemo();
+		}
 	}
 
 	//Plays a sound at the player position

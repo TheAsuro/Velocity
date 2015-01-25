@@ -71,12 +71,12 @@ public class EditorObjects : MonoBehaviour
 
 	public Vector3 GetObjectRotationByName(string blockName)
 	{
-		return bInfo.GetBlockRotation(blockName);
+		return GetPrefabByName(blockName).transform.rotation.eulerAngles;
 	}
 
 	public Vector3 GetObjectOffsetByName(string blockName)
 	{
-		return bInfo.GetBlockOffset(blockName);
+		return GetPrefabByName(blockName).transform.position;
 	}
 
 	private Vector3 StringToVector(string input)
