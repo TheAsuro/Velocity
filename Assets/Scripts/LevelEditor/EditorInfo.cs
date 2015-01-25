@@ -203,6 +203,7 @@ public class EditorInfo : MonoBehaviour
 	public void SelectPrefab(string name)
 	{
 		selectedPrefab = EditorObjects.OBJ.GetPrefabByName(name);
+		prefabText.text = name;
 	}
 
 	//Spawns a gameobject that was saved in a file

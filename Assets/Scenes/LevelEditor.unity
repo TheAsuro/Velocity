@@ -172,10 +172,10 @@ RectTransform:
   - {fileID: 672150186}
   m_Father: {fileID: 1405944466}
   m_RootOrder: 4
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: .200000003}
-  m_AnchoredPosition: {x: 0, y: 2.5}
-  m_SizeDelta: {x: -10, y: -5}
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: 200, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &64411202
 MonoBehaviour:
@@ -289,10 +289,10 @@ RectTransform:
   - {fileID: 1859518035}
   m_Father: {fileID: 1405944466}
   m_RootOrder: 3
-  m_AnchorMin: {x: 0, y: .200000003}
-  m_AnchorMax: {x: 1, y: .400000006}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -10, y: 0}
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: 100, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &69810420
 MonoBehaviour:
@@ -517,9 +517,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 345505600}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1335289688}
+        m_MethodName: SetVisible
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
@@ -1087,9 +1087,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 345505600}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1335289688}
+        m_MethodName: SetVisible
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
@@ -2094,10 +2094,10 @@ RectTransform:
   - {fileID: 1300041875}
   m_Father: {fileID: 1405944466}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: .400000006}
-  m_AnchorMax: {x: 1, y: .600000024}
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -10, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &870151003
 MonoBehaviour:
@@ -2567,9 +2567,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 345505600}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1335289688}
+        m_MethodName: SetVisible
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
@@ -2893,10 +2893,10 @@ RectTransform:
   - {fileID: 1118867207}
   m_Father: {fileID: 1405944466}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: .600000024}
-  m_AnchorMax: {x: 1, y: .800000012}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -10, y: 0}
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: -100, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1098806773
 MonoBehaviour:
@@ -3245,9 +3245,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 345505600}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1335289688}
+        m_MethodName: SetVisible
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
@@ -3736,7 +3736,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1335289685
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3757,9 +3757,9 @@ RectTransform:
   - {fileID: 1730600402}
   m_Father: {fileID: 560605318}
   m_RootOrder: 3
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -450, y: 55}
+  m_AnchorMin: {x: .5, y: 0}
+  m_AnchorMax: {x: .5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 165}
   m_SizeDelta: {x: 680, y: 110}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1335289686
@@ -3832,10 +3832,10 @@ RectTransform:
   - {fileID: 1255025112}
   m_Father: {fileID: 1405944466}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: .800000012}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -2.5}
-  m_SizeDelta: {x: -10, y: -5}
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: -200, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1368413015
 MonoBehaviour:
@@ -4011,10 +4011,10 @@ RectTransform:
   - {fileID: 64411201}
   m_Father: {fileID: 560605318}
   m_RootOrder: 1
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -55, y: -20}
-  m_SizeDelta: {x: 110, y: -40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 55}
+  m_SizeDelta: {x: 0, y: 110}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1405944467
 MonoBehaviour:
@@ -4486,9 +4486,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 345505600}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1335289688}
+        m_MethodName: SetVisible
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
@@ -4768,9 +4768,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 345505600}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1335289688}
+        m_MethodName: SetVisible
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
