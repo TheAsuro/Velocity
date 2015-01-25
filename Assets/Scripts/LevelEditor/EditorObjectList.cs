@@ -14,7 +14,7 @@ public class EditorObjectList : MonoBehaviour
 	{
 		displays = new EditorObjectDisplay[6];
 
-		for(int i = 0; i < 6; i++)
+		for(int i = 0; i < displays.Length; i++)
 		{
 			displays[i] = transform.Find("Obj" + (i + 1).ToString()).GetComponent<EditorObjectDisplay>();
 		}
@@ -51,6 +51,26 @@ public class EditorObjectList : MonoBehaviour
 				displays[i].SetText("");
 				displays[i].SetImage(null);
 			}	
+		}
+	}
+
+	public void addPageNumber(int add)
+	{
+		if(currentCollectionObjects != null)
+		{
+			pageNumber += add;
+
+			if(pageNumber < 0)
+				pageNumber = 0;
+
+			if(pageNumber * 6 >= currentCollectionObjects.Count)
+			{
+				pageNumber -= add;
+			}
+			else
+			{
+				UpdateDisplays();
+			}
 		}
 	}
 

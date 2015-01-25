@@ -6,6 +6,13 @@ using System.Collections;
 public class EditorObjectDisplay : MonoBehaviour
 {
 	private GameObject displayedObject;
+	private EditorInfo eInfo;
+
+	void Awake()
+	{
+		eInfo = GameObject.Find("Camera").GetComponent<EditorInfo>();
+		GetComponent<Button>().onClick.AddListener(OnClick);
+	}
 
 	public void SetText(string text)
 	{
@@ -21,5 +28,18 @@ public class EditorObjectDisplay : MonoBehaviour
 	{
 		displayedObject = obj;
 		SetText(obj.name);
+	}
+
+	private string GetText()
+	{
+		return transform.Find("Text").gameObject.GetComponent<Text>().text;
+	}
+
+	private void OnClick()
+	{
+		if(GetText() != "")
+		{
+			eInfo.SelectPrefab(GetText());
+		}
 	}
 }

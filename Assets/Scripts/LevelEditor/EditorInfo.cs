@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ public class EditorInfo : MonoBehaviour
 	private InputField prefabText;
 	private InputField levelNameText;
 	private Toggle snapToggle;
+	private EventSystem eSys;
 
 	//Selection
 	private GameObject selectionBox = null;
@@ -36,20 +38,18 @@ public class EditorInfo : MonoBehaviour
 		prefabText.onEndEdit.AddListener(PrefabSubmit);
 		levelNameText = topT.Find("LevelNameInput").GetComponent<InputField>();
 		snapToggle = topT.Find("SnapToGrid").GetComponent<Toggle>();
+		eSys = GameObject.Find("EventSystem").GetComponent<EventSystem>();
 	}
 
 	void Update()
 	{
 		DrawSelectionBox();
 
-		//Start selection with lmb
-		if(Input.GetMouseButtonDown(0))
-		{
-			//selectionStartPos = GetMouseOnSelectionPlane();
-		}
+		//Is the cursor over a gui element
+		bool onGui = eSys.currentSelectedGameObject != null;
 
 		//Spawn object when releasing lmb
-		if(Input.GetMouseButtonUp(0))
+		if(Input.GetMouseButtonUp(0) && !onGui)
 		{
 			//Spawn object at mouse release point
 			Vector3 pos = GetMouseOnSelectionPlane();
@@ -57,7 +57,7 @@ public class EditorInfo : MonoBehaviour
 		}
 
 		//Remove object with shift + lmb
-		if(Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonUp(1))
+		if(Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonUp(1) && !onGui)
 		{
 			RemoveSelectedObject();
 		}
@@ -200,7 +200,7 @@ public class EditorInfo : MonoBehaviour
 	}
 
 	//Selects the prefab by name
-	private void SelectPrefab(string name)
+	public void SelectPrefab(string name)
 	{
 		selectedPrefab = EditorObjects.OBJ.GetPrefabByName(name);
 	}
