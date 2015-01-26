@@ -79,6 +79,11 @@ public class EditorObjects : MonoBehaviour
 		return GetPrefabByName(blockName).transform.position;
 	}
 
+	public Vector3 GetObjectScaleByName(string blockName)
+	{
+		return GetPrefabByName(blockName).transform.localScale;
+	}
+
 	private Vector3 StringToVector(string input)
 	{
 		string[] inputValues = input.Split(',');

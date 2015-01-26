@@ -187,7 +187,7 @@ public class EditorInfo : MonoBehaviour
 
 		foreach(ObjectData oData in data.levelObjects)
 		{
-			SpawnPrefabFromFile(EditorObjects.OBJ.GetPrefabByName(oData.name), oData.position, oData.rotation, oData.scale);
+			SpawnPreparedPrefab(EditorObjects.OBJ.GetPrefabByName(oData.name), oData.position, oData.rotation, oData.scale);
 		}
 	}
 
@@ -206,8 +206,8 @@ public class EditorInfo : MonoBehaviour
 		prefabText.text = name;
 	}
 
-	//Spawns a gameobject that was saved in a file
-	private void SpawnPrefabFromFile(GameObject prefab, Vector3 pos, Quaternion rot, Vector3 scale)
+	//Instantiates a prefab with already corrected values
+	private void SpawnPreparedPrefab(GameObject prefab, Vector3 pos, Quaternion rot, Vector3 scale)
 	{
 		GameObject instance = (GameObject)GameObject.Instantiate(prefab, pos, rot);
 		instance.transform.localScale = scale;
@@ -215,7 +215,7 @@ public class EditorInfo : MonoBehaviour
 		EditorObjects.OBJ.AddNonGridObject(instance);
 	}
 
-	//Instantiates a new prefab
+	//Instantiates a prefab
 	private void SpawnPrefab(GameObject prefab, Vector3 pos, Quaternion rot)
 	{
 		//Check if we have a valid position and object
@@ -243,6 +243,7 @@ public class EditorInfo : MonoBehaviour
 			
 			//Create the object
 			GameObject instance = (GameObject)GameObject.Instantiate(prefab, newPos, newRot);
+			instance.transform.localScale = EditorObjects.OBJ.GetObjectScaleByName(prefab.name);
 			
 			//Set the name to the prefab's name so we know from wich one we created it
 			instance.name = prefab.name;
