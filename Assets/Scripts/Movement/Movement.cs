@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Movement : MonoBehaviour
+public class Movement : MonoBehaviour
 {
 	public float accel = 200f;
 	public float airAccel = 200f;
@@ -11,7 +11,7 @@ public abstract class Movement : MonoBehaviour
 	public float jumpForce = 5f;
 	public LayerMask groundLayers;
 
-	public GameObject camObj;
+	private GameObject camObj;
 	public bool crouched = false;
 	public float lastJumpPress = -1f;
 	public float jumpPressDuration = 0.1f;
