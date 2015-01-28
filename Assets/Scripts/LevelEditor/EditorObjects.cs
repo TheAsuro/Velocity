@@ -219,7 +219,7 @@ public class EditorObjects : MonoBehaviour
 			ObjectData oData = new ObjectData();
 			oData.name = obj.name;
 			oData.position = obj.transform.localPosition;
-			oData.rotation = obj.transform.localRotation;
+			oData.eulerRotation = obj.transform.localRotation.eulerAngles;
 			oData.scale = obj.transform.localScale;
 			allObj.Add(oData);
 		}

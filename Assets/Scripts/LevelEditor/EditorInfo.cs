@@ -187,7 +187,7 @@ public class EditorInfo : MonoBehaviour
 
 		foreach(ObjectData oData in data.levelObjects)
 		{
-			SpawnPreparedPrefab(EditorObjects.OBJ.GetPrefabByName(oData.name), oData.position, oData.rotation, oData.scale);
+			SpawnPreparedPrefab(EditorObjects.OBJ.GetPrefabByName(oData.name), oData.position, Quaternion.Euler(oData.eulerRotation), oData.scale);
 		}
 	}
 

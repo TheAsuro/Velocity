@@ -9,7 +9,7 @@ public class ObjectData
 	public string name;
 
 	public Vector3 position;
-	public Quaternion rotation;
+	public Vector3 eulerRotation;
 	public Vector3 scale;
 
 	[XmlArray("Children")]
