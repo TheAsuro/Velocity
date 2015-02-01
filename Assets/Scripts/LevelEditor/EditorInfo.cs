@@ -87,7 +87,7 @@ public class EditorInfo : MonoBehaviour
 		//Draw box only when cursor is on a valid square, rmb and shift are not pressed and snap to grid
 		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && snapToGrid)
 		{
-			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos) + new Vector3(0f, 0.5f, 0f);
+			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos, EditorObjects.OBJ.gridScale) + new Vector3(0f, 0.5f, 0f);
 
 			if(selectionBox == null)
 			{
@@ -229,7 +229,7 @@ public class EditorInfo : MonoBehaviour
 			//Round position to grid
 			if(snapToGrid)
 			{
-				newPos = EditorObjects.RoundXZToGrid(newPos);
+				newPos = EditorObjects.RoundXZToGrid(newPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale);
 			}
 
 			//The extents of the prefab will prevent placement of other blocks

@@ -13,6 +13,9 @@ public class EditorObjects : MonoBehaviour
 	private GameObject mySelectionPlane;
 	private BlockInfo bInfo;
 
+	public float gridScale = 1f;
+	public float verticalGridScale = 0.25f;
+
 	private Dictionary<Vector3,GameObject> gridObjects;
 	private List<GameObject> nonGridObjects;
 
@@ -143,11 +146,11 @@ public class EditorObjects : MonoBehaviour
 
 	public void AddObjectToGrid(GameObject obj)
 	{
-		Vector3 pos = RoundVectorToGrid(obj.transform.position);
+		Vector3 pos = RoundVectorToGrid(obj.transform.position, gridScale);
 
 		foreach(Vector3 addPos in GetObjectExtentsByName(obj.name))
 		{
-			gridObjects.Add(pos + RoundVectorToGrid(addPos), obj);
+			gridObjects.Add(pos + RoundVectorToGrid(addPos, gridScale), obj);
 		}
 
 		SpecialObjectCheck(obj);
@@ -176,38 +179,31 @@ public class EditorObjects : MonoBehaviour
 
 	public bool IsGridPositionFree(Vector3 position)
 	{
-		return !gridObjects.ContainsKey(RoundVectorToGrid(position));
+		return !gridObjects.ContainsKey(RoundVectorToGrid(position, gridScale));
 	}
 
 	public GameObject GetObjectAtGridPosition(Vector3 position)
 	{
-		return gridObjects[RoundVectorToGrid(position)];
+		return gridObjects[RoundVectorToGrid(position, gridScale)];
 	}
 
-	public static Vector3 RoundVectorToGrid(Vector3 input)
+	public static Vector3 RoundVectorToGrid(Vector3 input, float grid)
 	{
-		return new Vector3(Mathf.RoundToInt(input.x), Mathf.RoundToInt(input.y), Mathf.RoundToInt(input.z));
+		return new Vector3(roundFloat(input.x, grid), roundFloat(input.y, grid), roundFloat(input.z, grid));
 	}
 
-	public static Vector3 RoundXZToGrid(Vector3 input)
+	public static Vector3 RoundXZToGrid(Vector3 input, float grid, float vGrid)
 	{
-		return new Vector3(roundFloat(input.x), input.y, roundFloat(input.z));
+		return new Vector3(roundFloat(input.x, grid), roundFloat(input.y, vGrid), roundFloat(input.z, grid));
 	}
 
-	private static int roundFloat(float input)
+	private static float roundFloat(float input, float grid)
 	{
-		float temp = input;
-		while(Mathf.Abs(temp) >= 1f)
-		{
-			temp -= Mathf.Sign(temp) * 1f;
-		}
-		
-		if(Mathf.Abs(temp) > 0.99f)
-		{
-			return Mathf.RoundToInt(input) + 1;
-		}
-
-		return Mathf.RoundToInt(input);
+		float a = input / grid;
+		a += 0.5f;
+		a = Mathf.Floor(a);
+		a *= grid;
+		return a;
 	}
 
 	//Saves the current level to a xml file
@@ -243,33 +239,6 @@ public class EditorObjects : MonoBehaviour
 	public void AddSelectionPlanePosition(Vector3 addVector)
 	{
 		mySelectionPlane.transform.position += addVector;
-	}
-
-	public static List<Vector3> GetGridPositions(Vector3 start, Vector3 end)
-	{
-		Vector3 roundStart = RoundVectorToGrid(start);
-		Vector3 roundEnd = RoundVectorToGrid(end);
-
-		List<Vector3> temp = new List<Vector3>();
-
-		if(roundStart.Equals(roundEnd))
-		{
-			temp.Add(roundStart);
-			return temp;
-		}
-
-		for(float x = roundStart.x; x <= roundEnd.x; x++)
-		{
-			for(float y = roundStart.y; y <= roundEnd.y; y++)
-			{
-				for(float z = roundStart.z; z <= roundEnd.z; z++)
-				{
-					temp.Add(new Vector3(x,y,z));
-				}
-			}
-		}
-
-		return temp;
 	}
 
 	public List<GameObject> GetAllObjects()
