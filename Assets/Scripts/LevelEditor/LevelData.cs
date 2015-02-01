@@ -15,7 +15,9 @@ public class LevelData
 	{
 		XmlSerializer serializer = new XmlSerializer(typeof(LevelData));
 		FileStream stream = new FileStream(path, FileMode.Open);
-		return (LevelData)serializer.Deserialize(stream);
+		LevelData returnData = (LevelData)serializer.Deserialize(stream);
+		stream.Dispose();
+		return returnData;
 	}
 
 	public void WriteToFile(string path)
@@ -23,5 +25,6 @@ public class LevelData
 		XmlSerializer serializer = new XmlSerializer(typeof(LevelData));
 		FileStream stream = new FileStream(path, FileMode.Create);
 		serializer.Serialize(stream, this);
+		stream.Dispose();
 	}
 }
