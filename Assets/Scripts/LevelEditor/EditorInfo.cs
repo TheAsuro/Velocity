@@ -70,7 +70,7 @@ public class EditorInfo : MonoBehaviour
 
 		//Move spawn plane with scroll wheel
 		float scrollCount = Input.GetAxis("Mouse ScrollWheel");
-		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f, 0f));
+		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * EditorObjects.OBJ.verticalGridScale, 0f));
 	}
 
 	private void SetInterfaceActive(bool value)
@@ -87,7 +87,7 @@ public class EditorInfo : MonoBehaviour
 		//Draw box only when cursor is on a valid square, rmb and shift are not pressed and snap to grid
 		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && snapToGrid)
 		{
-			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos, EditorObjects.OBJ.gridScale) + new Vector3(0f, 0.5f, 0f);
+			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale) + new Vector3(0f, 0.2f, 0f);
 
 			if(selectionBox == null)
 			{
@@ -229,7 +229,7 @@ public class EditorInfo : MonoBehaviour
 			//Round position to grid
 			if(snapToGrid)
 			{
-				newPos = EditorObjects.RoundXZToGrid(newPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale);
+				newPos = EditorObjects.RoundVectorToGrid(newPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale);
 			}
 
 			//The extents of the prefab will prevent placement of other blocks

@@ -3740,6 +3740,9 @@ MonoBehaviour:
     - {fileID: 177914, guid: 134444ae044953749b88c5e1aa6cd9c0, type: 2}
     - {fileID: 182404, guid: a6521c5f6e205384e8eb4a58fcdd6510, type: 2}
     - {fileID: 144892, guid: ca122b336de78ae41a9825adbef19d2d, type: 2}
+    - {fileID: 158354, guid: b17afd1c1d13de541b56f5527d22ca15, type: 2}
+    - {fileID: 151134, guid: e620b00086747a848b6ce179e886a51f, type: 2}
+    - {fileID: 191878, guid: 549f46e31ad723e4692cc2d482dd8cf6, type: 2}
     - {fileID: 150408, guid: 439ee258a00880740823e1806cbf6a83, type: 2}
     - {fileID: 187516, guid: aedac8fb37bf72048b1563bc3c4b041f, type: 2}
     - {fileID: 167230, guid: 05a8973df8f376e41babcb687ea47dcc, type: 2}
@@ -3755,8 +3758,8 @@ MonoBehaviour:
   - name: Custom
     objects:
     - {fileID: 196948, guid: 51ded17fcfb386845b06a663e7ec8808, type: 2}
-  gridScale: 1
-  verticalGridScale: .25
+  gridScale: 2
+  verticalGridScale: .400000006
 --- !u!1 &1335289684
 GameObject:
   m_ObjectHideFlags: 0
@@ -6023,7 +6026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155533a379bc2e647ae861abbc9122da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scaleFactor: 1
+  scaleFactor: .5
   textures:
   - _MainTex
   scaleMode: 0

@@ -13,8 +13,8 @@ public class EditorObjects : MonoBehaviour
 	private GameObject mySelectionPlane;
 	private BlockInfo bInfo;
 
-	public float gridScale = 1f;
-	public float verticalGridScale = 0.25f;
+	public float gridScale = 4f;
+	public float verticalGridScale = 1f;
 
 	private Dictionary<Vector3,GameObject> gridObjects;
 	private List<GameObject> nonGridObjects;
@@ -146,11 +146,11 @@ public class EditorObjects : MonoBehaviour
 
 	public void AddObjectToGrid(GameObject obj)
 	{
-		Vector3 pos = RoundVectorToGrid(obj.transform.position, gridScale);
+		Vector3 pos = RoundVectorToGrid(obj.transform.position, gridScale, verticalGridScale);
 
 		foreach(Vector3 addPos in GetObjectExtentsByName(obj.name))
 		{
-			gridObjects.Add(pos + RoundVectorToGrid(addPos, gridScale), obj);
+			gridObjects.Add(pos + RoundVectorToGrid(addPos, gridScale, verticalGridScale), obj);
 		}
 
 		SpecialObjectCheck(obj);
@@ -179,20 +179,15 @@ public class EditorObjects : MonoBehaviour
 
 	public bool IsGridPositionFree(Vector3 position)
 	{
-		return !gridObjects.ContainsKey(RoundVectorToGrid(position, gridScale));
+		return !gridObjects.ContainsKey(RoundVectorToGrid(position, gridScale, verticalGridScale));
 	}
 
 	public GameObject GetObjectAtGridPosition(Vector3 position)
 	{
-		return gridObjects[RoundVectorToGrid(position, gridScale)];
+		return gridObjects[RoundVectorToGrid(position, gridScale, verticalGridScale)];
 	}
 
-	public static Vector3 RoundVectorToGrid(Vector3 input, float grid)
-	{
-		return new Vector3(roundFloat(input.x, grid), roundFloat(input.y, grid), roundFloat(input.z, grid));
-	}
-
-	public static Vector3 RoundXZToGrid(Vector3 input, float grid, float vGrid)
+	public static Vector3 RoundVectorToGrid(Vector3 input, float grid, float vGrid)
 	{
 		return new Vector3(roundFloat(input.x, grid), roundFloat(input.y, vGrid), roundFloat(input.z, grid));
 	}
