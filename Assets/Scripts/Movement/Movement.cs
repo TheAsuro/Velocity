@@ -121,6 +121,10 @@ public class Movement : MonoBehaviour
 		{
 			rigidbody.velocity = tempVelocity;
 		}
+
+		//Kill player if below level
+		if(transform.position.y <= WorldInfo.info.deathHeight)
+			respawnPlayer(true);
 	}
 
 	public virtual Vector3 calculateFriction(Vector3 currentVelocity)
