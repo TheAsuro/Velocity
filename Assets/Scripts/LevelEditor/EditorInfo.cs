@@ -4,11 +4,19 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
+public struct previewImageElement
+{
+	public string name;
+	public Texture2D image;
+}
+
 public class EditorInfo : MonoBehaviour
 {
 	public LayerMask spawnLayers;
 	public LayerMask removeLayers;
 	public GameObject selectionBoxPrefab;
+	public previewImageElement[] previewImages;
 
 	private GameObject selectedPrefab;
 
@@ -282,6 +290,18 @@ public class EditorInfo : MonoBehaviour
 			return NaV;
 
 		return hitInfo.point;
+	}
+
+	public Texture2D GetObjectPreview(string name)
+	{
+		foreach(previewImageElement el in previewImages)
+		{
+			if(el.name.Equals(name))
+			{
+				return el.image;
+			}
+		}
+		return null;
 	}
 
 	//Casts a ray from the camera into the direction of the mouse cursor

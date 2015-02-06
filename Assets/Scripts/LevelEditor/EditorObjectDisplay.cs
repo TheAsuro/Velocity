@@ -4,7 +4,6 @@ using System.Collections;
 
 public class EditorObjectDisplay : MonoBehaviour
 {
-	private GameObject displayedObject;
 	private EditorInfo eInfo;
 
 	void Awake()
@@ -20,13 +19,14 @@ public class EditorObjectDisplay : MonoBehaviour
 
 	public void SetImage(Texture texture)
 	{
-		transform.Find("RawImage").gameObject.GetComponent<RawImage>().texture = texture;
+		if(texture != null)
+			transform.Find("RawImage").gameObject.GetComponent<RawImage>().texture = texture;
 	}
 
 	public void SetObject(GameObject obj)
 	{
-		displayedObject = obj;
 		SetText(obj.name);
+		SetImage(Camera.main.GetComponent<EditorInfo>().GetObjectPreview(obj.name));
 	}
 
 	private string GetText()
