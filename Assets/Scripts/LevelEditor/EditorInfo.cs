@@ -30,7 +30,7 @@ public class EditorInfo : MonoBehaviour
 
 	//Selection
 	private GameObject selectionBox = null;
-	private int rotationDirection = 0; //0 = positive z (forward), 1 = positive x (right), 2 = negative z (back), 3 = negative x (left) [TODO]
+	private int rotationDirection = 0; //0 = positive z (forward), 1 = positive x (right), 2 = negative z (back), 3 = negative x (left)
 
 	//Thing that tells you something went wrong
 	public static Vector3 NaV = new Vector3(float.NaN, float.NaN, float.NaN);
@@ -56,12 +56,20 @@ public class EditorInfo : MonoBehaviour
 		//Is the cursor over a gui element
 		bool onGui = eSys.currentSelectedGameObject != null;
 
+		//Rotate with rmb
+		if(Input.GetKeyDown("e") && !onGui)
+		{
+			rotationDirection++;
+			if(rotationDirection > 3)
+				rotationDirection = 0;
+		}
+
 		//Spawn object when releasing lmb
 		if(Input.GetMouseButtonUp(0) && !onGui)
 		{
 			//Spawn object at mouse release point
 			Vector3 pos = GetMouseOnSelectionPlane();
-			SpawnPrefab(selectedPrefab, pos, Quaternion.identity);
+			SpawnPrefab(selectedPrefab, pos, Quaternion.Euler(0f, 0f, rotationDirection * 90f));
 		}
 
 		//Remove object with shift + lmb
@@ -93,7 +101,7 @@ public class EditorInfo : MonoBehaviour
 		Vector3 selectionPos = GetMouseOnSelectionPlane();
 
 		//Draw box only when cursor is on a valid square, rmb and shift are not pressed and snap to grid
-		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && snapToGrid)
+		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && snapToGrid)
 		{
 			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale) + new Vector3(0f, 0.2f, 0f);
 
