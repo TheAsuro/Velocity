@@ -4,11 +4,8 @@ using System.Collections;
 
 public class EditorObjectDisplay : MonoBehaviour
 {
-	private EditorInfo eInfo;
-
 	void Awake()
 	{
-		eInfo = GameObject.Find("Camera").GetComponent<EditorInfo>();
 		GetComponent<Button>().onClick.AddListener(OnClick);
 	}
 
@@ -26,7 +23,7 @@ public class EditorObjectDisplay : MonoBehaviour
 	public void SetObject(GameObject obj)
 	{
 		SetText(obj.name);
-		SetImage(Camera.main.GetComponent<EditorInfo>().GetObjectPreview(obj.name));
+		SetImage(EditorInfo.info.GetObjectPreview(obj.name));
 	}
 
 	private string GetText()
@@ -38,7 +35,7 @@ public class EditorObjectDisplay : MonoBehaviour
 	{
 		if(GetText() != "")
 		{
-			eInfo.SelectPrefab(GetText());
+			EditorInfo.info.SelectPrefab(GetText());
 		}
 	}
 }

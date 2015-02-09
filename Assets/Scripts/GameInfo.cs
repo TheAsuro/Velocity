@@ -234,13 +234,21 @@ public class GameInfo : MonoBehaviour
 	//Player hit the exit trigger
 	public void levelFinished()
 	{
+		GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
+		lastDemo = myPlayer.getDemo();
+		setPlayerInfo(null);
+
+		//If a player save is loaded, play demo and send to leaderboard
 		if(getCurrentSave() != null)
 		{
 			sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName);
-			GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
-			lastDemo = myPlayer.getDemo();
-			setPlayerInfo(null);
 			playLastDemo();
+		}
+
+		//If we are in editor, stop the test run
+		if(EditorInfo.info != null)
+		{
+			EditorInfo.info.EndTest();
 		}
 	}
 
@@ -581,6 +589,7 @@ public class GameInfo : MonoBehaviour
 	{
 		if(info == null)
 		{
+			//Destroy the player if there still is one
 			if(myPlayer != null)
 			{
 				Destroy(myPlayer.gameObject);

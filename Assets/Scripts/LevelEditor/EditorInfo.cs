@@ -13,6 +13,8 @@ public struct previewImageElement
 
 public class EditorInfo : MonoBehaviour
 {
+	public static EditorInfo info;
+
 	public LayerMask spawnLayers;
 	public LayerMask removeLayers;
 	public GameObject selectionBoxPrefab;
@@ -40,6 +42,15 @@ public class EditorInfo : MonoBehaviour
 
 	void Awake()
 	{
+		if(EditorInfo.info == null)
+		{
+			info = this;
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
+
 		canvasT = transform.parent.Find("Canvas");
 		topT = canvasT.Find("Top");
 		prefabText = topT.Find("PrefabInput").GetComponent<InputField>();
@@ -101,7 +112,7 @@ public class EditorInfo : MonoBehaviour
 		Vector3 selectionPos = GetMouseOnSelectionPlane();
 
 		//Draw box only when cursor is on a valid square, rmb and shift are not pressed and snap to grid
-		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && snapToGrid)
+		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && snapToGrid)
 		{
 			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale) + new Vector3(0f, 0.2f, 0f);
 

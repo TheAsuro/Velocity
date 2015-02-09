@@ -325,6 +325,7 @@ public class MainMenu : MonoBehaviour
 
 	public void loadEditor()
 	{
+		GameInfo.info.setCurrentSave(null);
 		Application.LoadLevel("LevelEditor");
 	}
 
