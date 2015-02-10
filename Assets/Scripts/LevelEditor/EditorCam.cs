@@ -11,9 +11,12 @@ public class EditorCam : MonoBehaviour
 
 	void Update()
 	{
-		Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")) * camMoveSpeed * Time.deltaTime;
-		Quaternion viewRot = transform.rotation;
-		transform.position = transform.position + viewRot * input;
+		if(GameInfo.info.getPlayerInfo() == null || !GameInfo.info.getPlayerInfo().editorMode)
+		{
+			Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")) * camMoveSpeed * Time.deltaTime;
+			Quaternion viewRot = transform.rotation;
+			transform.position = transform.position + viewRot * input;
+		}
 
 		if(Input.GetMouseButton(1))
 		{
