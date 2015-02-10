@@ -216,8 +216,9 @@ public class PlayerInfo : MonoBehaviour
 		return true;
 	}
 
-	public void enableEditorMode()
+	public bool editorMode
 	{
-		myRaceScript.enableEditorMode();
+		set { myRaceScript.setEditorMode(value); }
+		get { return myRaceScript.getEditorMode(); }
 	}
 }

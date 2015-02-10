@@ -214,10 +214,7 @@ public class GameInfo : MonoBehaviour
 			myPlayer.setWorldBackgroundColor(WorldInfo.info.worldBackgroundColor);
 		}
 
-		if(startInEditorMode)
-		{
-			myPlayer.enableEditorMode();
-		}
+		myPlayer.editorMode = startInEditorMode;
 		
 		applySettings();
 	}
@@ -236,7 +233,12 @@ public class GameInfo : MonoBehaviour
 	{
 		GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
 		lastDemo = myPlayer.getDemo();
-		setPlayerInfo(null);
+
+		//If we are in editor, stop the test run
+		if(myPlayer.editorMode)
+		{
+			EditorInfo.info.EndTest();
+		}
 
 		//If a player save is loaded, play demo and send to leaderboard
 		if(getCurrentSave() != null)
@@ -245,11 +247,7 @@ public class GameInfo : MonoBehaviour
 			playLastDemo();
 		}
 
-		//If we are in editor, stop the test run
-		if(EditorInfo.info != null)
-		{
-			EditorInfo.info.EndTest();
-		}
+		setPlayerInfo(null);
 	}
 
 	//Plays a sound at the player position

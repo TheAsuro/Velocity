@@ -214,8 +214,13 @@ public class RaceScript : MonoBehaviour
 		return unfreezeTime.ToString();
 	}
 
-	public void enableEditorMode()
+	public void setEditorMode(bool value)
 	{
-		editorMode = true;
+		editorMode = value;
+	}
+
+	public bool getEditorMode()
+	{
+		return editorMode;
 	}
 }
