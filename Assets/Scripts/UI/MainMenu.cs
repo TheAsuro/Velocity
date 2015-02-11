@@ -187,8 +187,13 @@ public class MainMenu : MonoBehaviour
 	private void loadSettingsMenu()
 	{
 		GameInfo.info.loadPlayerSettings();
+
+		float invertValue = 0f;
+		if(GameInfo.info.invertYInput) { invertValue = 1f; }
+
 		setSlider("VolumeRow", GameInfo.info.volume);
 		setSlider("SensitivityRow", GameInfo.info.mouseSpeed);
+		setSlider("YInvertRow", invertValue, SettingsSlider.translateFloat(invertValue));
 		setSlider("FovRow", GameInfo.info.fov);
 		setSlider("VsyncRow", GameInfo.info.vsyncLevel, SettingsSlider.translateFloat(GameInfo.info.vsyncLevel));
 		setSlider("LightingRow", GameInfo.info.lightingLevel);

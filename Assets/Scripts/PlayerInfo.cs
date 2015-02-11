@@ -221,4 +221,10 @@ public class PlayerInfo : MonoBehaviour
 		set { myRaceScript.setEditorMode(value); }
 		get { return myRaceScript.getEditorMode(); }
 	}
+
+	public bool invertYInput
+	{
+		set { myMouseLook.invertY = value; }
+		get { return myMouseLook.invertY; }
+	}
 }

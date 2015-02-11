@@ -44,6 +44,7 @@ public class GameInfo : MonoBehaviour
 
 	//Game settings
 	public float mouseSpeed = 1f;
+	public bool invertYInput = false;
 	public float fov = 90f;
 	public bool showHelp = true;
 	public float volume = 0.5f;
@@ -523,6 +524,7 @@ public class GameInfo : MonoBehaviour
 		if(myPlayer != null)
 		{
 			myPlayer.setMouseSens(mouseSpeed);
+			myPlayer.invertYInput = invertYInput;
 			myPlayer.setFov(fov);
 			myPlayer.setVolume(volume);
 		}
@@ -546,8 +548,12 @@ public class GameInfo : MonoBehaviour
 		float anisoValue = 0f;
 		if(anisotropicFiltering) { anisoValue = 1f; }
 
+		float invertValue = 0f;
+		if(invertYInput) { invertValue = 1f; }
+
 		PlayerPrefs.SetFloat("fov", fov);
 		PlayerPrefs.SetFloat("mouseSpeed", mouseSpeed);
+		PlayerPrefs.SetFloat("invertY", invertValue);
 		PlayerPrefs.SetFloat("volume", volume);
 		PlayerPrefs.SetFloat("aniso", anisoValue);
 		PlayerPrefs.SetFloat("aa", antiAliasing);
@@ -563,6 +569,7 @@ public class GameInfo : MonoBehaviour
 	{
 		fov = PlayerPrefs.GetFloat("fov");
 		mouseSpeed = PlayerPrefs.GetFloat("mouseSpeed");
+		invertYInput = (PlayerPrefs.GetFloat("invertY") == 1f);
 		volume = PlayerPrefs.GetFloat("volume");
 		anisotropicFiltering = (PlayerPrefs.GetFloat("aniso") == 1f);
 		antiAliasing = PlayerPrefs.GetFloat("aa");

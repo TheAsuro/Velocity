@@ -10,6 +10,7 @@ public class SettingsSlider : MonoBehaviour
 	{
 		Volume,
 		Sensitivity,
+		YInvert,
 		Fov,
 		Vsync,
 		Lighting,
@@ -40,6 +41,10 @@ public class SettingsSlider : MonoBehaviour
 				correctValue = floor(value, 1);
 				valueDisplay.text = correctValue.ToString();
 				GameInfo.info.mouseSpeed = correctValue;
+				break;
+			case SliderType.YInvert:
+				valueDisplay.text = translateFloat(correctValue);
+				GameInfo.info.invertYInput = correctValue == 1f;
 				break;
 			case SliderType.Fov:
 				valueDisplay.text = correctValue.ToString();
