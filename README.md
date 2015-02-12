@@ -1,8 +1,8 @@
 Velocity
 ========
 
-A game about juping and going fast. Has source-engine style strafing mechanics.
-More infos at theasuro.de
+A game about juping and going fast. Has source-engine style strafing mechanics.  
+More infos at http://theasuro.de
 
 Play the game
 =======
