@@ -65,7 +65,7 @@ public class EditorInfo : MonoBehaviour
 		DrawSelectionBox();
 
 		//Is the cursor over a gui element
-		bool onGui = eSys.currentSelectedGameObject != null;
+		bool onGui = eSys.IsPointerOverGameObject();
 
 		//Rotate with rmb
 		if(Input.GetKeyDown("e") && !onGui)
