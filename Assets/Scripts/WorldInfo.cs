@@ -8,6 +8,7 @@ public class WorldInfo : MonoBehaviour
 	
 	public GameInfo.MenuState beginState = GameInfo.MenuState.closed;
 	public Color worldBackgroundColor = Color.black;
+    public Material worldSkybox;
 	public float deathHeight = -100f;
 
 	public delegate void Start();

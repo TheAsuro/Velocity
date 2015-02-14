@@ -914,6 +914,7 @@ GameObject:
   - 124: {fileID: 345505596}
   - 114: {fileID: 345505600}
   - 114: {fileID: 345505601}
+  - 114: {fileID: 345505595}
   m_Layer: 14
   m_Name: Camera
   m_TagString: MainCamera
@@ -921,6 +922,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &345505595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 345505594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b77ebfd75008fa45bf4d8006e5223cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!124 &345505596
 Behaviour:
   m_ObjectHideFlags: 0
@@ -3334,6 +3346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   beginState: 7
   worldBackgroundColor: {r: .33088237, g: .677248955, b: 1, a: 1}
+  worldSkybox: {fileID: 2100000, guid: b3e08fa978fd92d40b549c8ff2b6237c, type: 2}
   deathHeight: -100
 --- !u!4 &1212048349
 Transform:
@@ -4451,6 +4464,10 @@ Prefab:
       propertyPath: beginState
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
+      propertyPath: worldSkybox
+      value: 
+      objectReference: {fileID: 2100000, guid: b3e08fa978fd92d40b549c8ff2b6237c, type: 2}
     m_RemovedComponents:
     - {fileID: 11400002, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
