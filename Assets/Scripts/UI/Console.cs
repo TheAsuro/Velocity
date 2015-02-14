@@ -153,6 +153,9 @@ public class Console : MonoBehaviour
 				case "move_gravity":
 					gravityCommand(commandParts);
 					break;
+				case "cheats":
+					cheatsCommand(commandParts);
+					break;
 				default:
 					writeToConsole("'" + command + "' is not a valid command!");
 					break;
@@ -433,6 +436,41 @@ public class Console : MonoBehaviour
 		else
 		{
 			writeToConsole("Usage: move_gravity (new gravity)");
+		}
+	}
+
+	private void cheatsCommand(string[] input)
+	{
+		PlayerInfo myPlayerInfo = GameInfo.info.getPlayerInfo();
+
+		if(myPlayerInfo == null)
+		{
+			writeToConsole("No player loaded!");
+			return;
+		}
+		
+		if(input.Length == 1)
+		{
+			writeToConsole("Cheats: " + myPlayerInfo.getCheats());
+		}
+		else if(input.Length == 2)
+		{
+			int newVal;
+			if(int.TryParse(input[1], out newVal))
+			{
+				if(newVal == 0)
+				{
+					myPlayerInfo.setCheats(false);
+				}
+				else
+				{
+					myPlayerInfo.setCheats(true);
+				}
+			}
+		}
+		else
+		{
+			writeToConsole("Usage: cheats (1 or 0)");
 		}
 	}
 }

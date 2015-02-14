@@ -21,6 +21,9 @@ public class PlayerInfo : MonoBehaviour
 	//Speed, AirSpeed, MaxSpeed, Friction, Jump
 	private static float[] defaults = { 200f, 200f, 6.4f, 0.6f, 8f, 5f };
 
+	//Can player change cheat protected variables?
+	private bool cheats = false;
+
 	void Awake()
 	{
 		myMesh = transform.Find("Mesh").gameObject;
@@ -112,8 +115,10 @@ public class PlayerInfo : MonoBehaviour
 
 	public void setFriction(float value)
 	{
-		myMovement.friction = value;
-		GameInfo.info.invalidateRun();
+		if(cheats)
+			myMovement.friction = value;
+		else
+			printCheatWarning();
 	}
 
 	public float getFriction()
@@ -123,8 +128,10 @@ public class PlayerInfo : MonoBehaviour
 
 	public void setAcceleration(float value)
 	{
-		myMovement.accel = value;
-		GameInfo.info.invalidateRun();
+		if(cheats)
+			myMovement.accel = value;
+		else
+			printCheatWarning();
 	}
 
 	//Gets input multiplier, not current speed!
@@ -135,8 +142,10 @@ public class PlayerInfo : MonoBehaviour
 
 	public void setAirAcceleration(float value)
 	{
-		myMovement.airAccel = value;
-		GameInfo.info.invalidateRun();
+		if(cheats)
+			myMovement.airAccel = value;
+		else
+			printCheatWarning();
 	}
 
 	public float getAirAcceleration()
@@ -146,8 +155,10 @@ public class PlayerInfo : MonoBehaviour
 
 	public void setMaxSpeed(float value)
 	{
-		myMovement.maxSpeed = value;
-		GameInfo.info.invalidateRun();
+		if(cheats)
+			myMovement.maxSpeed = value;
+		else
+			printCheatWarning();
 	}
 
 	public float getMaxSpeed()
@@ -157,8 +168,10 @@ public class PlayerInfo : MonoBehaviour
 
 	public void setMaxAirSpeed(float value)
 	{
-		myMovement.maxAirSpeed = value;
-		GameInfo.info.invalidateRun();
+		if(cheats)
+			myMovement.maxAirSpeed = value;
+		else
+			printCheatWarning();
 	}
 
 	public float getMaxAirSpeed()
@@ -168,8 +181,10 @@ public class PlayerInfo : MonoBehaviour
 
 	public void setJumpForce(float value)
 	{
-		myMovement.jumpForce = value;
-		GameInfo.info.invalidateRun();
+		if(cheats)
+			myMovement.jumpForce = value;
+		else
+			printCheatWarning();
 	}
 
 	public float getJumpForce()
@@ -205,15 +220,32 @@ public class PlayerInfo : MonoBehaviour
 		return myCrosshairCircle3;
 	}
 
-	public bool validatePlayerVariables()
+	public bool getCheats()
 	{
-		float[] currentValues = { getAcceleration(), getAirAcceleration(), getMaxSpeed(), getMaxAirSpeed(), getFriction(), getJumpForce() };
-		for(int i = 0; i < 5; i++)
+		return cheats;
+	}
+
+	public void setCheats(bool value)
+	{
+		cheats = value;
+		if(cheats)
 		{
-			if(defaults[i] != currentValues[i])
-				return false;
+			GameInfo.info.invalidateRun();
 		}
-		return true;
+		else
+		{
+			resetCheatValues();
+		}
+	}
+
+	public void resetCheatValues()
+	{
+		setAcceleration(defaults[0]);
+		setAirAcceleration(defaults[1]);
+		setMaxSpeed(defaults[2]);
+		setMaxAirSpeed(defaults[3]);
+		setFriction(defaults[4]);
+		setJumpForce(defaults[5]);
 	}
 
 	public bool editorMode
@@ -226,5 +258,10 @@ public class PlayerInfo : MonoBehaviour
 	{
 		set { myMouseLook.invertY = value; }
 		get { return myMouseLook.invertY; }
+	}
+
+	private void printCheatWarning()
+	{
+		GameInfo.info.writeToConsole("This command is cheat protected, turn on cheats with 'cheats 1'!");
 	}
 }

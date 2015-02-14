@@ -784,6 +784,7 @@ public class GameInfo : MonoBehaviour
 		return hashString.PadLeft(32, '0');
 	}
 
+	//Setting gravity directly, this is the only game variable that is not set in playerinfo
 	public void setGravity(float value)
 	{
 		Physics.gravity = new Vector3(0f, value, 0f);
@@ -798,16 +799,20 @@ public class GameInfo : MonoBehaviour
 
 	private void invalidRunCheck()
 	{
-		if(!getPlayerInfo().validatePlayerVariables())
-			invalidateRun();
-
-		if(Physics.gravity != defGravity)
+		if(getPlayerInfo().getCheats() || Physics.gravity != defGravity)
 			invalidateRun();
 	}
 
 	private void resetRun()
 	{
-		runValid = true;
-		invalidRunCheck();
+		if(getPlayerInfo().getCheats())
+		{
+			runValid = false;
+		}
+		else
+		{
+			runValid = true;
+			invalidRunCheck();
+		}
 	}
 }
