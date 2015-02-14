@@ -65,7 +65,7 @@ public class EditorInfo : MonoBehaviour
 		DrawSelectionBox();
 
 		//Is the cursor over a gui element
-		bool onGui = eSys.currentSelectedGameObject != null;
+		bool onGui = eSys.IsPointerOverGameObject();
 
 		//Rotate with rmb
 		if(Input.GetKeyDown("e") && !onGui)
@@ -114,15 +114,38 @@ public class EditorInfo : MonoBehaviour
 		//Draw box only when cursor is on a valid square, rmb and shift are not pressed and snap to grid
 		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && snapToGrid)
 		{
-			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale) + new Vector3(0f, 0.2f, 0f);
+			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale);
+			Quaternion selectionRot = Quaternion.Euler(0f, 0f, rotationDirection * 90f);
 
 			if(selectionBox == null)
 			{
-				selectionBox = (GameObject)GameObject.Instantiate(selectionBoxPrefab, roundedSelectionPos, Quaternion.identity);
+				//Create a new box/object display
+				GameObject boxObj = selectionBoxPrefab;
+				if(selectedPrefab != null) { boxObj = selectedPrefab; }
+				selectionBox = CreateSelectionBoxObject(boxObj, roundedSelectionPos, selectionRot);
 			}
 			else
 			{
-				selectionBox.transform.position = roundedSelectionPos;
+				string selectionName = "SelectionBox";
+				if(selectedPrefab != null)
+					selectionName = selectedPrefab.name;
+
+				//Check if selected object changed
+				if(selectionBox.name.Equals(selectionName))
+				{
+					//Object didn't change, just move the preview
+					selectionBox.transform.position = roundedSelectionPos + EditorObjects.OBJ.GetObjectOffsetByName(selectionBox.name);
+					selectionBox.transform.localRotation = Quaternion.Euler(EditorObjects.OBJ.GetObjectRotationByName(selectionBox.name)) * selectionRot;
+				}
+				else
+				{
+					//Object changed, spawn new object
+					GameObject.Destroy(selectionBox);
+
+					GameObject boxObj = selectionBoxPrefab;
+					if(selectedPrefab != null) { boxObj = selectedPrefab; }
+					selectionBox = CreateSelectionBoxObject(boxObj, roundedSelectionPos, selectionRot);
+				}
 			}
 		}
 		else
@@ -130,6 +153,18 @@ public class EditorInfo : MonoBehaviour
 			GameObject.Destroy(selectionBox);
 			selectionBox = null;
 		}
+	}
+
+	private GameObject CreateSelectionBoxObject(GameObject prefab, Vector3 pos, Quaternion rot)
+	{
+		Quaternion newRot = Quaternion.Euler(EditorObjects.OBJ.GetObjectRotationByName(prefab.name)) * rot;
+		
+		GameObject instance = (GameObject)GameObject.Instantiate(prefab, pos, newRot);
+		instance.transform.localScale = EditorObjects.OBJ.GetObjectScaleByName(prefab.name);
+		instance.transform.localPosition += EditorObjects.OBJ.GetObjectOffsetByName(prefab.name);
+		instance.name = prefab.name;
+
+		return instance;
 	}
 
 	//Destroys the object the mouse is over
@@ -250,7 +285,7 @@ public class EditorInfo : MonoBehaviour
 		{
 			Vector3 newPos = pos;
 
-			//Rotate the object if it's saved with a wrong rotation
+			//Rotate the object to it's saved rotation
 			Quaternion newRot = Quaternion.Euler(EditorObjects.OBJ.GetObjectRotationByName(prefab.name)) * rot;
 
 			//Round position to grid
