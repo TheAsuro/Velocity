@@ -11,7 +11,7 @@ public class EditorCam : MonoBehaviour
 
 	void Update()
 	{
-		if(GameInfo.info.getPlayerInfo() == null || !GameInfo.info.getPlayerInfo().editorMode)
+		if((GameInfo.info) && (GameInfo.info.getPlayerInfo() == null || !GameInfo.info.getPlayerInfo().editorMode))
 		{
 			Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")) * camMoveSpeed * Time.deltaTime;
 			Quaternion viewRot = transform.rotation;
