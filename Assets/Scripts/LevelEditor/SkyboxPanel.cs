@@ -3,19 +3,28 @@ using System.Collections;
 using System.IO;
 using System.Runtime.InteropServices;
 
-public class SkyboxPanel : MonoBehaviour {
+/*
+ * Created by Geordie Powers on Feb 14 2015
+ * 
+ * Manages the Level Editor skybox GUI, and creates/updates the skybox material held in WorldInfo
+ * 
+ */
+
+public class SkyboxPanel : MonoBehaviour
+{
 
     [DllImport("user32.dll")]
     private static extern void OpenFileDialog();
     private Material newSkyboxMaterial;
     private bool isActive = false;
-    
-    void Awake() {
-        //print("awake");
+
+    void Awake()
+    {
         newSkyboxMaterial = new Material(WorldInfo.info.worldSkybox);
     }
 
-    public void ClearSkybox() {
+    public void ClearSkybox()
+    {
         newSkyboxMaterial.SetTexture("_FrontTex", null);
         newSkyboxMaterial.SetTexture("_BackTex", null);
         newSkyboxMaterial.SetTexture("_LeftTex", null);
@@ -26,18 +35,18 @@ public class SkyboxPanel : MonoBehaviour {
         SetVisible(false);
     }
 
-    public void SaveSkybox() {
+    public void SaveSkybox()
+    {
         WorldInfo.info.worldSkybox = newSkyboxMaterial;
         WorldInfo.info.UpdateCameraSkyboxes();
         SetVisible(false);
     }
 
-    public void SetImage(string side) {
+    public void SetImage(string side)
+    {
         System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
         ofd.Title = "Open " + side + " Image";
         ofd.ShowDialog();
-        //print("Done");
-        //print("file path:" + ofd.FileName);
         // TODO: do checking
 
         // for now texture images must be 1024x1024
@@ -46,7 +55,8 @@ public class SkyboxPanel : MonoBehaviour {
         imageFile.LoadImage(OpenFile(ofd.FileName));
 
         // using numbers is a bit worrysome - maybe use strings to set material nameid
-        switch (side) {
+        switch (side)
+        {
             case "Front":
                 newSkyboxMaterial.SetTexture("_FrontTex", imageFile);
                 break;
@@ -68,28 +78,33 @@ public class SkyboxPanel : MonoBehaviour {
         }
     }
 
-    private byte[] OpenFile(string path) {
+    private byte[] OpenFile(string path)
+    {
         FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        // if canread
+        // TODO: if canread
         byte[] buffer;
-        //stream.BeginRead
-        try {
+        try
+        {
             int streamLength = (int)stream.Length;
             buffer = new byte[streamLength];
             int count, sum = 0;
             while ((count = stream.Read(buffer, sum, streamLength - sum)) > 0) sum += count;
-        } finally {
+        }
+        finally
+        {
             stream.Close();
         }
         return buffer;
     }
 
-    public void ShowHide() {
+    public void ShowHide()
+    {
         isActive = !isActive;
         SetVisible(isActive);
     }
 
-    public void SetVisible(bool visible) {
+    public void SetVisible(bool visible)
+    {
         isActive = visible;
         gameObject.SetActive(isActive);
     }

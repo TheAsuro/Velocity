@@ -87,12 +87,15 @@ public class WorldInfo : MonoBehaviour
 		}
 	}
 
-    public void AddSkyboxWatcher(GameObject watcher) {
+    public void AddSkyboxWatcher(GameObject watcher)
+    {
         skyboxWatchers.Add(watcher);
     }
 
-    public void UpdateCameraSkyboxes() {
-        foreach (GameObject watcher in skyboxWatchers) {
+    public void UpdateCameraSkyboxes()
+    {
+        foreach (GameObject watcher in skyboxWatchers)
+        {
             watcher.GetComponent<CamSkybox>().UpdateSkybox();
         }
     }
