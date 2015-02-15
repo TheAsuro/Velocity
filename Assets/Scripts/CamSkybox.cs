@@ -18,6 +18,12 @@ public class CamSkybox : MonoBehaviour
             gameObject.AddComponent<Skybox>();
         }
 
+        WorldInfo.info.AddSkyboxWatcher(this.gameObject);
+        UpdateSkybox();
+    }
+
+    public void UpdateSkybox() {
         gameObject.GetComponent<Skybox>().material = WorldInfo.info.worldSkybox;
+
     }
 }

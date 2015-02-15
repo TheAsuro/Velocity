@@ -17,6 +17,8 @@ public class WorldInfo : MonoBehaviour
 	private Dictionary<string,Start> startList = new Dictionary<string,Start>();
 	private Dictionary<string,Reset> resetList = new Dictionary<string,Reset>();
 
+    private List<GameObject> skyboxWatchers = new List<GameObject>();
+
 	//Respawn with r
 	private Respawn currentSpawn = null;
 	private Respawn firstSpawn = null;
@@ -84,4 +86,14 @@ public class WorldInfo : MonoBehaviour
 			r();
 		}
 	}
+
+    public void AddSkyboxWatcher(GameObject watcher) {
+        skyboxWatchers.Add(watcher);
+    }
+
+    public void UpdateCameraSkyboxes() {
+        foreach (GameObject watcher in skyboxWatchers) {
+            watcher.GetComponent<CamSkybox>().UpdateSkybox();
+        }
+    }
 }

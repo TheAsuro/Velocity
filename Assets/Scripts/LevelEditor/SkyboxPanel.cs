@@ -1,0 +1,96 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.IO;
+using System.Runtime.InteropServices;
+
+public class SkyboxPanel : MonoBehaviour {
+
+    [DllImport("user32.dll")]
+    private static extern void OpenFileDialog();
+    private Material newSkyboxMaterial;
+    private bool isActive = false;
+    
+    void Awake() {
+        //print("awake");
+        newSkyboxMaterial = new Material(WorldInfo.info.worldSkybox);
+    }
+
+    public void ClearSkybox() {
+        newSkyboxMaterial.SetTexture("_FrontTex", null);
+        newSkyboxMaterial.SetTexture("_BackTex", null);
+        newSkyboxMaterial.SetTexture("_LeftTex", null);
+        newSkyboxMaterial.SetTexture("_RightTex", null);
+        newSkyboxMaterial.SetTexture("_UpTex", null);
+        newSkyboxMaterial.SetTexture("_DownTex", null);
+        SaveSkybox();
+        SetVisible(false);
+    }
+
+    public void SaveSkybox() {
+        WorldInfo.info.worldSkybox = newSkyboxMaterial;
+        WorldInfo.info.UpdateCameraSkyboxes();
+        SetVisible(false);
+    }
+
+    public void SetImage(string side) {
+        System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+        ofd.Title = "Open " + side + " Image";
+        ofd.ShowDialog();
+        //print("Done");
+        //print("file path:" + ofd.FileName);
+        // TODO: do checking
+
+        // for now texture images must be 1024x1024
+        // TODO: allow for any size -- but how can a texture be created if the size is unknown, and can't get the size until the image is loaded? Possibly use System.Drawing.Image?
+        Texture2D imageFile = new Texture2D(1024, 1024);
+        imageFile.LoadImage(OpenFile(ofd.FileName));
+
+        // using numbers is a bit worrysome - maybe use strings to set material nameid
+        switch (side) {
+            case "Front":
+                newSkyboxMaterial.SetTexture("_FrontTex", imageFile);
+                break;
+            case "Back":
+                newSkyboxMaterial.SetTexture("_BackTex", imageFile);
+                break;
+            case "Left":
+                newSkyboxMaterial.SetTexture("_LeftTex", imageFile);
+                break;
+            case "Right":
+                newSkyboxMaterial.SetTexture("_RightTex", imageFile);
+                break;
+            case "Up":
+                newSkyboxMaterial.SetTexture("_UpTex", imageFile);
+                break;
+            case "Down":
+                newSkyboxMaterial.SetTexture("_DownTex", imageFile);
+                break;
+        }
+    }
+
+    private byte[] OpenFile(string path) {
+        FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+        // if canread
+        byte[] buffer;
+        //stream.BeginRead
+        try {
+            int streamLength = (int)stream.Length;
+            buffer = new byte[streamLength];
+            int count, sum = 0;
+            while ((count = stream.Read(buffer, sum, streamLength - sum)) > 0) sum += count;
+        } finally {
+            stream.Close();
+        }
+        return buffer;
+    }
+
+    public void ShowHide() {
+        isActive = !isActive;
+        SetVisible(isActive);
+    }
+
+    public void SetVisible(bool visible) {
+        isActive = visible;
+        gameObject.SetActive(isActive);
+    }
+}
