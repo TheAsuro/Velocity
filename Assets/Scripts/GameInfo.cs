@@ -626,7 +626,7 @@ public class GameInfo : MonoBehaviour
 		resetRun();
 
 		//check if there is a player and we are not in editor
-		if(myPlayer != null && getMenuState() != MenuState.editor)
+		if(myPlayer != null && getMenuState() != MenuState.editor && getMenuState() != MenuState.editorplay)
 			myPlayer.startDemo(currentSave.getPlayerName());
 	}
 
