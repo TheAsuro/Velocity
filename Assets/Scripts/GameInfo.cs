@@ -377,8 +377,6 @@ public class GameInfo : MonoBehaviour
 	{
 		if(!menuLocked)
 		{
-			print("Set state: " + state.ToString());
-
 			//Reset all states
 			setGamePaused(true);
 			escMenu.SetActive(false);
