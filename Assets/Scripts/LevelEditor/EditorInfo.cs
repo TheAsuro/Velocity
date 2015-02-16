@@ -234,6 +234,9 @@ public class EditorInfo : MonoBehaviour
 			GameInfo.info.getPlayerInfo().prepareRace(1f);
 		}
 		SetInterfaceActive(false);
+		GameInfo.info.unlockMenu();
+		GameInfo.info.setMenuState(GameInfo.MenuState.editorplay);
+		GameInfo.info.lockMenu();
 	}
 
 	public void SaveLevel()
@@ -259,6 +262,9 @@ public class EditorInfo : MonoBehaviour
 		GameInfo.info.setPlayerInfo(null);
 		GameInfo.info.cleanUpPlayer();
 		SetInterfaceActive(true);
+		GameInfo.info.unlockMenu();
+		GameInfo.info.setMenuState(GameInfo.MenuState.editor);
+		GameInfo.info.lockMenu();
 	}
 
 	//Selects the prefab by name

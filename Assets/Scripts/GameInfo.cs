@@ -79,7 +79,8 @@ public class GameInfo : MonoBehaviour
 		leaderboard,
 		endlevel,
 		othermenu,
-		editor
+		editor,
+		editorplay
 	}
 
 	public enum GameMode
@@ -362,6 +363,12 @@ public class GameInfo : MonoBehaviour
 			case "othermenu":
 				setMenuState(MenuState.othermenu);
 				break;
+			case "editor":
+				setMenuState(MenuState.editor);
+				break;
+			case "editorplay":
+				setMenuState(MenuState.editorplay);
+				break;
 		}
 	}
 
@@ -370,6 +377,8 @@ public class GameInfo : MonoBehaviour
 	{
 		if(!menuLocked)
 		{
+			print("Set state: " + state.ToString());
+
 			//Reset all states
 			setGamePaused(true);
 			escMenu.SetActive(false);
@@ -413,6 +422,11 @@ public class GameInfo : MonoBehaviour
 				case MenuState.editor:
 					menuLocked = true;
 					setGamePaused(false);
+					break;
+				case MenuState.editorplay:
+					menuLocked = true;
+					setGamePaused(false);
+					Screen.lockCursor = true;
 					break;
 			}
 
