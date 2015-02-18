@@ -114,7 +114,7 @@ public class Movement : MonoBehaviour
 		Vector3 tempVelocity = calculateFriction(rigidbody.velocity);
 
 		//Add movement
-		tempVelocity += calculateMovement(input);		
+		tempVelocity += calculateMovement(input, tempVelocity);		
 			
 		//Apply
 		if(!rigidbody.isKinematic)
@@ -122,7 +122,7 @@ public class Movement : MonoBehaviour
 			rigidbody.velocity = tempVelocity;
 		}
 
-		//Kill player if below level
+		//Kill player if below map
 		if(transform.position.y <= WorldInfo.info.deathHeight)
 			respawnPlayer(true);
 	}
@@ -132,27 +132,18 @@ public class Movement : MonoBehaviour
 		onGround = checkGround();
 		float speed = currentVelocity.magnitude; 
 
-		if(onGround && !Input.GetButton("Jump"))
+		//Code from https://flafla2.github.io/2015/02/14/bunnyhop.html
+		if(onGround && !Input.GetButton("Jump") && speed != 0f)
 		{
-			speed += friction * Time.deltaTime;
-
-			if(speed > 2f)
-			{
-				speed *= (1f - friction * Time.deltaTime);
-			}
-			else
-			{
-				speed -= 2f * friction * Time.deltaTime;
-			}
-
-			speed = Mathf.Max(0f, speed);
+			float drop = speed * friction * Time.deltaTime;
+			return currentVelocity * (Mathf.Max(speed - drop, 0f) / speed);
 		}
 
-		return currentVelocity.normalized * speed;
+		return currentVelocity;
 	}
 
 	//Do movement input here
-	public virtual Vector3 calculateMovement(Vector2 input)
+	public virtual Vector3 calculateMovement(Vector2 input, Vector3 velocity)
 	{
 		onGround = checkGround();
 
@@ -180,7 +171,7 @@ public class Movement : MonoBehaviour
 		Vector3 alignedInputVelocity = new Vector3(inputVelocity.x, 0f, inputVelocity.z) * Time.deltaTime;
 		
 		//Get current velocity
-		Vector3 currentVelocity = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z);
+		Vector3 currentVelocity = new Vector3(velocity.x, 0f, velocity.z);
 
 		//How close the current speed to max velocity is (1 = not moving, 0 = at/over max speed)
 		float max = Mathf.Max(0f, 1 - (currentVelocity.magnitude / curMaxSpeed));
@@ -195,7 +186,7 @@ public class Movement : MonoBehaviour
 		Vector3 correctVelocity = Vector3.Lerp(alignedInputVelocity, modifiedVelocity, velocityDot);
 
 		//Apply jump
-		correctVelocity += getJumpVelocity(rigidbody.velocity.y);
+		correctVelocity += getJumpVelocity(velocity.y);
 
 		//Return
 		return correctVelocity;
