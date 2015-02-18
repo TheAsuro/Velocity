@@ -76,7 +76,7 @@ public class EditorInfo : MonoBehaviour
 		}
 
 		//Spawn object when releasing lmb
-		if(Input.GetMouseButtonUp(0) && !onGui)
+		if(Input.GetMouseButtonUp(0) && !Input.GetKey(KeyCode.LeftAlt) && !onGui)
 		{
 			//Spawn object at mouse release point
 			Vector3 pos = GetMouseOnSelectionPlane();
@@ -84,7 +84,7 @@ public class EditorInfo : MonoBehaviour
 		}
 
 		//Remove object with shift + lmb
-		if(Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonUp(1) && !onGui)
+		if(Input.GetKey(KeyCode.LeftAlt) && (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && !onGui)
 		{
 			RemoveSelectedObject();
 		}
@@ -97,7 +97,14 @@ public class EditorInfo : MonoBehaviour
 
 		//Move spawn plane with scroll wheel
 		float scrollCount = Input.GetAxis("Mouse ScrollWheel");
-		EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * EditorObjects.OBJ.verticalGridScale, 0f));
+		if(Input.GetKey(KeyCode.LeftShift))
+		{
+			EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 100f * EditorObjects.OBJ.verticalGridScale, 0f));
+		}
+		else
+		{
+			EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * EditorObjects.OBJ.verticalGridScale, 0f));
+		}
 	}
 
 	private void SetInterfaceActive(bool value)
@@ -112,7 +119,7 @@ public class EditorInfo : MonoBehaviour
 		Vector3 selectionPos = GetMouseOnSelectionPlane();
 
 		//Draw box only when cursor is on a valid square, rmb and shift are not pressed and snap to grid
-		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift) && snapToGrid)
+		if(!selectionPos.Equals(NaV) && !Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftAlt) && snapToGrid)
 		{
 			Vector3 roundedSelectionPos = EditorObjects.RoundVectorToGrid(selectionPos, EditorObjects.OBJ.gridScale, EditorObjects.OBJ.verticalGridScale);
 			Quaternion selectionRot = Quaternion.Euler(0f, 0f, rotationDirection * 90f);

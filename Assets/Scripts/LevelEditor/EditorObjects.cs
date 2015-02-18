@@ -14,7 +14,7 @@ public class EditorObjects : MonoBehaviour
 	private BlockInfo bInfo;
 
 	public float gridScale = 4f;
-	public float verticalGridScale = 1f;
+	public float verticalGridScale = 0.2f;
 
 	private Dictionary<Vector3,GameObject> gridObjects;
 	private List<GameObject> nonGridObjects;

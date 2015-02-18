@@ -5,15 +5,21 @@ public class EditorCam : MonoBehaviour
 {
 	public float lookSensitivity = 1f;
 	public float camMoveSpeed = 3f;
+	public float fastCamMoveSpeed = 10f;
 
 	private float rotationX;
 	private float rotationY;
 
 	void Update()
 	{
+		//Move faster while shift is pressed
+		float currentMoveSpeed = camMoveSpeed;
+		if(Input.GetKey(KeyCode.LeftShift))
+			currentMoveSpeed = fastCamMoveSpeed;
+
 		if((GameInfo.info) && (GameInfo.info.getPlayerInfo() == null || !GameInfo.info.getPlayerInfo().editorMode))
 		{
-			Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")) * camMoveSpeed * Time.deltaTime;
+			Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")) * currentMoveSpeed * Time.deltaTime;
 			Quaternion viewRot = transform.rotation;
 			transform.position = transform.position + viewRot * input;
 		}
