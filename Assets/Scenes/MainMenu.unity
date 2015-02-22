@@ -1567,8 +1567,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1453612872}
   - 114: {fileID: 169137253}
-  - 114: {fileID: 169137251}
-  - 114: {fileID: 169137250}
   - 114: {fileID: 169137252}
   - 148: {fileID: 1453612876}
   m_Layer: 0
@@ -1578,31 +1576,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &169137250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400020, guid: 601e89f6bcc88ed408597f1676905559,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 169137249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61ae75c41d86d75408cf392b378e1992, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &169137251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400026, guid: 601e89f6bcc88ed408597f1676905559,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 169137249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc632e2343e225d4b8909be6c34b04cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostPrefab: {fileID: 100000, guid: a4a93747b7895864ba8bcfb521e1e547, type: 2}
 --- !u!114 &169137252
 MonoBehaviour:
   m_ObjectHideFlags: 0

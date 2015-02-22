@@ -189,11 +189,11 @@ public class Console : MonoBehaviour
 	{
 		if(input.Length == 3)
 		{
-			GameInfo.info.connectToServer(input[1], int.Parse(input[2]), "");
+			
 		}
 		else if(input.Length == 4)
 		{
-			GameInfo.info.connectToServer(input[1], int.Parse(input[2]), input[3]);
+			
 		}
 		else
 		{
@@ -204,7 +204,7 @@ public class Console : MonoBehaviour
 	//Leave the current server
 	private void disconnectCommand(string[] input)
 	{
-		GameInfo.info.disconnectFromServer();
+		
 	}
 
 	//Create a new multiplayer server
@@ -212,15 +212,15 @@ public class Console : MonoBehaviour
 	{
 		if(input.Length == 1)
 		{
-			GameInfo.info.startServer(42069, "", input[1]);
+			
 		}
 		else if(input.Length == 2)
 		{
-			GameInfo.info.startServer(42069, input[2], input[1]);
+			
 		}
 		else if(input.Length == 3)
 		{
-			GameInfo.info.startServer(int.Parse(input[2]), input[3], input[1]);
+			
 		}
 		else
 		{
@@ -231,7 +231,7 @@ public class Console : MonoBehaviour
 	//Stops the current server
 	private void stopServerCommand(string[] input)
 	{
-		GameInfo.info.stopServer();
+		
 	}
 
 	//Play a demo from a file

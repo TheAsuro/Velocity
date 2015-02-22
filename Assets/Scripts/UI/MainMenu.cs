@@ -236,18 +236,14 @@ public class MainMenu : MonoBehaviour
 		bool ok = int.TryParse(portText.text, out port);
 		string pass = passText.text;
 
-		if(ok)
-		{
-			GameInfo.info.startServer(port, pass, GameInfo.info.getSelectedMap());
-		}
-		else
-		{
-			portText.text = "42069";
-		}
+		
 	}
 
 	public void joinServer()
 	{
+        GameInfo.info.connectToServer("192.168.178.42", 42069);
+        return;
+
 		string ip;
 		int port;
 		string pass;
@@ -261,7 +257,7 @@ public class MainMenu : MonoBehaviour
 		{
 			ip = ipText.text;
 			pass = passText.text;
-			GameInfo.info.connectToServer(ip, port, pass);
+			
 		}
 		else
 		{

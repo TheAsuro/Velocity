@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 
 public class GameInfo : MonoBehaviour
 {
@@ -34,6 +36,10 @@ public class GameInfo : MonoBehaviour
 	private float lastTime = -1f;
 	private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
 	private bool runValid = false;
+
+    //Server
+    private ServerConnection serverConnection;
+    private GameServer server;
 	
 	//Debug window (top-left corner, toggle with f8)
 	public bool logToConsole = true;
@@ -65,8 +71,6 @@ public class GameInfo : MonoBehaviour
 	private Console myConsole;
 	private GameObject myCanvas;
 	private GameObject myConsoleWindow;
-	private Server myServer;
-	private Client myClient;
 	private GameObject myDebugWindow;
 	private UnityEngine.UI.Text myDebugWindowText;
 
@@ -104,8 +108,6 @@ public class GameInfo : MonoBehaviour
 			Destroy(gameObject);
 		}
 
-		myServer = gameObject.GetComponent<Server>();
-		myClient = gameObject.GetComponent<Client>();
 		myDemoPlayer = gameObject.GetComponent<DemoPlay>();
 
 		myCanvas = transform.Find("Canvas").gameObject;
@@ -192,10 +194,6 @@ public class GameInfo : MonoBehaviour
 	//Load a level, but inform other players if this is a server
 	public void loadLevel(string name)
 	{
-		if(myServer.isRunning())
-		{
-			//TODO
-		}
 		Application.LoadLevel(name);
 	}
 
@@ -265,38 +263,6 @@ public class GameInfo : MonoBehaviour
 				}
 			}
 		}
-	}
-
-	//Start a new multiplayer server
-	public void startServer(int port, string password, string map)
-	{
-		myServer.StartServer(2, port, password);
-		Application.LoadLevel(map);
-	}
-
-	//Connect to a multiplayer server
-	public void connectToServer(string ip, int port, string password)
-	{
-		if(currentSave != null)
-		{
-			myClient.ConnectToServer(ip, port, password);
-		}
-		else
-		{
-			writeToConsole("You can only connect with a loaded save!");
-		}
-	}
-
-	//Disconnect from current server
-	public void disconnectFromServer()
-	{
-		myClient.DisconnectFromServer();
-	}
-
-	//Stop current server
-	public void stopServer()
-	{
-		myServer.StopServer();
 	}
 
 	//Reset everything in the world to its initial state
@@ -453,6 +419,20 @@ public class GameInfo : MonoBehaviour
 		}
 		setMenuState(MenuState.leaderboard);
 	}
+
+    public void connectToServer(string ip, int port, string password = "")
+    {
+        if (serverConnection != null)
+            serverConnection.Disconnect();
+
+        serverConnection = new ServerConnection(ip, port, password);
+        serverConnection.Connect(connected);
+    }
+
+    private void connected()
+    {
+        Debug.Log("connected");
+    }
 
 	public MenuState getMenuState()
 	{
