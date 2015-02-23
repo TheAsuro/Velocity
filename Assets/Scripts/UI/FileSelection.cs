@@ -16,8 +16,8 @@ public class FileSelection : MonoBehaviour
     public delegate void ClickAction();
     public delegate void SelectAction(string value);
 
-    public static event ClickAction OnCancel;
-    public static event SelectAction OnFileSelected;
+    public event ClickAction OnCancel;
+    public event SelectAction OnFileSelected;
 
     public GameObject filePrefab;
     public string winStartDir = "C:/";

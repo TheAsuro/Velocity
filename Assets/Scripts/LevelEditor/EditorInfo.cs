@@ -29,6 +29,7 @@ public class EditorInfo : MonoBehaviour
 	private InputField levelNameText;
 	private Toggle snapToggle;
 	private EventSystem eSys;
+    private FileSelection fileSel;
 
 	//Selection
 	private GameObject selectionBox = null;
@@ -58,6 +59,7 @@ public class EditorInfo : MonoBehaviour
 		levelNameText = topT.Find("LevelNameInput").GetComponent<InputField>();
 		snapToggle = topT.Find("SnapToGrid").GetComponent<Toggle>();
 		eSys = GameObject.Find("EventSystem").GetComponent<EventSystem>();
+        fileSel = canvasT.Find("FileSelection").GetComponent<FileSelection>();
 	}
 
 	void Update()
@@ -96,15 +98,18 @@ public class EditorInfo : MonoBehaviour
 		}
 
 		//Move spawn plane with scroll wheel
-		float scrollCount = Input.GetAxis("Mouse ScrollWheel");
-		if(Input.GetKey(KeyCode.LeftShift))
-		{
-			EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 100f * EditorObjects.OBJ.verticalGridScale, 0f));
-		}
-		else
-		{
-			EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * EditorObjects.OBJ.verticalGridScale, 0f));
-		}
+        if (!onGui)
+        {
+            float scrollCount = Input.GetAxis("Mouse ScrollWheel");
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 100f * EditorObjects.OBJ.verticalGridScale, 0f));
+            }
+            else
+            {
+                EditorObjects.OBJ.AddSelectionPlanePosition(new Vector3(0f, scrollCount * 10f * EditorObjects.OBJ.verticalGridScale, 0f));
+            }
+        }
 	}
 
 	private void SetInterfaceActive(bool value)
@@ -391,4 +396,9 @@ public class EditorInfo : MonoBehaviour
 	{
 		return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
 	}
+
+    public FileSelection GetFileSelection()
+    {
+        return fileSel;
+    }
 }

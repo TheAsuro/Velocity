@@ -12,11 +12,9 @@ using System.Runtime.InteropServices;
 
 public class SkyboxPanel : MonoBehaviour
 {
-
-    [DllImport("user32.dll")]
-    private static extern void OpenFileDialog();
     private Material newSkyboxMaterial;
     private bool isActive = false;
+    private string tempSide = "";
 
     void Awake()
     {
@@ -42,17 +40,25 @@ public class SkyboxPanel : MonoBehaviour
         SetVisible(false);
     }
 
-    public void SetImage(string side)
+    public void OpenImageDialog(string side)
     {
-        System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
-        ofd.Title = "Open " + side + " Image";
-        ofd.ShowDialog();
-        // TODO: do checking
+        tempSide = side;
+        FileSelection fs = EditorInfo.info.GetFileSelection();
+        fs.gameObject.SetActive(true);
+        fs.OnFileSelected += fs_OnFileSelected;
+    }
 
+    void fs_OnFileSelected(string value)
+    {
+        SetImage(tempSide, value);
+    }
+
+    private void SetImage(string side, string path)
+    {
         // for now texture images must be 1024x1024
         // TODO: allow for any size -- but how can a texture be created if the size is unknown, and can't get the size until the image is loaded? Possibly use System.Drawing.Image?
         Texture2D imageFile = new Texture2D(1024, 1024);
-        imageFile.LoadImage(OpenFile(ofd.FileName));
+        imageFile.LoadImage(OpenFile(path));
 
         // using numbers is a bit worrysome - maybe use strings to set material nameid
         switch (side)
