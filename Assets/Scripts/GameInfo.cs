@@ -431,7 +431,7 @@ public class GameInfo : MonoBehaviour
 
     private void connected()
     {
-        Debug.Log("connected");
+        print("connected");
     }
 
 	public MenuState getMenuState()
