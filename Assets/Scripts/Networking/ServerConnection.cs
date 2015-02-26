@@ -19,13 +19,13 @@ public class ServerConnection
 
     string ip;
     int port;
-    string password;
+    //string password;
 
     public ServerConnection(string serverIp, int serverPort, string serverPass = "")
     {
         ip = serverIp;
         port = serverPort;
-        password = serverPass;
+        //password = serverPass;
     }
 
     /// <summary>
@@ -46,6 +46,7 @@ public class ServerConnection
         }
         catch(System.Exception ex)
         {
+            Debug.Log(ex.Message);
             return 0;
         }
     }
