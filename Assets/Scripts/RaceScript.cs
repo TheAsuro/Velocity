@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityEngine.UI;
+using System.Diagnostics;
 
 //Interacts with checkpoint triggers, must be added to every player
 public class RaceScript : MonoBehaviour
 {
 	private bool editorMode = false;
 
-	private float startTime = -1f;
-	private float time = -1f;
-
 	private int checkpoint = -1;
+    private bool started = false;
 	private bool finished = false;
+	private bool paused = false;
 
-	private bool frozen = false;
-	private float freezeDuration = 0f;
+	private float freezeDuration = 3f;
 	private float unfreezeTime = float.PositiveInfinity;
 
 	private Text timeText;
@@ -22,8 +22,24 @@ public class RaceScript : MonoBehaviour
 	private Text nameText;
 	private Text countdownText;
 	private Text wrText;
+
+    private Stopwatch playTime;
+    private TimeSpan elapsedTime
+    {
+        get
+        {
+            if (playTime == null)
+                return TimeSpan.MaxValue;
+            else
+                return playTime.Elapsed;
+        }
+    }
+    private string timeString
+    {
+        get { return (new DateTime(elapsedTime.Ticks)).ToString("mm:ss.ffff"); }
+    }
 	
-	//This script actually sets the player as an actual player
+	//Handle player GUI
 	void Awake()
 	{
 		Transform canvas = gameObject.transform.parent.Find("Canvas");
@@ -36,33 +52,14 @@ public class RaceScript : MonoBehaviour
 
 	void Update()
 	{
-		//Update time
-		if(!finished)
-		{
-			time = Time.time - startTime;
-		}
-
 		//Freeze time is up, start the race!
-		if(frozen && Time.time >= unfreezeTime)
+		if(!started && paused && Time.time >= unfreezeTime)
 		{
 			startRace();
 		}
 
-		//Checkpoint system
-		if(time > 0f && checkpoint != -1 && !finished)
-		{
-			timeText.gameObject.transform.parent.gameObject.SetActive(true);
-			timeText.text = "Time: " + time.ToString().Substring(0,time.ToString().IndexOf('.') + 2);
-		}
-		else if(finished)
-		{
-			timeText.gameObject.transform.parent.gameObject.SetActive(true);
-			timeText.text = time.ToString();
-		}
-		else
-		{
-			timeText.gameObject.transform.parent.gameObject.SetActive(false);
-		}
+		//Display time
+		timeText.text = timeString;
 
 		//Display speed
 		speedText.text = GameInfo.info.getPlayerInfo().getCurrentSpeed().ToString() + " m/s";
@@ -77,7 +74,7 @@ public class RaceScript : MonoBehaviour
 		drawCrosshair();
 
 		//Skip countdown with use key
-		if(Input.GetButtonDown("Skip") && startTime > Time.time)
+		if(Input.GetButtonDown("Skip") && !started)
 		{
 			startRace();
 		}
@@ -111,28 +108,17 @@ public class RaceScript : MonoBehaviour
 			Checkpoint cp = other.GetComponent<Checkpoint>();
 			int nr = cp.checkpointNumber;
 			bool end = cp.isEnd;
-			freezeDuration = cp.freezeTime;
 
 			//Save game (pretty sure i can remove this. TODO check if unnecessary)
 			GameInfo.info.save();
 			
 			if(end && nr == checkpoint + 1 && !finished) //End
 			{
-				time = Time.time - startTime;
-				finished = true;
-				GameInfo.info.runFinished(time);
-				if(freezeDuration > 0f)
-				{
-					freeze(freezeDuration);
-				}
+                endRace();
 			}
 			else if(nr == checkpoint + 1) //next checkpoint
 			{
 				checkpoint++;
-				if(freezeDuration > 0f)
-				{
-					freeze(freezeDuration);
-				}
 			}
 		}
 	}
@@ -172,47 +158,58 @@ public class RaceScript : MonoBehaviour
 	//Starts a new race (resets the current one if there is one)
 	public void prepareRace(float newFreezeDuration = 0f)
 	{
-		time = -1f;
-		startTime = Time.time;
-
 		checkpoint = 0;
+        started = false;
 		finished = false;
 		freezeDuration = newFreezeDuration;
-		frozen = false;
+        paused = true;
+
+        playTime = new Stopwatch();
+
 		if(freezeDuration > 0f)
 		{
-			freeze(freezeDuration);
-			startTime += freezeDuration;
+            pause();
+            unfreezeTime = Time.time + freezeDuration;
 		}
+        else
+        {
+            startRace();
+        }
 
 		GameInfo.info.startDemo();
 	}
 
 	private void startRace()
 	{
-		startTime = Time.time;
-		WorldInfo.info.DoStart();
-		unfreeze();
+        started = true;
+        WorldInfo.info.DoStart();
+        unpause();
+        unfreezeTime = Time.time;
 	}
-	
-	private void freeze(float duration)
-	{
-		frozen = true;
-		GameInfo.info.getPlayerInfo().freeze();
-		unfreezeTime = Time.time + duration;
-	}
-	
-	private void unfreeze()
-	{
-		frozen = false;
-		GameInfo.info.getPlayerInfo().unfreeze();
-		unfreezeTime = Time.time;
-	}
-	
-	private string getFrozenString()
-	{
-		return unfreezeTime.ToString();
-	}
+
+    private void endRace()
+    {
+        playTime.Stop();
+        finished = true;
+        GameInfo.info.runFinished(elapsedTime);
+    }
+
+    public void pause()
+    {
+        playTime.Stop();
+        paused = true;
+        GameInfo.info.getPlayerInfo().freeze();
+    }
+
+    public void unpause()
+    {
+        if(started)
+        {
+            playTime.Start();
+            paused = false;
+            GameInfo.info.getPlayerInfo().unfreeze();
+        }
+    }
 
 	public void setEditorMode(bool value)
 	{

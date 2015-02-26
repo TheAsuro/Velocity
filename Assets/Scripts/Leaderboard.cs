@@ -45,7 +45,6 @@ public class Leaderboard : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log("Got leaderboard data: " + www.text);
 			processEntries(www.text, index);
 		}
 	}
@@ -127,8 +126,6 @@ public class Leaderboard : MonoBehaviour
 		{
 			Debug.Log("Send leaderboard data www error: " + www.error);
 		}
-
-		Debug.Log("Sent leaderboard data, got: " + www.text);
 	}
 
 	public void up()

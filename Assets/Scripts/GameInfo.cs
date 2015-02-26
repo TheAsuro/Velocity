@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -33,7 +34,7 @@ public class GameInfo : MonoBehaviour
 	//Stuff
 	private SaveData currentSave;
 	private Demo lastDemo;
-	private float lastTime = -1f;
+	private long lastTime = -1L;
 	private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
 	private bool runValid = false;
 
@@ -85,15 +86,6 @@ public class GameInfo : MonoBehaviour
 		othermenu,
 		editor,
 		editorplay
-	}
-
-	public enum GameMode
-	{
-		mainmenu = 1,
-		mainmenulobby = 2,
-		singleplayer = 3,
-		maplobby = 4,
-		timeattack = 5
 	}
 	
 	void Awake()
@@ -220,12 +212,12 @@ public class GameInfo : MonoBehaviour
 	}
 
 	//Player hit the goal
-	public void runFinished(float time)
+	public void runFinished(TimeSpan time)
 	{
 		stopDemo();
 		cleanUpPlayer();
-		getCurrentSave().saveIfPersonalBest(time, Application.loadedLevelName);
-		lastTime = time;
+		getCurrentSave().saveIfPersonalBest(time.Ticks, Application.loadedLevelName);
+		lastTime = time.Ticks;
 	}
 
 	//Player hit the exit trigger
@@ -461,11 +453,15 @@ public class GameInfo : MonoBehaviour
 		{
 			setMouseView(false);
 			Time.timeScale = 0f;
+            if (getPlayerInfo() != null)
+                getPlayerInfo().setPause(true);
 		}
 		else
 		{
 			setMouseView(true);
 			Time.timeScale = 1f;
+            if(getPlayerInfo() != null)
+                getPlayerInfo().setPause(false);
 		}
 	}
 
@@ -640,7 +636,7 @@ public class GameInfo : MonoBehaviour
 		myDemoPlayer.playDemo(lastDemo, endLeveldemoPlayEnded);
 	}
 
-	public float getLastTime()
+	public double getLastTime()
 	{
 		return lastTime;
 	}
@@ -728,7 +724,7 @@ public class GameInfo : MonoBehaviour
 	//Send a leaderboard entry to leaderboard server, with a automatically generated hash.
 	//This includes a secret key that will be included in the final game (and not uploaded to github),
 	//so nobody can send fake entries.
-	private void sendLeaderboardEntry(string name, float time, string map)
+	private void sendLeaderboardEntry(string name, long time, string map)
 	{
 		invalidRunCheck();
 		if(runValid)
