@@ -469,7 +469,8 @@ public class GameInfo : MonoBehaviour
 	public void setCurrentSave(SaveData data)
 	{
 		currentSave = data;
-        PlayerPrefs.SetInt("lastplayer", currentSave.getIndex());
+        if(data != null)
+            PlayerPrefs.SetInt("lastplayer", currentSave.getIndex());
 	}
 
 	public SaveData getCurrentSave()

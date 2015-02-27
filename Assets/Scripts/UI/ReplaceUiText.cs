@@ -10,7 +10,7 @@ public class ReplaceUiText : MonoBehaviour
     }
 
     private string initialText = "";
-    private SaveData player1, player2, player3;
+    private static SaveData player1, player2, player3;
     private string wr = "";
     private bool loadingWr = false;
     private string pb = "";
@@ -18,11 +18,10 @@ public class ReplaceUiText : MonoBehaviour
     void Start()
     {
         initialText = textScript.text;
-
-        init();
+        ReplaceUiText.UpdateSaveInfo();
     }
 
-    public void init()
+    public static void UpdateSaveInfo()
     {
         player1 = new SaveData(1);
         player2 = new SaveData(2);
@@ -71,7 +70,35 @@ public class ReplaceUiText : MonoBehaviour
         if (temp.Contains("$wr")) { temp = temp.Replace("$wr", wr); }
         if (temp.Contains("$pb")) { temp = temp.Replace("$pb", pb); }
 
-        if (temp.Contains("$currentplayer")) { temp = temp.Replace("$currentplayer", playerSave.getPlayerName()); }
+        if (temp.Contains("$currentplayer"))
+        {
+            if (playerSave != null && !playerSave.getPlayerName().Equals(""))
+                temp = temp.Replace("$currentplayer", playerSave.getPlayerName());
+            else
+                temp = temp.Replace("$currentplayer", "No player selected!");
+        }
+
+        if (temp.Contains("$load1"))
+        {
+            if (player1.getPlayerName().Equals(""))
+                temp = temp.Replace("$load1", "New");
+            else
+                temp = temp.Replace("$load1", "Load");
+        }
+        if (temp.Contains("$load2"))
+        {
+            if (player2.getPlayerName().Equals(""))
+                temp = temp.Replace("$load2", "New");
+            else
+                temp = temp.Replace("$load2", "Load");
+        }
+        if (temp.Contains("$load3"))
+        {
+            if (player3.getPlayerName().Equals(""))
+                temp = temp.Replace("$load3", "New");
+            else
+                temp = temp.Replace("$load3", "Load");
+        }
 
         textScript.text = temp;
     }

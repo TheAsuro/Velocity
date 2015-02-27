@@ -11,9 +11,11 @@ public class MainMenu : MonoBehaviour
     public GameObject[] menuObjects;
 
     //References to specific things
-    public Button playButton;
     public GameObject gameSelectionContentPanel;
     public GameObject mapPanelPrefab;
+    public InputField newPlayerNameField;
+
+    private int newPlayerSelectedIndex = 0;
 
     private MenuState currentState;
     public MenuState currentMenuState
@@ -25,7 +27,8 @@ public class MainMenu : MonoBehaviour
     {
         MainMenu,
         GameSelection,
-        PlayerSelection
+        PlayerSelection,
+        NewPlayer
     }
 
     public enum GameSelectionContent
@@ -41,9 +44,7 @@ public class MainMenu : MonoBehaviour
     {
         SetMenuState(MenuState.MainMenu);
         GameInfo.info.setMenuState(GameInfo.MenuState.othermenu);
-
-        if (!loadLastPlayer())
-            playButton.interactable = false;
+        loadLastPlayer();
     }
 
     //Load the last player that was logged in, returns false if loading failed
@@ -57,10 +58,64 @@ public class MainMenu : MonoBehaviour
         return true;
     }
 
-    public void loadPlayerAtIndex(int index)
+    private void loadPlayerAtIndex(int index)
     {
         GameInfo.info.setCurrentSave(new SaveData(index));
-        playButton.interactable = true;
+    }
+
+    public void OnPlayButtonPress()
+    {
+        SaveData sd = GameInfo.info.getCurrentSave();
+        if(sd == null || sd.getPlayerName().Equals(""))
+        {
+            //Create a new player if no player is selected
+            SetMenuState(MenuState.PlayerSelection);
+        }
+        else
+        {
+            SetMenuState(MenuState.GameSelection);
+        }
+    }
+
+    public void OnLoadButtonPress(int index)
+    {
+        //Check if a player exists, create new player if not
+        SaveData sd = new SaveData(index);
+        if (sd.getPlayerName().Equals(""))
+        {
+            newPlayerSelectedIndex = index;
+            SetMenuState(MenuState.NewPlayer);
+        }
+        else
+        {
+            loadPlayerAtIndex(index);
+            SetMenuState(MenuState.MainMenu);
+        }
+    }
+
+    public void OnCreatePlayerOK()
+    {
+        CreateNewPlayer(newPlayerSelectedIndex, newPlayerNameField.text);
+    }
+
+    private void CreateNewPlayer(int index, string name)
+    {
+        SaveData sd = new SaveData(index, name);
+        sd.save();
+        loadPlayerAtIndex(index);
+        SetMenuState(MenuState.MainMenu);
+        ReplaceUiText.UpdateSaveInfo();
+    }
+
+    public void DeletePlayerAtIndex(int index)
+    {
+        SaveData sd = new SaveData(index);
+        sd.deleteData();
+        ReplaceUiText.UpdateSaveInfo();
+
+        //Log out from current player if we deleted that one
+        if (GameInfo.info.getCurrentSave() != null && GameInfo.info.getCurrentSave().getIndex() == index)
+            GameInfo.info.setCurrentSave(null);
     }
 
     public void SetMenuState(int stateID)
@@ -93,9 +148,10 @@ public class MainMenu : MonoBehaviour
     private void SetGameSelectionContent(GameSelectionContent newContent)
     {
         //Clear all children
-        foreach(GameObject child in gameSelectionContentPanel.transform)
+        foreach(Object child in gameSelectionContentPanel.transform)
         {
-            GameObject.Destroy(child);
+            if(child.GetType().Equals(typeof(GameObject)))
+                GameObject.Destroy(child);
         }
 
         //Create new children
