@@ -113,7 +113,7 @@ public class MainMenu : MonoBehaviour
     public void DeletePlayerAtIndex(int index)
     {
         SaveData sd = new SaveData(index);
-        sd.deleteData();
+        sd.deleteData(mapNames);
         ReplaceUiText.UpdateSaveInfo();
 
         //Log out from current player if we deleted that one

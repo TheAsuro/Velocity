@@ -37,7 +37,7 @@ public class ReplaceUiText : MonoBehaviour
         else if (temp.Contains("$player2")) { temp = temp.Replace("$player2", player2.getPlayerName()); }
         else if (temp.Contains("$player3")) { temp = temp.Replace("$player3", player3.getPlayerName()); }
         else if (temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.getPlayerName()); }
-        if (temp.Contains("$time")) { temp = temp.Replace("$time", (GameInfo.info.getLastTime() / 10000000D).ToString()); }
+        if (temp.Contains("$time")) { temp = temp.Replace("$time", (GameInfo.info.lastTimeString).ToString()); }
         if (temp.Contains("$map")) { temp = Application.loadedLevelName; }
 
         if (temp.Contains("$selectedmap")) { temp = temp.Replace("$selectedmap", GameInfo.info.getSelectedMap()); }
@@ -63,8 +63,11 @@ public class ReplaceUiText : MonoBehaviour
 
         if (pb.Equals("") && playerSave != null)
         {
-            pb = GameInfo.info.getCurrentSave().getPersonalBest(Application.loadedLevelName).ToString();
-            if (pb == "0") { pb = "-"; }
+            decimal pbTime = GameInfo.info.getCurrentSave().getPersonalBest(Application.loadedLevelName);
+            if (pbTime <= 0)
+                pb = "-";
+            else
+                pb = pbTime.ToString();
         }
 
         if (temp.Contains("$wr")) { temp = temp.Replace("$wr", wr); }

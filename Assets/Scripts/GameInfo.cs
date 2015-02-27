@@ -34,7 +34,9 @@ public class GameInfo : MonoBehaviour
 	//Stuff
 	private SaveData currentSave;
 	private Demo lastDemo;
-	private decimal lastTime = -1L;
+	private decimal lastTime = -1;
+    public string lastTimeString
+    { get { return lastTime.ToString("0.0000"); } }
 	private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
 	private bool runValid = false;
 
@@ -216,7 +218,7 @@ public class GameInfo : MonoBehaviour
 	{
 		stopDemo();
 		cleanUpPlayer();
-        lastTime = time.Ticks / (decimal)1000;
+        lastTime = time.Ticks / (decimal)10000000;
 		getCurrentSave().saveIfPersonalBest(lastTime, Application.loadedLevelName);
 	}
 

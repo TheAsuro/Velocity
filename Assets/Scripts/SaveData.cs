@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class SaveData
 {
@@ -38,7 +38,10 @@ public class SaveData
 
 	public decimal getPersonalBest(string mapName)
 	{
-		return decimal.Parse(PlayerPrefs.GetString(playerName + "_" + mapName));
+        if (PlayerPrefs.HasKey(playerName + "_" + mapName))
+            return decimal.Parse(PlayerPrefs.GetString(playerName + "_" + mapName));
+        else
+            return -1;
 	}
 
 	public string getPlayerName()
@@ -51,9 +54,13 @@ public class SaveData
 		return index;
 	}
 
-	public void deleteData()
+	public void deleteData(List<string> mapNames)
 	{
 		PlayerPrefs.DeleteKey("PlayerName" + index.ToString());
-		//TODO delete player map times
+
+        foreach(string map in mapNames)
+        {
+            PlayerPrefs.DeleteKey(playerName + "_" + map);
+        }
 	}
 }
