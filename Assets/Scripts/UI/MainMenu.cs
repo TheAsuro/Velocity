@@ -12,7 +12,9 @@ public class MainMenu : MonoBehaviour
 
     //References to specific things
     public GameObject gameSelectionContentPanel;
+    public GameObject demoContentPanel;
     public GameObject mapPanelPrefab;
+    public GameObject demoPanelPrefab;
     public InputField newPlayerNameField;
 
     private int newPlayerSelectedIndex = 0;
@@ -28,7 +30,8 @@ public class MainMenu : MonoBehaviour
         MainMenu,
         GameSelection,
         PlayerSelection,
-        NewPlayer
+        NewPlayer,
+        Demos
     }
 
     public enum GameSelectionContent
@@ -140,6 +143,9 @@ public class MainMenu : MonoBehaviour
             case MenuState.GameSelection:
                 SetGameSelectionContent(GameSelectionContent.PlayableMapList);
                 break;
+            case MenuState.Demos:
+                LoadDemoPanels();
+                break;
         }
 
         currentState = newState;
@@ -178,11 +184,47 @@ public class MainMenu : MonoBehaviour
         t.offsetMin = new Vector2(5f, 0f);
         t.offsetMax = new Vector2(-5f, 0f);
         t.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f);
-        t.localPosition = new Vector3(t.localPosition.x, -42.5f - slot * 75f + ((RectTransform)gameSelectionContentPanel.transform).rect.height, 0f);
+        float heightOffset = ((RectTransform)gameSelectionContentPanel.transform).rect.height;
+        t.localPosition = new Vector3(t.localPosition.x, -42.5f - slot * 75f + heightOffset, 0f);
 
         t.FindChild("Name").GetComponent<Text>().text = name;
         t.FindChild("Author").GetComponent<Text>().text = author;
         t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { OnPlayableMapClick(name); }); //Internet magic
+    }
+
+    private void LoadDemoPanels()
+    {
+        //Clear all children
+        foreach (Object child in demoContentPanel.transform)
+        {
+            if (child.GetType().Equals(typeof(GameObject)))
+                GameObject.Destroy(child);
+        }
+
+        //Create a list of all playable maps
+        Demo[] allDemos = DemoInfo.GetAllDemos();
+        ((RectTransform)demoContentPanel.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * allDemos.Length + 10f);
+
+        for (int i = 0; i < allDemos.Length; i++)
+        {
+            CreateDemoPanel(i, allDemos[i].getLevelName(), allDemos[i].getTime().ToString(), allDemos[i].getPlayerName());
+        }
+    }
+
+    private void CreateDemoPanel(int slot, string map, string time, string player)
+    {
+        GameObject panel = (GameObject)GameObject.Instantiate(demoPanelPrefab);
+        RectTransform t = (RectTransform)panel.transform;
+        t.SetParent(demoContentPanel.transform);
+        t.offsetMin = new Vector2(5f, 0f);
+        t.offsetMax = new Vector2(-5f, 0f);
+        t.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f);
+        float heightOffset = ((RectTransform)demoContentPanel.transform).rect.height / 2f;
+        t.localPosition = new Vector3(t.localPosition.x, -42.5f - slot * 75f + heightOffset, 0f);
+
+        t.FindChild("Map").GetComponent<Text>().text = map;
+        t.FindChild("Time").GetComponent<Text>().text = time;
+        t.FindChild("Player").GetComponent<Text>().text = player;
     }
 
     private void OnPlayableMapClick(string mapName)

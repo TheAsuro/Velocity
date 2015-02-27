@@ -10,6 +10,7 @@ public class Demo
 	private List<DemoTick> tickList;
 	private string playerName;
 	private string levelName;
+    private decimal finalTime = -1;
 	private bool loadFromFileFailed = false;
 
 	//Load a demo from file
@@ -30,7 +31,7 @@ public class Demo
 				if(!lines[i].Equals(""))
 				{
 					string[] lineParts = lines[i].Split('|');
-					float time = float.Parse(lineParts[0]);
+					decimal time = decimal.Parse(lineParts[0]);
 					string[] posParts = lineParts[1].Split(';');
 					Vector3 pos = new Vector3(float.Parse(posParts[0]), float.Parse(posParts[1]), float.Parse(posParts[2]));
 					string[] rotParts = lineParts[2].Split(';');
@@ -39,6 +40,9 @@ public class Demo
 					tickList.Add(tick);
 				}
 			}
+
+            if(tickList.Count > 0)
+                finalTime = tickList[tickList.Count - 1].getTime();
 		}
 		catch(FileNotFoundException ex)
 		{
@@ -54,6 +58,9 @@ public class Demo
 		tickList = pTickList;
 		playerName = pPlayerName;
 		levelName = pLevelName;
+
+        if(tickList.Count > 0)
+            finalTime = tickList[tickList.Count - 1].getTime();
 	}
 
 	//RIP
@@ -82,6 +89,11 @@ public class Demo
 		return tickList;
 	}
 
+    public decimal getTime()
+    {
+        return finalTime;
+    }
+
 	//Convert string to bytes (for saving)
 	private static byte[] GetBytes(string str)
 	{
@@ -106,7 +118,7 @@ public class Demo
 		string content = "";
 
 		//header
-		content += "VELOCITYDEMO 1.0.0\n" + playerName + "\n" + levelName + "\n";
+		content += "VELOCITYDEMO 1.0.1\n" + playerName + "\n" + levelName + "\n" + finalTime + "\n";
 
 		//ticks
 		foreach(DemoTick tick in tickList)

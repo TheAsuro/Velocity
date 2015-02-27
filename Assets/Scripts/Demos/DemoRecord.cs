@@ -16,7 +16,7 @@ public class DemoRecord : MonoBehaviour
 		if(recording)
 		{
 			Quaternion rot = Camera.main.transform.rotation;
-			tickList.Add(new DemoTick(Time.time - startPlayTime, transform.position, rot));
+			tickList.Add(new DemoTick((decimal)(Time.time - startPlayTime), transform.position, rot));
 		}
 	}
 

@@ -25,20 +25,20 @@ public class SaveData
 		PlayerPrefs.SetString("PlayerName" + index.ToString(), playerName);
 	}
 
-	public bool saveIfPersonalBest(long time, string mapName)
+	public bool saveIfPersonalBest(decimal time, string mapName)
 	{
-		float pbTime = getPersonalBest(mapName);
-		if(pbTime == 0f || time < pbTime)
+		decimal pbTime = getPersonalBest(mapName);
+		if(pbTime == 0 || time < pbTime)
 		{
-			PlayerPrefs.SetInt(playerName + "_" + mapName, (int)time);
+			PlayerPrefs.SetString(playerName + "_" + mapName, time.ToString());
 			return true;
 		}
 		return false;
 	}
 
-	public float getPersonalBest(string mapName)
+	public decimal getPersonalBest(string mapName)
 	{
-		return PlayerPrefs.GetFloat(playerName + "_" + mapName);
+		return decimal.Parse(PlayerPrefs.GetString(playerName + "_" + mapName));
 	}
 
 	public string getPlayerName()

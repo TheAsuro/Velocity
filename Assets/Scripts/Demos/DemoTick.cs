@@ -4,23 +4,23 @@ using System.Collections;
 [System.Serializable]
 public class DemoTick
 {
-	private float time;
+	private decimal time;
 	private Vector3 position;
 	private Quaternion rotation;
 
-	public DemoTick(float recordtime, Vector3 pos, Quaternion rot)
+	public DemoTick(decimal recordtime, Vector3 pos, Quaternion rot)
 	{
 		time = recordtime;
 		position = pos;
 		rotation = rot;
 	}
 
-	public void setTime(float value)
+	public void setTime(decimal value)
 	{
 		time = value;
 	}
 
-	public float getTime()
+	public decimal getTime()
 	{
 		return time;
 	}

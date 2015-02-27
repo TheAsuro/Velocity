@@ -34,7 +34,7 @@ public class GameInfo : MonoBehaviour
 	//Stuff
 	private SaveData currentSave;
 	private Demo lastDemo;
-	private long lastTime = -1L;
+	private decimal lastTime = -1L;
 	private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
 	private bool runValid = false;
 
@@ -216,8 +216,8 @@ public class GameInfo : MonoBehaviour
 	{
 		stopDemo();
 		cleanUpPlayer();
-		getCurrentSave().saveIfPersonalBest(time.Ticks, Application.loadedLevelName);
-		lastTime = time.Ticks;
+        lastTime = time.Ticks / (decimal)1000;
+		getCurrentSave().saveIfPersonalBest(lastTime, Application.loadedLevelName);
 	}
 
 	//Player hit the exit trigger
@@ -638,7 +638,7 @@ public class GameInfo : MonoBehaviour
 		myDemoPlayer.playDemo(lastDemo, endLeveldemoPlayEnded);
 	}
 
-	public double getLastTime()
+	public decimal getLastTime()
 	{
 		return lastTime;
 	}
@@ -726,7 +726,7 @@ public class GameInfo : MonoBehaviour
 	//Send a leaderboard entry to leaderboard server, with a automatically generated hash.
 	//This includes a secret key that will be included in the final game (and not uploaded to github),
 	//so nobody can send fake entries.
-	private void sendLeaderboardEntry(string name, long time, string map)
+	private void sendLeaderboardEntry(string name, decimal time, string map)
 	{
 		invalidRunCheck();
 		if(runValid)

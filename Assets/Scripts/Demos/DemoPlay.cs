@@ -34,18 +34,18 @@ public class DemoPlay : MonoBehaviour
 			foreach(DemoTick tick in tickList)
 			{
 				//Find the highest one that is smaller than playTime
-				if(tick.getTime() <= playTime && tick.getTime() > lastFrameTime)
+				if((float)tick.getTime() <= playTime && (float)tick.getTime() > lastFrameTime)
 				{
-					lastFrameTime = tick.getTime();
+					lastFrameTime = (float)tick.getTime();
 					lastPos = tick.getPosition();
 					lastRot = tick.getRotation();
 				}
 				//Find the one after that
 				else
 				{
-					if(tick.getTime() > lastFrameTime && nextFrameTime == -1f)
+					if((float)tick.getTime() > (float)lastFrameTime && nextFrameTime == -1f)
 					{
-						nextFrameTime = tick.getTime();
+						nextFrameTime = (float)tick.getTime();
 						nextPos = tick.getPosition();
 						nextRot = tick.getRotation();
 					}
