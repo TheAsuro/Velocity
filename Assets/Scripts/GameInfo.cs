@@ -559,18 +559,51 @@ public class GameInfo : MonoBehaviour
 	//Load game settings from playerprefs, but don't apply them yet
 	public void loadPlayerSettings()
 	{
-		fov = PlayerPrefs.GetFloat("fov");
-		mouseSpeed = PlayerPrefs.GetFloat("mouseSpeed");
-		invertYInput = PlayerPrefs.GetFloat("invertY");
-		volume = PlayerPrefs.GetFloat("volume");
-        anisotropicFiltering = PlayerPrefs.GetFloat("aniso");
-		antiAliasing = PlayerPrefs.GetFloat("aa");
-		textureSize = PlayerPrefs.GetFloat("textureSize");
-		lightingLevel = PlayerPrefs.GetFloat("lighting");
-		vsyncLevel = PlayerPrefs.GetFloat("vsync");
+        //Check if keys are available, load defaults otherwise
+        if (PlayerPrefs.HasKey("fov"))
+            fov = PlayerPrefs.GetFloat("fov");
+        else
+            fov = 90f;
 
-		if(fov == 0f) { fov = 90f; }
-		if(mouseSpeed == 0f) { mouseSpeed = 1f; }
+        if (PlayerPrefs.HasKey("mouseSpeed"))
+            mouseSpeed = PlayerPrefs.GetFloat("mouseSpeed");
+        else
+            mouseSpeed = 1f;
+
+        if (PlayerPrefs.HasKey("invertY"))
+            invertYInput = PlayerPrefs.GetFloat("invertY");
+        else
+            invertYInput = 0f;
+
+        if (PlayerPrefs.HasKey("volume"))
+            volume = PlayerPrefs.GetFloat("volume");
+        else
+            volume = 0.5f;
+
+        if (PlayerPrefs.HasKey("aniso"))
+            anisotropicFiltering = PlayerPrefs.GetFloat("aniso");
+        else
+            anisotropicFiltering = 1f;
+
+        if (PlayerPrefs.HasKey("aa"))
+            antiAliasing = PlayerPrefs.GetFloat("aa");
+        else
+            antiAliasing = 2f;
+
+        if (PlayerPrefs.HasKey("textureSize"))
+            textureSize = PlayerPrefs.GetFloat("textureSize");
+        else
+            textureSize = 2f;
+
+        if (PlayerPrefs.HasKey("lighting"))
+            lightingLevel = PlayerPrefs.GetFloat("lighting");
+        else
+            lightingLevel = 4f;
+
+        if (PlayerPrefs.HasKey("vsync"))
+            vsyncLevel = PlayerPrefs.GetFloat("vsync");
+        else
+            vsyncLevel = 0f;
 
 		applySettings();
 	}
