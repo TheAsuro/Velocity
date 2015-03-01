@@ -51,13 +51,13 @@ public class GameInfo : MonoBehaviour
 	private List<string> linePrefixes = new List<string>();
 	private List<InfoString> windowLines = new List<InfoString>();
 
-	//Game settings
+	//Game settings (saved as floats because PlayerPrefs can't handle bools
 	public float mouseSpeed = 1f;
-	public bool invertYInput = false;
+	public float invertYInput = 0f;
 	public float fov = 90f;
 	public bool showHelp = true;
 	public float volume = 0.5f;
-	public bool anisotropicFiltering = false;
+	public float anisotropicFiltering = 1f;
 	public float antiAliasing = 0f;
 	public float textureSize = 0f;
 	public float lightingLevel = 0f;
@@ -516,13 +516,13 @@ public class GameInfo : MonoBehaviour
 		if(myPlayer != null)
 		{
 			myPlayer.setMouseSens(mouseSpeed);
-			myPlayer.invertYInput = invertYInput;
+			myPlayer.invertYInput = invertYInput == 1f;
 			myPlayer.setFov(fov);
 			myPlayer.setVolume(volume);
 		}
 
 		AnisotropicFiltering filter = AnisotropicFiltering.Disable;
-		if(anisotropicFiltering) { filter = AnisotropicFiltering.ForceEnable; }
+		if(anisotropicFiltering == 1f) { filter = AnisotropicFiltering.ForceEnable; }
 
 		int textureLimit = 2 - (int)textureSize;
 
@@ -538,10 +538,10 @@ public class GameInfo : MonoBehaviour
 	public void savePlayerSettings()
 	{
 		float anisoValue = 0f;
-		if(anisotropicFiltering) { anisoValue = 1f; }
+		if(anisotropicFiltering == 1f) { anisoValue = 1f; }
 
 		float invertValue = 0f;
-		if(invertYInput) { invertValue = 1f; }
+		if(invertYInput == 1f) { invertValue = 1f; }
 
 		PlayerPrefs.SetFloat("fov", fov);
 		PlayerPrefs.SetFloat("mouseSpeed", mouseSpeed);
@@ -561,15 +561,15 @@ public class GameInfo : MonoBehaviour
 	{
 		fov = PlayerPrefs.GetFloat("fov");
 		mouseSpeed = PlayerPrefs.GetFloat("mouseSpeed");
-		invertYInput = (PlayerPrefs.GetFloat("invertY") == 1f);
+		invertYInput = PlayerPrefs.GetFloat("invertY");
 		volume = PlayerPrefs.GetFloat("volume");
-		anisotropicFiltering = (PlayerPrefs.GetFloat("aniso") == 1f);
+        anisotropicFiltering = PlayerPrefs.GetFloat("aniso");
 		antiAliasing = PlayerPrefs.GetFloat("aa");
 		textureSize = PlayerPrefs.GetFloat("textureSize");
 		lightingLevel = PlayerPrefs.GetFloat("lighting");
 		vsyncLevel = PlayerPrefs.GetFloat("vsync");
 
-		if(fov == 0f) { fov = 60f; }
+		if(fov == 0f) { fov = 90f; }
 		if(mouseSpeed == 0f) { mouseSpeed = 1f; }
 
 		applySettings();

@@ -1,138 +1,139 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class SettingsSlider : MonoBehaviour
 {
-	public UnityEngine.UI.Text valueDisplay;
-	public SliderType sliderType;
+    public Slider slider;
+    public Text display;
+    public SettingType type;
+    public int roundDigits = -1;
+    public string[] valueNames;
+    public float[] valueMeaning;
+    public string prefix = "";
+    public string postfix = "";
 
-	public enum SliderType
-	{
-		Volume,
-		Sensitivity,
-		YInvert,
-		Fov,
-		Vsync,
-		Lighting,
-		AntiAliasing,
-		AnisotropicFiltering,
-		TextureSize
-	}
+    public enum SettingType
+    {
+        Volume,
+        Fov,
+        AntiAliasing,
+        AnisotropicFiltering,
+        TextureSize,
+        VSync,
+        Lighting,
+        MouseSpeed,
+        YInvert
+    }
 
-	void Start()
-	{
-		UnityEngine.UI.Slider.SliderEvent myEvent = new UnityEngine.UI.Slider.SliderEvent();
-		myEvent.AddListener(OnValueChanged);
-		GetComponent<UnityEngine.UI.Slider>().onValueChanged = myEvent;
-	}
+    void Awake()
+    {
+        slider.onValueChanged.AddListener(OnValueChanged);
+        MainMenu.SettingsOpened += OnSettingsOpened;
+        UpdateValues();
+    }
 
-	void OnValueChanged(float value)
-	{
-		float correctValue = value;
+    private void OnValueChanged(float value)
+    {
+        string roundStr = value.ToString();
+        float savedValue = value;
 
-		switch(sliderType)
-		{
-			case SliderType.Volume:
-				correctValue = floor(value, 2);
-				valueDisplay.text = correctValue.ToString();
-				GameInfo.info.volume = correctValue;
-				break;
-			case SliderType.Sensitivity:
-				correctValue = floor(value, 1);
-				valueDisplay.text = correctValue.ToString();
-				GameInfo.info.mouseSpeed = correctValue;
-				break;
-			case SliderType.YInvert:
-				valueDisplay.text = translateFloat(correctValue);
-				GameInfo.info.invertYInput = correctValue == 1f;
-				break;
-			case SliderType.Fov:
-				valueDisplay.text = correctValue.ToString();
-				GameInfo.info.fov = correctValue;
-				break;
-			case SliderType.Vsync:
-				valueDisplay.text = translateFloat(correctValue);
-				GameInfo.info.vsyncLevel = correctValue;
-				break;
-			case SliderType.Lighting:
-				valueDisplay.text = correctValue.ToString();
-				GameInfo.info.lightingLevel = correctValue;
-				break;
-			case SliderType.AntiAliasing:
-				correctValue = roundAA(value);
-				valueDisplay.text = correctValue.ToString();
-				GameInfo.info.antiAliasing = correctValue;
-				break;
-			case SliderType.AnisotropicFiltering:
-				valueDisplay.text = translateFloat(correctValue);
-				GameInfo.info.anisotropicFiltering = correctValue == 1f;
-				break;
-			case SliderType.TextureSize:
-				valueDisplay.text = translateTextureSize(correctValue);
-				GameInfo.info.textureSize = correctValue;
-				break;
-		}
-	}
+        if(roundDigits >= 0)
+        {
+            roundStr = System.Math.Round(value, roundDigits).ToString();
+        }
 
-	//Returns rounded value of a float
-	public static float floor(float input, int decimalsAfterPoint)
-	{
-		if(decimalsAfterPoint <= 0)
-		{
-			return Mathf.Round(input);
-		}
-		else
-		{
-			float temp = input * Mathf.Pow(10, decimalsAfterPoint);
-			return Mathf.Round(temp) / Mathf.Pow(10, decimalsAfterPoint);
-		}
-	}
+        if(valueNames.Length > 0)
+        {
+            display.text = prefix + valueNames[(int)value] + postfix;
+        }
+        else
+        {
+            display.text = prefix + roundStr + postfix;
+        }
 
-	//Return rounded value acceptable for AA
-	public static float roundAA(float input)
-	{
-		if(input < 1f)
-		{
-			return 0f;
-		}
-		else if(input < 3f)
-		{
-			return 2f;
-		}
-		else if(input < 6f)
-		{
-			return 4f;
-		}
-		else
-		{
-			return 8f;
-		}
-	}
+        if(valueMeaning.Length > 0)
+        {
+            savedValue = valueMeaning[(int)value];
+        }
 
-	//Returns On/Off for float input
-	public static string translateFloat(float input)
-	{
-		if(input == 0f)
-		{
-			return "Off";
-		}
-		return "On";
-	}
+        switch(type)
+        {
+            case SettingType.Volume:
+                GameInfo.info.volume = savedValue; break;
+            case SettingType.Fov:
+                GameInfo.info.fov = savedValue; break;
+            case SettingType.AntiAliasing:
+                GameInfo.info.antiAliasing = savedValue; break;
+            case SettingType.AnisotropicFiltering:
+                GameInfo.info.anisotropicFiltering = savedValue; break;
+            case SettingType.Lighting:
+                GameInfo.info.lightingLevel = savedValue; break;
+            case SettingType.TextureSize:
+                GameInfo.info.textureSize = savedValue; break;
+            case SettingType.VSync:
+                GameInfo.info.vsyncLevel = savedValue; break;
+            case SettingType.MouseSpeed:
+                GameInfo.info.mouseSpeed = savedValue; break;
+            case SettingType.YInvert:
+                GameInfo.info.invertYInput = savedValue; break;
+            default:
+                print("fok"); break;
+        }
+    }
 
-	public static string translateTextureSize(float input)
-	{
-		if(input == 2)
-		{
-			return "Full";
-		}
-		else if(input == 1)
-		{
-			return "Half";
-		}
-		else if(input == 0)
-		{
-			return "Quarter";
-		}
-		return "Error";
-	}
+    public void OnSettingsOpened(object sender, System.EventArgs e)
+    {
+        UpdateValues();
+    }
+
+    private void UpdateValues()
+    {
+        float newValue = -1f;
+
+        switch(type)
+        {
+            case SettingType.Volume:
+                newValue = GameInfo.info.volume; break;
+            case SettingType.Fov:
+                newValue = GameInfo.info.fov; break;
+            case SettingType.AntiAliasing:
+                newValue = GameInfo.info.antiAliasing; break;
+            case SettingType.AnisotropicFiltering:
+                newValue = GameInfo.info.anisotropicFiltering; break;
+            case SettingType.Lighting:
+                newValue = GameInfo.info.lightingLevel; break;
+            case SettingType.VSync:
+                newValue = GameInfo.info.vsyncLevel; break;
+            case SettingType.MouseSpeed:
+                newValue = GameInfo.info.mouseSpeed; break;
+            case SettingType.YInvert:
+                newValue = GameInfo.info.invertYInput; break;
+            case SettingType.TextureSize:
+                newValue = GameInfo.info.textureSize; break;
+        }
+
+        newValue = ConvertToSlider(newValue);
+
+        slider.value = newValue;
+        slider.onValueChanged.Invoke(newValue);
+    }
+
+    private float ConvertToSlider(float savedValue)
+    {
+        //If the slider value is the same as it's meaning, return it directly
+        if (valueMeaning.Length == 0)
+            return savedValue;
+
+        //Translate the internal value to the slider position
+        for(int i = 0; i < valueMeaning.Length; i++)
+        {
+            if(valueMeaning[i] == savedValue)
+            {
+                return (float)i;
+            }
+        }
+
+        return -1;
+    }
 }

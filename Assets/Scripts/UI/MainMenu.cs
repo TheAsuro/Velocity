@@ -5,10 +5,14 @@ using System.Collections.Generic;
 
 public class MainMenu : MonoBehaviour
 {
+    public static event System.EventHandler SettingsOpened;
+
     //General stuff
 	public List<string> mapNames = new List<string>();
 	public List<string> mapAuthors = new List<string>();
     public GameObject[] menuObjects;
+    public GameObject[] settingObjects;
+    public Toggle[] settingTitles;
 
     //References to specific things
     public GameObject gameSelectionContentPanel;
@@ -31,7 +35,8 @@ public class MainMenu : MonoBehaviour
         GameSelection,
         PlayerSelection,
         NewPlayer,
-        Demos
+        Demos,
+        Settings
     }
 
     public enum GameSelectionContent
@@ -146,6 +151,9 @@ public class MainMenu : MonoBehaviour
             case MenuState.Demos:
                 LoadDemoPanels();
                 break;
+            case MenuState.Settings:
+                if (SettingsOpened != null) { SettingsOpened(this, null); }
+                break;
         }
 
         currentState = newState;
@@ -174,6 +182,19 @@ public class MainMenu : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    public void SetSettingGroup(int groupID)
+    {
+        SetMenuState(MenuState.Settings);
+
+        foreach (GameObject obj in settingObjects)
+        {
+            obj.SetActive(false);
+        }
+
+        settingObjects[groupID].SetActive(true);
+        settingTitles[groupID].isOn = true;
     }
 
     private void CreateMapPanel(int slot, string name, string author)
@@ -230,5 +251,35 @@ public class MainMenu : MonoBehaviour
     private void OnPlayableMapClick(string mapName)
     {
         GameInfo.info.loadLevel(mapName);
+    }
+
+    public void OnSettingTitleStatusChange(int group)
+    {
+        if(settingTitles[group].isOn)
+        {
+            SetSettingGroup(group);
+        }
+    }
+
+    public void SaveSettings()
+    {
+        GameInfo.info.savePlayerSettings();
+    }
+
+    public void DeleteSettings()
+    {
+        PlayerPrefs.DeleteKey("fov");
+        PlayerPrefs.DeleteKey("mouseSpeed");
+        PlayerPrefs.DeleteKey("invertY");
+        PlayerPrefs.DeleteKey("volume");
+        PlayerPrefs.DeleteKey("aniso");
+        PlayerPrefs.DeleteKey("aa");
+        PlayerPrefs.DeleteKey("textureSize");
+        PlayerPrefs.DeleteKey("lighting");
+        PlayerPrefs.DeleteKey("vsync");
+
+        GameInfo.info.loadPlayerSettings();
+        if (SettingsOpened != null)
+            SettingsOpened(this, null);
     }
 }
