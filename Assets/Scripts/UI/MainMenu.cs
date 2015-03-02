@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 
 public class MainMenu : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class MainMenu : MonoBehaviour
     public GameObject mapPanelPrefab;
     public GameObject demoPanelPrefab;
     public InputField newPlayerNameField;
+    public Text blogText;
 
     private int newPlayerSelectedIndex = 0;
 
@@ -53,6 +55,9 @@ public class MainMenu : MonoBehaviour
         SetMenuState(MenuState.MainMenu);
         GameInfo.info.setMenuState(GameInfo.MenuState.othermenu);
         loadLastPlayer();
+
+        WWW www = new WWW("http://theasuro.de/Velocity/feed/");
+        StartCoroutine(WaitForBlogEntry(www));
     }
 
     //Load the last player that was logged in, returns false if loading failed
@@ -281,5 +286,30 @@ public class MainMenu : MonoBehaviour
         GameInfo.info.loadPlayerSettings();
         if (SettingsOpened != null)
             SettingsOpened(this, null);
+    }
+
+    public IEnumerator WaitForBlogEntry(WWW www)
+    {
+        yield return www;
+        XmlDocument doc = new XmlDocument();
+        string fixedStr = www.text.Substring(www.text.IndexOf("<?xml"));
+        doc.LoadXml(fixedStr);
+        XmlNode node = doc.GetElementsByTagName("item")[0];
+        string title = "";
+        string content = "";
+        foreach(XmlNode subNode in node)
+        {
+           if (subNode.Name.Equals("title"))
+                title = subNode.InnerText;
+
+            if (subNode.Name.Equals("content:encoded"))
+                content = subNode.InnerText;
+        }
+        blogText.text = title + "\n" + stripHtml(content);
+    }
+
+    private string stripHtml(string text)
+    {
+        return text.Replace("<p>","").Replace("</p>", "\n");
     }
 }
