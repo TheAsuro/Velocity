@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
+using System.Text.RegularExpressions;
 
 public class MainMenu : MonoBehaviour
 {
@@ -332,16 +333,26 @@ public class MainMenu : MonoBehaviour
         doc.LoadXml(fixedStr);
         XmlNode node = doc.GetElementsByTagName("item")[0];
         string title = "";
+        string date = "";
         string content = "";
         foreach(XmlNode subNode in node)
         {
-           if (subNode.Name.Equals("title"))
+            if (subNode.Name.Equals("title"))
                 title = subNode.InnerText;
+
+            if (subNode.Name.Equals("pubDate"))
+                date = parseDate(subNode.InnerText);
 
             if (subNode.Name.Equals("content:encoded"))
                 content = subNode.InnerText;
         }
-        blogText.text = stripHtml(title) + "\n" + stripHtml(content);
+        blogText.text = "\"" + stripHtml(title) + "\" - " + date + "\n\n" + stripHtml(content);
+    }
+
+    private string parseDate(string text)
+    {
+        Regex r = new Regex("(.*, \\d* .* \\d*) ");
+        return r.Match(text).Captures[0].Value;
     }
 
     private string stripHtml(string text)
