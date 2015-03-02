@@ -1347,11 +1347,26 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Controls:\n-Hold right mouse button to look around\n-Use WASD to move\n-Select
-    objects from the list below\n-Press E to change object rotation\n-Press Left click
-    to place an object\n-Use the scroll wheel to set placement height\n-Alt + Click
-    to remove an object\n\nAdvanced controls:\n-Shift + Scroll for increased jumps
-    in placement height \n-Shift + WASD for faster camera movement"
+  m_Text: 'Controls:
+
+    -Look: Right mouse button
+
+    -Move: WASD
+
+    -Spawn: Select object from list below, left click
+
+    -Rotate: E
+
+    -Set Height: Mousewheel
+
+    -Remove: Alt + Click
+
+
+    Advanced controls:
+
+    -Scroll up/down faster: Shift + Mousewheel
+
+    -Move camera faster: Shift + WASD'
 --- !u!222 &329535296
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2723,8 +2738,8 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -220}
-  m_SizeDelta: {x: 450, y: 350}
+  m_AnchoredPosition: {x: 225, y: -190}
+  m_SizeDelta: {x: 450, y: 300}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &628388974
 MonoBehaviour:

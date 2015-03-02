@@ -62,6 +62,16 @@ public class EditorInfo : MonoBehaviour
         fileSel = canvasT.Find("FileSelection").GetComponent<FileSelection>();
 	}
 
+    void Start()
+    {
+        //If there is a preset map in gameinfo, load this map now
+        if (!GameInfo.info.editorLevelName.Equals(""))
+        {
+            levelNameText.text = GameInfo.info.editorLevelName;
+            LoadLevel();
+        }
+    }
+
 	void Update()
 	{
 		DrawSelectionBox();
@@ -258,7 +268,6 @@ public class EditorInfo : MonoBehaviour
 
 	public void LoadLevel()
 	{
-		SetSnap(false); //Todo save and load grid placement (needed?)
 		ClearLevel();
 		LevelData data = EditorObjects.OBJ.LoadLevelFromFile(Application.dataPath + "/" + levelNameText.text + ".vlvl");
 

@@ -205,7 +205,6 @@ public class MainMenu : MonoBehaviour
     private void LoadEditableMaps()
     {
         string[] mapFiles = Directory.GetFiles(Application.dataPath, "*.vlvl");
-        print(mapFiles.Length);
         for (int i = 0; i < mapFiles.Length; i++)
         {
             mapFiles[i] = Path.GetFileNameWithoutExtension(mapFiles[i]);
@@ -240,7 +239,7 @@ public class MainMenu : MonoBehaviour
         t.offsetMin = new Vector2(5f, 0f);
         t.offsetMax = new Vector2(-5f, 0f);
         t.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f);
-        float heightOffset = ((RectTransform)parent.transform).rect.height;
+        float heightOffset = ((RectTransform)parent.transform).rect.height / 2f;
         t.localPosition = new Vector3(t.localPosition.x, -42.5f - slot * 75f + heightOffset, 0f);
         return panel;
     }
@@ -342,12 +341,12 @@ public class MainMenu : MonoBehaviour
             if (subNode.Name.Equals("content:encoded"))
                 content = subNode.InnerText;
         }
-        blogText.text = title + "\n" + stripHtml(content);
+        blogText.text = stripHtml(title) + "\n" + stripHtml(content);
     }
 
     private string stripHtml(string text)
     {
-        return text.Replace("<p>","").Replace("</p>", "\n");
+        return System.Web.HttpUtility.HtmlDecode(text).Replace("<p>","").Replace("</p>","\n");
     }
 
     public void LoadEditorWithLevel(string levelName)
