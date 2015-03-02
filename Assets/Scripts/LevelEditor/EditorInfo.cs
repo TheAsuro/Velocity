@@ -253,14 +253,14 @@ public class EditorInfo : MonoBehaviour
 
 	public void SaveLevel()
 	{
-		EditorObjects.OBJ.SaveLevelToFile(levelNameText.text + ".vlvl");
+		EditorObjects.OBJ.SaveLevelToFile(Application.dataPath + "/" + levelNameText.text + ".vlvl");
 	}
 
 	public void LoadLevel()
 	{
 		SetSnap(false); //Todo save and load grid placement (needed?)
 		ClearLevel();
-		LevelData data = EditorObjects.OBJ.LoadLevelFromFile(levelNameText.text + ".vlvl");
+		LevelData data = EditorObjects.OBJ.LoadLevelFromFile(Application.dataPath + "/" + levelNameText.text + ".vlvl");
 
 		foreach(ObjectData oData in data.levelObjects)
 		{

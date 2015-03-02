@@ -68,6 +68,9 @@ public class GameInfo : MonoBehaviour
 	public float circleSpeed2 = 20f;
 	public float circleSpeed3 = 30f;
 
+    //Editor
+    public string editorLevelName = "";
+
 	//References
 	private PlayerInfo myPlayer;
 	private DemoPlay myDemoPlayer;

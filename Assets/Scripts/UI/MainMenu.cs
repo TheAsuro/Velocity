@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
+using System.IO;
 
 public class MainMenu : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class MainMenu : MonoBehaviour
     public GameObject demoContentPanel;
     public GameObject mapPanelPrefab;
     public GameObject demoPanelPrefab;
+    public GameObject editPanelPrefab;
     public InputField newPlayerNameField;
     public Text blogText;
 
@@ -164,28 +166,56 @@ public class MainMenu : MonoBehaviour
         currentState = newState;
     }
 
+    public void SetGameSelectionContent(int contentID)
+    {
+        SetGameSelectionContent((GameSelectionContent)contentID);
+    }
+
     private void SetGameSelectionContent(GameSelectionContent newContent)
     {
         //Clear all children
-        foreach(Object child in gameSelectionContentPanel.transform)
+        foreach(Transform child in gameSelectionContentPanel.transform)
         {
-            if(child.GetType().Equals(typeof(GameObject)))
-                GameObject.Destroy(child);
+            GameObject.Destroy(child.gameObject);
         }
 
         //Create new children
         switch (newContent)
         {
             case GameSelectionContent.PlayableMapList:
-                //Create a list of all playable maps
-                int mapCount = Mathf.Min(mapNames.Count, mapAuthors.Count);
-                ((RectTransform)gameSelectionContentPanel.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * mapCount + 10f);
+                LoadPlayableMaps(); break;
+            case GameSelectionContent.EditableMapList:
+                LoadEditableMaps(); break;
+            default:
+                print("todo"); break;
+        }
+    }
 
-                for (int i = 0; i < mapCount; i++)
-                {
-                    CreateMapPanel(i, mapNames[i], mapAuthors[i]);
-                }
-                break;
+    private void LoadPlayableMaps()
+    {
+        int mapCount = Mathf.Min(mapNames.Count, mapAuthors.Count);
+        ((RectTransform)gameSelectionContentPanel.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * mapCount + 10f);
+
+        for (int i = 0; i < mapCount; i++)
+        {
+            CreateMapPanel(i, mapNames[i], mapAuthors[i]);
+        }
+    }
+
+    private void LoadEditableMaps()
+    {
+        string[] mapFiles = Directory.GetFiles(Application.dataPath, "*.vlvl");
+        print(mapFiles.Length);
+        for (int i = 0; i < mapFiles.Length; i++)
+        {
+            mapFiles[i] = Path.GetFileNameWithoutExtension(mapFiles[i]);
+        }
+
+        ((RectTransform)gameSelectionContentPanel.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * mapFiles.Length + 10f);
+
+        for (int i = 0; i < mapFiles.Length; i++)
+        {
+            CreateEditPanel(i, mapFiles[i]);
         }
     }
 
@@ -202,20 +232,43 @@ public class MainMenu : MonoBehaviour
         settingTitles[groupID].isOn = true;
     }
 
-    private void CreateMapPanel(int slot, string name, string author)
+    private GameObject CreatePanel(int slot, GameObject prefab, Transform parent)
     {
-        GameObject panel = (GameObject)GameObject.Instantiate(mapPanelPrefab);
+        GameObject panel = (GameObject)GameObject.Instantiate(prefab);
         RectTransform t = (RectTransform)panel.transform;
-        t.SetParent(gameSelectionContentPanel.transform);
+        t.SetParent(parent);
         t.offsetMin = new Vector2(5f, 0f);
         t.offsetMax = new Vector2(-5f, 0f);
         t.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f);
-        float heightOffset = ((RectTransform)gameSelectionContentPanel.transform).rect.height;
+        float heightOffset = ((RectTransform)parent.transform).rect.height;
         t.localPosition = new Vector3(t.localPosition.x, -42.5f - slot * 75f + heightOffset, 0f);
+        return panel;
+    }
+
+    private void CreateMapPanel(int slot, string name, string author)
+    {
+        Transform t = CreatePanel(slot, mapPanelPrefab, gameSelectionContentPanel.transform).transform;
 
         t.FindChild("Name").GetComponent<Text>().text = name;
         t.FindChild("Author").GetComponent<Text>().text = author;
         t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { OnPlayableMapClick(name); }); //Internet magic
+    }
+
+    private void CreateEditPanel(int slot, string fileName)
+    {
+        Transform t = CreatePanel(slot, editPanelPrefab, gameSelectionContentPanel.transform).transform;
+
+        t.FindChild("Name").GetComponent<Text>().text = fileName;
+        t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { LoadEditorWithLevel(fileName); });
+    }
+
+    private void CreateDemoPanel(int slot, string map, string time, string player)
+    {
+        Transform t = CreatePanel(slot, demoPanelPrefab, demoContentPanel.transform).transform;
+
+        t.FindChild("Map").GetComponent<Text>().text = map;
+        t.FindChild("Time").GetComponent<Text>().text = time;
+        t.FindChild("Player").GetComponent<Text>().text = player;
     }
 
     private void LoadDemoPanels()
@@ -235,22 +288,6 @@ public class MainMenu : MonoBehaviour
         {
             CreateDemoPanel(i, allDemos[i].getLevelName(), allDemos[i].getTime().ToString(), allDemos[i].getPlayerName());
         }
-    }
-
-    private void CreateDemoPanel(int slot, string map, string time, string player)
-    {
-        GameObject panel = (GameObject)GameObject.Instantiate(demoPanelPrefab);
-        RectTransform t = (RectTransform)panel.transform;
-        t.SetParent(demoContentPanel.transform);
-        t.offsetMin = new Vector2(5f, 0f);
-        t.offsetMax = new Vector2(-5f, 0f);
-        t.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f);
-        float heightOffset = ((RectTransform)demoContentPanel.transform).rect.height / 2f;
-        t.localPosition = new Vector3(t.localPosition.x, -42.5f - slot * 75f + heightOffset, 0f);
-
-        t.FindChild("Map").GetComponent<Text>().text = map;
-        t.FindChild("Time").GetComponent<Text>().text = time;
-        t.FindChild("Player").GetComponent<Text>().text = player;
     }
 
     private void OnPlayableMapClick(string mapName)
@@ -311,5 +348,11 @@ public class MainMenu : MonoBehaviour
     private string stripHtml(string text)
     {
         return text.Replace("<p>","").Replace("</p>", "\n");
+    }
+
+    public void LoadEditorWithLevel(string levelName)
+    {
+        GameInfo.info.editorLevelName = levelName;
+        GameInfo.info.loadLevel("LevelEditor");
     }
 }
