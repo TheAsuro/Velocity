@@ -53,8 +53,8 @@ public class PlayerInfo : MonoBehaviour
 
 	public void playSound(AudioClip pClip)
 	{
-		myMesh.audio.clip = pClip;
-		myMesh.audio.Play();
+		myMesh.GetComponent<AudioSource>().clip = pClip;
+		myMesh.GetComponent<AudioSource>().Play();
 	}
 
 	public string getCurrentSpeed()
@@ -75,7 +75,7 @@ public class PlayerInfo : MonoBehaviour
 
 	public void setVolume(float volume)
 	{
-		myMesh.audio.volume = volume;
+		myMesh.GetComponent<AudioSource>().volume = volume;
 	}
 
 	public void startDemo(string playerName)

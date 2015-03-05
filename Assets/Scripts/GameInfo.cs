@@ -62,6 +62,7 @@ public class GameInfo : MonoBehaviour
 	public float textureSize = 0f;
 	public float lightingLevel = 0f;
 	public float vsyncLevel = 0f;
+    public float demoPerspective = 0f;
 
 	//GUI settings
 	public float circleSpeed1 = 10f;
@@ -115,7 +116,6 @@ public class GameInfo : MonoBehaviour
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
 		myLeaderboardObj = myCanvas.transform.Find("Leaderboard").gameObject;
 		myLeaderboard = myCanvas.GetComponent<Leaderboard>();
-		Screen.lockCursor = true;
 		setMenuState(MenuState.closed);
 	}
 
@@ -162,14 +162,14 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	//Lock cursor after game window lost and gained focus
-	void OnApplicationFocus(bool focusStatus)
+	//Lock cursor after game window lost and gained focus __DUNNO IF THIS IS STILL NECESSARY__
+	/*void OnApplicationFocus(bool focusStatus)
 	{
 		if(getMenuState() == MenuState.closed && focusStatus)
 		{
-			Screen.lockCursor = true;
+			Cursor.lockState = CursorLockMode.Locked;
 		}
-	}
+	}*/
 
 	//Prepare for new level
 	void OnLevelWasLoaded(int level)
@@ -345,24 +345,18 @@ public class GameInfo : MonoBehaviour
 			escMenu.SetActive(false);
 			endLevel.SetActive(false);
 			myLeaderboardObj.SetActive(false);
-			Screen.lockCursor = false;
 
 			switch(state)
 			{
 				case MenuState.closed:
 					setGamePaused(false);
-					Screen.lockCursor = true;
 					break;
 				case MenuState.escmenu:
 					escMenu.SetActive(true);
 					break;
-				case MenuState.inactive:
-					setGamePaused(false);
-					break;
 				case MenuState.demo:
 					setGamePaused(false);
 					setMouseView(false);
-					Screen.lockCursor = true;
 					break;
 				case MenuState.leaderboard:
 					setMouseView(false);
@@ -387,7 +381,6 @@ public class GameInfo : MonoBehaviour
 				case MenuState.editorplay:
 					menuLocked = true;
 					setGamePaused(false);
-					Screen.lockCursor = true;
 					break;
 			}
 
@@ -555,6 +548,7 @@ public class GameInfo : MonoBehaviour
 		PlayerPrefs.SetFloat("textureSize", textureSize);
 		PlayerPrefs.SetFloat("lighting", lightingLevel);
 		PlayerPrefs.SetFloat("vsync", vsyncLevel);
+        PlayerPrefs.SetFloat("demoPerspective", demoPerspective);
 
 		applySettings();
 	}
@@ -607,6 +601,11 @@ public class GameInfo : MonoBehaviour
             vsyncLevel = PlayerPrefs.GetFloat("vsync");
         else
             vsyncLevel = 0f;
+
+        if (PlayerPrefs.HasKey("demoPerspective"))
+            demoPerspective = PlayerPrefs.GetFloat("demoPerspective");
+        else
+            demoPerspective = 0f;
 
 		applySettings();
 	}

@@ -91,15 +91,15 @@ public class Movement : MonoBehaviour
 	public void freeze()
 	{
 		frozen = true;
-		rigidbody.isKinematic = true;
+		GetComponent<Rigidbody>().isKinematic = true;
 	}
 
 	public void unfreeze()
 	{
-		rigidbody.isKinematic = false;
+		GetComponent<Rigidbody>().isKinematic = false;
 		//TODO find less hacky way of updating the rigidbody
-		rigidbody.useGravity = false;
-		rigidbody.useGravity = true;
+		GetComponent<Rigidbody>().useGravity = false;
+		GetComponent<Rigidbody>().useGravity = true;
 		frozen = false;
 	}
 
@@ -111,15 +111,15 @@ public class Movement : MonoBehaviour
 		if(allowMoveVertical) { input.y = Input.GetAxis("Vertical"); }
 
 		//Friction
-		Vector3 tempVelocity = calculateFriction(rigidbody.velocity);
+		Vector3 tempVelocity = calculateFriction(GetComponent<Rigidbody>().velocity);
 
 		//Add movement
 		tempVelocity += calculateMovement(input, tempVelocity);		
 			
 		//Apply
-		if(!rigidbody.isKinematic)
+		if(!GetComponent<Rigidbody>().isKinematic)
 		{
-			rigidbody.velocity = tempVelocity;
+			GetComponent<Rigidbody>().velocity = tempVelocity;
 		}
 
 		//Kill player if below map
@@ -219,7 +219,7 @@ public class Movement : MonoBehaviour
 			}
 			if(tp.cancelVelocity)
 			{
-				rigidbody.velocity = Vector3.zero;
+				GetComponent<Rigidbody>().velocity = Vector3.zero;
 			}
 		}
 		else if(other.tag.Equals("Kill"))
@@ -235,7 +235,7 @@ public class Movement : MonoBehaviour
 		{
 			transform.position = spawn.getSpawnPos();
 			camObj.transform.rotation = spawn.getSpawnRot();
-			rigidbody.velocity = Vector3.zero;
+			GetComponent<Rigidbody>().velocity = Vector3.zero;
 			lastJumpPress = -1f;
 		}
 		else
@@ -265,8 +265,8 @@ public class Movement : MonoBehaviour
 	
 	public bool checkGround()
 	{
-		Vector3 pos = new Vector3(transform.position.x, transform.position.y - collider.bounds.extents.y + 0.05f, transform.position.z);
-		Vector3 radiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
+		Vector3 pos = new Vector3(transform.position.x, transform.position.y - GetComponent<Collider>().bounds.extents.y + 0.05f, transform.position.z);
+		Vector3 radiusVector = new Vector3(GetComponent<Collider>().bounds.extents.x, 0f, 0f);
 		return checkCylinder(pos, radiusVector, -0.1f, 8);
 	}
 
@@ -328,7 +328,7 @@ public class Movement : MonoBehaviour
 	
 	private void setCrouched(bool state)
 	{
-		MeshCollider col = (MeshCollider)collider;
+		MeshCollider col = (MeshCollider)GetComponent<Collider>();
 
 		if(!crouched && state)
 		{
@@ -341,8 +341,8 @@ public class Movement : MonoBehaviour
 		else if(crouched && !state)
 		{
 			//extend down if not on ground
-			Vector3 lowerPos = transform.position + new Vector3(0f, (collider.bounds.extents.y * -1f) + 0.05f, 0f);
-			Vector3 lowerRadiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
+			Vector3 lowerPos = transform.position + new Vector3(0f, (GetComponent<Collider>().bounds.extents.y * -1f) + 0.05f, 0f);
+			Vector3 lowerRadiusVector = new Vector3(GetComponent<Collider>().bounds.extents.x, 0f, 0f);
 			if(!checkCylinder(lowerPos, lowerRadiusVector, -1.05f, 8, false))
 			{
 				col.transform.localScale = new Vector3(col.transform.localScale.x, 1f, col.transform.localScale.z);
@@ -353,8 +353,8 @@ public class Movement : MonoBehaviour
 			else
 			{
 				//extend up if there is space
-				Vector3 upperPos = transform.position + new Vector3(0f, collider.bounds.extents.y - 0.05f, 0f);
-				Vector3 upperRadiusVector = new Vector3(collider.bounds.extents.x, 0f, 0f);
+				Vector3 upperPos = transform.position + new Vector3(0f, GetComponent<Collider>().bounds.extents.y - 0.05f, 0f);
+				Vector3 upperRadiusVector = new Vector3(GetComponent<Collider>().bounds.extents.x, 0f, 0f);
 
 				if(!checkCylinder(upperPos, upperRadiusVector, 1.05f, 8, false))
 				{
@@ -388,12 +388,12 @@ public class Movement : MonoBehaviour
 		
 	private float getVelocity()
 	{
-		return Vector3.Magnitude(rigidbody.velocity);
+		return Vector3.Magnitude(GetComponent<Rigidbody>().velocity);
 	}
 	
 	public string getXzVelocityString()
 	{
-		float mag = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z).magnitude;
+		float mag = new Vector3(GetComponent<Rigidbody>().velocity.x, 0f, GetComponent<Rigidbody>().velocity.z).magnitude;
 		string magstr = mag.ToString();
 		if(magstr.ToLower().Contains("e"))
 		{
@@ -404,7 +404,7 @@ public class Movement : MonoBehaviour
 	
 	public string getYVelocityString()
 	{
-		string v = rigidbody.velocity.y.ToString();
+		string v = GetComponent<Rigidbody>().velocity.y.ToString();
 		if(v.ToLower().Contains("e"))
 		{
 			return "0";

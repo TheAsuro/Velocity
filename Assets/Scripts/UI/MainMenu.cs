@@ -57,6 +57,7 @@ public class MainMenu : MonoBehaviour
     {
         SetMenuState(MenuState.MainMenu);
         GameInfo.info.setMenuState(GameInfo.MenuState.othermenu);
+		GameInfo.info.lockMenu();
         loadLastPlayer();
 
         WWW www = new WWW("http://theasuro.de/Velocity/feed/");

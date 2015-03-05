@@ -39,7 +39,13 @@ public class SaveData
 	public decimal getPersonalBest(string mapName)
 	{
         if (PlayerPrefs.HasKey(playerName + "_" + mapName))
-            return decimal.Parse(PlayerPrefs.GetString(playerName + "_" + mapName));
+        {
+			string s = PlayerPrefs.GetString(playerName + "_" + mapName);
+			if(!s.Equals(""))
+				return decimal.Parse(s);
+			else
+				return -1;
+        }
         else
             return -1;
 	}

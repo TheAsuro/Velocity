@@ -33,8 +33,8 @@ public class ScaleTex : MonoBehaviour
 		
 		foreach(string texture in textures)
 		{
-			renderer.material.GetTexture(texture).wrapMode = TextureWrapMode.Repeat;
-			renderer.material.SetTextureScale(texture, scale);
+			GetComponent<Renderer>().material.GetTexture(texture).wrapMode = TextureWrapMode.Repeat;
+			GetComponent<Renderer>().material.SetTextureScale(texture, scale);
 		}
 	}
 }

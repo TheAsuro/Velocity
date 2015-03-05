@@ -23,7 +23,8 @@ public class SettingsSlider : MonoBehaviour
         VSync,
         Lighting,
         MouseSpeed,
-        YInvert
+        YInvert,
+        DemoPerspective
     }
 
     void Awake()
@@ -77,6 +78,8 @@ public class SettingsSlider : MonoBehaviour
                 GameInfo.info.mouseSpeed = savedValue; break;
             case SettingType.YInvert:
                 GameInfo.info.invertYInput = savedValue; break;
+            case SettingType.DemoPerspective:
+                GameInfo.info.demoPerspective = savedValue; break;
             default:
                 print("fok"); break;
         }
@@ -111,6 +114,8 @@ public class SettingsSlider : MonoBehaviour
                 newValue = GameInfo.info.invertYInput; break;
             case SettingType.TextureSize:
                 newValue = GameInfo.info.textureSize; break;
+            case SettingType.DemoPerspective:
+                newValue = GameInfo.info.demoPerspective; break;
         }
 
         newValue = ConvertToSlider(newValue);
