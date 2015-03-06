@@ -7,14 +7,14 @@ public class DemoPlay : MonoBehaviour
 	public delegate void FinishedPlaying();
 	public GameObject ghostPrefab;
 	public GameObject ghostCamPrefab;
-	public Vector3 camDistance;
+    public Vector3 thirdPersonOffset;
 
+	private Vector3 camDistance;
 	private FinishedPlaying myFinishedPlaying;
 	private bool playing = false;
 	private float startPlayTime;
 	private GameObject ghost;
-	private GameObject ghostCamObj;
-	private GameObject ghostCamChild;
+	private GameObject ghostCam;
 	private List<DemoTick> tickList;
 
 	void Update()
@@ -52,6 +52,7 @@ public class DemoPlay : MonoBehaviour
 				}
 			}
 
+            //If demo is running
 			if(lastFrameTime > 0f && nextFrameTime > 0f)
 			{
 				float frameStep = nextFrameTime - lastFrameTime;
@@ -64,12 +65,20 @@ public class DemoPlay : MonoBehaviour
 				ghost.transform.position = Vector3.Lerp(lastPos, nextPos, t);
 				ghost.transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, t);
 
-				//TODO make obj at ghost position and child at cam distance
-				ghostCamObj.transform.position = ghost.transform.position;
-				ghostCamChild.transform.localPosition = camDistance;
-				ghostCamObj.transform.rotation = ghost.transform.rotation;
+                //Update first/third person view
+                if (GameInfo.info.demoPerspective == 0f)
+                    camDistance = new Vector3(0f, 0.5f, 0f); //First person view
+                else
+                    camDistance = thirdPersonOffset; //Third person view
 
-				ghostCamChild.transform.LookAt(ghost.transform.position);
+				//make obj at ghost position and child at cam distance
+				ghostCam.transform.position = ghost.transform.position + (ghost.transform.rotation * camDistance);
+
+                //Look at player if in third person
+                if (GameInfo.info.demoPerspective == 1f)
+                    ghostCam.transform.LookAt(ghost.transform.position);
+                else
+                    ghostCam.transform.rotation = ghost.transform.rotation;
 			}
 
 			if(nextFrameTime == -1f)
@@ -90,11 +99,12 @@ public class DemoPlay : MonoBehaviour
 		//Get ghost spawn
 		Respawn spawn = WorldInfo.info.getFirstSpawn();
 		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
-		ghostCamObj = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
-		ghostCamChild = ghostCamObj.transform.FindChild("CamObj").gameObject;
+		ghostCam = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
 
 		//Set up camera
-		ghostCamChild.GetComponent<Camera>().backgroundColor = WorldInfo.info.worldBackgroundColor;
+        Camera cam = ghostCam.GetComponent<Camera>();
+		cam.backgroundColor = WorldInfo.info.worldBackgroundColor;
+        cam.fieldOfView = GameInfo.info.fov;
 
 		//Set start time to current time
 		startPlayTime = Time.time;
@@ -121,7 +131,7 @@ public class DemoPlay : MonoBehaviour
 	{
 		playing = false;
 		GameObject.Destroy(ghost);
-		GameObject.Destroy(ghostCamObj);
+		GameObject.Destroy(ghostCam);
 		if(finished)
 		{
 			myFinishedPlaying();

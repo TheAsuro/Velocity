@@ -26,7 +26,7 @@ public class Demo
 			levelName = lines[2];
 			tickList = new List<DemoTick>();
 
-			for(int i = 3; i < lines.Length; i++)
+			for(int i = 4; i < lines.Length; i++)
 			{
 				if(!lines[i].Equals(""))
 				{
