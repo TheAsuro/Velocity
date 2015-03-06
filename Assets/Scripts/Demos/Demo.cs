@@ -19,30 +19,32 @@ public class Demo
 	{
 		try
 		{
-			string content = GetString(System.IO.File.ReadAllBytes(file));
+            FileStream stream = new FileStream(file, FileMode.Open);
+            BinaryReader reader = new BinaryReader(stream);
 
-			string[] lines = content.Split('\n');
-			playerName = lines[1];
-			levelName = lines[2];
 			tickList = new List<DemoTick>();
 
-			for(int i = 4; i < lines.Length; i++)
-			{
-				if(!lines[i].Equals(""))
-				{
-					string[] lineParts = lines[i].Split('|');
-					decimal time = decimal.Parse(lineParts[0]);
-					string[] posParts = lineParts[1].Split(';');
-					Vector3 pos = new Vector3(float.Parse(posParts[0]), float.Parse(posParts[1]), float.Parse(posParts[2]));
-					string[] rotParts = lineParts[2].Split(';');
-					Quaternion rot = new Quaternion(float.Parse(rotParts[0]), float.Parse(rotParts[1]), float.Parse(rotParts[2]), float.Parse(rotParts[3]));
-					DemoTick tick = new DemoTick(time, pos, rot);
-					tickList.Add(tick);
-				}
-			}
+            //Read header
+            string demoVersion = reader.ReadString();
+            playerName = reader.ReadString();
+            levelName = reader.ReadString();
+            finalTime = reader.ReadDecimal();
 
-            if(tickList.Count > 0)
-                finalTime = tickList[tickList.Count - 1].getTime();
+            //Read ticks until end of file
+			while(reader.BaseStream.Position < reader.BaseStream.Length)
+            {
+                decimal time = reader.ReadDecimal();
+                float xPos = reader.ReadSingle();
+                float yPos = reader.ReadSingle();
+                float zPos = reader.ReadSingle();
+                Vector3 pos = new Vector3(xPos, yPos, zPos);
+                float xRot = reader.ReadSingle();
+                float yRot = reader.ReadSingle();
+                Quaternion rot = Quaternion.Euler(xRot, yRot, 0f);
+                DemoTick tick = new DemoTick(time, pos, rot);
+
+                tickList.Add(tick);
+            }
 		}
 		catch(FileNotFoundException ex)
 		{
@@ -94,55 +96,34 @@ public class Demo
         return finalTime;
     }
 
-	//Convert string to bytes (for saving)
-	private static byte[] GetBytes(string str)
-	{
-	    byte[] bytes = new byte[str.Length * sizeof(char)];
-	    System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-	    return bytes;
-	}
-
-	//Convert bytes to string (for loading)
-	private static string GetString(byte[] bytes)
-	{
-	    char[] chars = new char[bytes.Length / sizeof(char)];
-	    System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-	    return new string(chars);
-	}
-
-	//Save demo to file (Currently only on windows)
+	//Save demo to file
 	#if UNITY_STANDALONE
 	public void saveToFile(string path)
 	{
 		string filename = path + "/" + playerName + "-" + levelName + ".vdem";
-		string content = "";
+        FileStream stream = new FileStream(filename, FileMode.Create);
+        BinaryWriter writer = new BinaryWriter(stream);
 
 		//header
-		content += "VELOCITYDEMO 1.0.1\n" + playerName + "\n" + levelName + "\n" + finalTime + "\n";
+		writer.Write("VELOCITYDEMO 1.1.0");
+        writer.Write(playerName);
+        writer.Write(levelName);
+        writer.Write(finalTime);
 
 		//ticks
 		foreach(DemoTick tick in tickList)
 		{
-			content += tick.getTime();
-			content += "|";
-			content += tick.getPosition().x;
-			content += ";";
-			content += tick.getPosition().y;
-			content += ";";
-			content += tick.getPosition().z;
-			content += "|";
-			content += tick.getRotation().x;
-			content += ";";
-			content += tick.getRotation().y;
-			content += ";";
-			content += tick.getRotation().z;
-			content += ";";
-			content += tick.getRotation().w;
-			content += "\n";
+            writer.Write(tick.getTime());
+			writer.Write(tick.getPosition().x);
+			writer.Write(tick.getPosition().y);
+			writer.Write(tick.getPosition().z);
+			writer.Write(tick.getRotation().eulerAngles.x);
+			writer.Write(tick.getRotation().eulerAngles.y);
 		}
 
-		//write
-		File.WriteAllBytes(filename, GetBytes(content));
+		//close
+        writer.Close();
+        stream.Dispose();
 	}
 	#endif
 }

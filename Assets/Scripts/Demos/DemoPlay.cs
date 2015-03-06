@@ -59,8 +59,8 @@ public class DemoPlay : MonoBehaviour
 				float timeToNextFrame = nextFrameTime - playTime;
 				float t = timeToNextFrame / frameStep;
 
-				Quaternion editedLastRot = Quaternion.Euler(0f, lastRot.eulerAngles.y, 0f);
-				Quaternion editedNextRot = Quaternion.Euler(0f, nextRot.eulerAngles.y, 0f);
+				Quaternion editedLastRot = Quaternion.Euler(lastRot.eulerAngles.x, lastRot.eulerAngles.y, 0f);
+				Quaternion editedNextRot = Quaternion.Euler(lastRot.eulerAngles.x, nextRot.eulerAngles.y, 0f);
 
 				ghost.transform.position = Vector3.Lerp(lastPos, nextPos, t);
 				ghost.transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, t);
