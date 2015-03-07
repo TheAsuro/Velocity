@@ -188,9 +188,10 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	//Load a level, but inform other players if this is a server
+	//Load a level
 	public void loadLevel(string name)
 	{
+        //Server stuff might be here later
 		Application.LoadLevel(name);
 	}
 
@@ -228,14 +229,15 @@ public class GameInfo : MonoBehaviour
 	//Player hit the exit trigger
 	public void levelFinished()
 	{
+        //If we are in editor, stop the test run
+        if (myPlayer.editorMode)
+        {
+            EditorInfo.info.EndTest();
+            return;
+        }
+
 		GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
 		lastDemo = myPlayer.getDemo();
-
-		//If we are in editor, stop the test run
-		if(myPlayer.editorMode)
-		{
-			EditorInfo.info.EndTest();
-		}
 
 		//If a player save is loaded, play demo and send to leaderboard
 		if(getCurrentSave() != null)

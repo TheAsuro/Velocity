@@ -19,7 +19,12 @@ static class DemoInfo
         return ret;
     }
 
-    private static string[] GetDemoNames()
+    public static void DeleteDemoFile(string path)
+    {
+        File.Delete(path);
+    }
+
+    public static string[] GetDemoNames()
     {
         return Directory.GetFiles(Application.dataPath, "*.vdem");
     }

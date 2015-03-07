@@ -61,7 +61,7 @@ public class Demo
 		playerName = pPlayerName;
 		levelName = pLevelName;
 
-        if(tickList.Count > 0)
+        if(tickList != null && tickList.Count > 0)
             finalTime = tickList[tickList.Count - 1].getTime();
 	}
 

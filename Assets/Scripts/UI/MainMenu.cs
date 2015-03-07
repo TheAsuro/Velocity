@@ -263,31 +263,34 @@ public class MainMenu : MonoBehaviour
         t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { LoadEditorWithLevel(fileName); });
     }
 
-    private void CreateDemoPanel(int slot, string map, string time, string player)
+    private void CreateDemoPanel(int slot, string map, string time, string player, string fileName)
     {
         Transform t = CreatePanel(slot, demoPanelPrefab, demoContentPanel.transform).transform;
 
         t.FindChild("Map").GetComponent<Text>().text = map;
         t.FindChild("Time").GetComponent<Text>().text = time;
         t.FindChild("Player").GetComponent<Text>().text = player;
+
+        t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { PlayDemo(fileName); });
+        t.FindChild("Remove").GetComponent<Button>().onClick.AddListener(delegate { DeleteDemo(fileName); });
     }
 
     private void LoadDemoPanels()
     {
         //Clear all children
-        foreach (Object child in demoContentPanel.transform)
+        foreach (Transform child in demoContentPanel.transform)
         {
-            if (child.GetType().Equals(typeof(GameObject)))
-                GameObject.Destroy(child);
+            GameObject.Destroy(child.gameObject);
         }
 
         //Create a list of all playable maps
         Demo[] allDemos = DemoInfo.GetAllDemos();
+        string[] allDemoFiles = DemoInfo.GetDemoNames();
         ((RectTransform)demoContentPanel.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * allDemos.Length + 10f);
 
         for (int i = 0; i < allDemos.Length; i++)
         {
-            CreateDemoPanel(i, allDemos[i].getLevelName(), allDemos[i].getTime().ToString(), allDemos[i].getPlayerName());
+            CreateDemoPanel(i, allDemos[i].getLevelName(), allDemos[i].getTime().ToString(), allDemos[i].getPlayerName(), allDemoFiles[i]);
         }
     }
 
@@ -302,6 +305,17 @@ public class MainMenu : MonoBehaviour
         {
             SetSettingGroup(group);
         }
+    }
+
+    private void PlayDemo(string name)
+    {
+        //TODO
+    }
+
+    private void DeleteDemo(string name)
+    {
+        DemoInfo.DeleteDemoFile(name);
+        SetMenuState(MenuState.Demos);
     }
 
     public void SaveSettings()
