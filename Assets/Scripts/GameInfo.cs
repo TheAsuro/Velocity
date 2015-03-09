@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ public class GameInfo : MonoBehaviour
 	private Leaderboard myLeaderboard;
 	private string selectedMap;
 	private string selectedAuthor = "?";
+    private GameInfoFX fx;
 
 	//Sound
 	public List<string> soundNames;
@@ -117,6 +119,8 @@ public class GameInfo : MonoBehaviour
 		myLeaderboardObj = myCanvas.transform.Find("Leaderboard").gameObject;
 		myLeaderboard = myCanvas.GetComponent<Leaderboard>();
 		setMenuState(MenuState.closed);
+
+        fx = new GameInfoFX(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
 	}
 
 	void Start()
@@ -160,6 +164,9 @@ public class GameInfo : MonoBehaviour
 		{
 			myDebugWindowText.text += "No player";
 		}
+
+        //Update effects
+        fx.Update();
 	}
 
 	//Lock cursor after game window lost and gained focus __DUNNO IF THIS IS STILL NECESSARY__
@@ -176,23 +183,30 @@ public class GameInfo : MonoBehaviour
 	{
 		removeAllWindowLines();
 		loadPlayerSettings();
-		menuLocked = false;
-		WorldInfo wInfo = WorldInfo.info;
-		if(wInfo != null)
-		{
-			setMenuState(wInfo.beginState);
-		}
-		else
-		{
-			setMenuState(MenuState.inactive);
-		}
+        menuLocked = true;
+
+        fx.StartFadeToColor(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f, StartLevelAction);
 	}
+
+    private void StartLevelAction()
+    {
+        menuLocked = false;
+        WorldInfo wInfo = WorldInfo.info;
+        if (wInfo != null)
+        {
+            setMenuState(wInfo.beginState);
+        }
+        else
+        {
+            setMenuState(MenuState.inactive);
+        }
+    }
 
 	//Load a level
 	public void loadLevel(string name)
 	{
         //Server stuff might be here later
-		Application.LoadLevel(name);
+        fx.StartFadeToColor(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, delegate { Application.LoadLevel(name); });
 	}
 
 	//Creates a new local player (the one that is controlled by the current user)
@@ -844,4 +858,73 @@ public class GameInfo : MonoBehaviour
 			invalidRunCheck();
 		}
 	}
+}
+
+class GameInfoFX
+{
+    public delegate void Callback();
+    private delegate void EffectUpdate(Effect effect);
+
+    private Image effectImage;
+
+    private List<Effect> activeEffects;
+
+    struct Effect
+    {
+        public float startTime;
+        public float duration;
+        public EffectUpdate update;
+        public Callback callback;
+        public Color startColor;
+        public Color endColor;
+    }
+
+    public GameInfoFX(Image image)
+    {
+        activeEffects = new List<Effect>();
+
+        effectImage = image;
+    }
+
+    //Call this in the script's update function
+    public void Update()
+    {
+        //Go through active effects and update them
+        for (int i = 0; i < activeEffects.Count; i++)
+        {
+            activeEffects[i].update(activeEffects[i]);
+        }
+    }
+
+    public void StartFadeToColor(Color start, Color end, float duration, Callback callback)
+    {
+        Effect e = new Effect();
+        e.startTime = Time.unscaledTime;
+        e.duration = duration;
+        e.startColor = start;
+        e.endColor = end;
+        e.update = FadeToColor;
+        e.callback = callback;
+        activeEffects.Add(e);
+    }
+
+    private void FadeToColor(Effect effect)
+    {
+        //Fade
+        float progress = Interpolate(effect.startTime, Time.unscaledTime, effect.startTime + effect.duration);
+        effectImage.color = Color.Lerp(effect.startColor, effect.endColor, progress);
+
+        //Check if we are done
+        if(progress >= 1f)
+        {
+            effect.callback();
+            activeEffects.Remove(effect);
+        }
+    }
+
+    //Returns 0 if current == start; returns 1 if current == end
+    private float Interpolate(float start, float current, float end)
+    {
+        return (current - start) / (end - start);
+    }
 }
