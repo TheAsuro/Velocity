@@ -398,7 +398,7 @@ public class EditorInfo : MonoBehaviour
 
 	public void ExitEditor()
 	{
-		Application.LoadLevel("MainMenu");
+        GameInfo.info.loadLevel("MainMenu");
 	}
 
 	private Vector3 SimpleVectorMultiply(Vector3 a, Vector3 b)

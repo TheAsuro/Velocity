@@ -183,13 +183,7 @@ public class GameInfo : MonoBehaviour
 	{
 		removeAllWindowLines();
 		loadPlayerSettings();
-        menuLocked = true;
 
-        fx.StartFadeToColor(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f, StartLevelAction);
-	}
-
-    private void StartLevelAction()
-    {
         menuLocked = false;
         WorldInfo wInfo = WorldInfo.info;
         if (wInfo != null)
@@ -200,7 +194,9 @@ public class GameInfo : MonoBehaviour
         {
             setMenuState(MenuState.inactive);
         }
-    }
+
+        fx.StartFadeToColor(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f, delegate { });
+	}
 
 	//Load a level
 	public void loadLevel(string name)
