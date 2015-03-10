@@ -340,6 +340,12 @@ public class MainMenu : MonoBehaviour
             SettingsOpened(this, null);
     }
 
+    public void DeleteEverything()
+    {
+        PlayerPrefs.DeleteAll();
+        GameInfo.info.loadPlayerSettings();
+    }
+
     public IEnumerator WaitForBlogEntry(WWW www)
     {
         yield return www;

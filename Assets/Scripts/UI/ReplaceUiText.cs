@@ -67,7 +67,7 @@ public class ReplaceUiText : MonoBehaviour
             if (pbTime <= 0)
                 pb = "-";
             else
-                pb = pbTime.ToString();
+                pb = pbTime.ToString("0.0000");
         }
 
         if (temp.Contains("$wr")) { temp = temp.Replace("$wr", wr); }
