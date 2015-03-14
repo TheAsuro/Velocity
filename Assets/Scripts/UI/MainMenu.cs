@@ -386,4 +386,9 @@ public class MainMenu : MonoBehaviour
         GameInfo.info.editorLevelName = levelName;
         GameInfo.info.loadLevel("LevelEditor");
     }
+
+    public void Quit()
+    {
+        GameInfo.info.quit();
+    }
 }

@@ -27,9 +27,9 @@ public class SaveData
 
 	public bool saveIfPersonalBest(decimal time, string mapName)
 	{
-		decimal pbTime = getPersonalBest(mapName);
-		if(pbTime <= 0 || time < pbTime)
-		{
+        decimal pbTime = getPersonalBest(mapName);
+        if(pbTime <= 0 || time < pbTime)
+        {
             PlayerPrefs.SetString(playerName + "_" + mapName, time.ToString());
             return true;
 		}
