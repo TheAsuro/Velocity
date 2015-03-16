@@ -1921,6 +1921,7 @@ MonoBehaviour:
   - jump
   soundClips:
   - {fileID: 8300000, guid: b7edf35dbb83dbc4e921f861592864a9, type: 3}
+  loadMode: 0
   logToConsole: 1
   mouseSpeed: 1
   invertYInput: 0
@@ -7163,9 +7164,9 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 1
+        m_CallState: 2
       - m_Target: {fileID: 169137253}
-        m_MethodName: setMenuState
+        m_MethodName: SetMenuState
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7175,9 +7176,9 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: demo
           m_BoolArgument: 0
-        m_CallState: 1
+        m_CallState: 2
       - m_Target: {fileID: 169137253}
-        m_MethodName: playLastDemo
+        m_MethodName: PlayRaceDemo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7187,7 +7188,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &799054425
@@ -17813,7 +17814,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 169137253}
-        m_MethodName: setMenuState
+        m_MethodName: SetMenuState
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

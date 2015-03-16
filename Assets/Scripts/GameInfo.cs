@@ -34,12 +34,13 @@ public class GameInfo : MonoBehaviour
 
 	//Stuff
 	private SaveData currentSave;
-	private Demo lastDemo;
+	private Demo currentDemo;
 	private decimal lastTime = -1;
     public string lastTimeString
     { get { return lastTime.ToString("0.0000"); } }
 	private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
 	private bool runValid = false;
+    public LevelLoadMode loadMode = LevelLoadMode.play;
 
     //Server
     private ServerConnection serverConnection;
@@ -94,6 +95,12 @@ public class GameInfo : MonoBehaviour
 		editor,
 		editorplay
 	}
+
+    public enum LevelLoadMode
+    {
+        play,
+        demo
+    }
 	
 	void Awake()
 	{
@@ -116,7 +123,7 @@ public class GameInfo : MonoBehaviour
 		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
 		myLeaderboardObj = myCanvas.transform.Find("Leaderboards").gameObject;
-		setMenuState(MenuState.closed);
+		SetMenuState(MenuState.closed);
 
         fx = new GameInfoFX(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
 	}
@@ -184,13 +191,19 @@ public class GameInfo : MonoBehaviour
 
         menuLocked = false;
         WorldInfo wInfo = WorldInfo.info;
-        if (wInfo != null)
+
+        //Initialize based on loadMode
+        if(loadMode == LevelLoadMode.play)
         {
-            setMenuState(wInfo.beginState);
+            if (wInfo != null)
+                SetMenuState(wInfo.beginState);
+            else
+                SetMenuState(MenuState.inactive);
         }
-        else
+        else if(loadMode == LevelLoadMode.demo)
         {
-            setMenuState(MenuState.inactive);
+            SetMenuState(MenuState.demo);
+            PlayDemo(currentDemo);
         }
 
         fx.StartFadeToColor(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f, delegate { });
@@ -244,14 +257,14 @@ public class GameInfo : MonoBehaviour
             return;
         }
 
-		GameInfo.info.setMenuState(GameInfo.MenuState.endlevel);
-		lastDemo = myPlayer.getDemo();
+		GameInfo.info.SetMenuState(GameInfo.MenuState.endlevel);
+		currentDemo = myPlayer.getDemo();
 
 		//If a player save is loaded, play demo and send to leaderboard
 		if(getCurrentSave() != null)
 		{
 			sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName);
-			playLastDemo();
+			PlayRaceDemo();
 		}
 
 		setPlayerInfo(null);
@@ -278,7 +291,7 @@ public class GameInfo : MonoBehaviour
 		stopDemo();
 		cleanUpPlayer();
 		WorldInfo.info.reset();
-		setMenuState(MenuState.closed);
+		SetMenuState(MenuState.closed);
 		startDemo();
 	}
 
@@ -311,42 +324,42 @@ public class GameInfo : MonoBehaviour
 	}
 
 	//Version for new gui
-	public void setMenuState(string state)
+	public void SetMenuState(string state)
 	{
 		switch(state)
 		{
 			case "closed":
-				setMenuState(MenuState.closed);
+				SetMenuState(MenuState.closed);
 				break;
 			case "escmenu":
-				setMenuState(MenuState.escmenu);
+				SetMenuState(MenuState.escmenu);
 				break;
 			case "inactive":
-				setMenuState(MenuState.inactive);
+				SetMenuState(MenuState.inactive);
 				break;
 			case "demo":
-				setMenuState(MenuState.demo);
+				SetMenuState(MenuState.demo);
 				break;
 			case "leaderboard":
-				setMenuState(MenuState.leaderboard);
+				SetMenuState(MenuState.leaderboard);
 				break;
 			case "endlevel":
-				setMenuState(MenuState.endlevel);
+				SetMenuState(MenuState.endlevel);
 				break;
 			case "othermenu":
-				setMenuState(MenuState.othermenu);
+				SetMenuState(MenuState.othermenu);
 				break;
 			case "editor":
-				setMenuState(MenuState.editor);
+				SetMenuState(MenuState.editor);
 				break;
 			case "editorplay":
-				setMenuState(MenuState.editorplay);
+				SetMenuState(MenuState.editorplay);
 				break;
 		}
 	}
 
 	//Menu state manager
-	public void setMenuState(MenuState state)
+	public void SetMenuState(MenuState state)
 	{
 		if(!menuLocked)
 		{
@@ -367,6 +380,7 @@ public class GameInfo : MonoBehaviour
 				case MenuState.demo:
 					setGamePaused(false);
 					setMouseView(false);
+                    menuLocked = true;
 					break;
 				case MenuState.leaderboard:
 					setMouseView(false);
@@ -402,11 +416,11 @@ public class GameInfo : MonoBehaviour
 	{
 		if(menuState == MenuState.closed)
 		{
-			setMenuState(MenuState.escmenu);
+			SetMenuState(MenuState.escmenu);
 		}
 		else
 		{
-			setMenuState(MenuState.closed);
+			SetMenuState(MenuState.closed);
 		}
 	}
 
@@ -414,10 +428,10 @@ public class GameInfo : MonoBehaviour
 	{
 		if(myLeaderboardObj.activeSelf)
 		{
-			setMenuState(MenuState.endlevel);
+			SetMenuState(MenuState.endlevel);
 			return;
 		}
-		setMenuState(MenuState.leaderboard);
+		SetMenuState(MenuState.leaderboard);
 	}
 
     public void connectToServer(string ip, int port, string password = "")
@@ -661,28 +675,26 @@ public class GameInfo : MonoBehaviour
 			myPlayer.stopDemo();
 	}
 
-	//Plays a demo from a ".vdem" file, does not work in web player
-	public void playDemoFromFile(string fileName)
+	//Plays a demo and returns to main menu
+	public void PlayDemo(Demo demo)
 	{
-		#if UNITY_STANDALONE
+        currentDemo = demo;
 
-		stopDemo();
+        //Reload level if in wrong mode/level (this function will be called again)
+        if(currentDemo.getLevelName() != Application.loadedLevelName || loadMode != LevelLoadMode.demo)
+        {
+            loadMode = LevelLoadMode.demo;
+            loadLevel(currentDemo.getLevelName());
+            return;
+        }
 
-		string fixedFileName = fileName;
-		if(!fixedFileName.ToLower().EndsWith(".vdem")) { fixedFileName += ".vdem"; }
-		
-		Demo myDemo = new Demo(Application.dataPath + "/" + fixedFileName);
-		if(!myDemo.didLoadFromFileFail())
-		{
-			myDemoPlayer.playDemo(myDemo, consoleDemoPlayEnded);
-		}
-
-		#endif
+        myDemoPlayer.playDemo(currentDemo, delegate { loadMode = LevelLoadMode.play; loadLevel("MainMenu"); });
 	}
 
-	public void playLastDemo()
+    //Plays the current demo and returns to end level screen
+	public void PlayRaceDemo()
 	{
-		myDemoPlayer.playDemo(lastDemo, endLeveldemoPlayEnded);
+        myDemoPlayer.playDemo(currentDemo, delegate { menuLocked = false; SetMenuState(MenuState.endlevel); });
 	}
 
 	public decimal getLastTime()
@@ -690,24 +702,12 @@ public class GameInfo : MonoBehaviour
 		return lastTime;
 	}
 
-	//Will be called after demo finished (demo started from endlevel menu)
-	private void endLeveldemoPlayEnded()
-	{
-		setMenuState(MenuState.endlevel);
-	}
-
-	//Will be called after demo finished (demo started from console)
-	private void consoleDemoPlayEnded()
-	{
-		setMenuState(MenuState.escmenu);
-	}
-
 	//Save demo to ".vdem" file, does not work in web player
 	public void saveLastDemo()
 	{
 		#if UNITY_STANDALONE
 
-		lastDemo.saveToFile(Application.dataPath);
+		currentDemo.saveToFile(Application.dataPath);
 
 		#endif
 	}

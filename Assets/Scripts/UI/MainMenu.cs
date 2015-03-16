@@ -57,7 +57,7 @@ public class MainMenu : MonoBehaviour
     void Awake()
     {
         SetMenuState(MenuState.MainMenu);
-        GameInfo.info.setMenuState(GameInfo.MenuState.othermenu);
+        GameInfo.info.SetMenuState(GameInfo.MenuState.othermenu);
 		GameInfo.info.lockMenu();
         loadLastPlayer();
 
@@ -315,7 +315,8 @@ public class MainMenu : MonoBehaviour
 
     private void PlayDemo(string name)
     {
-        //TODO
+        Demo demo = new Demo(Path.Combine(Application.dataPath, name));
+        GameInfo.info.PlayDemo(demo);
     }
 
     private void DeleteDemo(string name)

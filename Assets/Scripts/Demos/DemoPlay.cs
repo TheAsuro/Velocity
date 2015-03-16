@@ -97,9 +97,8 @@ public class DemoPlay : MonoBehaviour
 		tickList = demo.getTickList();
 
 		//Get ghost spawn
-		Respawn spawn = WorldInfo.info.getFirstSpawn();
-		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
-		ghostCam = (GameObject)GameObject.Instantiate(ghostCamPrefab, spawn.getSpawnPos(), spawn.getSpawnRot());
+		ghost = (GameObject)GameObject.Instantiate(ghostPrefab, tickList[0].getPosition(), tickList[0].getRotation());
+        ghostCam = (GameObject)GameObject.Instantiate(ghostCamPrefab, tickList[0].getPosition(), tickList[0].getRotation());
 
 		//Set up camera
         Camera cam = ghostCam.GetComponent<Camera>();

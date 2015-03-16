@@ -15,7 +15,7 @@ public class StartLevelEvent : Event
 	void Start()
 	{
 		WorldInfo.info.addResetMethod(reset, "start level reset");
-		if(!inEditor)
+		if(!inEditor && !(GameInfo.info.loadMode == GameInfo.LevelLoadMode.demo))
 			fire(null);
 	}
 

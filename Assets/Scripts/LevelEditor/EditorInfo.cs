@@ -257,7 +257,7 @@ public class EditorInfo : MonoBehaviour
 		}
 		SetInterfaceActive(false);
 		GameInfo.info.unlockMenu();
-		GameInfo.info.setMenuState(GameInfo.MenuState.editorplay);
+		GameInfo.info.SetMenuState(GameInfo.MenuState.editorplay);
 		GameInfo.info.lockMenu();
 	}
 
@@ -284,7 +284,7 @@ public class EditorInfo : MonoBehaviour
 		GameInfo.info.cleanUpPlayer();
 		SetInterfaceActive(true);
 		GameInfo.info.unlockMenu();
-		GameInfo.info.setMenuState(GameInfo.MenuState.editor);
+		GameInfo.info.SetMenuState(GameInfo.MenuState.editor);
 		GameInfo.info.lockMenu();
 	}
 

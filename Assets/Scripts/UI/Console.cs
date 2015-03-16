@@ -239,7 +239,12 @@ public class Console : MonoBehaviour
 	{
 		if(input.Length == 2)
 		{
-			GameInfo.info.playDemoFromFile(input[1]);
+            Demo demo = new Demo(System.IO.Path.Combine(Application.dataPath, input[1]));
+
+            if (demo.didLoadFromFileFail())
+                writeToConsole("Could not open demo!");
+            else
+                GameInfo.info.PlayDemo(demo);
 		}
 		else
 		{
