@@ -41,7 +41,8 @@ public class MainMenu : MonoBehaviour
         PlayerSelection,
         NewPlayer,
         Demos,
-        Settings
+        Settings,
+        Leaderboards
     }
 
     public enum GameSelectionContent
@@ -218,6 +219,11 @@ public class MainMenu : MonoBehaviour
         {
             CreateEditPanel(i, mapFiles[i]);
         }
+    }
+
+    private void LoadLeaderboardMap(string mapName)
+    {
+        
     }
 
     public void SetSettingGroup(int groupID)

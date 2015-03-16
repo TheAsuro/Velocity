@@ -1,147 +1,54 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
 
-public class Leaderboard : MonoBehaviour
+static class Leaderboard
 {
-	public delegate void processString(string wr);
+    private const string leaderboardUrl = "http://theasuro.de/Velocity/mapleaderboardtemp.php";
+    private const string recordUrl = "http://theasuro.de/Velocity/wr.php";
+    private const string entryUrl = "http://theasuro.de/Velocity/newentry.php";
 
-	private Transform myLeaderboardObj;
-	private Text myNumbers;
-	private Text myTimes;
-	private Text myPlayers;
-	private Text myInfo;
+    public delegate void LeaderboardCallback(string entryData);
 
-	private int currentIndex = 0;
+    //Request leaderboard entries from the server
+    public static IEnumerator<WWW> GetEntries(string map, int index, LeaderboardCallback callback)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("Map", map);
+        form.AddField("Index", index);
 
-	void Awake()
-	{
-		myLeaderboardObj = transform.Find("Leaderboard");
-		myNumbers = myLeaderboardObj.transform.Find("Numbers").Find("Text").gameObject.GetComponent<Text>();
-		myTimes = myLeaderboardObj.transform.Find("Times").Find("Text").gameObject.GetComponent<Text>();
-		myPlayers = myLeaderboardObj.transform.Find("Players").Find("Text").gameObject.GetComponent<Text>();
-		myInfo = myLeaderboardObj.transform.Find("Info").Find("Text").gameObject.GetComponent<Text>();
-	}
+        WWW www = new WWW(leaderboardUrl, form);
+        return WaitForData(www, callback);
+    }
 
-	//Request leaderboard entries from the server
-	public void getLeaderboardEntries(string map)
-	{
-		WWWForm form = new WWWForm();
-		form.AddField("Map", map);
-		form.AddField("Index", currentIndex);
+    public static void SendEntry(string player, decimal time, string map, string hash)
+    {
+        WWWForm form = new WWWForm();
 
-		WWW www = new WWW("http://theasuro.de/Velocity/mapleaderboard.php", form);
-		StartCoroutine(WaitForLeaderboardData(www, currentIndex));
-	}
+        form.AddField("Player", player);
+        form.AddField("Time", time.ToString());
+        form.AddField("Map", map);
+        form.AddField("Hash", hash);
 
-	//Wait for the server
-	private IEnumerator WaitForLeaderboardData(WWW www, int index)
-	{
-		yield return www;
+        new WWW(entryUrl, form);
+    }
 
-		if(www.error != null)
-		{
-			Debug.Log("Leaderboard data www error: " + www.error);
-		}
-		else
-		{
-			processEntries(www.text, index);
-		}
-	}
+    public static IEnumerator<WWW> GetRecord(string map, LeaderboardCallback callback)
+    {
+        WWWForm form = new WWWForm();
 
-	//Server answered, display recieved data
-	private void processEntries(string entries, int index)
-	{
-		int indexCounter = index + 1;
+        form.AddField("Map", map);
 
-		clear();
+        WWW www = new WWW(recordUrl, form);
+        return WaitForData(www, callback);
+    }
 
-		if(entries.Equals(""))
-		{
-			return;
-		}
-
-		string[] rows = entries.Split('\n');
-
-		foreach(string row in rows)
-		{
-			if(!row.Equals("") && !row.StartsWith("<"))
-			{
-				string[] items = row.Split('|');
-				addRow(indexCounter.ToString(), items[0], items[1], items[2]);
-				indexCounter++;
-			}
-		}
-	}
-
-	public void getMapRecord(string map, processString proc)
-	{
-		WWWForm form = new WWWForm();
-		form.AddField("Map", map);
-
-		WWW www = new WWW("http://theasuro.de/Velocity/wr.php", form);
-		StartCoroutine(waitForRecordData(www, proc));
-	}
-
-	private IEnumerator waitForRecordData(WWW www, processString proc)
-	{
-		yield return www;
-
-		if(www.error != null)
-		{
-			Debug.Log("Record data www error: " + www.error);
-		}
-		else
-		{
-			proc(www.text);
-		}
-	}
-
-	private void clear()
-	{
-		myNumbers.text = "";
-		myTimes.text = "";
-		myPlayers.text = "";
-		myInfo.text = "";
-	}
-
-	public void addRow(string nr, string time, string name, string dateStr)
-	{
-		string nl = "\n";
-		if(myNumbers.text.Equals(""))
-			nl = "";
-
-		myNumbers.text += nl + nr;
-		myTimes.text += nl + time;
-		myPlayers.text += nl + name;
-		myInfo.text += nl + dateStr;
-	}
-
-	//Wait for the server to answer
-	public IEnumerator SendLeaderboardData(WWW www)
-	{
-		yield return www;
-
-		if(www.error != null)
-		{
-			Debug.Log("Send leaderboard data www error: " + www.error);
-		}
-	}
-
-	public void up()
-	{
-		currentIndex -= 10;
-
-		if(currentIndex < 0)
-			currentIndex = 0;
-
-		getLeaderboardEntries(Application.loadedLevelName);
-	}
-
-	public void down()
-	{
-		currentIndex += 10;
-
-		getLeaderboardEntries(Application.loadedLevelName);
-	}
+    private static IEnumerator<WWW> WaitForData(WWW www, LeaderboardCallback callback)
+    {
+        yield return www;
+        callback(www.text);
+    }
 }

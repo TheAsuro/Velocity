@@ -24,7 +24,7 @@ public class GameInfo : MonoBehaviour
 	private GameObject escMenu;
 	private GameObject endLevel;
 	private GameObject myLeaderboardObj;
-	private Leaderboard myLeaderboard;
+	private LeaderboardDisplay myLeaderboard;
 	private string selectedMap;
 	private string selectedAuthor = "?";
     private GameInfoFX fx;
@@ -117,7 +117,7 @@ public class GameInfo : MonoBehaviour
 		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
 		myLeaderboardObj = myCanvas.transform.Find("Leaderboard").gameObject;
-		myLeaderboard = myCanvas.GetComponent<Leaderboard>();
+		myLeaderboard = myCanvas.GetComponent<LeaderboardDisplay>();
 		setMenuState(MenuState.closed);
 
         fx = new GameInfoFX(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
@@ -374,7 +374,7 @@ public class GameInfo : MonoBehaviour
 					setMouseView(false);
 					endLevel.SetActive(true);
 					myLeaderboardObj.SetActive(true);
-					myLeaderboard.getLeaderboardEntries(Application.loadedLevelName);
+					myLeaderboard.LoadMap(Application.loadedLevelName);
 					menuLocked = true;
 					break;
 				case MenuState.endlevel:
@@ -780,26 +780,13 @@ public class GameInfo : MonoBehaviour
 		invalidRunCheck();
 		if(runValid)
 		{
-			WWWForm form = new WWWForm();
 			string hash = Md5Sum(name + time.ToString() + map + secretKey);
-
-			form.AddField("Player", name);
-			form.AddField("Time", time.ToString());
-			form.AddField("Map", map);
-			form.AddField("Hash", hash);
-
-			WWW www = new WWW("http://theasuro.de/Velocity/newentry.php", form);
-			StartCoroutine(myLeaderboard.SendLeaderboardData(www));
+			Leaderboard.SendEntry(name, time, map, hash);
 		}
 		else
 		{
 			print("Invalid run!");
 		}
-	}
-
-	public void loadMapRecord(string map, Leaderboard.processString proc)
-	{
-		myLeaderboard.getMapRecord(map, proc);
 	}
 
 	//Create a md5 hash from a string

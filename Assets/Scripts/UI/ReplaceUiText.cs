@@ -109,7 +109,7 @@ public class ReplaceUiText : MonoBehaviour
     private void loadWr()
     {
         loadingWr = true;
-        GameInfo.info.loadMapRecord(Application.loadedLevelName, setWr);
+        StartCoroutine(Leaderboard.GetRecord(Application.loadedLevelName, setWr));
     }
 
     private void setWr(string text)
