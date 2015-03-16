@@ -24,7 +24,6 @@ public class GameInfo : MonoBehaviour
 	private GameObject escMenu;
 	private GameObject endLevel;
 	private GameObject myLeaderboardObj;
-	private LeaderboardDisplay myLeaderboard;
 	private string selectedMap;
 	private string selectedAuthor = "?";
     private GameInfoFX fx;
@@ -116,8 +115,7 @@ public class GameInfo : MonoBehaviour
 		myConsoleWindow = myCanvas.transform.Find("Console").gameObject;
 		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
-		myLeaderboardObj = myCanvas.transform.Find("Leaderboard").gameObject;
-		myLeaderboard = myCanvas.GetComponent<LeaderboardDisplay>();
+		myLeaderboardObj = myCanvas.transform.Find("Leaderboards").gameObject;
 		setMenuState(MenuState.closed);
 
         fx = new GameInfoFX(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
@@ -374,7 +372,7 @@ public class GameInfo : MonoBehaviour
 					setMouseView(false);
 					endLevel.SetActive(true);
 					myLeaderboardObj.SetActive(true);
-					myLeaderboard.LoadMap(Application.loadedLevelName);
+                    myLeaderboardObj.GetComponent<LeaderboardDisplay>().LoadMap(Application.loadedLevelName);
 					menuLocked = true;
 					break;
 				case MenuState.endlevel:

@@ -8,17 +8,27 @@ public class LeaderboardDisplay : MonoBehaviour
     public InputField mapNameInput;
     public List<LeaderboardPanel> entryPanels; //Must always have 10 elements!
 
+    private string lastLoadedMap = "";
     private int startIndex = 0;
 
     void Awake()
     {
         if (mapNameInput)
-            mapNameInput.onEndEdit.AddListener(LoadMap);
+        {
+            mapNameInput.onEndEdit.AddListener(ChangeMap);
+        }
+    }
+
+    private void ChangeMap(string mapName)
+    {
+        startIndex = 0;
+        LoadMap(mapName);
     }
 
     public void LoadMap(string mapName)
     {
         StartCoroutine(Leaderboard.GetEntries(mapName, startIndex, DisplayData));
+        lastLoadedMap = mapName;
     }
 
     private void DisplayData(string data)
@@ -68,7 +78,7 @@ public class LeaderboardDisplay : MonoBehaviour
         startIndex += add;
         if (startIndex < 0)
             startIndex = 0;
-        LoadMap(mapNameInput.text);
+        LoadMap(lastLoadedMap);
     }
 }
 
