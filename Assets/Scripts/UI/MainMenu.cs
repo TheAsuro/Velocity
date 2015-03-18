@@ -201,7 +201,11 @@ public class MainMenu : MonoBehaviour
 
         for (int i = 0; i < mapCount; i++)
         {
-            CreateMapPanel(i, mapNames[i], mapAuthors[i]);
+            string pb = "PB: -";
+            decimal pbTime = GameInfo.info.getCurrentSave().getPersonalBest(mapNames[i]);
+            if (pbTime != -1)
+                pb = "PB: " + pbTime.ToString("0.0000");
+            CreateMapPanel(i, mapNames[i], mapAuthors[i], pb);
         }
     }
 
@@ -221,11 +225,6 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    private void LoadLeaderboardMap(string mapName)
-    {
-        
-    }
-
     public void SetSettingGroup(int groupID)
     {
         SetMenuState(MenuState.Settings);
@@ -237,6 +236,12 @@ public class MainMenu : MonoBehaviour
 
         settingObjects[groupID].SetActive(true);
         settingTitles[groupID].isOn = true;
+    }
+
+    private string FormatWrStringForMenu(string wrstring)
+    {
+        string[] parts = wrstring.Split('|');
+        return "WR by " + parts[0] + ": " + parts[1];
     }
 
     private GameObject CreatePanel(int slot, GameObject prefab, Transform parent)
@@ -252,13 +257,22 @@ public class MainMenu : MonoBehaviour
         return panel;
     }
 
-    private void CreateMapPanel(int slot, string name, string author)
+    private void SetObjectText(Transform objTrans, string value)
+    {
+        objTrans.GetComponent<Text>().text = value;
+    }
+
+    private void CreateMapPanel(int slot, string name, string author, string pb)
     {
         Transform t = CreatePanel(slot, mapPanelPrefab, gameSelectionContentPanel.transform).transform;
 
         t.FindChild("Name").GetComponent<Text>().text = name;
         t.FindChild("Author").GetComponent<Text>().text = author;
-        t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { OnPlayableMapClick(name); }); //Internet magic
+        t.FindChild("PB").GetComponent<Text>().text = pb;
+        t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { OnPlayableMapClick(name); });
+
+        Leaderboard.LeaderboardCallback callback = wrstring => t.FindChild("WR").GetComponent<Text>().text = FormatWrStringForMenu(wrstring);
+        StartCoroutine(Leaderboard.GetRecord(name, callback));
     }
 
     private void CreateEditPanel(int slot, string fileName)

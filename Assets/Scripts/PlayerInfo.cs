@@ -268,6 +268,11 @@ public class PlayerInfo : MonoBehaviour
 		get { return myMouseLook.invertY; }
 	}
 
+    public Camera playerCamera
+    {
+        get { return myCamera; }
+    }
+
 	private void printCheatWarning()
 	{
 		GameInfo.info.writeToConsole("This command is cheat protected, turn on cheats with 'cheats 1'!");
