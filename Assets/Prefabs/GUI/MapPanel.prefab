@@ -113,6 +113,7 @@ GameObject:
   - 224: {fileID: 22478082}
   - 222: {fileID: 22278082}
   - 114: {fileID: 11478082}
+  - 114: {fileID: 11450518}
   m_Layer: 0
   m_Name: MapPanel
   m_TagString: Untagged
@@ -120,6 +121,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &11450518
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 178082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1200242548, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!114 &11463988
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -196,15 +209,15 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: .1953125, g: .1953125, b: .1953125, a: 1}
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 49b95b425cba7904aad8f265eb233c6e, type: 3}
-    m_FontSize: 10
+    m_Font: {fileID: 12800000, guid: 1eeb5802a9cfb3549b00585ce10faae3, type: 3}
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 3
+    m_Alignment: 6
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'WR: 12:34.56'
@@ -222,15 +235,15 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: .1953125, g: .1953125, b: .1953125, a: 1}
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 49b95b425cba7904aad8f265eb233c6e, type: 3}
-    m_FontSize: 10
+    m_Font: {fileID: 12800000, guid: 1eeb5802a9cfb3549b00585ce10faae3, type: 3}
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 3
+    m_Alignment: 6
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'PB: 12:34.56'
@@ -248,15 +261,15 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: .1953125, g: .1953125, b: .1953125, a: 1}
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 49b95b425cba7904aad8f265eb233c6e, type: 3}
-    m_FontSize: 10
+    m_Font: {fileID: 12800000, guid: 1eeb5802a9cfb3549b00585ce10faae3, type: 3}
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 3
+    m_Alignment: 6
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'By: testname'
@@ -398,7 +411,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22478082}
   m_RootOrder: 4
-  m_AnchorMin: {x: .699999988, y: 0}
+  m_AnchorMin: {x: .600000024, y: 0}
   m_AnchorMax: {x: 1, y: .333000004}
   m_AnchoredPosition: {x: -2.5, y: 0}
   m_SizeDelta: {x: -5, y: 0}
@@ -415,7 +428,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22478082}
   m_RootOrder: 3
-  m_AnchorMin: {x: .699999988, y: .333000004}
+  m_AnchorMin: {x: .600000024, y: .333000004}
   m_AnchorMax: {x: 1, y: .666000009}
   m_AnchoredPosition: {x: -2.5, y: 0}
   m_SizeDelta: {x: -5, y: 0}
@@ -432,7 +445,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22478082}
   m_RootOrder: 2
-  m_AnchorMin: {x: .699999988, y: .666000009}
+  m_AnchorMin: {x: .600000024, y: .666000009}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -2.5, y: 0}
   m_SizeDelta: {x: -5, y: 0}
@@ -450,7 +463,7 @@ RectTransform:
   m_Father: {fileID: 22478082}
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: .699999988, y: 1}
+  m_AnchorMax: {x: .600000024, y: 1}
   m_AnchoredPosition: {x: 37.5, y: 0}
   m_SizeDelta: {x: -85, y: -10}
   m_Pivot: {x: .5, y: .5}
@@ -505,4 +518,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 178082}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

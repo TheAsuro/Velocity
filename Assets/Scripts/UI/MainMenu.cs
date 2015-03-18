@@ -204,7 +204,7 @@ public class MainMenu : MonoBehaviour
             string pb = "PB: -";
             decimal pbTime = GameInfo.info.getCurrentSave().getPersonalBest(mapNames[i]);
             if (pbTime != -1)
-                pb = "PB: " + pbTime.ToString("0.0000");
+                pb = pbTime.ToString("0.0000");
             CreateMapPanel(i, mapNames[i], mapAuthors[i], pb);
         }
     }
@@ -238,10 +238,17 @@ public class MainMenu : MonoBehaviour
         settingTitles[groupID].isOn = true;
     }
 
-    private string FormatWrStringForMenu(string wrstring)
+    private void SetWrText(Transform panelTransform, string wrstring)
     {
+        if (panelTransform == null)
+            return;
+
+        Transform wrObj = panelTransform.FindChild("WR");
+        if (wrObj == null || wrObj.GetComponent<Text>() == null)
+            return;
+
         string[] parts = wrstring.Split('|');
-        return "WR by " + parts[0] + ": " + parts[1];
+        wrObj.GetComponent<Text>().text = "WR: " + parts[1] + " by " + parts[0];
     }
 
     private GameObject CreatePanel(int slot, GameObject prefab, Transform parent)
@@ -267,11 +274,11 @@ public class MainMenu : MonoBehaviour
         Transform t = CreatePanel(slot, mapPanelPrefab, gameSelectionContentPanel.transform).transform;
 
         t.FindChild("Name").GetComponent<Text>().text = name;
-        t.FindChild("Author").GetComponent<Text>().text = author;
-        t.FindChild("PB").GetComponent<Text>().text = pb;
+        t.FindChild("Author").GetComponent<Text>().text = "Map by " + author;
+        t.FindChild("PB").GetComponent<Text>().text = "PB: " + pb;
         t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { OnPlayableMapClick(name); });
 
-        Leaderboard.LeaderboardCallback callback = wrstring => t.FindChild("WR").GetComponent<Text>().text = FormatWrStringForMenu(wrstring);
+        Leaderboard.LeaderboardCallback callback = wrstring => SetWrText(t, wrstring);
         StartCoroutine(Leaderboard.GetRecord(name, callback));
     }
 
