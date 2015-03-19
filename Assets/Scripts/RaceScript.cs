@@ -16,6 +16,8 @@ public class RaceScript : MonoBehaviour
 
 	private float freezeDuration = 3f;
 	private float unfreezeTime = float.PositiveInfinity;
+    private float lastSecondGame;
+    private DateTime lastSecondComputer;
 
 	private Text timeText;
 	private Text speedText;
@@ -57,6 +59,20 @@ public class RaceScript : MonoBehaviour
 		{
 			startRace();
 		}
+
+        //Check time validity every second
+        if(started && Time.time > lastSecondGame + 1f)
+        {
+            TimeSpan difference = DateTime.Now - lastSecondComputer;
+            double offset = 1000 - difference.TotalMilliseconds;
+            if (offset > 15 || offset < -15)
+            {
+                GameInfo.info.invalidateRun();
+                print("Invalidated run. Reason: Too big timing difference.");
+            }
+            lastSecondGame = Time.time;
+            lastSecondComputer = DateTime.Now;
+        }
 
 		//Display time
 		timeText.text = timeString;
@@ -185,6 +201,8 @@ public class RaceScript : MonoBehaviour
         WorldInfo.info.DoStart();
         unpause();
         unfreezeTime = Time.time;
+        lastSecondComputer = DateTime.Now;
+        lastSecondGame = Time.time;
 	}
 
     private void endRace()
