@@ -174,15 +174,6 @@ public class GameInfo : MonoBehaviour
         fx.Update();
 	}
 
-	//Lock cursor after game window lost and gained focus __DUNNO IF THIS IS STILL NECESSARY__
-	/*void OnApplicationFocus(bool focusStatus)
-	{
-		if(getMenuState() == MenuState.closed && focusStatus)
-		{
-			Cursor.lockState = CursorLockMode.Locked;
-		}
-	}*/
-
 	//Prepare for new level
 	void OnLevelWasLoaded(int level)
 	{
@@ -368,11 +359,13 @@ public class GameInfo : MonoBehaviour
 			escMenu.SetActive(false);
 			endLevel.SetActive(false);
 			myLeaderboardObj.SetActive(false);
+            SetCursorLock(false);
 
 			switch(state)
 			{
 				case MenuState.closed:
 					setGamePaused(false);
+                    SetCursorLock(true);
 					break;
 				case MenuState.escmenu:
 					escMenu.SetActive(true);
@@ -381,6 +374,7 @@ public class GameInfo : MonoBehaviour
 					setGamePaused(false);
 					setMouseView(false);
                     menuLocked = true;
+                    SetCursorLock(true);
 					break;
 				case MenuState.leaderboard:
 					setMouseView(false);
@@ -405,6 +399,7 @@ public class GameInfo : MonoBehaviour
 				case MenuState.editorplay:
 					menuLocked = true;
 					setGamePaused(false);
+                    SetCursorLock(true);
 					break;
 			}
 
@@ -839,6 +834,15 @@ public class GameInfo : MonoBehaviour
 			invalidRunCheck();
 		}
 	}
+
+    public void SetCursorLock(bool value)
+    {
+        CursorLockMode mode = CursorLockMode.None;
+        if (value)
+            mode = CursorLockMode.Locked;
+        Cursor.lockState = mode;
+        Cursor.visible = !value;
+    }
 }
 
 class GameInfoFX
