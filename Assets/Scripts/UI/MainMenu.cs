@@ -240,7 +240,7 @@ public class MainMenu : MonoBehaviour
 
     private void SetWrText(Transform panelTransform, string wrstring)
     {
-        if (panelTransform == null)
+        if (panelTransform == null || wrstring == "")
             return;
 
         Transform wrObj = panelTransform.FindChild("WR");
@@ -353,15 +353,7 @@ public class MainMenu : MonoBehaviour
 
     public void DeleteSettings()
     {
-        PlayerPrefs.DeleteKey("fov");
-        PlayerPrefs.DeleteKey("mouseSpeed");
-        PlayerPrefs.DeleteKey("invertY");
-        PlayerPrefs.DeleteKey("volume");
-        PlayerPrefs.DeleteKey("aniso");
-        PlayerPrefs.DeleteKey("aa");
-        PlayerPrefs.DeleteKey("textureSize");
-        PlayerPrefs.DeleteKey("lighting");
-        PlayerPrefs.DeleteKey("vsync");
+        GameInfo.info.DeletePlayerSettings();
 
         GameInfo.info.loadPlayerSettings();
         if (SettingsOpened != null)

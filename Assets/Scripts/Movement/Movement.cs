@@ -107,8 +107,8 @@ public class Movement : MonoBehaviour
 	{
 		Vector2 input = new Vector2();
 
-		if(allowMoveHorizontal) { input.x = Input.GetAxis("Horizontal"); }
-		if(allowMoveVertical) { input.y = Input.GetAxis("Vertical"); }
+        if (allowMoveHorizontal) { input.x = Input.GetAxis("Horizontal"); }
+		if (allowMoveVertical) { input.y = Input.GetAxis("Vertical"); }
 
 		//Friction
 		Vector3 tempVelocity = calculateFriction(GetComponent<Rigidbody>().velocity);
@@ -127,7 +127,7 @@ public class Movement : MonoBehaviour
 			respawnPlayer(true);
 	}
 
-	public virtual Vector3 calculateFriction(Vector3 currentVelocity)
+	public Vector3 calculateFriction(Vector3 currentVelocity)
 	{
 		onGround = checkGround();
 		float speed = currentVelocity.magnitude; 
@@ -143,7 +143,7 @@ public class Movement : MonoBehaviour
 	}
 
 	//Do movement input here
-	public virtual Vector3 calculateMovement(Vector2 input, Vector3 velocity)
+	public Vector3 calculateMovement(Vector2 input, Vector3 velocity)
 	{
 		onGround = checkGround();
 

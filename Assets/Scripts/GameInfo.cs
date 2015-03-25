@@ -65,6 +65,7 @@ public class GameInfo : MonoBehaviour
 	public float lightingLevel = 0f;
 	public float vsyncLevel = 0f;
     public float demoPerspective = 0f;
+    public float rawMouse = 1f;
 
 	//GUI settings
 	public float circleSpeed1 = 10f;
@@ -568,6 +569,7 @@ public class GameInfo : MonoBehaviour
 		PlayerPrefs.SetFloat("lighting", lightingLevel);
 		PlayerPrefs.SetFloat("vsync", vsyncLevel);
         PlayerPrefs.SetFloat("demoPerspective", demoPerspective);
+        PlayerPrefs.SetFloat("rawmouse", rawMouse);
 
 		applySettings();
 	}
@@ -626,8 +628,27 @@ public class GameInfo : MonoBehaviour
         else
             demoPerspective = 0f;
 
+        if (PlayerPrefs.HasKey("rawmouse"))
+            rawMouse = PlayerPrefs.GetFloat("rawmouse");
+        else
+            rawMouse = 1f;
+
 		applySettings();
 	}
+
+    public void DeletePlayerSettings()
+    {
+        PlayerPrefs.DeleteKey("fov");
+        PlayerPrefs.DeleteKey("mouseSpeed");
+        PlayerPrefs.DeleteKey("invertY");
+        PlayerPrefs.DeleteKey("volume");
+        PlayerPrefs.DeleteKey("aniso");
+        PlayerPrefs.DeleteKey("aa");
+        PlayerPrefs.DeleteKey("textureSize");
+        PlayerPrefs.DeleteKey("lighting");
+        PlayerPrefs.DeleteKey("vsync");
+        PlayerPrefs.DeleteKey("rawmouse");
+    }
 	
 	public bool getGamePaused()
 	{

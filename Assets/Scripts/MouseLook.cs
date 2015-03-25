@@ -39,20 +39,20 @@ public class MouseLook : MonoBehaviour {
 
 		if (axes == RotationAxes.MouseXAndY)
 		{
-			float rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivityX;
+			float rotationX = transform.localEulerAngles.y + GetMouseX() * sensitivityX;
 			
-			rotationY += Input.GetAxis("Mouse Y") * ySens;
+			rotationY += GetMouseY() * ySens;
 			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 			
 			transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
 		}
 		else if (axes == RotationAxes.MouseX)
 		{
-			transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivityX, 0);
+			transform.Rotate(0, GetMouseX() * sensitivityX, 0);
 		}
 		else
 		{
-			rotationY += Input.GetAxis("Mouse Y") * ySens;
+			rotationY += GetMouseY() * ySens;
 			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 			
 			transform.localEulerAngles = new Vector3(-rotationY, transform.localEulerAngles.y, 0);
@@ -65,4 +65,20 @@ public class MouseLook : MonoBehaviour {
 		if (GetComponent<Rigidbody>())
 			GetComponent<Rigidbody>().freezeRotation = true;
 	}
+
+    float GetMouseX()
+    {
+        if (GameInfo.info.rawMouse == 1f)
+            return Input.GetAxisRaw("Mouse X");
+        else
+            return Input.GetAxis("Mouse X");
+    }
+
+    float GetMouseY()
+    {
+        if (GameInfo.info.rawMouse == 1f)
+            return Input.GetAxisRaw("Mouse Y");
+        else
+            return Input.GetAxis("Mouse Y");
+    }
 }

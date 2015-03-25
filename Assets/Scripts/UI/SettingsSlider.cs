@@ -24,7 +24,8 @@ public class SettingsSlider : MonoBehaviour
         Lighting,
         MouseSpeed,
         YInvert,
-        DemoPerspective
+        DemoPerspective,
+        RawMouse
     }
 
     void Awake()
@@ -80,6 +81,8 @@ public class SettingsSlider : MonoBehaviour
                 GameInfo.info.invertYInput = savedValue; break;
             case SettingType.DemoPerspective:
                 GameInfo.info.demoPerspective = savedValue; break;
+            case SettingType.RawMouse:
+                GameInfo.info.rawMouse = savedValue; break;
             default:
                 print("fok"); break;
         }
@@ -116,6 +119,8 @@ public class SettingsSlider : MonoBehaviour
                 newValue = GameInfo.info.textureSize; break;
             case SettingType.DemoPerspective:
                 newValue = GameInfo.info.demoPerspective; break;
+            case SettingType.RawMouse:
+                newValue = GameInfo.info.rawMouse; break;
         }
 
         newValue = ConvertToSlider(newValue);
