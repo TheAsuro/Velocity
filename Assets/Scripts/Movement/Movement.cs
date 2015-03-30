@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Movement : MonoBehaviour
 {
+    private const float noclipSpeed = 10f;
+
 	public float accel = 200f;
 	public float airAccel = 200f;
 	public float maxSpeed = 6.4f;
@@ -91,9 +93,9 @@ public class Movement : MonoBehaviour
 	public void unfreeze()
 	{
 		GetComponent<Rigidbody>().isKinematic = false;
-		//TODO find less hacky way of updating the rigidbody
-		GetComponent<Rigidbody>().useGravity = false;
-		GetComponent<Rigidbody>().useGravity = true;
+		//OK shit this broke things
+		/*GetComponent<Rigidbody>().useGravity = false;
+		GetComponent<Rigidbody>().useGravity = true;*/
 		frozen = false;
 	}
 
@@ -121,8 +123,25 @@ public class Movement : MonoBehaviour
 			respawnPlayer(true);
 	}
 
+    public bool Noclip
+    {
+        set
+        {
+            GetComponent<Rigidbody>().useGravity = !value;
+            GetComponent<Collider>().enabled = !value;
+        }
+        get
+        {
+            return !GetComponent<Rigidbody>().useGravity;
+        }
+    }
+
 	public Vector3 calculateFriction(Vector3 currentVelocity)
 	{
+        // Noclip
+        if (Noclip)
+            return Vector3.zero;
+
 		onGround = checkGround();
 		float speed = currentVelocity.magnitude; 
 
@@ -139,7 +158,11 @@ public class Movement : MonoBehaviour
 	//Do movement input here
 	public Vector3 calculateMovement(Vector2 input, Vector3 velocity)
 	{
-		onGround = checkGround();
+        //Noclip
+        if (Noclip)
+            return camObj.transform.rotation * new Vector3(input.x * noclipSpeed, 0f, input.y * noclipSpeed);
+
+        onGround = checkGround();
 
 		//Different acceleration values for ground and air
 		float curAccel = accel;

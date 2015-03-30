@@ -277,4 +277,17 @@ public class PlayerInfo : MonoBehaviour
 	{
 		GameInfo.info.writeToConsole("This command is cheat protected, turn on cheats with 'cheats 1'!");
 	}
+
+    public void SetNoclip(bool value)
+    {
+        if (cheats || value == false)
+            myMovement.Noclip = value;
+        else
+            printCheatWarning();
+    }
+
+    public bool GetNoclip()
+    {
+        return myMovement.Noclip;
+    }
 }
