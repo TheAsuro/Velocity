@@ -17,12 +17,6 @@ public class Movement : MonoBehaviour
 	public float jumpPressDuration = 0.1f;
 	private bool onGround = false;
 
-	private bool allowJump = true;
-	private bool allowRespawn = true;
-	private bool allowReset = true;
-	private bool allowCrouch = true;
-	private bool allowMoveHorizontal = true;
-	private bool allowMoveVertical = true;
 	private bool frozen = false;
 
 	private bool jumpKeyPressed = false;
@@ -49,13 +43,13 @@ public class Movement : MonoBehaviour
 		if(!frozen && !GameInfo.info.isConsoleOpen())
 		{
 			//Set key states
-			if(Input.GetButton("Jump") && allowJump)
+			if(Input.GetButton("Jump"))
 				{ jumpKeyPressed = true; } else { jumpKeyPressed = false; }
-			if(Input.GetButtonDown("Respawn") && allowRespawn)
+			if(Input.GetButtonDown("Respawn"))
 				{ respawnKeyPressed = true; } else { respawnKeyPressed = false; }
-			if(Input.GetButtonDown("Reset") && allowReset)
+			if(Input.GetButtonDown("Reset"))
 				{ resetKeyPressed = true; } else { resetKeyPressed = false; }
-			if(Input.GetButton("Crouch") && allowCrouch)
+			if(Input.GetButton("Crouch"))
 				{ crouchKeyPressed = true; } else { crouchKeyPressed = false; }
 			
 			if(jumpKeyPressed)
@@ -107,8 +101,8 @@ public class Movement : MonoBehaviour
 	{
 		Vector2 input = new Vector2();
 
-        if (allowMoveHorizontal) { input.x = Input.GetAxis("Horizontal"); }
-		if (allowMoveVertical) { input.y = Input.GetAxis("Vertical"); }
+        input.x = Input.GetAxis("Horizontal");
+		input.y = Input.GetAxis("Vertical");
 
 		//Friction
 		Vector3 tempVelocity = calculateFriction(GetComponent<Rigidbody>().velocity);
@@ -364,25 +358,6 @@ public class Movement : MonoBehaviour
 					crouched = false;
 				}
 			}
-		}
-	}
-
-	public void setPlayerControls(bool jump, bool respawn, bool reset, bool crouch, bool moveH, bool moveV, bool view)
-	{
-		allowJump = jump;
-		allowRespawn = respawn;
-		allowReset = reset;
-		allowCrouch = crouch;
-		allowMoveHorizontal = moveH;
-		allowMoveVertical = moveV;
-		
-		if(!view)
-		{
-			GameInfo.info.lockMouseView(false);
-		}
-		else
-		{
-			GameInfo.info.unlockMouseView();
 		}
 	}
 		
