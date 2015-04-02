@@ -273,6 +273,12 @@ public class PlayerInfo : MonoBehaviour
         get { return myCamera; }
     }
 
+    public bool CanvasEnabled
+    {
+        get { if (myCanvas == null) { return false; } return myCanvas.enabled; }
+        set { if (myCanvas == null) { return; } myCanvas.enabled = value; }
+    }
+
 	private void printCheatWarning()
 	{
 		GameInfo.info.writeToConsole("This command is cheat protected, turn on cheats with 'cheats 1'!");

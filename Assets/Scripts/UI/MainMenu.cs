@@ -13,6 +13,7 @@ public class MainMenu : MonoBehaviour
     //General stuff
 	public List<string> mapNames = new List<string>();
 	public List<string> mapAuthors = new List<string>();
+    public List<Texture2D> mapPreviews = new List<Texture2D>();
     public GameObject[] menuObjects;
     public GameObject[] settingObjects;
     public Toggle[] settingTitles;
@@ -205,7 +206,7 @@ public class MainMenu : MonoBehaviour
             decimal pbTime = GameInfo.info.getCurrentSave().getPersonalBest(mapNames[i]);
             if (pbTime != -1)
                 pb = pbTime.ToString("0.0000");
-            CreateMapPanel(i, mapNames[i], mapAuthors[i], pb);
+            CreateMapPanel(i, mapNames[i], mapAuthors[i], mapPreviews[i], pb);
         }
     }
 
@@ -269,12 +270,13 @@ public class MainMenu : MonoBehaviour
         objTrans.GetComponent<Text>().text = value;
     }
 
-    private void CreateMapPanel(int slot, string name, string author, string pb)
+    private void CreateMapPanel(int slot, string name, string author, Texture2D preview, string pb)
     {
         Transform t = CreatePanel(slot, mapPanelPrefab, gameSelectionContentPanel.transform).transform;
 
         t.FindChild("Name").GetComponent<Text>().text = name;
         t.FindChild("Author").GetComponent<Text>().text = "Map by " + author;
+        t.FindChild("Preview").GetComponent<RawImage>().texture = preview;
         t.FindChild("PB").GetComponent<Text>().text = "PB: " + pb;
         t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { OnPlayableMapClick(name); });
 

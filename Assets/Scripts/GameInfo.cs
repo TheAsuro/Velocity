@@ -146,6 +146,11 @@ public class GameInfo : MonoBehaviour
 			toggleEscMenu();
 		}
 
+        if (Input.GetButtonDown("HideUI") && myPlayer != null)
+        {
+            myPlayer.CanvasEnabled = !myPlayer.CanvasEnabled;
+        }
+
 		//Update fps every 0.1 seconds
 		if(lastFpsRecordTime + 0.1f < Time.time || lastFpsRecordTime < 0f)
 		{
