@@ -230,7 +230,7 @@ public class PlayerInfo : MonoBehaviour
 		cheats = value;
 		if(cheats)
 		{
-			GameInfo.info.invalidateRun();
+			GameInfo.info.invalidateRun("Activated cheats");
 		}
 		else
 		{

@@ -833,19 +833,25 @@ public class GameInfo : MonoBehaviour
 	public void setGravity(float value)
 	{
 		Physics.gravity = new Vector3(0f, value, 0f);
-		invalidateRun();
+		invalidateRun("Changed gravity");
 	}
 
 	//Run will not be uploaded to leaderboards
-	public void invalidateRun()
+	public void invalidateRun(string message = "undefined")
 	{
 		runValid = false;
+        print("Run was invalidated. Reason: " + message);
 	}
+
+    public bool IsRunValid()
+    {
+        return runValid;
+    }
 
 	private void invalidRunCheck()
 	{
 		if(getPlayerInfo().getCheats() || Physics.gravity != defGravity)
-			invalidateRun();
+			invalidateRun("Cheat check returned positive");
 	}
 
 	private void resetRun()

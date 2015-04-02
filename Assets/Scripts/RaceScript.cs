@@ -67,8 +67,7 @@ public class RaceScript : MonoBehaviour
             double offset = 1000 - difference.TotalMilliseconds;
             if (offset > 15 || offset < -15)
             {
-                GameInfo.info.invalidateRun();
-                print("Invalidated run. Reason: Too big timing difference.");
+                GameInfo.info.invalidateRun("Local time sync failed");
             }
             lastSecondGame = Time.time;
             lastSecondComputer = DateTime.Now;
@@ -76,6 +75,10 @@ public class RaceScript : MonoBehaviour
 
 		//Display time
 		timeText.text = timeString;
+        if (GameInfo.info.IsRunValid())
+            timeText.color = Color.white;
+        else
+            timeText.color = Color.red;
 
 		//Display speed
 		speedText.text = GameInfo.info.getPlayerInfo().getCurrentSpeed().ToString() + " m/s";
