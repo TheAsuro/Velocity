@@ -9,7 +9,8 @@ static class Leaderboard
 {
     private const string leaderboardUrl = "http://theasuro.de/Velocity/mapleaderboardtemp.php";
     private const string recordUrl = "http://theasuro.de/Velocity/wr.php";
-    private const string entryUrl = "http://theasuro.de/Velocity/newentry.php";
+    private const string entryUrl = "http://theasuro.de/Velocity/newentrytemp.php";
+    private const string downloadUrl = "http://theasuro.de/Velocity/getdemo.php";
 
     public delegate void LeaderboardCallback(string entryData);
 
@@ -24,16 +25,27 @@ static class Leaderboard
         return WaitForData(www, callback);
     }
 
-    public static void SendEntry(string player, decimal time, string map, string hash)
+    public static IEnumerator<WWW> SendEntry(string player, decimal time, string map, string hash, Demo demo)
     {
+        string test = "";
+        for (int i = 0; i < 10; i++ )
+        {
+            test += demo.GetBinaryData()[i].ToString();
+        }
+        Debug.Log("First ten bytes of data: " + test);
+        //TODO: Remove this debug stuff and only upload demo when needed
+
         WWWForm form = new WWWForm();
 
         form.AddField("Player", player);
         form.AddField("Time", time.ToString());
         form.AddField("Map", map);
         form.AddField("Hash", hash);
+        form.AddField("Demo", Encoding.ASCII.GetString(demo.GetBinaryData()));
 
-        new WWW(entryUrl, form);
+        WWW www = new WWW(entryUrl, form);
+
+        return WaitForData(www, (string text) => Debug.Log(text));
     }
 
     public static IEnumerator<WWW> GetRecord(string map, LeaderboardCallback callback)
@@ -43,6 +55,16 @@ static class Leaderboard
         form.AddField("Map", map);
 
         WWW www = new WWW(recordUrl, form);
+        return WaitForData(www, callback);
+    }
+
+    public static IEnumerator<WWW> GetDemo(int entryID, LeaderboardCallback callback)
+    {
+        WWWForm form = new WWWForm();
+
+        form.AddField("ID", entryID);
+
+        WWW www = new WWW(downloadUrl, form);
         return WaitForData(www, callback);
     }
 

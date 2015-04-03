@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 public class LeaderboardDisplay : MonoBehaviour
@@ -67,10 +68,20 @@ public class LeaderboardDisplay : MonoBehaviour
                 entryPanels[i].time = rows[i].time.ToString("0.0000");
                 entryPanels[i].player = rows[i].player;
                 entryPanels[i].rank = rows[i].rank;
-                entryPanels[i].SetButtonAction(delegate { }); //TODO: Set this to download demo with demoID
+                int id = rows[i].entryID;
+                entryPanels[i].SetButtonAction(delegate { StartCoroutine(Leaderboard.GetDemo(id, ProcessDownloadedDemo)); });
                 entryPanels[i].SetButtonActive(true);
             }
         }
+    }
+
+    private void ProcessDownloadedDemo(string demoText)
+    {
+        byte[] data = System.Text.Encoding.ASCII.GetBytes(demoText);
+        MemoryStream stream = new MemoryStream(data);
+        Demo downloadedDemo = new Demo(new BinaryReader(stream));
+        print("Player: " + downloadedDemo.getPlayerName());
+        print("Level: " + downloadedDemo.getLevelName());
     }
 
     public void AddIndex(int add)
@@ -87,13 +98,13 @@ public struct EntryRow
     public string rank;
     public string player;
     public decimal time;
-    public int demoId;
+    public int entryID;
     public bool isEmpty;
 
     /// <summary>
     /// Creates an Entry row from a string
     /// </summary>
-    /// <param name="data">Format: "rank|player|time" or "rank|player|time|demoID"</param>
+    /// <param name="data">Format: "rank|player|time" or "rank|player|time|entryid"</param>
     /// <returns>The parsed Entry row</returns>
     public static EntryRow Parse(string data)
     {
@@ -114,7 +125,7 @@ public struct EntryRow
             throw new InvalidCastException("Can't parse the string!");
 
         if (parts.Length == 4)
-            if(!int.TryParse(parts[3], out row.demoId))
+            if(!int.TryParse(parts[3], out row.entryID))
                 throw new InvalidCastException("Can't parse the string!");
 
         row.isEmpty = false;

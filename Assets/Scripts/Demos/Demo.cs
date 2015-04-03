@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
+using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-#if UNITY_STANDALONE
 using System.IO;
-#endif
 
 public class Demo
 {
@@ -13,16 +13,35 @@ public class Demo
     private decimal finalTime = -1;
 	private bool loadFromFileFailed = false;
 
-	//Load a demo from file
-	#if UNITY_STANDALONE
-	public Demo(string file)
-	{
-		try
-		{
-            FileStream stream = new FileStream(file, FileMode.Open);
-            BinaryReader reader = new BinaryReader(stream);
+    public Demo(string path)
+    {
+        FileStream stream = new FileStream(path, FileMode.Open);
+        BinaryReader reader = new BinaryReader(stream);
+        LoadFromBinaryReader(reader);
+    }
 
-			tickList = new List<DemoTick>();
+	//Load a demo from a stream
+	public Demo(BinaryReader reader)
+	{
+        LoadFromBinaryReader(reader);
+	}
+
+	//Make a demo from a list of ticks
+	public Demo(List<DemoTick> pTickList, string pPlayerName, string pLevelName)
+	{
+		tickList = pTickList;
+		playerName = pPlayerName;
+		levelName = pLevelName;
+
+        if(tickList != null && tickList.Count > 0)
+            finalTime = tickList[tickList.Count - 1].getTime();
+	}
+
+    private void LoadFromBinaryReader(BinaryReader reader)
+    {
+        try
+        {
+            tickList = new List<DemoTick>();
 
             //Read header
             string demoVersion = reader.ReadString();
@@ -31,7 +50,7 @@ public class Demo
             finalTime = reader.ReadDecimal();
 
             //Read ticks until end of file
-			while(reader.BaseStream.Position < reader.BaseStream.Length)
+            while (reader.BaseStream.Position < reader.BaseStream.Length)
             {
                 decimal time = reader.ReadDecimal();
                 float xPos = reader.ReadSingle();
@@ -45,25 +64,13 @@ public class Demo
 
                 tickList.Add(tick);
             }
-		}
-		catch(FileNotFoundException ex)
-		{
-			GameInfo.info.writeToConsole(ex.Message + "\n'" + file + "' is not a file!");
-			loadFromFileFailed = true;
-		}
-	}
-	#endif
-
-	//Make a demo from a list of ticks
-	public Demo(List<DemoTick> pTickList, string pPlayerName, string pLevelName)
-	{
-		tickList = pTickList;
-		playerName = pPlayerName;
-		levelName = pLevelName;
-
-        if(tickList != null && tickList.Count > 0)
-            finalTime = tickList[tickList.Count - 1].getTime();
-	}
+        }
+        catch (FileNotFoundException ex)
+        {
+            GameInfo.info.writeToConsole(ex.Message);
+            loadFromFileFailed = true;
+        }
+    }
 
 	//RIP
 	public bool didLoadFromFileFail()
@@ -97,10 +104,9 @@ public class Demo
     }
 
 	//Save demo to file
-	#if UNITY_STANDALONE
 	public void saveToFile(string path)
 	{
-		string filename = path + "/" + playerName + "-" + levelName + ".vdem";
+		string filename = Path.Combine(path, playerName + "-" + levelName + ".vdem");
         FileStream stream = new FileStream(filename, FileMode.Create);
         BinaryWriter writer = new BinaryWriter(stream);
 
@@ -125,5 +131,29 @@ public class Demo
         writer.Close();
         stream.Dispose();
 	}
-	#endif
+
+    public byte[] GetBinaryData()
+    {
+        List<byte> data = new List<byte>();
+
+        //header
+        
+        data.AddRange(Encoding.ASCII.GetBytes("VELOCITYDEMO 1.1.0"));
+        data.AddRange(Encoding.ASCII.GetBytes(playerName));
+        data.AddRange(Encoding.ASCII.GetBytes(levelName));
+        data.AddRange(Encoding.ASCII.GetBytes(finalTime.ToString())); //TODO: convert this to binary
+
+        //ticks
+        foreach (DemoTick tick in tickList)
+        {
+            data.AddRange(Encoding.ASCII.GetBytes(tick.getTime().ToString())); //TODO: convert this to binary
+            data.AddRange(BitConverter.GetBytes(tick.getPosition().x));
+            data.AddRange(BitConverter.GetBytes(tick.getPosition().y));
+            data.AddRange(BitConverter.GetBytes(tick.getPosition().z));
+            data.AddRange(BitConverter.GetBytes(tick.getRotation().eulerAngles.x));
+            data.AddRange(BitConverter.GetBytes(tick.getRotation().eulerAngles.y));
+        }
+
+        return data.ToArray();
+    }
 }

@@ -260,7 +260,7 @@ public class GameInfo : MonoBehaviour
 		//If a player save is loaded, play demo and send to leaderboard
 		if(getCurrentSave() != null)
 		{
-			sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName);
+			sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName, currentDemo);
 			PlayRaceDemo();
 		}
 
@@ -794,13 +794,13 @@ public class GameInfo : MonoBehaviour
 	//Send a leaderboard entry to leaderboard server, with a automatically generated hash.
 	//This includes a secret key that will be included in the final game (and not uploaded to github),
 	//so nobody can send fake entries.
-	private void sendLeaderboardEntry(string name, decimal time, string map)
+	private void sendLeaderboardEntry(string name, decimal time, string map, Demo demo)
 	{
 		invalidRunCheck();
 		if(runValid)
 		{
 			string hash = Md5Sum(name + time.ToString() + map + secretKey);
-			Leaderboard.SendEntry(name, time, map, hash);
+			StartCoroutine(Leaderboard.SendEntry(name, time, map, hash, demo));
 		}
 		else
 		{
