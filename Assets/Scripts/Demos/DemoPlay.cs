@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,12 +11,13 @@ public class DemoPlay : MonoBehaviour
     public Vector3 thirdPersonOffset;
 
 	private Vector3 camDistance;
-	private FinishedPlaying myFinishedPlaying;
 	private bool playing = false;
 	private float startPlayTime;
 	private GameObject ghost;
 	private GameObject ghostCam;
 	private List<DemoTick> tickList;
+
+    private Action MyCallback;
 
 	void Update()
 	{
@@ -81,17 +83,17 @@ public class DemoPlay : MonoBehaviour
                     ghostCam.transform.rotation = ghost.transform.rotation;
 			}
 
-			if(nextFrameTime == -1f)
-			{
-				stopDemoPlayback(true);
-			}
+            if (Input.GetButtonDown("Menu") || nextFrameTime == -1f)
+            {
+                StopDemoPlayback();
+            }
 		}
 	}
 
-	public void playDemo(Demo demo, FinishedPlaying pFinishedPlaying)
+	public void playDemo(Demo demo, Action Callback)
 	{
-		//Reset if currently playing
-		stopPlayback();
+        //Reset if currently playing
+		StopDemoPlayback(true);
 
 		//Load demo ticks
 		tickList = demo.getTickList();
@@ -108,32 +110,29 @@ public class DemoPlay : MonoBehaviour
 		//Set start time to current time
 		startPlayTime = Time.time;
 
-		//Set the finished playing delegate
-		myFinishedPlaying = pFinishedPlaying;
-
 		//Stop playback on world reset
-		WorldInfo.Reset resetPlay = new WorldInfo.Reset(stopPlayback);
+		WorldInfo.Reset resetPlay = new WorldInfo.Reset(StopDemoPlayback);
 		WorldInfo.info.addResetMethod(resetPlay, "GhostReset");
+
+        //Save callback
+        MyCallback = Callback;
 
 		//Start playing
 		playing = true;
 	}
 
-	//Public stop, which always counts as an iterrupt
-	public void stopPlayback()
-	{
-		stopDemoPlayback(false);
-	}
+    public void StopDemoPlayback(bool interrupt)
+    {
+        playing = false;
+        GameObject.Destroy(ghost);
+        GameObject.Destroy(ghostCam);
 
-	//Private stop, finished will determine if the finishedplaying delegate will be called
-	private void stopDemoPlayback(bool finished)
+        if (MyCallback != null && !interrupt)
+            MyCallback();
+    }
+
+	public void StopDemoPlayback()
 	{
-		playing = false;
-		GameObject.Destroy(ghost);
-		GameObject.Destroy(ghostCam);
-		if(finished)
-		{
-			myFinishedPlaying();
-		}
+        StopDemoPlayback(false);
 	}
 }
