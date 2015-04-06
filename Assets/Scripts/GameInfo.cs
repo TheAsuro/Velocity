@@ -288,6 +288,7 @@ public class GameInfo : MonoBehaviour
 		stopDemo();
 		cleanUpPlayer();
 		WorldInfo.info.reset();
+        unlockMenu();
 		SetMenuState(MenuState.closed);
 		startDemo();
 	}
@@ -358,7 +359,7 @@ public class GameInfo : MonoBehaviour
 	//Menu state manager
 	public void SetMenuState(MenuState state)
 	{
-		if(!menuLocked)
+        if(!menuLocked)
 		{
 			//Reset all states
 			setGamePaused(true);

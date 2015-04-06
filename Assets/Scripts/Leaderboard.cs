@@ -27,13 +27,7 @@ static class Leaderboard
 
     public static IEnumerator<WWW> SendEntry(string player, decimal time, string map, string hash, Demo demo)
     {
-        string test = "";
-        for (int i = 0; i < 10; i++ )
-        {
-            test += demo.GetBinaryData()[i].ToString();
-        }
-        Debug.Log("First ten bytes of data: " + test);
-        //TODO: Remove this debug stuff and only upload demo when needed
+       //TODO: only upload demo when needed
 
         WWWForm form = new WWWForm();
 
