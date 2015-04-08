@@ -241,7 +241,17 @@ public class GameInfo : MonoBehaviour
 		stopDemo();
 		cleanUpPlayer();
         lastTime = time.Ticks / (decimal)10000000;
+
+        save(); //necessary?
 		getCurrentSave().saveIfPersonalBest(lastTime, Application.loadedLevelName);
+
+        currentDemo = myPlayer.getDemo();
+
+        //If a player save is loaded, play demo and send to leaderboard
+        if (getCurrentSave() != null)
+        {
+            sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName, currentDemo);
+        }
 	}
 
 	//Player hit the exit trigger
@@ -254,15 +264,9 @@ public class GameInfo : MonoBehaviour
             return;
         }
 
-		GameInfo.info.SetMenuState(GameInfo.MenuState.endlevel);
-		currentDemo = myPlayer.getDemo();
+		SetMenuState(GameInfo.MenuState.endlevel);
 
-		//If a player save is loaded, play demo and send to leaderboard
-		if(getCurrentSave() != null)
-		{
-			sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName, currentDemo);
-			PlayRaceDemo();
-		}
+        PlayRaceDemo();
 
 		setPlayerInfo(null);
 	}
@@ -297,6 +301,7 @@ public class GameInfo : MonoBehaviour
 	public void cleanUpPlayer()
 	{
 		removeAllWindowLines();
+        currentDemo = null;
 	}
 
 	//Leave the game
@@ -714,9 +719,10 @@ public class GameInfo : MonoBehaviour
 	}
 
     //Plays the current demo and returns to end level screen
-	public void PlayRaceDemo()
+	private void PlayRaceDemo()
 	{
-        myDemoPlayer.playDemo(currentDemo, delegate { menuLocked = false; SetMenuState(MenuState.endlevel); });
+        if(myDemoPlayer != null && currentDemo != null)
+            myDemoPlayer.playDemo(currentDemo, delegate { menuLocked = false; SetMenuState(MenuState.endlevel); });
 	}
 
 	public decimal getLastTime()
@@ -727,11 +733,8 @@ public class GameInfo : MonoBehaviour
 	//Save demo to ".vdem" file, does not work in web player
 	public void saveLastDemo()
 	{
-		#if UNITY_STANDALONE
-
-		currentDemo.saveToFile(Application.dataPath);
-
-		#endif
+        if (currentDemo != null)
+		    currentDemo.saveToFile(Application.dataPath);
 	}
 
 	//Can the player move the camera with the mouse

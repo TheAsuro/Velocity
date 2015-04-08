@@ -127,9 +127,6 @@ public class RaceScript : MonoBehaviour
 			Checkpoint cp = other.GetComponent<Checkpoint>();
 			int nr = cp.checkpointNumber;
 			bool end = cp.isEnd;
-
-			//Save game (pretty sure i can remove this. TODO check if unnecessary)
-			GameInfo.info.save();
 			
 			if(end && nr == checkpoint + 1 && !finished) //End
 			{

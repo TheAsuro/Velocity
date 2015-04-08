@@ -5864,7 +5864,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Velocity 0.3 pre2
+  m_Text: Velocity 0.3 pre3
 --- !u!222 &582943239
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7225,7 +7225,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1453612877}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -7346,30 +7346,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 169137253}
-        m_MethodName: unlockMenu
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 169137253}
-        m_MethodName: SetMenuState
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: demo
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 169137253}
         m_MethodName: PlayRaceDemo
         m_Mode: 1
@@ -8526,7 +8502,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22461452, guid: cccf889770078324795144c4877f01ee, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 22461452, guid: cccf889770078324795144c4877f01ee, type: 2}
       propertyPath: m_AnchoredPosition.x
@@ -10505,7 +10481,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Play Demo
+  m_Text: Restart Demo
 --- !u!222 &1227030028
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11519,70 +11495,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1340809646}
---- !u!1 &1350560707
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100068, guid: 601e89f6bcc88ed408597f1676905559, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 1350560708}
-  - 222: {fileID: 1350560710}
-  - 114: {fileID: 1350560709}
-  m_Layer: 5
-  m_Name: ServerSettings
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &1350560708
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22400066, guid: 601e89f6bcc88ed408597f1676905559,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1350560707}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1453612877}
-  m_RootOrder: 3
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -.5, y: -.5}
-  m_SizeDelta: {x: 300, y: 200}
-  m_Pivot: {x: .5, y: .5}
---- !u!114 &1350560709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400098, guid: 601e89f6bcc88ed408597f1676905559,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1350560707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Sprite: {fileID: 21300000, guid: dec3b698a4400fe4c921899c8d601f07, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &1350560710
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22200064, guid: 601e89f6bcc88ed408597f1676905559,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1350560707}
 --- !u!1 &1356443021
 GameObject:
   m_ObjectHideFlags: 0
@@ -12341,7 +12253,6 @@ RectTransform:
   - {fileID: 875814881}
   - {fileID: 1637157125}
   - {fileID: 1678257828}
-  - {fileID: 1350560708}
   - {fileID: 1700713210}
   - {fileID: 1636943348}
   - {fileID: 2095551863}
@@ -14813,7 +14724,7 @@ RectTransform:
   m_Children:
   - {fileID: 75616401}
   m_Father: {fileID: 1453612877}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 80, y: -100}
@@ -17895,7 +17806,7 @@ RectTransform:
   m_Children:
   - {fileID: 263771010}
   m_Father: {fileID: 1453612877}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
