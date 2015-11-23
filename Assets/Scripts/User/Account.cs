@@ -8,7 +8,7 @@ namespace Api
     {
         private const string LOGIN_API_URL = "http://theasuro.de/Velocity/Test/account.php";
 
-        public event EventHandler OnLoginFinished;
+        public event EventHandler<StringEventArgs> OnLoginFinished;
         public event EventHandler OnAccountRequestFinished;
 
         public string Name { get; private set; }
@@ -39,7 +39,7 @@ namespace Api
             }
             else
             {
-                Debug.Log(result.text);
+                Debug.Log(result.text + " (" + result.errorText + ")");
             }
 
             if (OnAccountRequestFinished != null)
@@ -60,7 +60,6 @@ namespace Api
             {
                 Token = result.text;
                 IsLoggedIn = true;
-                Debug.Log(Token);
             }
             else
             {
@@ -68,7 +67,17 @@ namespace Api
             }
 
             if (OnLoginFinished != null)
-                OnLoginFinished(this, new EventArgs());
+                OnLoginFinished(this, new StringEventArgs(Token));
+        }
+    }
+
+    public class StringEventArgs : EventArgs
+    {
+        public string Content { get; private set; }
+
+        public StringEventArgs(string str) : base()
+        {
+            Content = str;
         }
     }
 }

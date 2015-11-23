@@ -35,47 +35,85 @@ namespace Api
                 HttpWebRequest request = WebRequest.Create(combinedUrl) as HttpWebRequest;
                 request.Method = method;
                 request.ContentType = "application/x-www-form-urlencoded";
-                request.Timeout = 2000;
+                request.Timeout = 3000;
 
                 if (data != null && method != "GET")
                 {
-                    SendRequestData(request.GetRequestStream(), data);
-                }
-
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                string result = new StreamReader(response.GetResponseStream()).ReadToEnd();
-
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    
-                    callback(new ApiResult() { error = false, text = result });
+                    request.BeginGetRequestStream(new AsyncCallback(ContinueRequest), new RequestInfo() { request = request, data = data, callback = callback });
                 }
                 else
                 {
-                    callback(new ApiResult() { error = true, text = result });
+                    request.BeginGetResponse(new AsyncCallback(ProcessResponse), new ResponseInfo() { request = request, callback = callback });
                 }
             }
             catch (WebException ex)
             {
-                UnityEngine.Debug.Log(ex.Response);
-                callback(new ApiResult() { error = true, text = ex.Message });
+                HandleWebException(ex, callback);
             }
         }
 
-        private static void SendRequestData(Stream stream, Dictionary<string, string> data)
+        private static void ContinueRequest(IAsyncResult result)
         {
-            ASCIIEncoding enc = new ASCIIEncoding();
-            bool first = true;
+            RequestInfo info = (RequestInfo)result.AsyncState;
 
-            foreach (KeyValuePair<string, string> pair in data)
+            try
             {
-                if (!first)
-                    stream.Write(enc.GetBytes("&"), 0, enc.GetByteCount("&"));
-                else
-                    first = false;
+                Stream stream = info.request.EndGetRequestStream(result);
+                StreamWriter sw = new StreamWriter(stream);
 
-                string content = pair.Key + "=" + pair.Value;
-                stream.Write(enc.GetBytes(content), 0, enc.GetByteCount(content));
+                ASCIIEncoding enc = new ASCIIEncoding();
+                bool first = true;
+
+                foreach (KeyValuePair<string, string> pair in info.data)
+                {
+                    if (!first)
+                        sw.Write("&");
+                    else
+                        first = false;
+                    
+                    sw.Write(pair.Key + "=" + pair.Value);
+                }
+
+                sw.Flush();
+                sw.Dispose();
+                stream.Dispose();
+
+                info.request.BeginGetResponse(new AsyncCallback(ProcessResponse), new ResponseInfo() { request = info.request, callback = info.callback });
+            }
+            catch (WebException ex)
+            {
+                HandleWebException(ex, info.callback);
+            }
+        }
+
+        private static void ProcessResponse(IAsyncResult result)
+        {
+            ResponseInfo info = (ResponseInfo)result.AsyncState;
+
+            try
+            {
+                WebResponse response = info.request.EndGetResponse(result);
+
+                string resultStr = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+                info.callback(new ApiResult() { error = false, text = resultStr, errorText = "" });
+            }
+            catch (WebException ex)
+            {
+                HandleWebException(ex, info.callback);
+            }
+        }
+
+        private static void HandleWebException(WebException ex, Action<ApiResult> callback)
+        {
+            if (ex.Response != null)
+            {
+                StreamReader reader = new StreamReader(ex.Response.GetResponseStream());
+                callback(new ApiResult() { error = true, text = reader.ReadToEnd(), errorText = ex.Message });
+            }
+            else
+            {
+                callback(new ApiResult() { error = true, text = "No response.", errorText = ex.Message });
             }
         }
 
@@ -83,18 +121,20 @@ namespace Api
         {
             public bool error;
             public string text;
+            public string errorText;
         }
 
         private struct RequestInfo
         {
-            public RequestInfo(HttpWebRequest request, Dictionary<string, string> data)
-            {
-                this.request = request;
-                this.data = data;
-            }
-
             public HttpWebRequest request;
             public Dictionary<string, string> data;
+            public Action<ApiResult> callback;
+        }
+
+        private struct ResponseInfo
+        {
+            public HttpWebRequest request;
+            public Action<ApiResult> callback;
         }
     }
 }
