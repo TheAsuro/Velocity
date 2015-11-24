@@ -804,7 +804,7 @@ public class GameInfo : MonoBehaviour
 		if(runValid)
 		{
 			string hash = Md5Sum(name + time.ToString() + map + secretKey);
-			StartCoroutine(Leaderboard.SendEntry(name, time, map, hash, demo));
+			Api.Leaderboard.SendEntry(name, time, map, hash, demo);
 		}
 		else
 		{

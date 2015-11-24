@@ -59,9 +59,8 @@ namespace Api
             try
             {
                 Stream stream = info.request.EndGetRequestStream(result);
-                StreamWriter sw = new StreamWriter(stream);
+                StreamWriter sw = new StreamWriter(stream, Encoding.ASCII);
 
-                ASCIIEncoding enc = new ASCIIEncoding();
                 bool first = true;
 
                 foreach (KeyValuePair<string, string> pair in info.data)

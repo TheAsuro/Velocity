@@ -31,7 +31,7 @@ public class LeaderboardDisplay : MonoBehaviour
 
     public void LoadMap(string mapName)
     {
-        Leaderboard.GetEntries(mapName, startIndex, ELEMENTS_PER_SITE, DisplayData));
+        Leaderboard.GetEntries(mapName, startIndex, ELEMENTS_PER_SITE, DisplayData);
         lastLoadedMap = mapName;
     }
 

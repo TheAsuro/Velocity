@@ -36,8 +36,6 @@ namespace Api
 
         public static void GetRecord(string map, Action<LeaderboardEntry> callback)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>();
-
             // TODO: Fix map with bad characters
             // TODO: Fix if result has no entries
             HttpApi.StartRequest(LEADERBOARD_URL + "?map=" + map, "GET", (result) => callback(ParseEntries(result.text)[0]));
@@ -52,12 +50,12 @@ namespace Api
         }
     }
 
-    public struct LeaderboardEntry
+    public class LeaderboardEntry
     {
         public int id;
         public int rank;
         public string map;
         public string playerName;
-        public float time;
+        public decimal time;
     }
 }

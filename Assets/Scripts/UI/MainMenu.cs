@@ -239,17 +239,16 @@ public class MainMenu : MonoBehaviour
         settingTitles[groupID].isOn = true;
     }
 
-    private void SetWrText(Transform panelTransform, string wrstring)
+    private void SetWrText(Transform panelTransform, Api.LeaderboardEntry entry)
     {
-        if (panelTransform == null || wrstring == "")
+        if (panelTransform == null || entry == null)
             return;
 
         Transform wrObj = panelTransform.FindChild("WR");
         if (wrObj == null || wrObj.GetComponent<Text>() == null)
             return;
 
-        string[] parts = wrstring.Split('|');
-        wrObj.GetComponent<Text>().text = "WR: " + parts[1] + " by " + parts[0];
+        wrObj.GetComponent<Text>().text = "WR: " + entry.time + " by " + entry.playerName;
     }
 
     private GameObject CreatePanel(int slot, GameObject prefab, Transform parent)
@@ -280,8 +279,7 @@ public class MainMenu : MonoBehaviour
         t.FindChild("PB").GetComponent<Text>().text = "PB: " + pb;
         t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { OnPlayableMapClick(name); });
 
-        Leaderboard.LeaderboardCallback callback = wrstring => SetWrText(t, wrstring);
-        StartCoroutine(Leaderboard.GetRecord(name, callback));
+        Api.Leaderboard.GetRecord(name, (entry) => SetWrText(t, entry));
     }
 
     private void CreateEditPanel(int slot, string fileName)

@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ReplaceUiText : MonoBehaviour
 {
-    private Text textScript
+    private Text TextScript
     {
         get { return GetComponent<Text>(); }
     }
@@ -17,7 +17,7 @@ public class ReplaceUiText : MonoBehaviour
 
     void Start()
     {
-        initialText = textScript.text;
+        initialText = TextScript.text;
         ReplaceUiText.UpdateSaveInfo();
     }
 
@@ -58,7 +58,7 @@ public class ReplaceUiText : MonoBehaviour
         if (temp.Contains("$wr"))
         {
             if (wr.Equals("") && !loadingWr)
-                loadWr();
+                LoadWr();
         }
 
         if (pb.Equals("") && playerSave != null)
@@ -103,22 +103,18 @@ public class ReplaceUiText : MonoBehaviour
                 temp = temp.Replace("$load3", "Load");
         }
 
-        textScript.text = temp;
+        TextScript.text = temp;
     }
 
-    private void loadWr()
+    private void LoadWr()
     {
         loadingWr = true;
-        StartCoroutine(Leaderboard.GetRecord(Application.loadedLevelName, setWr));
+        Api.Leaderboard.GetRecord(Application.loadedLevelName, SetWr);
     }
 
-    private void setWr(string text)
+    private void SetWr(Api.LeaderboardEntry entry)
     {
         loadingWr = false;
-        string temp = text.Split('\n')[0];
-        string[] temp2 = temp.Split('|');
-
-        if (temp2.Length == 2)
-            wr = temp2[1] + " by " + temp2[0];
+        wr = entry.time + " by " + entry.playerName;
     }
 }

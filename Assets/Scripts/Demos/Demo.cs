@@ -44,7 +44,7 @@ public class Demo
             tickList = new List<DemoTick>();
 
             //Read header
-            string demoVersion = reader.ReadString();
+            reader.ReadString(); // demo version
             playerName = reader.ReadString();
             levelName = reader.ReadString();
             finalTime = reader.ReadDecimal();
