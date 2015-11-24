@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Api
 {
-    public static class Api
+    public static class HttpApi
     {
-        public static void StartRequest(string url, string method, Action<ApiResult> callback, Dictionary<string, string> data = null)
+        public static void StartRequest(string url, string method, Action<ApiResult> callback = null, Dictionary<string, string> data = null)
         {
             try
             {
@@ -96,7 +96,8 @@ namespace Api
 
                 string resultStr = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
-                info.callback(new ApiResult() { error = false, text = resultStr, errorText = "" });
+                if (info.callback != null)
+                    info.callback(new ApiResult() { error = false, text = resultStr, errorText = "" });
             }
             catch (WebException ex)
             {
@@ -109,11 +110,13 @@ namespace Api
             if (ex.Response != null)
             {
                 StreamReader reader = new StreamReader(ex.Response.GetResponseStream());
-                callback(new ApiResult() { error = true, text = reader.ReadToEnd(), errorText = ex.Message });
+                if (callback != null)
+                    callback(new ApiResult() { error = true, text = reader.ReadToEnd(), errorText = ex.Message });
             }
             else
             {
-                callback(new ApiResult() { error = true, text = "No response.", errorText = ex.Message });
+                if (callback != null)
+                    callback(new ApiResult() { error = true, text = "No response.", errorText = ex.Message });
             }
         }
 

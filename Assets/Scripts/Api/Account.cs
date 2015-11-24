@@ -28,10 +28,10 @@ namespace Api
             data.Add("pass", pass);
             if (mail != "")
                 data.Add("mail", mail);
-            Api.StartRequest(LOGIN_API_URL, "POST", FinishCreate, data);
+            HttpApi.StartRequest(LOGIN_API_URL, "POST", FinishCreate, data);
         }
 
-        private void FinishCreate(Api.ApiResult result)
+        private void FinishCreate(HttpApi.ApiResult result)
         {
             if (result.error == false)
             {
@@ -51,10 +51,10 @@ namespace Api
             var data = new Dictionary<string, string>();
             data.Add("user", Name);
             data.Add("pass", pass);
-            Api.StartRequest(LOGIN_API_URL, "GET", FinishLogin, data);
+            HttpApi.StartRequest(LOGIN_API_URL, "GET", FinishLogin, data);
         }
 
-        private void FinishLogin(Api.ApiResult result)
+        private void FinishLogin(HttpApi.ApiResult result)
         {
             if (result.error == false)
             {

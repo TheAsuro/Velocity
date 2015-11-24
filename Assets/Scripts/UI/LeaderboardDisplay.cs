@@ -3,11 +3,14 @@ using UnityEngine.UI;
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Api;
 
 public class LeaderboardDisplay : MonoBehaviour
 {
     public InputField mapNameInput;
-    public List<LeaderboardPanel> entryPanels; //Must always have 10 elements!
+    public List<LeaderboardPanel> entryPanels; //Must always have ELEMENTS_PER_SITE elements!
+
+    private const int ELEMENTS_PER_SITE = 10;
 
     private string lastLoadedMap = "";
     private int startIndex = 0;
@@ -28,34 +31,15 @@ public class LeaderboardDisplay : MonoBehaviour
 
     public void LoadMap(string mapName)
     {
-        StartCoroutine(Leaderboard.GetEntries(mapName, startIndex, DisplayData));
+        Leaderboard.GetEntries(mapName, startIndex, ELEMENTS_PER_SITE, DisplayData));
         lastLoadedMap = mapName;
     }
 
-    private void DisplayData(string data)
+    private void DisplayData(List<LeaderboardEntry> entries)
     {
-        if (entryPanels.Count != 10)
-            throw new InvalidOperationException("Data can only be displayed if entryPanels has exactly 10 elements!");
-
-        string[] lines = data.Split('\n');
-        EntryRow[] rows = new EntryRow[10];
-
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < ELEMENTS_PER_SITE; i++)
         {
-            if (i >= lines.Length || lines[i].Equals(""))
-            {
-                rows[i] = new EntryRow();
-                rows[i].isEmpty = true;
-            }
-            else
-            {
-                rows[i] = EntryRow.Parse((startIndex + i + 1) + "|" + lines[i]);
-            }
-        }
-
-        for(int i = 0; i < Math.Min(10, rows.Length); i++)
-        {
-            if(rows[i].isEmpty)
+            if (entries.Count < i)
             {
                 entryPanels[i].time = "";
                 entryPanels[i].player = "";
@@ -65,23 +49,20 @@ public class LeaderboardDisplay : MonoBehaviour
             }
             else
             {
-                entryPanels[i].time = rows[i].time.ToString("0.0000");
-                entryPanels[i].player = rows[i].player;
-                entryPanels[i].rank = rows[i].rank;
-                int id = rows[i].entryID;
-                entryPanels[i].SetButtonAction(delegate { StartCoroutine(Leaderboard.GetDemo(id, ProcessDownloadedDemo)); });
+                entryPanels[i].time = entries[i].time.ToString("0.0000");
+                entryPanels[i].player = entries[i].playerName;
+                entryPanels[i].rank = entries[i].rank.ToString();
+                int id = entries[i].id;
+                entryPanels[i].SetButtonAction(() => Leaderboard.GetDemo(id, ProcessDownloadedDemo));
                 entryPanels[i].SetButtonActive(true);
             }
         }
     }
 
-    private void ProcessDownloadedDemo(string demoText)
+    private void ProcessDownloadedDemo(Demo demo)
     {
-        byte[] data = System.Text.Encoding.ASCII.GetBytes(demoText);
-        MemoryStream stream = new MemoryStream(data);
-        Demo downloadedDemo = new Demo(new BinaryReader(stream));
-        print("Player: " + downloadedDemo.getPlayerName());
-        print("Level: " + downloadedDemo.getLevelName());
+        print("Player: " + demo.getPlayerName());
+        print("Level: " + demo.getLevelName());
     }
 
     public void AddIndex(int add)
@@ -90,46 +71,5 @@ public class LeaderboardDisplay : MonoBehaviour
         if (startIndex < 0)
             startIndex = 0;
         LoadMap(lastLoadedMap);
-    }
-}
-
-public struct EntryRow
-{
-    public string rank;
-    public string player;
-    public decimal time;
-    public int entryID;
-    public bool isEmpty;
-
-    /// <summary>
-    /// Creates an Entry row from a string
-    /// </summary>
-    /// <param name="data">Format: "rank|player|time" or "rank|player|time|entryid"</param>
-    /// <returns>The parsed Entry row</returns>
-    public static EntryRow Parse(string data)
-    {
-        EntryRow row = new EntryRow();
-
-        if(!data.Contains("|"))
-            throw new InvalidCastException("Can't parse the string!");
-
-        string[] parts = data.Split('|');
-
-        if (parts.Length < 3 || parts.Length > 4)
-        { Debug.Log(data); throw new InvalidCastException("Can't parse the string!"); }
-
-        row.rank = parts[0];
-        row.player = parts[1];
-
-        if(!decimal.TryParse(parts[2], out row.time))
-            throw new InvalidCastException("Can't parse the string!");
-
-        if (parts.Length == 4)
-            if(!int.TryParse(parts[3], out row.entryID))
-                throw new InvalidCastException("Can't parse the string!");
-
-        row.isEmpty = false;
-
-        return row;
     }
 }
