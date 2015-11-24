@@ -60,24 +60,24 @@ public class MainMenu : MonoBehaviour
         SetMenuState(MenuState.MainMenu);
         GameInfo.info.SetMenuState(GameInfo.MenuState.othermenu);
 		GameInfo.info.lockMenu();
-        loadLastPlayer();
+        LoadLastPlayer();
 
         WWW www = new WWW("http://theasuro.de/Velocity/feed/");
         StartCoroutine(WaitForBlogEntry(www));
     }
 
     //Load the last player that was logged in, returns false if loading failed
-    private bool loadLastPlayer()
+    private bool LoadLastPlayer()
     {
         if (!PlayerPrefs.HasKey("lastplayer"))
             return false;
 
         int index = PlayerPrefs.GetInt("lastplayer");
-        loadPlayerAtIndex(index);
+        LoadPlayerAtIndex(index);
         return true;
     }
 
-    private void loadPlayerAtIndex(int index)
+    private void LoadPlayerAtIndex(int index)
     {
         GameInfo.info.setCurrentSave(new SaveData(index));
     }
@@ -107,7 +107,7 @@ public class MainMenu : MonoBehaviour
         }
         else
         {
-            loadPlayerAtIndex(index);
+            LoadPlayerAtIndex(index);
             SetMenuState(MenuState.MainMenu);
         }
     }
@@ -121,7 +121,7 @@ public class MainMenu : MonoBehaviour
     {
         SaveData sd = new SaveData(index, name);
         sd.save();
-        loadPlayerAtIndex(index);
+        LoadPlayerAtIndex(index);
         SetMenuState(MenuState.MainMenu);
         ReplaceUiText.UpdateSaveInfo();
     }

@@ -8,6 +8,19 @@ namespace Api
 {
     public static class HttpApi
     {
+        private static Dictionary<Action<ApiResult>, ApiResult> callbacks = new Dictionary<Action<ApiResult>, ApiResult>();
+
+        public static void ConsumeCallbacks()
+        {
+            var tempDict = new Dictionary<Action<ApiResult>, ApiResult>(callbacks);
+            callbacks.Clear();
+
+            foreach (KeyValuePair<Action<ApiResult>, ApiResult> callback in tempDict)
+            {
+                callback.Key(callback.Value);
+            }
+        }
+
         public static void StartRequest(string url, string method, Action<ApiResult> callback = null, Dictionary<string, string> data = null)
         {
             try
@@ -96,7 +109,7 @@ namespace Api
                 string resultStr = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
                 if (info.callback != null)
-                    info.callback(new ApiResult() { error = false, text = resultStr, errorText = "" });
+                    callbacks.Add(info.callback, new ApiResult() { error = false, text = resultStr, errorText = "" });
             }
             catch (WebException ex)
             {
@@ -110,12 +123,12 @@ namespace Api
             {
                 StreamReader reader = new StreamReader(ex.Response.GetResponseStream());
                 if (callback != null)
-                    callback(new ApiResult() { error = true, text = reader.ReadToEnd(), errorText = ex.Message });
+                    callbacks.Add(callback, new ApiResult() { error = true, text = reader.ReadToEnd(), errorText = ex.Message });
             }
             else
             {
                 if (callback != null)
-                    callback(new ApiResult() { error = true, text = "No response.", errorText = ex.Message });
+                    callbacks.Add(callback, new ApiResult() { error = true, text = "No response.", errorText = ex.Message });
             }
         }
 

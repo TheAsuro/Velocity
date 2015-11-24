@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Newtonsoft.Json;
 
 namespace Api
 {
@@ -9,26 +9,37 @@ namespace Api
         private const string LEADERBOARD_URL = "http://theasuro.de/Velocity/Test/leaderboard.php";
 
         //Request leaderboard entries from the server
-        public static void GetEntries(string map, int index, int count, Action<List<LeaderboardEntry>> callback)
+        public static void GetEntries(string map, int index, int count, Action<LeaderboardEntry[]> callback)
         {
-            HttpApi.StartRequest(LEADERBOARD_URL + "?level=" + map + "&index=" + index + "&count=" + count, "GET", (result) => callback(ParseEntries(result.text, index)));
+            HttpApi.StartRequest(LEADERBOARD_URL + "?level=" + map + "&index=" + index + "&count=" + count, "GET", (result) => callback(ParseEntries(result.text, index, map)));
         }
 
-        private static List<LeaderboardEntry> ParseEntries(string entryJSON, int rankOffset = 0)
+        private static LeaderboardEntry[] ParseEntries(string entryJSON, int rankOffset = 0, string specificMap = "")
         {
-            // TODO: parse
-            return new List<LeaderboardEntry>();
+            LeaderboardResult[] results = JsonConvert.DeserializeObject<LeaderboardResult[]>(entryJSON);
+            LeaderboardEntry[] entries = new LeaderboardEntry[results.Length];
+            for (int i = 0; i < results.Length; i++)
+            {
+                entries[i] = results[i];
+            }
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                if (specificMap != "")
+                    entries[i].map = specificMap;
+                entries[i].rank = rankOffset + i + 1;
+            }
+            return entries;
         }
 
-        public static void SendEntry(string player, decimal time, string map, string hash, Demo demo)
+        public static void SendEntry(string player, decimal time, string map, string token, Demo demo)
         {
-            //TODO: only upload demo when needed
+            //TODO: upload demo when needed
             Dictionary<string, string> data = new Dictionary<string, string>();
-            data.Add("Player", player);
-            data.Add("Time", time.ToString());
-            data.Add("Map", map);
-            data.Add("Hash", hash);
-            data.Add("Demo", Encoding.ASCII.GetString(demo.GetBinaryData()));
+            data.Add("player", player);
+            data.Add("time", time.ToString());
+            data.Add("level", map);
+            data.Add("token", token);
 
             // TODO: Display when entry was successful
             HttpApi.StartRequest(LEADERBOARD_URL, "POST", null, data);
@@ -53,9 +64,22 @@ namespace Api
     public class LeaderboardEntry
     {
         public int id;
-        public int rank;
-        public string map;
         public string playerName;
+        public string map;
         public decimal time;
+        public int rank;
+
+        public static implicit operator LeaderboardEntry(LeaderboardResult v)
+        {
+            return new LeaderboardEntry() { id = v.ID, playerName = v.PlayerName, map = v.MapName, time = v.GameTime, rank = -1 };
+        }
+    }
+
+    public struct LeaderboardResult
+    {
+        public string MapName;
+        public int ID;
+        public string PlayerName;
+        public decimal GameTime;
     }
 }

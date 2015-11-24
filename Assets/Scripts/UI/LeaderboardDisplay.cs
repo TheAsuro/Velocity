@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System;
-using System.IO;
 using System.Collections.Generic;
 using Api;
 
@@ -35,11 +33,11 @@ public class LeaderboardDisplay : MonoBehaviour
         lastLoadedMap = mapName;
     }
 
-    private void DisplayData(List<LeaderboardEntry> entries)
+    private void DisplayData(LeaderboardEntry[] entries)
     {
         for(int i = 0; i < ELEMENTS_PER_SITE; i++)
         {
-            if (entries.Count < i)
+            if (entries.Length <= i)
             {
                 entryPanels[i].time = "";
                 entryPanels[i].player = "";

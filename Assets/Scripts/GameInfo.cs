@@ -136,6 +136,8 @@ public class GameInfo : MonoBehaviour
 
 	void Update()
 	{
+        Api.HttpApi.ConsumeCallbacks();
+
 		if(Input.GetButtonDown("Debug"))
 		{
 			myDebugWindow.SetActive(!myDebugWindow.activeSelf);
