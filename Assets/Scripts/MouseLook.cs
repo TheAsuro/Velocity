@@ -68,7 +68,7 @@ public class MouseLook : MonoBehaviour {
 
     float GetMouseX()
     {
-        if (GameInfo.info.rawMouse == 1f)
+        if (Settings.Game.RawMouse)
             return Input.GetAxisRaw("Mouse X");
         else
             return Input.GetAxis("Mouse X");
@@ -76,7 +76,7 @@ public class MouseLook : MonoBehaviour {
 
     float GetMouseY()
     {
-        if (GameInfo.info.rawMouse == 1f)
+        if (Settings.Game.RawMouse)
             return Input.GetAxisRaw("Mouse Y");
         else
             return Input.GetAxis("Mouse Y");

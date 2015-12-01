@@ -33,7 +33,7 @@ public class InfoText : MonoBehaviour
 
 	void OnGUI()
 	{
-		if(display && (GameInfo.info.showHelp || ignoreDisabledHelp))
+		if(display && (Settings.Game.ShowHelp || ignoreDisabledHelp))
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height - 50f - boxMargin, 400f, 50f));
 			GUILayout.Box(content, skin.box);

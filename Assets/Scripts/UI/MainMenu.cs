@@ -346,26 +346,6 @@ public class MainMenu : MonoBehaviour
         SetMenuState(MenuState.Demos);
     }
 
-    public void SaveSettings()
-    {
-        GameInfo.info.savePlayerSettings();
-    }
-
-    public void DeleteSettings()
-    {
-        GameInfo.info.DeletePlayerSettings();
-
-        GameInfo.info.loadPlayerSettings();
-        if (SettingsOpened != null)
-            SettingsOpened(this, null);
-    }
-
-    public void DeleteEverything()
-    {
-        PlayerPrefs.DeleteAll();
-        GameInfo.info.loadPlayerSettings();
-    }
-
     public IEnumerator WaitForBlogEntry(WWW www)
     {
         yield return www;

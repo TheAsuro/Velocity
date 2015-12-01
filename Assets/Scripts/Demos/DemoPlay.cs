@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class DemoPlay : MonoBehaviour
 {
+    public static bool thirdPersonDemoView = false;
+
 	public delegate void FinishedPlaying();
 	public GameObject ghostPrefab;
 	public GameObject ghostCamPrefab;
@@ -68,7 +70,7 @@ public class DemoPlay : MonoBehaviour
 				ghost.transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, t);
 
                 //Update first/third person view
-                if (GameInfo.info.demoPerspective == 0f)
+                if (!thirdPersonDemoView)
                     camDistance = new Vector3(0f, 0.5f, 0f); //First person view
                 else
                     camDistance = thirdPersonOffset; //Third person view
@@ -77,7 +79,7 @@ public class DemoPlay : MonoBehaviour
 				ghostCam.transform.position = ghost.transform.position + (ghost.transform.rotation * camDistance);
 
                 //Look at player if in third person
-                if (GameInfo.info.demoPerspective == 1f)
+                if (thirdPersonDemoView)
                     ghostCam.transform.LookAt(ghost.transform.position);
                 else
                     ghostCam.transform.rotation = ghost.transform.rotation;
@@ -105,7 +107,7 @@ public class DemoPlay : MonoBehaviour
 		//Set up camera
         Camera cam = ghostCam.GetComponent<Camera>();
 		cam.backgroundColor = WorldInfo.info.worldBackgroundColor;
-        cam.fieldOfView = GameInfo.info.fov;
+        cam.fieldOfView = Settings.Game.Fov;
 
 		//Set start time to current time
 		startPlayTime = Time.time;

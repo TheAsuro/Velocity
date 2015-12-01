@@ -52,21 +52,7 @@ public class GameInfo : MonoBehaviour
 	private float lastFpsRecordTime = -1f;
 	private List<string> linePrefixes = new List<string>();
 	private List<InfoString> windowLines = new List<InfoString>();
-
-	//Game settings (saved as floats because PlayerPrefs can't handle bools
-	public float mouseSpeed = 1f;
-	public float invertYInput = 0f;
-	public float fov = 90f;
-	public bool showHelp = true;
-	public float volume = 0.5f;
-	public float anisotropicFiltering = 1f;
-	public float antiAliasing = 0f;
-	public float textureSize = 0f;
-	public float lightingLevel = 0f;
-	public float vsyncLevel = 0f;
-    public float demoPerspective = 0f;
-    public float rawMouse = 1f;
-
+    
 	//GUI settings
 	public float circleSpeed1 = 10f;
 	public float circleSpeed2 = 20f;
@@ -82,7 +68,7 @@ public class GameInfo : MonoBehaviour
 	private GameObject myCanvas;
 	private GameObject myConsoleWindow;
 	private GameObject myDebugWindow;
-	private UnityEngine.UI.Text myDebugWindowText;
+	private Text myDebugWindowText;
 
 	public enum MenuState
 	{
@@ -122,22 +108,19 @@ public class GameInfo : MonoBehaviour
 		endLevel = myCanvas.transform.Find("EndLevel").gameObject;
 		myConsoleWindow = myCanvas.transform.Find("Console").gameObject;
 		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
-		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<UnityEngine.UI.Text>();
+		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<Text>();
 		myLeaderboardObj = myCanvas.transform.Find("Leaderboards").gameObject;
 		SetMenuState(MenuState.closed);
 
         fx = new GameInfoFX(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
 	}
 
-	void Start()
-	{
-		loadPlayerSettings();
-	}
-
 	void Update()
 	{
+        Settings.Input.ExecuteBoundActions();
         Api.HttpApi.ConsumeCallbacks();
 
+        //TODO put into binds
 		if(Input.GetButtonDown("Debug"))
 		{
 			myDebugWindow.SetActive(!myDebugWindow.activeSelf);
@@ -186,7 +169,7 @@ public class GameInfo : MonoBehaviour
 	void OnLevelWasLoaded(int level)
 	{
 		removeAllWindowLines();
-		loadPlayerSettings();
+        Settings.AllSettings.LoadSettings(); //TODO does this belong here?
 
         menuLocked = false;
         WorldInfo wInfo = WorldInfo.info;
@@ -233,8 +216,6 @@ public class GameInfo : MonoBehaviour
 		}
 
 		myPlayer.editorMode = startInEditorMode;
-		
-		applySettings();
 	}
 
 	//Player hit the goal
@@ -538,130 +519,6 @@ public class GameInfo : MonoBehaviour
 		if(myConsole)
 			myConsole.writeToConsole(text);
 	}
-
-	//Apply loaded settings to the current game
-	private void applySettings()
-	{
-		if(myPlayer != null)
-		{
-			myPlayer.setMouseSens(mouseSpeed);
-			myPlayer.invertYInput = invertYInput == 1f;
-			myPlayer.setFov(fov);
-			myPlayer.setVolume(volume);
-		}
-
-		AnisotropicFiltering filter = AnisotropicFiltering.Disable;
-		if(anisotropicFiltering == 1f) { filter = AnisotropicFiltering.ForceEnable; }
-
-		int textureLimit = 2 - (int)textureSize;
-
-		QualitySettings.anisotropicFiltering = filter;
-		QualitySettings.antiAliasing = (int)antiAliasing;
-		QualitySettings.masterTextureLimit = textureLimit;
-		QualitySettings.pixelLightCount = (int)lightingLevel;
-		QualitySettings.shadowCascades = (int)lightingLevel;
-		QualitySettings.vSyncCount = (int)vsyncLevel;
-	}
-
-	//Save current game settings to playerprefs
-	public void savePlayerSettings()
-	{
-		float anisoValue = 0f;
-		if(anisotropicFiltering == 1f) { anisoValue = 1f; }
-
-		float invertValue = 0f;
-		if(invertYInput == 1f) { invertValue = 1f; }
-
-		PlayerPrefs.SetFloat("fov", fov);
-		PlayerPrefs.SetFloat("mouseSpeed", mouseSpeed);
-		PlayerPrefs.SetFloat("invertY", invertValue);
-		PlayerPrefs.SetFloat("volume", volume);
-		PlayerPrefs.SetFloat("aniso", anisoValue);
-		PlayerPrefs.SetFloat("aa", antiAliasing);
-		PlayerPrefs.SetFloat("textureSize", textureSize);
-		PlayerPrefs.SetFloat("lighting", lightingLevel);
-		PlayerPrefs.SetFloat("vsync", vsyncLevel);
-        PlayerPrefs.SetFloat("demoPerspective", demoPerspective);
-        PlayerPrefs.SetFloat("rawmouse", rawMouse);
-
-		applySettings();
-	}
-
-	//Load game settings from playerprefs, but don't apply them yet
-	public void loadPlayerSettings()
-	{
-        //Check if keys are available, load defaults otherwise
-        if (PlayerPrefs.HasKey("fov"))
-            fov = PlayerPrefs.GetFloat("fov");
-        else
-            fov = 90f;
-
-        if (PlayerPrefs.HasKey("mouseSpeed"))
-            mouseSpeed = PlayerPrefs.GetFloat("mouseSpeed");
-        else
-            mouseSpeed = 1f;
-
-        if (PlayerPrefs.HasKey("invertY"))
-            invertYInput = PlayerPrefs.GetFloat("invertY");
-        else
-            invertYInput = 0f;
-
-        if (PlayerPrefs.HasKey("volume"))
-            volume = PlayerPrefs.GetFloat("volume");
-        else
-            volume = 0.5f;
-
-        if (PlayerPrefs.HasKey("aniso"))
-            anisotropicFiltering = PlayerPrefs.GetFloat("aniso");
-        else
-            anisotropicFiltering = 1f;
-
-        if (PlayerPrefs.HasKey("aa"))
-            antiAliasing = PlayerPrefs.GetFloat("aa");
-        else
-            antiAliasing = 2f;
-
-        if (PlayerPrefs.HasKey("textureSize"))
-            textureSize = PlayerPrefs.GetFloat("textureSize");
-        else
-            textureSize = 2f;
-
-        if (PlayerPrefs.HasKey("lighting"))
-            lightingLevel = PlayerPrefs.GetFloat("lighting");
-        else
-            lightingLevel = 4f;
-
-        if (PlayerPrefs.HasKey("vsync"))
-            vsyncLevel = PlayerPrefs.GetFloat("vsync");
-        else
-            vsyncLevel = 0f;
-
-        if (PlayerPrefs.HasKey("demoPerspective"))
-            demoPerspective = PlayerPrefs.GetFloat("demoPerspective");
-        else
-            demoPerspective = 0f;
-
-        if (PlayerPrefs.HasKey("rawmouse"))
-            rawMouse = PlayerPrefs.GetFloat("rawmouse");
-        else
-            rawMouse = 1f;
-
-		applySettings();
-	}
-
-    public void DeletePlayerSettings()
-    {
-        PlayerPrefs.DeleteKey("fov");
-        PlayerPrefs.DeleteKey("mouseSpeed");
-        PlayerPrefs.DeleteKey("invertY");
-        PlayerPrefs.DeleteKey("volume");
-        PlayerPrefs.DeleteKey("aniso");
-        PlayerPrefs.DeleteKey("aa");
-        PlayerPrefs.DeleteKey("textureSize");
-        PlayerPrefs.DeleteKey("lighting");
-        PlayerPrefs.DeleteKey("vsync");
-        PlayerPrefs.DeleteKey("rawmouse");
-    }
 	
 	public bool getGamePaused()
 	{

@@ -1,19 +1,110 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Settings
 {
     public static class Input
     {
-        public static bool Key(KeyCode code)
+        public enum OtherCode
         {
-            return false; // TODO
+            MouseWheelUp = -1,
+            MouseWheelDown = -2
         }
 
-        public bool KeyDown(KeyCode code)
+        private static Dictionary<int, List<Action>> actions = new Dictionary<int, List<Action>>();
+
+        public static void BindKey(int code, Action action)
         {
-            return false; // TODO
+            if (!actions.ContainsKey(code))
+                actions[code] = new List<Action>();
+
+            actions[code].Add(action);
+        }
+
+        public static void UnbindKey(int code)
+        {
+            actions.Remove(code);
+        }
+
+        public static void UnbindAll()
+        {
+            actions.Clear();
+        }
+
+        public static void ExecuteBoundActions()
+        {
+            foreach (var kvp in actions.Where((pair) => KeyDown(pair.Key)))
+            {
+                kvp.Value.ForEach((action) => action());
+            }
+        }
+
+        public static bool Key(int inputCode)
+        {
+            if (Enum.IsDefined(typeof(KeyCode), inputCode))
+            {
+                switch ((KeyCode)inputCode)
+                {
+                    case KeyCode.Mouse0:
+                        return UnityEngine.Input.GetMouseButton(0);
+                    case KeyCode.Mouse1:
+                        return UnityEngine.Input.GetMouseButton(1);
+                    case KeyCode.Mouse2:
+                        return UnityEngine.Input.GetMouseButton(2);
+                    default:
+                        return UnityEngine.Input.GetKey((KeyCode)inputCode);
+                }
+            }
+            else
+            {
+                if (Enum.IsDefined(typeof(OtherCode), inputCode))
+                {
+                    switch ((OtherCode)inputCode)
+                    {
+                        case OtherCode.MouseWheelUp:
+                            return UnityEngine.Input.mouseScrollDelta.y > 0f;
+                        case OtherCode.MouseWheelDown:
+                            return UnityEngine.Input.mouseScrollDelta.y < 0f;
+                    }
+                }
+
+                throw new InvalidOperationException("The input code '" + inputCode + "' is not defined!");
+            }
+        }
+
+        public static bool KeyDown(int inputCode)
+        {
+            if (Enum.IsDefined(typeof(KeyCode), inputCode))
+            {
+                switch ((KeyCode)inputCode)
+                {
+                    case KeyCode.Mouse0:
+                        return UnityEngine.Input.GetMouseButtonDown(0);
+                    case KeyCode.Mouse1:
+                        return UnityEngine.Input.GetMouseButtonDown(1);
+                    case KeyCode.Mouse2:
+                        return UnityEngine.Input.GetMouseButtonDown(2);
+                    default:
+                        return UnityEngine.Input.GetKey((KeyCode)inputCode);
+                }
+            }
+            else
+            {
+                if (Enum.IsDefined(typeof(OtherCode), inputCode))
+                {
+                    switch ((OtherCode)inputCode)
+                    {
+                        case OtherCode.MouseWheelUp:
+                            return UnityEngine.Input.mouseScrollDelta.y > 0f;
+                        case OtherCode.MouseWheelDown:
+                            return UnityEngine.Input.mouseScrollDelta.y < 0f;
+                    }
+                }
+
+                throw new InvalidOperationException("The input code '" + inputCode + "' is not defined!");
+            }
         }
     }
 }

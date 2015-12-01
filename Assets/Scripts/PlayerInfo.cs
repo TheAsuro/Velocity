@@ -37,7 +37,17 @@ public class PlayerInfo : MonoBehaviour
 		myCrosshairCircle = myCanvas.transform.Find("CrosshairCircle").GetComponent<Image>();
 		myCrosshairCircle2 = myCanvas.transform.Find("CrosshairCircle2").GetComponent<Image>();
 		myCrosshairCircle3 = myCanvas.transform.Find("CrosshairCircle3").GetComponent<Image>();
+
+        ApplySettings();
 	}
+
+    public void ApplySettings()
+    {
+        setMouseSens(Settings.Game.MouseSpeed);
+        invertYInput = Settings.Game.InvertY;
+        setFov(Settings.Game.Fov);
+        setVolume(Settings.Game.Volume);
+    }
 
 	public void resetPosition(Vector3 pos, Quaternion rot)
 	{
