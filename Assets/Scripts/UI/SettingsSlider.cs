@@ -9,12 +9,6 @@ namespace Settings
         public Slider slider;
         public Text display;
         public string settingName;
-        public Type settingType;
-        public int roundDigits = -1;
-        public string[] valueNames;
-        public float[] valueMeaning;
-        public string prefix = "";
-        public string postfix = "";
 
         void Awake()
         {
@@ -24,12 +18,13 @@ namespace Settings
 
         private void OnValueChanged(float value)
         {
-            
+            display.text = value.ToString();
+            Game.SetSettingFloat(settingName, value);
         }
 
         public void OnSettingsOpened(object sender, EventArgs e)
         {
-            slider.value = Game.GetSettingFloat<typeof(settingType)>(settingName);
+            slider.value = Game.GetSettingFloat(settingName);
         }
     }
 }

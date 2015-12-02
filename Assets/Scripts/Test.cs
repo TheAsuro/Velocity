@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Api;
-using Settings;
 
 public class Test : MonoBehaviour
 {
