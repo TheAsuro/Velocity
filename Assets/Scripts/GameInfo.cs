@@ -169,7 +169,6 @@ public class GameInfo : MonoBehaviour
 	void OnLevelWasLoaded(int level)
 	{
 		removeAllWindowLines();
-        Settings.AllSettings.LoadSettings(); //TODO does this belong here?
 
         menuLocked = false;
         WorldInfo wInfo = WorldInfo.info;

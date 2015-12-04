@@ -15816,12 +15816,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1974460055}
-        m_MethodName: SetSettingGroup
+        m_MethodName: SetMenuState
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -16771,11 +16771,11 @@ Prefab:
       objectReference: {fileID: 1974460055}
     - target: {fileID: 11475756, guid: 931ca6154e9968b40b42a4d56cbf41f2, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DeleteSettings
+      value: LoadSettings
       objectReference: {fileID: 0}
     - target: {fileID: 11475756, guid: 931ca6154e9968b40b42a4d56cbf41f2, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 931ca6154e9968b40b42a4d56cbf41f2, type: 2}
@@ -18137,7 +18137,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11475756, guid: 931ca6154e9968b40b42a4d56cbf41f2, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 931ca6154e9968b40b42a4d56cbf41f2, type: 2}

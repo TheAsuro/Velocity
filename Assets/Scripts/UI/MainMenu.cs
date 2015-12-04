@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 public class MainMenu : MonoBehaviour
 {
-    public static event System.EventHandler SettingsOpened;
+    public static event System.EventHandler LoadSettingsFromDisk;
 
     //General stuff
 	public List<string> mapNames = new List<string>();
@@ -163,7 +163,8 @@ public class MainMenu : MonoBehaviour
                 LoadDemoPanels();
                 break;
             case MenuState.Settings:
-                if (SettingsOpened != null) { SettingsOpened(this, null); }
+                LoadSettings();
+                SetSettingGroup(0);
                 break;
         }
 
@@ -228,8 +229,6 @@ public class MainMenu : MonoBehaviour
 
     public void SetSettingGroup(int groupID)
     {
-        SetMenuState(MenuState.Settings);
-
         foreach (GameObject obj in settingObjects)
         {
             obj.SetActive(false);
@@ -332,6 +331,17 @@ public class MainMenu : MonoBehaviour
         {
             SetSettingGroup(group);
         }
+    }
+
+    public void LoadSettings()
+    {
+        if (LoadSettingsFromDisk != null)
+            LoadSettingsFromDisk(this, null);
+    }
+
+    public void SaveSettings()
+    {
+        Settings.AllSettings.SaveSettings();
     }
 
     private void PlayDemo(string name)

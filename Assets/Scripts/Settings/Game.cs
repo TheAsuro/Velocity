@@ -90,8 +90,6 @@ namespace Settings
 
             AllSettings.AddSetting(new BoolSetting(SHOW_HELP, true));
             conversions.Add(SHOW_HELP, boolConverter);
-
-            AllSettings.LoadSettings();
         }
 
         public static string GetSettingValueName(string name)
