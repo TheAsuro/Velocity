@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 namespace Settings
@@ -59,22 +60,34 @@ namespace Settings
             var boolConverter = new SettingConverter((bVal) => (bool)bVal ? 1f : 0f, (fVal) => fVal == 1f, (bVal) => (bool)bVal ? "On" : "Off");
 
             AllSettings.AddSetting(new FloatSetting(MOUSE_SPEED, 1f));
+            conversions.Add(MOUSE_SPEED, new SettingConverter((fVal) => Mathf.Round((float)fVal * 10f) / 10f, (fVal) => fVal));
+
             AllSettings.AddSetting(new BoolSetting(INVERT_Y, false));
             conversions.Add(INVERT_Y, boolConverter);
+
             AllSettings.AddSetting(new FloatSetting(FOV, 90f));
+
             AllSettings.AddSetting(new FloatSetting(VOLUME, 0.5f));
+            conversions.Add(VOLUME, new SettingConverter((fVal) => Mathf.Round((float)fVal * 100f) / 100f, (fVal) => fVal));
+
             AllSettings.AddSetting(new IntSetting(ANISOTROPIC_FILTERING, (int)AnisotropicFiltering.Enable));
-            conversions.Add(ANISOTROPIC_FILTERING, new SettingConverter((anVal) => (int)anVal, (fVal) => (AnisotropicFiltering)Mathf.RoundToInt(fVal)));
+            conversions.Add(ANISOTROPIC_FILTERING, new EnumSettingConverter<AnisotropicFiltering>((anVal) => (int)anVal, (fVal) => (AnisotropicFiltering)Mathf.RoundToInt(fVal)));
+
             AllSettings.AddSetting(new IntSetting(ANTI_ALIASING, (int)AAValue.Off));
-            conversions.Add(ANTI_ALIASING, new SettingConverter((iVal) => 2f, (fVal) => (int)Mathf.Pow(2, fVal)));
+            conversions.Add(ANTI_ALIASING, new EnumSettingConverter<AAValue>((iVal) => 2f, (fVal) => (int)Mathf.Pow(2, fVal)));
+
             AllSettings.AddSetting(new IntSetting(TEXTURE_SIZE, (int)TexSize.Full));
-            conversions.Add(TEXTURE_SIZE, new SettingConverter((texVal) => (int)texVal, (fVal) => (TexSize)Mathf.RoundToInt(fVal)));
+            conversions.Add(TEXTURE_SIZE, new EnumSettingConverter<TexSize>((texVal) => (int)texVal, (fVal) => (TexSize)Mathf.RoundToInt(fVal)));
+
             AllSettings.AddSetting(new BoolSetting(V_SYNC, false));
             conversions.Add(V_SYNC, boolConverter);
+
             AllSettings.AddSetting(new BoolSetting(RAW_MOUSE, true));
             conversions.Add(RAW_MOUSE, boolConverter);
+
             AllSettings.AddSetting(new IntSetting(FRAME_QUEUE_LIMIT, -1));
-            conversions.Add(FRAME_QUEUE_LIMIT, new SettingConverter((iVal) => (int)iVal == -1 ? 3f : (float)iVal, (fVal) => fVal == 3f ? -1 : (int)fVal));
+            conversions.Add(FRAME_QUEUE_LIMIT, new EnumSettingConverter<FrameQueueLimit>((iVal) => (int)iVal == -1 ? 3f : (float)iVal, (fVal) => fVal == 3f ? -1 : (int)fVal));
+
             AllSettings.AddSetting(new BoolSetting(SHOW_HELP, true));
             conversions.Add(SHOW_HELP, boolConverter);
 

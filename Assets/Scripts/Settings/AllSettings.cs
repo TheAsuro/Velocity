@@ -204,4 +204,9 @@ namespace Settings
                 return value.ToString();
         }
     }
+
+    class EnumSettingConverter<T> : SettingConverter
+    {
+        public EnumSettingConverter(Func<object, float> toFloat, Func<float, object> fromFloat) : base(toFloat, fromFloat, (obj) => Enum.GetName(typeof(T), obj)) { }
+    }
 }
