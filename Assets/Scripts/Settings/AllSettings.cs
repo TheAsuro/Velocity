@@ -177,21 +177,31 @@ namespace Settings
     {
         protected Func<object, float> toFloat;
         protected Func<float, object> fromFloat;
+        protected Func<object, string> toString;
 
-        public SettingConverter(Func<object, float> toFloat, Func<float, object> fromFloat)
+        public SettingConverter(Func<object, float> toFloat, Func<float, object> fromFloat, Func<object, string> toString = null)
         {
             this.toFloat = toFloat;
             this.fromFloat = fromFloat;
+            this.toString = toString;
         }
 
-        public float ToFloat(object value)
+        public virtual float ToFloat(object value)
         {
             return toFloat(value);
         }
 
-        public object FromFloat(float value)
+        public virtual object FromFloat(float value)
         {
             return fromFloat(value);
+        }
+
+        public virtual string ToString(object value)
+        {
+            if (toString != null)
+                return toString(value);
+            else
+                return value.ToString();
         }
     }
 }

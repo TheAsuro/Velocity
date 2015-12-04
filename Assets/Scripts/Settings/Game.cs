@@ -56,8 +56,7 @@ namespace Settings
 
         static Game()
         {
-            var boolConverter = new SettingConverter((bVal) => (bool)bVal ? 1f : 0f, (fVal) => fVal == 1f);
-            var intConverter = new SettingConverter((iVal) => (float)iVal, (fVal) => (int)fVal);
+            var boolConverter = new SettingConverter((bVal) => (bool)bVal ? 1f : 0f, (fVal) => fVal == 1f, (bVal) => (bool)bVal ? "On" : "Off");
 
             AllSettings.AddSetting(new FloatSetting(MOUSE_SPEED, 1f));
             AllSettings.AddSetting(new BoolSetting(INVERT_Y, false));
@@ -65,11 +64,11 @@ namespace Settings
             AllSettings.AddSetting(new FloatSetting(FOV, 90f));
             AllSettings.AddSetting(new FloatSetting(VOLUME, 0.5f));
             AllSettings.AddSetting(new IntSetting(ANISOTROPIC_FILTERING, (int)AnisotropicFiltering.Enable));
-            conversions.Add(ANISOTROPIC_FILTERING, intConverter);
+            conversions.Add(ANISOTROPIC_FILTERING, new SettingConverter((anVal) => (int)anVal, (fVal) => (AnisotropicFiltering)Mathf.RoundToInt(fVal)));
             AllSettings.AddSetting(new IntSetting(ANTI_ALIASING, (int)AAValue.Off));
-            conversions.Add(ANTI_ALIASING, new SettingConverter((iVal) => (int)iVal / 2f, (fVal) => (int)fVal * 2));
+            conversions.Add(ANTI_ALIASING, new SettingConverter((iVal) => 2f, (fVal) => (int)Mathf.Pow(2, fVal)));
             AllSettings.AddSetting(new IntSetting(TEXTURE_SIZE, (int)TexSize.Full));
-            conversions.Add(TEXTURE_SIZE, intConverter);
+            conversions.Add(TEXTURE_SIZE, new SettingConverter((texVal) => (int)texVal, (fVal) => (TexSize)Mathf.RoundToInt(fVal)));
             AllSettings.AddSetting(new BoolSetting(V_SYNC, false));
             conversions.Add(V_SYNC, boolConverter);
             AllSettings.AddSetting(new BoolSetting(RAW_MOUSE, true));
@@ -80,6 +79,14 @@ namespace Settings
             conversions.Add(SHOW_HELP, boolConverter);
 
             AllSettings.LoadSettings();
+        }
+
+        public static string GetSettingValueName(string name)
+        {
+            if (conversions.ContainsKey(name))
+                return conversions[name].ToString(AllSettings.GetSetting(name));
+            else
+                return AllSettings.GetSetting(name).ToString();
         }
 
         public static float GetSettingFloat(string name)

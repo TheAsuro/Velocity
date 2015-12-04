@@ -18,13 +18,24 @@ namespace Settings
 
         private void OnValueChanged(float value)
         {
-            display.text = value.ToString();
-            Game.SetSettingFloat(settingName, value);
+            SetSetting(value);
+            DisplaySetting();
         }
 
         public void OnSettingsOpened(object sender, EventArgs e)
         {
+            DisplaySetting();
+        }
+
+        private void SetSetting(float value)
+        {
+            Game.SetSettingFloat(settingName, value);
+        }
+
+        private void DisplaySetting()
+        {
             slider.value = Game.GetSettingFloat(settingName);
+            display.text = Game.GetSettingValueName(settingName);
         }
     }
 }
