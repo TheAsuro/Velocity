@@ -203,7 +203,7 @@ public class MainMenu : MonoBehaviour
 
         for (int i = 0; i < mapCount; i++)
         {
-            string pb = "PB: -";
+            string pb = "-";
             decimal pbTime = GameInfo.info.getCurrentSave().getPersonalBest(mapNames[i]);
             if (pbTime != -1)
                 pb = pbTime.ToString("0.0000");

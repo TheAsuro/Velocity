@@ -14,6 +14,7 @@ namespace Settings
         {
             slider.onValueChanged.AddListener(OnValueChanged);
             MainMenu.LoadSettingsFromDisk += OnLoadSettings;
+            OnLoadSettings(this, null);
         }
 
         private void OnValueChanged(float value)

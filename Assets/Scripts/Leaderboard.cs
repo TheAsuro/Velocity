@@ -6,7 +6,7 @@ namespace Api
 {
     static class Leaderboard
     {
-        private const string LEADERBOARD_URL = "http://theasuro.de/Velocity/Test/leaderboard.php";
+        private const string LEADERBOARD_URL = "http://theasuro.de/Velocity/Api/leaderboard.php";
 
         //Request leaderboard entries from the server
         public static void GetEntries(string map, int index, int count, Action<LeaderboardEntry[]> callback)
@@ -29,6 +29,13 @@ namespace Api
                     entries[i].map = specificMap;
                 entries[i].rank = rankOffset + i + 1;
             }
+
+            if (entries.Length == 0)
+            {
+                var e = new LeaderboardEntry() { id = -1, map = specificMap, playerName = "-", rank = -1, time = -1 };
+                entries = new LeaderboardEntry[1] { e };
+            }
+
             return entries;
         }
 
@@ -49,7 +56,7 @@ namespace Api
         {
             // TODO: Fix map with bad characters
             // TODO: Fix if result has no entries
-            HttpApi.StartRequest(LEADERBOARD_URL + "?map=" + map, "GET", (result) => callback(ParseEntries(result.text)[0]));
+            HttpApi.StartRequest(LEADERBOARD_URL + "?level=" + map, "GET", (result) => callback(ParseEntries(result.text)[0]));
         }
 
         public static void GetDemo(int entryID, Action<Demo> callback)

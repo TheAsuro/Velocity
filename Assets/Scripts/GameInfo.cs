@@ -773,6 +773,8 @@ class GameInfoFX
         {
             activeEffects[i].update(activeEffects[i]);
         }
+
+        Settings.Input.ExecuteBoundActions();
     }
 
     public void StartFadeToColor(Color start, Color end, float duration, Callback callback)
