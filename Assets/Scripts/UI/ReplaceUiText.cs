@@ -31,12 +31,12 @@ public class ReplaceUiText : MonoBehaviour
     void Update()
     {
         string temp = initialText;
-        SaveData playerSave = GameInfo.info.getCurrentSave();
+        SaveData playerSave = GameInfo.info.CurrentSave;
 
-        if (temp.Contains("$player1")) { temp = temp.Replace("$player1", player1.getPlayerName()); }
-        else if (temp.Contains("$player2")) { temp = temp.Replace("$player2", player2.getPlayerName()); }
-        else if (temp.Contains("$player3")) { temp = temp.Replace("$player3", player3.getPlayerName()); }
-        else if (temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.getPlayerName()); }
+        if (temp.Contains("$player1")) { temp = temp.Replace("$player1", player1.Account.Name); }
+        else if (temp.Contains("$player2")) { temp = temp.Replace("$player2", player2.Account.Name); }
+        else if (temp.Contains("$player3")) { temp = temp.Replace("$player3", player3.Account.Name); }
+        else if (temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.Account.Name); }
         if (temp.Contains("$time")) { temp = temp.Replace("$time", (GameInfo.info.lastTimeString).ToString()); }
         if (temp.Contains("$map")) { temp = Application.loadedLevelName; }
 
@@ -63,7 +63,7 @@ public class ReplaceUiText : MonoBehaviour
 
         if (pb.Equals("") && playerSave != null)
         {
-            decimal pbTime = GameInfo.info.getCurrentSave().getPersonalBest(Application.loadedLevelName);
+            decimal pbTime = playerSave.GetPersonalBest(Application.loadedLevelName);
             if (pbTime <= 0)
                 pb = "-";
             else
@@ -75,29 +75,29 @@ public class ReplaceUiText : MonoBehaviour
 
         if (temp.Contains("$currentplayer"))
         {
-            if (playerSave != null && !playerSave.getPlayerName().Equals(""))
-                temp = temp.Replace("$currentplayer", playerSave.getPlayerName());
+            if (playerSave != null && !playerSave.Account.Name.Equals(""))
+                temp = temp.Replace("$currentplayer", playerSave.Account.Name);
             else
                 temp = temp.Replace("$currentplayer", "No player selected!");
         }
 
         if (temp.Contains("$load1"))
         {
-            if (player1.getPlayerName().Equals(""))
+            if (player1.Account.Name.Equals(""))
                 temp = temp.Replace("$load1", "New");
             else
                 temp = temp.Replace("$load1", "Load");
         }
         if (temp.Contains("$load2"))
         {
-            if (player2.getPlayerName().Equals(""))
+            if (player2.Account.Name.Equals(""))
                 temp = temp.Replace("$load2", "New");
             else
                 temp = temp.Replace("$load2", "Load");
         }
         if (temp.Contains("$load3"))
         {
-            if (player3.getPlayerName().Equals(""))
+            if (player3.Account.Name.Equals(""))
                 temp = temp.Replace("$load3", "New");
             else
                 temp = temp.Replace("$load3", "Load");
@@ -115,6 +115,9 @@ public class ReplaceUiText : MonoBehaviour
     private void SetWr(Api.LeaderboardEntry entry)
     {
         loadingWr = false;
-        wr = entry.time + " by " + entry.playerName;
+        if (entry != null)
+            wr = entry.time + " by " + entry.playerName;
+        else
+            wr = "-";
     }
 }

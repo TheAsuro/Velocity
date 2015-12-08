@@ -33,7 +33,6 @@ public class GameInfo : MonoBehaviour
 	public List<AudioClip> soundClips;
 
 	//Stuff
-	private SaveData currentSave;
 	private Demo currentDemo;
 	private decimal lastTime = -1;
     public string lastTimeString
@@ -70,7 +69,25 @@ public class GameInfo : MonoBehaviour
 	private GameObject myDebugWindow;
 	private Text myDebugWindowText;
 
-	public enum MenuState
+    //Load infos like player name, pb's, etc.
+    private SaveData currentSave;
+    public SaveData CurrentSave
+    {
+        get
+        {
+            return currentSave;
+        }
+        set
+        {
+            currentSave = value;
+            if (value != null)
+            {
+                PlayerPrefs.SetInt("lastplayer", currentSave.Index);
+            }
+        }
+    }
+
+    public enum MenuState
 	{
 		closed,
 		escmenu,
@@ -225,15 +242,10 @@ public class GameInfo : MonoBehaviour
         lastTime = time.Ticks / (decimal)10000000;
 
         save(); //necessary?
-		getCurrentSave().saveIfPersonalBest(lastTime, Application.loadedLevelName);
+		CurrentSave.SaveIfPersonalBest(lastTime, Application.loadedLevelName);
 
         currentDemo = myPlayer.getDemo();
-
-        //If a player save is loaded, play demo and send to leaderboard
-        if (getCurrentSave() != null)
-        {
-            sendLeaderboardEntry(getCurrentSave().getPlayerName(), lastTime, Application.loadedLevelName, currentDemo);
-        }
+        sendLeaderboardEntry(lastTime, Application.loadedLevelName, currentDemo);
 	}
 
 	//Player hit the exit trigger
@@ -246,7 +258,7 @@ public class GameInfo : MonoBehaviour
             return;
         }
 
-		SetMenuState(GameInfo.MenuState.endlevel);
+		SetMenuState(MenuState.endlevel);
 
         PlayRaceDemo();
 
@@ -476,25 +488,12 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	//Load infos like player name, pb's, etc.
-	public void setCurrentSave(SaveData data)
-	{
-		currentSave = data;
-        if(data != null)
-            PlayerPrefs.SetInt("lastplayer", currentSave.getIndex());
-	}
-
-	public SaveData getCurrentSave()
-	{
-		return currentSave;
-	}
-
 	//Apply current data to loaded save file
 	public void save()
 	{
 		if(currentSave != null)
 		{
-			currentSave.save();
+			currentSave.SaveName();
 		}
 		else
 		{
@@ -551,7 +550,7 @@ public class GameInfo : MonoBehaviour
 
 		//check if there is a player and we are not in editor
 		if(myPlayer != null && getMenuState() != MenuState.editor && getMenuState() != MenuState.editorplay)
-			myPlayer.startDemo(currentSave.getPlayerName());
+			myPlayer.startDemo(currentSave.Account.Name);
 	}
 
 	public void stopDemo()
@@ -656,18 +655,26 @@ public class GameInfo : MonoBehaviour
 	//Send a leaderboard entry to leaderboard server, with a automatically generated hash.
 	//This includes a secret key that will be included in the final game (and not uploaded to github),
 	//so nobody can send fake entries.
-	private void sendLeaderboardEntry(string name, decimal time, string map, Demo demo)
+	private void sendLeaderboardEntry(decimal time, string map, Demo demo)
 	{
 		invalidRunCheck();
-		if(runValid)
-		{
-			string hash = Md5Sum(name + time.ToString() + map + secretKey);
-			Api.Leaderboard.SendEntry(name, time, map, hash, demo);
-		}
-		else
-		{
-			print("Invalid run!");
-		}
+        if (!runValid)
+        {
+            print("Invalid run!");
+            return;
+        }
+        if (currentSave == null)
+        {
+            print("Invalid save.");
+            return;
+        }
+        if (!currentSave.Account.IsLoggedIn)
+        {
+            print("Account not logged in!");
+            return;
+        }
+
+        Api.Leaderboard.SendEntry(currentSave.Account.Name, time, map, currentSave.Account.Token, demo);
 	}
 
 	//Create a md5 hash from a string

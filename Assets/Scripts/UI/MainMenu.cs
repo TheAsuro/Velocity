@@ -79,13 +79,13 @@ public class MainMenu : MonoBehaviour
 
     private void LoadPlayerAtIndex(int index)
     {
-        GameInfo.info.setCurrentSave(new SaveData(index));
+        GameInfo.info.CurrentSave = new SaveData(index);
     }
 
     public void OnPlayButtonPress()
     {
-        SaveData sd = GameInfo.info.getCurrentSave();
-        if(sd == null || sd.getPlayerName().Equals(""))
+        SaveData sd = GameInfo.info.CurrentSave;
+        if(sd == null || sd.Account.Name.Equals(""))
         {
             //Create a new player if no player is selected
             SetMenuState(MenuState.PlayerSelection);
@@ -100,7 +100,7 @@ public class MainMenu : MonoBehaviour
     {
         //Check if a player exists, create new player if not
         SaveData sd = new SaveData(index);
-        if (sd.getPlayerName().Equals(""))
+        if (sd.Account.Name.Equals(""))
         {
             newPlayerSelectedIndex = index;
             SetMenuState(MenuState.NewPlayer);
@@ -120,7 +120,7 @@ public class MainMenu : MonoBehaviour
     private void CreateNewPlayer(int index, string name)
     {
         SaveData sd = new SaveData(index, name);
-        sd.save();
+        sd.SaveName();
         LoadPlayerAtIndex(index);
         SetMenuState(MenuState.MainMenu);
         ReplaceUiText.UpdateSaveInfo();
@@ -129,12 +129,12 @@ public class MainMenu : MonoBehaviour
     public void DeletePlayerAtIndex(int index)
     {
         SaveData sd = new SaveData(index);
-        sd.deleteData(mapNames);
+        sd.DeleteData(mapNames);
         ReplaceUiText.UpdateSaveInfo();
 
         //Log out from current player if we deleted that one
-        if (GameInfo.info.getCurrentSave() != null && GameInfo.info.getCurrentSave().getIndex() == index)
-            GameInfo.info.setCurrentSave(null);
+        if (GameInfo.info.CurrentSave != null && GameInfo.info.CurrentSave.Index == index)
+            GameInfo.info.CurrentSave = null;
     }
 
     public void SetMenuState(int stateID)
@@ -204,7 +204,7 @@ public class MainMenu : MonoBehaviour
         for (int i = 0; i < mapCount; i++)
         {
             string pb = "-";
-            decimal pbTime = GameInfo.info.getCurrentSave().getPersonalBest(mapNames[i]);
+            decimal pbTime = GameInfo.info.CurrentSave.GetPersonalBest(mapNames[i]);
             if (pbTime != -1)
                 pb = pbTime.ToString("0.0000");
             CreateMapPanel(i, mapNames[i], mapAuthors[i], mapPreviews[i], pb);

@@ -1,46 +1,47 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Api;
 
 public class SaveData
 {
-	private int index;
-	private string playerName;
+	public int Index { get; private set; }
+	public Account Account { get; private set; }
 
 	//Creates a new instance with given data
-	public SaveData(int pIndex, string pPlayerName)
+	public SaveData(int index, string playerName)
 	{
-		index = pIndex;
-		playerName = pPlayerName;
+		Index = index;
+        Account = new Account(playerName);
 	}
 
 	//Loads a new instance from file saved at index
-	public SaveData(int pIndex)
+	public SaveData(int index)
 	{
-		index = pIndex;
-		playerName = PlayerPrefs.GetString("PlayerName" + pIndex.ToString());
+		Index = index;
+		Account = new Account(PlayerPrefs.GetString("PlayerName" + index));
 	}
 
-	public void save()
+	public void SaveName()
 	{
-		PlayerPrefs.SetString("PlayerName" + index.ToString(), playerName);
+		PlayerPrefs.SetString("PlayerName" + Index.ToString(), Account.Name);
 	}
 
-	public bool saveIfPersonalBest(decimal time, string mapName)
+	public bool SaveIfPersonalBest(decimal time, string mapName)
 	{
-        decimal pbTime = getPersonalBest(mapName);
+        decimal pbTime = GetPersonalBest(mapName);
         if(pbTime <= 0 || time < pbTime)
         {
-            PlayerPrefs.SetString(playerName + "_" + mapName, time.ToString());
+            PlayerPrefs.SetString(Account.Name + "_" + mapName, time.ToString());
             return true;
 		}
 		return false;
 	}
 
-	public decimal getPersonalBest(string mapName)
+	public decimal GetPersonalBest(string mapName)
 	{
-        if (PlayerPrefs.HasKey(playerName + "_" + mapName))
+        if (PlayerPrefs.HasKey(Account.Name + "_" + mapName))
         {
-			string s = PlayerPrefs.GetString(playerName + "_" + mapName);
+			string s = PlayerPrefs.GetString(Account.Name + "_" + mapName);
             if(!s.Equals(""))
 				return decimal.Parse(s);
 			else
@@ -50,23 +51,13 @@ public class SaveData
             return -1;
 	}
 
-	public string getPlayerName()
+	public void DeleteData(List<string> mapNames)
 	{
-		return playerName;
-	}
-
-	public int getIndex()
-	{
-		return index;
-	}
-
-	public void deleteData(List<string> mapNames)
-	{
-		PlayerPrefs.DeleteKey("PlayerName" + index.ToString());
+		PlayerPrefs.DeleteKey("PlayerName" + Index.ToString());
 
         foreach(string map in mapNames)
         {
-            PlayerPrefs.DeleteKey(playerName + "_" + map);
+            PlayerPrefs.DeleteKey(Account.Name + "_" + map);
         }
 	}
 }

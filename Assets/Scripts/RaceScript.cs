@@ -85,7 +85,7 @@ public class RaceScript : MonoBehaviour
 
 		//Display player name
 		if(!editorMode)
-			nameText.text = GameInfo.info.getCurrentSave().getPlayerName();
+			nameText.text = GameInfo.info.CurrentSave.Account.Name;
 		else
 			nameText.text = "Editor";
 
