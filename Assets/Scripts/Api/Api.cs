@@ -123,12 +123,12 @@ namespace Api
             {
                 StreamReader reader = new StreamReader(ex.Response.GetResponseStream());
                 if (callback != null)
-                    callbacks.Add(callback, new ApiResult() { error = true, text = reader.ReadToEnd(), errorText = ex.Message });
+                    callbacks.Add(callback, new ApiResult() { error = true, text = "", errorText = reader.ReadToEnd() });
             }
             else
             {
                 if (callback != null)
-                    callbacks.Add(callback, new ApiResult() { error = true, text = "No response.", errorText = ex.Message });
+                    callbacks.Add(callback, new ApiResult() { error = true, text = "", errorText = ex.Message });
             }
         }
 

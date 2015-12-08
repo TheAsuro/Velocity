@@ -12,7 +12,8 @@ public class SaveData
 	{
 		Index = index;
         Account = new Account(playerName);
-	}
+        SaveName();
+    }
 
 	//Loads a new instance from file saved at index
 	public SaveData(int index)
@@ -21,7 +22,7 @@ public class SaveData
 		Account = new Account(PlayerPrefs.GetString("PlayerName" + index));
 	}
 
-	public void SaveName()
+	private void SaveName()
 	{
 		PlayerPrefs.SetString("PlayerName" + Index.ToString(), Account.Name);
 	}

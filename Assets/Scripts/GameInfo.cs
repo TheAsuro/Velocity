@@ -240,8 +240,7 @@ public class GameInfo : MonoBehaviour
 		stopDemo();
 		cleanUpPlayer();
         lastTime = time.Ticks / (decimal)10000000;
-
-        save(); //necessary?
+        
 		CurrentSave.SaveIfPersonalBest(lastTime, Application.loadedLevelName);
 
         currentDemo = myPlayer.getDemo();
@@ -485,19 +484,6 @@ public class GameInfo : MonoBehaviour
 			Time.timeScale = 1f;
             if(getPlayerInfo() != null)
                 getPlayerInfo().setPause(false);
-		}
-	}
-
-	//Apply current data to loaded save file
-	public void save()
-	{
-		if(currentSave != null)
-		{
-			currentSave.SaveName();
-		}
-		else
-		{
-			writeToConsole("Tried to save, but there is no current save file :o");
 		}
 	}
 

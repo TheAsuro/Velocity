@@ -24,16 +24,11 @@ public class MainMenu : MonoBehaviour
     public GameObject mapPanelPrefab;
     public GameObject demoPanelPrefab;
     public GameObject editPanelPrefab;
-    public InputField newPlayerNameField;
     public Text blogText;
 
-    private int newPlayerSelectedIndex = 0;
+    public MenuState CurrentState { get; private set; }
 
-    private MenuState currentState;
-    public MenuState currentMenuState
-    {
-        get { return currentState; }
-    }
+    private NewPlayerMenu NewPlayerMenu { get { return menuObjects[(int)MenuState.NewPlayer].GetComponent<NewPlayerMenu>(); } }
 
 	public enum MenuState
     {
@@ -61,6 +56,8 @@ public class MainMenu : MonoBehaviour
         GameInfo.info.SetMenuState(GameInfo.MenuState.othermenu);
 		GameInfo.info.lockMenu();
         LoadLastPlayer();
+
+        NewPlayerMenu.OnCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
 
         WWW www = new WWW("http://theasuro.de/Velocity/feed/");
         StartCoroutine(WaitForBlogEntry(www));
@@ -102,7 +99,7 @@ public class MainMenu : MonoBehaviour
         SaveData sd = new SaveData(index);
         if (sd.Account.Name.Equals(""))
         {
-            newPlayerSelectedIndex = index;
+            NewPlayerMenu.currentIndex = index;
             SetMenuState(MenuState.NewPlayer);
         }
         else
@@ -112,16 +109,9 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void OnCreatePlayerOK()
+    public void OnPlayerCreated(int playerIndex)
     {
-        CreateNewPlayer(newPlayerSelectedIndex, newPlayerNameField.text);
-    }
-
-    private void CreateNewPlayer(int index, string name)
-    {
-        SaveData sd = new SaveData(index, name);
-        sd.SaveName();
-        LoadPlayerAtIndex(index);
+        LoadPlayerAtIndex(playerIndex);
         SetMenuState(MenuState.MainMenu);
         ReplaceUiText.UpdateSaveInfo();
     }
@@ -168,7 +158,7 @@ public class MainMenu : MonoBehaviour
                 break;
         }
 
-        currentState = newState;
+        CurrentState = newState;
     }
 
     public void SetGameSelectionContent(int contentID)

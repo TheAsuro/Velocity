@@ -8,8 +8,8 @@ namespace Api
     {
         private const string LOGIN_API_URL = "http://theasuro.de/Velocity/Api/account.php";
 
-        public event EventHandler<StringEventArgs> OnLoginFinished;
-        public event EventHandler OnAccountRequestFinished;
+        public event EventHandler<EventArgs<string>> OnLoginFinished;
+        public event EventHandler<EventArgs<string>> OnAccountRequestFinished;
 
         public string Name { get; private set; }
         public bool IsLoggedIn { get; private set; }
@@ -33,17 +33,13 @@ namespace Api
 
         private void FinishCreate(HttpApi.ApiResult result)
         {
-            if (result.error == false)
+            if (!result.error)
             {
                 FinishLogin(result);
             }
-            else
-            {
-                Debug.Log(result.text + " (" + result.errorText + ")");
-            }
 
             if (OnAccountRequestFinished != null)
-                OnAccountRequestFinished(this, new EventArgs());
+                OnAccountRequestFinished(this, new EventArgs<string>(result.text, result.error, result.errorText));
         }
 
         public void StartLogin(string pass)
@@ -56,28 +52,39 @@ namespace Api
 
         private void FinishLogin(HttpApi.ApiResult result)
         {
-            if (result.error == false)
+            if (!result.error)
             {
                 Token = result.text;
                 IsLoggedIn = true;
+                Debug.Log("Logged in.");
             }
             else
             {
-                Debug.Log(result.text);
+                Debug.Log(result.errorText);
             }
 
             if (OnLoginFinished != null)
-                OnLoginFinished(this, new StringEventArgs(Token));
+                OnLoginFinished(this, new EventArgs<string>(Token, result.error, result.errorText));
         }
     }
 
-    public class StringEventArgs : EventArgs
+    public class EventArgs<T> : EventArgs
     {
-        public string Content { get; private set; }
+        public T Content { get; private set; }
+        public bool Error { get; private set; }
+        public string ErrorText { get; private set; }
 
-        public StringEventArgs(string str) : base()
+        public EventArgs(T content) : base()
         {
-            Content = str;
+            Content = content;
+            Error = false;
+        }
+
+        public EventArgs(T content, bool error, string errorText) : base()
+        {
+            Content = content;
+            Error = error;
+            ErrorText = errorText;
         }
     }
 }
