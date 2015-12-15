@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 public class MainMenu : MonoBehaviour
 {
-    public static event System.EventHandler LoadSettingsFromDisk;
+    public static event System.EventHandler UpdateSettingSliders;
 
     //General stuff
 	public List<string> mapNames = new List<string>();
@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour
 
     public MenuState CurrentState { get; private set; }
 
-    private NewPlayerMenu NewPlayerMenu { get { return menuObjects[(int)MenuState.NewPlayer].GetComponent<NewPlayerMenu>(); } }
+    private T GetSubMenu<T>(MenuState menuType) where T : MainSubMenu { return menuObjects[(int)menuType].GetComponent<T>(); }
 
 	public enum MenuState
     {
@@ -57,7 +57,11 @@ public class MainMenu : MonoBehaviour
 		GameInfo.info.lockMenu();
         LoadLastPlayer();
 
-        NewPlayerMenu.OnCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
+        MainSubMenu.GoToMainMenu += (s, e) => SetMenuState(MenuState.MainMenu);
+        GetSubMenu<NewPlayerMenu>(MenuState.NewPlayer).OnCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
+        GetSubMenu<PlayerSelectionMenu>(MenuState.PlayerSelection).LoginFinished += (s, e) => SetMenuState(MenuState.GameSelection);
+
+        Settings.AllSettings.LoadSettings();
 
         WWW www = new WWW("http://theasuro.de/Velocity/feed/");
         StartCoroutine(WaitForBlogEntry(www));
@@ -69,14 +73,13 @@ public class MainMenu : MonoBehaviour
         if (!PlayerPrefs.HasKey("lastplayer"))
             return false;
 
-        int index = PlayerPrefs.GetInt("lastplayer");
-        LoadPlayerAtIndex(index);
+        LoadPlayer(PlayerPrefs.GetString("lastplayer"));
         return true;
     }
 
-    private void LoadPlayerAtIndex(int index)
+    private void LoadPlayer(string name)
     {
-        GameInfo.info.CurrentSave = new SaveData(index);
+        GameInfo.info.CurrentSave = new SaveData(name);
     }
 
     public void OnPlayButtonPress()
@@ -93,37 +96,19 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void OnLoadButtonPress(int index)
+    public void OnPlayerCreated(string playerName)
     {
-        //Check if a player exists, create new player if not
-        SaveData sd = new SaveData(index);
-        if (sd.Account.Name.Equals(""))
-        {
-            NewPlayerMenu.currentIndex = index;
-            SetMenuState(MenuState.NewPlayer);
-        }
-        else
-        {
-            LoadPlayerAtIndex(index);
-            SetMenuState(MenuState.MainMenu);
-        }
-    }
-
-    public void OnPlayerCreated(int playerIndex)
-    {
-        LoadPlayerAtIndex(playerIndex);
+        LoadPlayer(playerName);
         SetMenuState(MenuState.MainMenu);
-        ReplaceUiText.UpdateSaveInfo();
     }
 
-    public void DeletePlayerAtIndex(int index)
+    public void DeletePlayer(string name)
     {
-        SaveData sd = new SaveData(index);
+        SaveData sd = new SaveData(name);
         sd.DeleteData(mapNames);
-        ReplaceUiText.UpdateSaveInfo();
 
         //Log out from current player if we deleted that one
-        if (GameInfo.info.CurrentSave != null && GameInfo.info.CurrentSave.Index == index)
+        if (GameInfo.info.CurrentSave != null && GameInfo.info.CurrentSave.Name == name)
             GameInfo.info.CurrentSave = null;
     }
 
@@ -153,8 +138,9 @@ public class MainMenu : MonoBehaviour
                 LoadDemoPanels();
                 break;
             case MenuState.Settings:
-                LoadSettings();
+                Settings.AllSettings.LoadSettings();
                 SetSettingGroup(0);
+                LoadSettings();
                 break;
         }
 
@@ -325,8 +311,8 @@ public class MainMenu : MonoBehaviour
 
     public void LoadSettings()
     {
-        if (LoadSettingsFromDisk != null)
-            LoadSettingsFromDisk(this, null);
+        if (UpdateSettingSliders != null)
+            UpdateSettingSliders(this, null);
     }
 
     public void SaveSettings()

@@ -4,35 +4,37 @@ using Api;
 
 public class SaveData
 {
-	public int Index { get; private set; }
+    private const string PLAYER_PREFIX = "p_";
+
+    private static bool PlayerExists(string name)
+    {
+        return PlayerPrefs.HasKey(PLAYER_PREFIX + name);
+    }
+
+    public static string SaveName(string name)
+    {
+        return PLAYER_PREFIX + name;
+    }
+
+    public string Name { get; private set; }
 	public Account Account { get; private set; }
 
 	//Creates a new instance with given data
-	public SaveData(int index, string playerName)
+	public SaveData(string name)
 	{
-		Index = index;
-        Account = new Account(playerName);
-        SaveName();
+        Name = name;
+        Account = new Account(Name);
+
+        if (!PlayerExists(Name))
+            PlayerPrefs.SetString(SaveName(Name), "");
     }
-
-	//Loads a new instance from file saved at index
-	public SaveData(int index)
-	{
-		Index = index;
-		Account = new Account(PlayerPrefs.GetString("PlayerName" + index));
-	}
-
-	private void SaveName()
-	{
-		PlayerPrefs.SetString("PlayerName" + Index.ToString(), Account.Name);
-	}
 
 	public bool SaveIfPersonalBest(decimal time, string mapName)
 	{
         decimal pbTime = GetPersonalBest(mapName);
         if(pbTime <= 0 || time < pbTime)
         {
-            PlayerPrefs.SetString(Account.Name + "_" + mapName, time.ToString());
+            PlayerPrefs.SetString(SaveName(Name) + "_" + mapName, time.ToString());
             return true;
 		}
 		return false;
@@ -40,9 +42,9 @@ public class SaveData
 
 	public decimal GetPersonalBest(string mapName)
 	{
-        if (PlayerPrefs.HasKey(Account.Name + "_" + mapName))
+        if (PlayerPrefs.HasKey(SaveName(Name) + "_" + mapName))
         {
-			string s = PlayerPrefs.GetString(Account.Name + "_" + mapName);
+			string s = PlayerPrefs.GetString(SaveName(Name) + "_" + mapName);
             if(!s.Equals(""))
 				return decimal.Parse(s);
 			else
@@ -54,11 +56,11 @@ public class SaveData
 
 	public void DeleteData(List<string> mapNames)
 	{
-		PlayerPrefs.DeleteKey("PlayerName" + Index.ToString());
+		PlayerPrefs.DeleteKey(SaveName(Name));
 
         foreach(string map in mapNames)
         {
-            PlayerPrefs.DeleteKey(Account.Name + "_" + map);
+            PlayerPrefs.DeleteKey(SaveName(Name) + "_" + map);
         }
 	}
 }

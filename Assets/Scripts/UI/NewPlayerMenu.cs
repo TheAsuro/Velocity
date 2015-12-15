@@ -3,11 +3,11 @@ using UnityEngine.UI;
 using Api;
 using System;
 
-public class NewPlayerMenu : MonoBehaviour
+public class NewPlayerMenu : MainSubMenu
 {
-    public EventHandler<EventArgs<int>> OnCreatedNewPlayer;
+    public EventHandler<EventArgs<string>> OnCreatedNewPlayer;
 
-    public int currentIndex = 0;
+    private string currentName;
 
     [SerializeField]
     private InputField playerNameField;
@@ -31,7 +31,8 @@ public class NewPlayerMenu : MonoBehaviour
 
     private void OnOkClick()
     {
-        SaveData sd = new SaveData(currentIndex, playerNameField.text);
+        currentName = playerNameField.text;
+        SaveData sd = new SaveData(currentName);
         // TODO remove events when done
         sd.Account.OnAccountRequestFinished += (s, e) => FinishedAccountRequest(sd, e);
         sd.Account.OnLoginFinished += (s, e) => FinishedLoginRequest(sd, e);
@@ -64,7 +65,7 @@ public class NewPlayerMenu : MonoBehaviour
         if (!e.Error)
         {
             if (OnCreatedNewPlayer != null)
-                OnCreatedNewPlayer(this, new EventArgs<int>(currentIndex));
+                OnCreatedNewPlayer(this, new EventArgs<string>(currentName));
         }
         else
         {

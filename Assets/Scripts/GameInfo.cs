@@ -82,7 +82,7 @@ public class GameInfo : MonoBehaviour
             currentSave = value;
             if (value != null)
             {
-                PlayerPrefs.SetInt("lastplayer", currentSave.Index);
+                PlayerPrefs.SetString("lastplayer", currentSave.Name);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Settings
         void Awake()
         {
             slider.onValueChanged.AddListener(OnValueChanged);
-            MainMenu.LoadSettingsFromDisk += OnLoadSettings;
+            MainMenu.UpdateSettingSliders += OnLoadSettings;
             OnLoadSettings(this, null);
         }
 
@@ -25,7 +25,6 @@ namespace Settings
 
         public void OnLoadSettings(object sender, EventArgs e)
         {
-            AllSettings.LoadSettings();
             DisplaySetting();
         }
 

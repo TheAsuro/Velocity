@@ -10,7 +10,6 @@ public class ReplaceUiText : MonoBehaviour
     }
 
     private string initialText = "";
-    private static SaveData player1, player2, player3;
     private string wr = "";
     private bool loadingWr = false;
     private string pb = "";
@@ -18,25 +17,14 @@ public class ReplaceUiText : MonoBehaviour
     void Start()
     {
         initialText = TextScript.text;
-        ReplaceUiText.UpdateSaveInfo();
-    }
-
-    public static void UpdateSaveInfo()
-    {
-        player1 = new SaveData(1);
-        player2 = new SaveData(2);
-        player3 = new SaveData(3);
     }
 
     void Update()
     {
         string temp = initialText;
         SaveData playerSave = GameInfo.info.CurrentSave;
-
-        if (temp.Contains("$player1")) { temp = temp.Replace("$player1", player1.Account.Name); }
-        else if (temp.Contains("$player2")) { temp = temp.Replace("$player2", player2.Account.Name); }
-        else if (temp.Contains("$player3")) { temp = temp.Replace("$player3", player3.Account.Name); }
-        else if (temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.Account.Name); }
+        
+        if (temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.Account.Name); }
         if (temp.Contains("$time")) { temp = temp.Replace("$time", (GameInfo.info.lastTimeString).ToString()); }
         if (temp.Contains("$map")) { temp = Application.loadedLevelName; }
 
@@ -79,28 +67,6 @@ public class ReplaceUiText : MonoBehaviour
                 temp = temp.Replace("$currentplayer", playerSave.Account.Name);
             else
                 temp = temp.Replace("$currentplayer", "No player selected!");
-        }
-
-        if (temp.Contains("$load1"))
-        {
-            if (player1.Account.Name.Equals(""))
-                temp = temp.Replace("$load1", "New");
-            else
-                temp = temp.Replace("$load1", "Load");
-        }
-        if (temp.Contains("$load2"))
-        {
-            if (player2.Account.Name.Equals(""))
-                temp = temp.Replace("$load2", "New");
-            else
-                temp = temp.Replace("$load2", "Load");
-        }
-        if (temp.Contains("$load3"))
-        {
-            if (player3.Account.Name.Equals(""))
-                temp = temp.Replace("$load3", "New");
-            else
-                temp = temp.Replace("$load3", "Load");
         }
 
         TextScript.text = temp;

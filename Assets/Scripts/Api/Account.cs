@@ -19,6 +19,11 @@ namespace Api
         {
             Name = name;
             IsLoggedIn = false;
+            if (PlayerPrefs.HasKey(SaveData.SaveName(name) + "_token"))
+            {
+                Token = PlayerPrefs.GetString(SaveData.SaveName(name) + "_token");
+                IsLoggedIn = true;
+            }
         }
 
         public void StartCreate(string pass, string mail = "")
@@ -55,6 +60,7 @@ namespace Api
             if (!result.error)
             {
                 Token = result.text;
+                PlayerPrefs.SetString(SaveData.SaveName(Name) + "_token", Token);
                 IsLoggedIn = true;
                 Debug.Log("Logged in.");
             }
