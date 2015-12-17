@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Api;
 
-public class LeaderboardDisplay : MonoBehaviour
+public class LeaderboardDisplay : MainSubMenu
 {
     public InputField mapNameInput;
     public List<LeaderboardPanel> entryPanels; //Must always have ELEMENTS_PER_SITE elements!

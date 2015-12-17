@@ -8,15 +8,11 @@ using System.Text.RegularExpressions;
 
 public class MainMenu : MonoBehaviour
 {
-    public static event System.EventHandler UpdateSettingSliders;
-
     //General stuff
 	public List<string> mapNames = new List<string>();
 	public List<string> mapAuthors = new List<string>();
     public List<Texture2D> mapPreviews = new List<Texture2D>();
     public GameObject[] menuObjects;
-    public GameObject[] settingObjects;
-    public Toggle[] settingTitles;
 
     //References to specific things
     public GameObject gameSelectionContentPanel;
@@ -60,8 +56,6 @@ public class MainMenu : MonoBehaviour
         MainSubMenu.GoToMainMenu += (s, e) => SetMenuState(MenuState.MainMenu);
         GetSubMenu<NewPlayerMenu>(MenuState.NewPlayer).OnCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
         GetSubMenu<PlayerSelectionMenu>(MenuState.PlayerSelection).LoginFinished += (s, e) => SetMenuState(MenuState.GameSelection);
-
-        Settings.AllSettings.LoadSettings();
 
         WWW www = new WWW("http://theasuro.de/Velocity/feed/");
         StartCoroutine(WaitForBlogEntry(www));
@@ -139,8 +133,8 @@ public class MainMenu : MonoBehaviour
                 break;
             case MenuState.Settings:
                 Settings.AllSettings.LoadSettings();
-                SetSettingGroup(0);
-                LoadSettings();
+                GetSubMenu<SettingsMenu>(MenuState.Settings).SetSettingGroup(0);
+                GetSubMenu<SettingsMenu>(MenuState.Settings).Load();
                 break;
         }
 
@@ -201,17 +195,6 @@ public class MainMenu : MonoBehaviour
         {
             CreateEditPanel(i, mapFiles[i]);
         }
-    }
-
-    public void SetSettingGroup(int groupID)
-    {
-        foreach (GameObject obj in settingObjects)
-        {
-            obj.SetActive(false);
-        }
-
-        settingObjects[groupID].SetActive(true);
-        settingTitles[groupID].isOn = true;
     }
 
     private void SetWrText(Transform panelTransform, Api.LeaderboardEntry entry)
@@ -299,25 +282,6 @@ public class MainMenu : MonoBehaviour
     private void OnPlayableMapClick(string mapName)
     {
         GameInfo.info.loadLevel(mapName);
-    }
-
-    public void OnSettingTitleStatusChange(int group)
-    {
-        if(settingTitles[group].isOn)
-        {
-            SetSettingGroup(group);
-        }
-    }
-
-    public void LoadSettings()
-    {
-        if (UpdateSettingSliders != null)
-            UpdateSettingSliders(this, null);
-    }
-
-    public void SaveSettings()
-    {
-        Settings.AllSettings.SaveSettings();
     }
 
     private void PlayDemo(string name)

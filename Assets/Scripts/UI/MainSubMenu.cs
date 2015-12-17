@@ -5,7 +5,7 @@ public class MainSubMenu : MonoBehaviour
 {
     public static EventHandler GoToMainMenu;
 
-    protected void BackButtonClick()
+    public void BackButtonClick()
     {
         if (GoToMainMenu != null)
             GoToMainMenu(this, null);

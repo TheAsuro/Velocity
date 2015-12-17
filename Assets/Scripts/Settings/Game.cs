@@ -92,6 +92,8 @@ namespace Settings
             conversions.Add(SHOW_HELP, boolConverter);
         }
 
+        public static void Initialize() { }
+
         public static string GetSettingValueName(string name)
         {
             if (conversions.ContainsKey(name))

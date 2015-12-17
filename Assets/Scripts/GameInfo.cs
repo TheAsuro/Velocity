@@ -185,7 +185,9 @@ public class GameInfo : MonoBehaviour
 	//Prepare for new level
 	void OnLevelWasLoaded(int level)
 	{
-		removeAllWindowLines();
+        Settings.AllSettings.LoadSettings();
+
+        removeAllWindowLines();
 
         menuLocked = false;
         WorldInfo wInfo = WorldInfo.info;
