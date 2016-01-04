@@ -3,7 +3,7 @@ using System;
 
 public class MainSubMenu : MonoBehaviour
 {
-    public static EventHandler GoToMainMenu;
+    public static event EventHandler GoToMainMenu;
 
     public void BackButtonClick()
     {

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
@@ -26,7 +27,9 @@ public class MainMenu : MonoBehaviour
 
     private T GetSubMenu<T>(MenuState menuType) where T : MainSubMenu { return menuObjects[(int)menuType].GetComponent<T>(); }
 
-	public enum MenuState
+    private Action<object, EventArgs> returnToMenu;
+
+    public enum MenuState
     {
         MainMenu,
         GameSelection,
@@ -53,12 +56,18 @@ public class MainMenu : MonoBehaviour
 		GameInfo.info.lockMenu();
         LoadLastPlayer();
 
-        MainSubMenu.GoToMainMenu += (s, e) => SetMenuState(MenuState.MainMenu);
+        returnToMenu = new Action<object, EventArgs>((s, e) => SetMenuState(MenuState.MainMenu));
+        MainSubMenu.GoToMainMenu += returnToMenu.Invoke;
         GetSubMenu<NewPlayerMenu>(MenuState.NewPlayer).OnCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
         GetSubMenu<PlayerSelectionMenu>(MenuState.PlayerSelection).LoginFinished += (s, e) => SetMenuState(MenuState.GameSelection);
 
         WWW www = new WWW("http://theasuro.de/Velocity/feed/");
         StartCoroutine(WaitForBlogEntry(www));
+    }
+
+    void OnDestroy()
+    {
+        MainSubMenu.GoToMainMenu -= returnToMenu.Invoke;
     }
 
     //Load the last player that was logged in, returns false if loading failed
