@@ -22,7 +22,7 @@ namespace Api
             if (PlayerPrefs.HasKey(SaveData.SaveName(name) + "_token"))
             {
                 Token = PlayerPrefs.GetString(SaveData.SaveName(name) + "_token");
-                IsLoggedIn = true;
+                StartLoginCheck((result) => IsLoggedIn = result);
             }
         }
 
@@ -71,6 +71,13 @@ namespace Api
 
             if (OnLoginFinished != null)
                 OnLoginFinished(this, new EventArgs<string>(Token, result.error, result.errorText));
+        }
+
+        public void StartLoginCheck(Action<bool> callback)
+        {
+            var data = new Dictionary<string, string>();
+            data.Add("token", Token);
+            HttpApi.StartRequest(LOGIN_API_URL, "POST", (result) => { if (result.text == "1") callback(true); else callback(false); }, data);
         }
     }
 

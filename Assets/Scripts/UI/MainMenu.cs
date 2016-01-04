@@ -60,6 +60,7 @@ public class MainMenu : MonoBehaviour
         MainSubMenu.GoToMainMenu += returnToMenu.Invoke;
         GetSubMenu<NewPlayerMenu>(MenuState.NewPlayer).OnCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
         GetSubMenu<PlayerSelectionMenu>(MenuState.PlayerSelection).LoginFinished += (s, e) => SetMenuState(MenuState.GameSelection);
+        GetSubMenu<PlayerSelectionMenu>(MenuState.PlayerSelection).OpenRegisterMenu += (s, e) => SetMenuState(MenuState.NewPlayer);
 
         WWW www = new WWW("http://theasuro.de/Velocity/feed/");
         StartCoroutine(WaitForBlogEntry(www));
@@ -88,9 +89,9 @@ public class MainMenu : MonoBehaviour
     public void OnPlayButtonPress()
     {
         SaveData sd = GameInfo.info.CurrentSave;
-        if(sd == null || sd.Account.Name.Equals(""))
+        if(sd == null || sd.Account.Name.Equals("") || sd.Account.IsLoggedIn == false)
         {
-            //Create a new player if no player is selected
+            //Open login window if no logged in player exists
             SetMenuState(MenuState.PlayerSelection);
         }
         else

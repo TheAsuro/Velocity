@@ -5,6 +5,7 @@ using System;
 public class PlayerSelectionMenu : MainSubMenu
 {
     public EventHandler LoginFinished;
+    public EventHandler OpenRegisterMenu;
 
     [SerializeField]
     private InputField nameField;
@@ -30,5 +31,10 @@ public class PlayerSelectionMenu : MainSubMenu
             LoginFinished(this, null);
         else
             throw new InvalidOperationException("MainMenu should always register on the LoginFinished event");
+    }
+
+    public void OnRegisterClick()
+    {
+        OpenRegisterMenu(this, null);
     }
 }
