@@ -67,7 +67,8 @@ public class RaceScript : MonoBehaviour
             double offset = 1000 - difference.TotalMilliseconds;
             if (offset > 15 || offset < -15)
             {
-                GameInfo.info.invalidateRun("Local time sync failed");
+                // TODO this is broken (kinda)
+                //GameInfo.info.invalidateRun("Local time sync failed");
             }
             lastSecondGame = Time.time;
             lastSecondComputer = DateTime.Now;
