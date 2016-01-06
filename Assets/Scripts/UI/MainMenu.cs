@@ -61,9 +61,6 @@ public class MainMenu : MonoBehaviour
         GetSubMenu<NewPlayerMenu>(MenuState.NewPlayer).OnCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
         GetSubMenu<PlayerSelectionMenu>(MenuState.PlayerSelection).LoginFinished += (s, e) => SetMenuState(MenuState.GameSelection);
         GetSubMenu<PlayerSelectionMenu>(MenuState.PlayerSelection).OpenRegisterMenu += (s, e) => SetMenuState(MenuState.NewPlayer);
-
-        WWW www = new WWW("http://theasuro.de/Velocity/feed/");
-        StartCoroutine(WaitForBlogEntry(www));
     }
 
     void OnDestroy()
@@ -304,30 +301,6 @@ public class MainMenu : MonoBehaviour
     {
         DemoInfo.DeleteDemoFile(name);
         SetMenuState(MenuState.Demos);
-    }
-
-    public IEnumerator WaitForBlogEntry(WWW www)
-    {
-        yield return www;
-        XmlDocument doc = new XmlDocument();
-        string fixedStr = www.text.Substring(www.text.IndexOf("<?xml"));
-        doc.LoadXml(fixedStr);
-        XmlNode node = doc.GetElementsByTagName("item")[0];
-        string title = "";
-        string date = "";
-        string content = "";
-        foreach(XmlNode subNode in node)
-        {
-            if (subNode.Name.Equals("title"))
-                title = subNode.InnerText;
-
-            if (subNode.Name.Equals("pubDate"))
-                date = parseDate(subNode.InnerText);
-
-            if (subNode.Name.Equals("content:encoded"))
-                content = subNode.InnerText;
-        }
-        blogText.text = "\"" + stripHtml(title) + "\" - " + date + "\n\n" + stripHtml(content);
     }
 
     private string parseDate(string text)
