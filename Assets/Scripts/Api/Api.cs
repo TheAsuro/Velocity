@@ -23,6 +23,7 @@ namespace Api
 
         public static void StartRequest(string url, string method, Action<ApiResult> callback = null, Dictionary<string, string> data = null)
         {
+#if UNITY_STANDALONE
             try
             {
                 string combinedUrl = url;
@@ -63,6 +64,10 @@ namespace Api
             {
                 HandleWebException(ex, callback);
             }
+#else
+            if (callback != null)
+                callbacks.Add(callback, new ApiResult() { error = true, text = "", errorText = "Web requests are not possible in the web player." });
+#endif
         }
 
         private static void ContinueRequest(IAsyncResult result)

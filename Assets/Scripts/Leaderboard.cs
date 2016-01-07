@@ -16,6 +16,9 @@ namespace Api
 
         private static LeaderboardEntry[] ParseEntries(string entryJSON, int rankOffset = 0, string specificMap = "")
         {
+            if (entryJSON == "")
+                return new LeaderboardEntry[0];
+
             LeaderboardResult[] results = JsonConvert.DeserializeObject<LeaderboardResult[]>(entryJSON);
             LeaderboardEntry[] entries = new LeaderboardEntry[results.Length];
             for (int i = 0; i < results.Length; i++)

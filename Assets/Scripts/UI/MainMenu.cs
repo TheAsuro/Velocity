@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -307,11 +305,6 @@ public class MainMenu : MonoBehaviour
     {
         Regex r = new Regex("(.*, \\d* .* \\d*) ");
         return r.Match(text).Captures[0].Value;
-    }
-
-    private string stripHtml(string text)
-    {
-        return System.Web.HttpUtility.HtmlDecode(text).Replace("<p>","").Replace("</p>","\n");
     }
 
     public void LoadEditorWithLevel(string levelName)
