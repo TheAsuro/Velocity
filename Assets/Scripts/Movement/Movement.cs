@@ -180,8 +180,8 @@ public class Movement : MonoBehaviour
 		else if(crouched)
 			curMaxSpeed = maxSpeed / 3f;
 
-		//Get input and make it a vector
-		Vector3 camRotation = new Vector3(0f, camObj.transform.rotation.eulerAngles.y, camObj.transform.rotation.eulerAngles.z);
+		//Get rotation input and make it a vector
+		Vector3 camRotation = new Vector3(0f, camObj.transform.rotation.eulerAngles.y, 0f);
 		Vector3 inputVelocity = Quaternion.Euler(camRotation) * new Vector3(input.x * curAccel, 0f, input.y * curAccel);
 
 		//Ignore vertical component of rotated input
