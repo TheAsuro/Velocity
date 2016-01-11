@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections;
 
 public class ReplaceUiText : MonoBehaviour
 {
@@ -26,7 +26,7 @@ public class ReplaceUiText : MonoBehaviour
         
         if (temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.Account.Name); }
         if (temp.Contains("$time")) { temp = temp.Replace("$time", (GameInfo.info.lastTimeString).ToString()); }
-        if (temp.Contains("$map")) { temp = Application.loadedLevelName; }
+        if (temp.Contains("$map")) { temp = SceneManager.GetActiveScene().name; }
 
         if (temp.Contains("$selectedmap")) { temp = temp.Replace("$selectedmap", GameInfo.info.getSelectedMap()); }
 
@@ -51,7 +51,7 @@ public class ReplaceUiText : MonoBehaviour
 
         if (pb.Equals("") && playerSave != null)
         {
-            decimal pbTime = playerSave.GetPersonalBest(Application.loadedLevelName);
+            decimal pbTime = playerSave.GetPersonalBest(SceneManager.GetActiveScene().name);
             if (pbTime <= 0)
                 pb = "-";
             else
@@ -75,7 +75,7 @@ public class ReplaceUiText : MonoBehaviour
     private void LoadWr()
     {
         loadingWr = true;
-        Api.Leaderboard.GetRecord(Application.loadedLevelName, SetWr);
+        Api.Leaderboard.GetRecord(SceneManager.GetActiveScene().name, SetWr);
     }
 
     private void SetWr(Api.LeaderboardEntry entry)

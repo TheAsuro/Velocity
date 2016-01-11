@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class DemoRecord : MonoBehaviour
@@ -25,7 +25,7 @@ public class DemoRecord : MonoBehaviour
 		startPlayTime = Time.time;
 		tickList = new List<DemoTick>();
 		playerName = pPlayerName;
-		levelName = Application.loadedLevelName;
+		levelName = SceneManager.GetActiveScene().name;
 		recording = true;
 	}
 

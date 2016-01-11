@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
 
 public class GameInfo : MonoBehaviour
 {
@@ -213,7 +211,7 @@ public class GameInfo : MonoBehaviour
 	public void loadLevel(string name)
 	{
         //Server stuff might be here later
-        fx.StartFadeToColor(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, delegate { Application.LoadLevel(name); });
+        fx.StartFadeToColor(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, delegate { SceneManager.LoadScene(name); });
 	}
 
 	//Creates a new local player (the one that is controlled by the current user)
@@ -243,10 +241,10 @@ public class GameInfo : MonoBehaviour
 		cleanUpPlayer();
         lastTime = time.Ticks / (decimal)10000000;
         
-		CurrentSave.SaveIfPersonalBest(lastTime, Application.loadedLevelName);
+		CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
 
         currentDemo = myPlayer.getDemo();
-        sendLeaderboardEntry(lastTime, Application.loadedLevelName, currentDemo);
+        sendLeaderboardEntry(lastTime, SceneManager.GetActiveScene().name, currentDemo);
 	}
 
 	//Player hit the exit trigger
@@ -387,7 +385,7 @@ public class GameInfo : MonoBehaviour
 					setMouseView(false);
 					endLevel.SetActive(true);
 					myLeaderboardObj.SetActive(true);
-                    myLeaderboardObj.GetComponent<LeaderboardDisplay>().LoadMap(Application.loadedLevelName);
+                    myLeaderboardObj.GetComponent<LeaderboardDisplay>().LoadMap(SceneManager.GetActiveScene().name);
 					menuLocked = true;
 					break;
 				case MenuState.endlevel:
@@ -553,7 +551,7 @@ public class GameInfo : MonoBehaviour
         currentDemo = demo;
 
         //Reload level if in wrong mode/level (this function will be called again)
-        if(currentDemo.getLevelName() != Application.loadedLevelName || loadMode != LevelLoadMode.demo)
+        if(currentDemo.getLevelName() != SceneManager.GetActiveScene().name || loadMode != LevelLoadMode.demo)
         {
             loadMode = LevelLoadMode.demo;
             loadLevel(currentDemo.getLevelName());
