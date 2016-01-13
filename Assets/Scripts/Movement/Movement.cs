@@ -436,4 +436,6 @@ public class Movement : MonoBehaviour
 			return input;
 		}
 	}
+
+    public float XZVelocity { get { return new Vector3(GetComponent<Rigidbody>().velocity.x, 0f, GetComponent<Rigidbody>().velocity.z).magnitude; } }
 }

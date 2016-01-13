@@ -90,9 +90,6 @@ public class RaceScript : MonoBehaviour
 		else
 			nameText.text = "Editor";
 
-		//Display crosshair
-		drawCrosshair();
-
 		//Skip countdown with use key
 		if(Input.GetButtonDown("Skip") && !started)
 		{
@@ -138,38 +135,6 @@ public class RaceScript : MonoBehaviour
 				checkpoint++;
 			}
 		}
-	}
-
-	private void drawCrosshair()
-	{
-		//TODO put gameinfo circle speed in here and make a third circle
-
-		PlayerInfo pi = GameInfo.info.getPlayerInfo();
-		float speed = float.Parse(pi.getCurrentSpeed());
-		float max1 = GameInfo.info.circleSpeed1;
-		float max2 = GameInfo.info.circleSpeed2;
-		float max3 = GameInfo.info.circleSpeed3;
-
-		float lvl1Speed = Mathf.Min(speed, max1) / max1;
-		pi.getCrosshairCircle().fillAmount = lvl1Speed;
-
-		float lvl2Speed = Mathf.Max(Mathf.Min(speed - max1, (max2 - max1)), 0f) / (max2 - max1);
-		pi.getCrosshairCircle2().fillAmount = lvl2Speed;
-
-		float lvl3Speed = Mathf.Max(Mathf.Min(speed - max2, (max3 - max2)), 0f) / (max3 - max2);
-		pi.getCrosshairCircle3().fillAmount = lvl3Speed;
-
-		Color c = new Color(1f, 1f, 1f);
-		
-		if(speed <= max1) { c.r = 1f - lvl1Speed * 0.8f; }
-		if(speed > max1)  { c.r = lvl2Speed * 0.8f; }
-
-		if(speed > max1)  { c.g = 1f - lvl2Speed * 0.5f * 0.8f; }
-		if(speed > max2)  { c.g = 0.5f - lvl3Speed * 0.5f * 0.8f; }
-
-		c.b = 1f - lvl1Speed;
-		
-		pi.setCrosshairColor(c);
 	}
 
 	//Starts a new race (resets the current one if there is one)

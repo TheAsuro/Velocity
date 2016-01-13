@@ -2,14 +2,16 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 3
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Crosshair
-  m_Shader: {fileID: 10753, guid: 0000000000000000e000000000000000, type: 0}
-  m_ShaderKeywords: []
-  m_CustomRenderQueue: -1
+  m_Shader: {fileID: 4800000, guid: 3f44f528f0ed03f40942a854894ab01a, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: 2000
+  stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -25,6 +27,34 @@ Material:
         first:
           name: PixelSnap
         second: 0
+      data:
+        first:
+          name: _InnerRadius
+        second: 0.25
+      data:
+        first:
+          name: _RadiusOffset
+        second: 0.075
+      data:
+        first:
+          name: _Thickness
+        second: 0.02
+      data:
+        first:
+          name: _FirstCircleSpeed
+        second: 7
+      data:
+        first:
+          name: _OtherCircleSpeed
+        second: 10
+      data:
+        first:
+          name: _Speed
+        second: 27.046282
+      data:
+        first:
+          name: _CircleSpeed
+        second: 7
     m_Colors:
       data:
         first:

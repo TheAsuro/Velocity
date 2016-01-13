@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class PlayerInfo : MonoBehaviour
 {
@@ -13,9 +12,6 @@ public class PlayerInfo : MonoBehaviour
 	private DemoRecord myRecorder;
 	private Movement myMovement;
 	private Image myCrosshair;
-	private Image myCrosshairCircle;
-	private Image myCrosshairCircle2;
-	private Image myCrosshairCircle3;
 
 	//Default values for movement variables
 	//Speed, AirSpeed, MaxSpeed, Friction, Jump
@@ -33,13 +29,15 @@ public class PlayerInfo : MonoBehaviour
 		myMouseLook = myCamera.gameObject.GetComponent<MouseLook>();
 		myRecorder = myMesh.GetComponent<DemoRecord>();
 		myMovement = myMesh.GetComponent<Movement>();
-		myCrosshair = myCanvas.transform.Find("Crosshair").GetComponent<Image>();
-		myCrosshairCircle = myCanvas.transform.Find("CrosshairCircle").GetComponent<Image>();
-		myCrosshairCircle2 = myCanvas.transform.Find("CrosshairCircle2").GetComponent<Image>();
-		myCrosshairCircle3 = myCanvas.transform.Find("CrosshairCircle3").GetComponent<Image>();
+		myCrosshair = myCanvas.transform.Find("CrosshairCircle").GetComponent<Image>();
 
         ApplySettings();
 	}
+
+    void Update()
+    {
+        myCrosshair.material.SetFloat("_Speed", myMovement.XZVelocity);
+    }
 
     public void ApplySettings()
     {
@@ -205,29 +203,6 @@ public class PlayerInfo : MonoBehaviour
 	public void setWorldBackgroundColor(Color color)
 	{
 		myCamera.backgroundColor = color;
-	}
-
-	public void setCrosshairColor(Color color)
-	{
-		myCrosshair.color = color;
-		myCrosshairCircle.color = color;
-		myCrosshairCircle2.color = color;
-		myCrosshairCircle3.color = color;
-	}
-
-	public Image getCrosshairCircle()
-	{
-		return myCrosshairCircle;
-	}
-
-	public Image getCrosshairCircle2()
-	{
-		return myCrosshairCircle2;
-	}
-
-	public Image getCrosshairCircle3()
-	{
-		return myCrosshairCircle3;
 	}
 
 	public bool getCheats()
