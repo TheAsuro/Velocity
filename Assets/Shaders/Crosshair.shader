@@ -2,7 +2,8 @@ Shader "Unlit/Crosshair"
 {
     Properties
     {
-        _InnerRadius("Inner Radius", Float) = 0.2
+		_Color("Color", Color) = (1,1,1,1)
+        _InnerRadius("Inner Radius", Float) = 0.21
         _RadiusOffset("Radius Offset", Float) = 0.1
         _Thickness("Thickness", Float) = 0.02
         _CircleSpeed("Circle Speed", Float) = 7
@@ -27,6 +28,7 @@ Shader "Unlit/Crosshair"
 
             static const float PI = 3.14159265;
 
+			fixed4 _Color;
             float _InnerRadius;
             float _RadiusOffset;
             float _Thickness;
@@ -42,7 +44,7 @@ Shader "Unlit/Crosshair"
             {
                 float circ = (relX) * (relX) + (relY) * (relY) - (radius * radius);
                 float intensity = 1 - (abs(circ) / _Thickness);
-                float col = lerp(0, 1, intensity);
+                float val = lerp(0, 1, intensity);
                 float realpos = 0;
                 if (relY >= 0)
                 {
@@ -69,7 +71,9 @@ Shader "Unlit/Crosshair"
 
                 if (realpos <= (2 * PI) * completeness && intensity > 0)
                 {
-                    return fixed4(col, col, col, intensity);
+					fixed4 color = _Color * val;
+					color.a = intensity;
+					return color;
                 }
                 else
                 {
