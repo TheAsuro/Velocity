@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 //Player resets to one of these points if r is pressed, handeled by WorldInfo
 public class Respawn : MonoBehaviour
@@ -14,6 +13,9 @@ public class Respawn : MonoBehaviour
 	{
 		if(isFistSpawn)
 		{
+            if (WorldInfo.info == null)
+                throw new System.InvalidOperationException("This scene does not have a WoldInfo object! Game can not initialize.");
+
 			WorldInfo.info.setSpawn(this);
 		}
 	}
