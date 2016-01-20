@@ -97,7 +97,7 @@ Shader "Unlit/Crosshair"
                 float relY = var.uv.y - 0.5;
                 float angle = atan(abs(relY) / abs(relX));
 
-                [unroll(4)] for (float i = 0; i * _CircleSpeed < _Speed; i+=1.0)
+                for (float i = 0; i * _CircleSpeed < _Speed; i+=1.0)
                 {
                     result += drawCirclePoint(_InnerRadius + i * _RadiusOffset, relX, relY, angle, (_Speed - i * _CircleSpeed) / _CircleSpeed);
                 }
