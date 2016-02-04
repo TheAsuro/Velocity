@@ -7,9 +7,9 @@ namespace Settings
     public enum AAValue
     {
         Off = 0,
-        X2 = 2,
-        X4 = 4,
-        X8 = 8
+        X2 = 1,
+        X4 = 2,
+        X8 = 3
     }
 
     public enum TexSize
@@ -74,7 +74,7 @@ namespace Settings
             conversions.Add(ANISOTROPIC_FILTERING, new EnumSettingConverter<AnisotropicFiltering>((anVal) => (int)anVal, (fVal) => (AnisotropicFiltering)Mathf.RoundToInt(fVal)));
 
             AllSettings.AddSetting(new IntSetting(ANTI_ALIASING, (int)AAValue.Off));
-            conversions.Add(ANTI_ALIASING, new EnumSettingConverter<AAValue>((iVal) => 2f, (fVal) => (int)Mathf.Pow(2, fVal)));
+            conversions.Add(ANTI_ALIASING, new EnumSettingConverter<AAValue>((iVal) => (int)iVal, (fVal) => (AAValue)Mathf.RoundToInt(fVal)));
 
             AllSettings.AddSetting(new IntSetting(TEXTURE_SIZE, (int)TexSize.Full));
             conversions.Add(TEXTURE_SIZE, new EnumSettingConverter<TexSize>((texVal) => (int)texVal, (fVal) => (TexSize)Mathf.RoundToInt(fVal)));
@@ -121,7 +121,8 @@ namespace Settings
         public static void ApplyGraphicsSettings()
         {
             QualitySettings.anisotropicFiltering = (AnisotropicFiltering)AllSettings.GetSetting("Aniso");
-            QualitySettings.antiAliasing = (int)AllSettings.GetSetting("AA");
+            int aa = (int)AllSettings.GetSetting("AA");
+            QualitySettings.antiAliasing = aa * aa;
             QualitySettings.masterTextureLimit = (int)AllSettings.GetSetting("TextureSize");
             QualitySettings.vSyncCount = (bool)AllSettings.GetSetting("VSync") ? 1 : 0;
         }
