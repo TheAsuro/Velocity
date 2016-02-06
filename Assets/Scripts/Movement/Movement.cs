@@ -93,9 +93,6 @@ public class Movement : MonoBehaviour
 	public void unfreeze()
 	{
 		GetComponent<Rigidbody>().isKinematic = false;
-		//OK shit this broke things
-		/*GetComponent<Rigidbody>().useGravity = false;
-		GetComponent<Rigidbody>().useGravity = true;*/
 		frozen = false;
 	}
 
@@ -245,6 +242,20 @@ public class Movement : MonoBehaviour
 		}
 	}
 
+    void OnCollisionEnter(Collision col)
+    {
+        bool canMove = true;
+
+        foreach (ContactPoint p in col.contacts)
+        {
+            if (p.point.y + 0.05f < col.collider.transform.position.y + col.collider.bounds.extents.y)
+                canMove = false;
+        }
+
+        if (canMove)
+            transform.position = new Vector3(transform.position.x, col.collider.transform.position.y + col.collider.bounds.extents.y + GetComponent<Collider>().bounds.extents.y + 0.001f, transform.position.z);
+    }
+
 	//Spawn at a specific checkpoint
 	public void spawnPlayer(Respawn spawn)
 	{
@@ -256,9 +267,7 @@ public class Movement : MonoBehaviour
 			lastJumpPress = -1f;
 		}
 		else
-		{
-			print("Tried to spawn, but no spawnpoint selected. RIP :(");
-		}
+			throw new System.InvalidOperationException("Tried to spawn, but no spawnpoint selected.");
 	}
 	
 	//Reset and spawn at the last checkpoint
@@ -287,11 +296,17 @@ public class Movement : MonoBehaviour
 		return checkCylinder(pos, radiusVector, -0.1f, 8);
 	}
 
-	//Doesn't actually check the volume of a cylinder, instead executes a given number of raycasts in a circle
-	//origin: center of the circle from which will be cast
-	//radiusVector: radius of the circle
-	//rayCount: number of vertices the "circle" will have
-	private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount, out float dist, bool slopeCheck = true)
+    /// <summary>
+    /// Doesn't actually check the volume of a cylinder, instead executes a given number of raycasts in a circle
+    /// </summary>
+    /// <param name="origin">center of the circle from which will be cast</param>
+    /// <param name="radiusVector">radius of the circle</param>
+    /// <param name="verticalLength">Distance of the raycast, from the center of the player up/down depending on sign</param>
+    /// <param name="rayCount">number of vertices the "circle" will have</param>
+    /// <param name="dist">Returns shortest distance to ground, or -1f if no ground was touched</param>
+    /// <param name="slopeCheck">If true, adds additional check for ground steepness</param>
+    /// <returns>true if ground was touched, false if not, also false if slopeCheck is active and the slope is too steep</returns>
+    private bool checkCylinder(Vector3 origin, Vector3 radiusVector, float verticalLength, int rayCount, out float dist, bool slopeCheck = true)
 	{
 		bool tempHit = false;
 		float tempDist = -1f;
