@@ -11,6 +11,7 @@ public class Movement : MonoBehaviour
 	public float maxAirSpeed = 0.6f;
 	public float friction = 8f;
 	public float jumpForce = 5f;
+    public float maxStepHeight = 0.201f;
 	public LayerMask groundLayers;
 
 	private GameObject camObj;
@@ -25,6 +26,8 @@ public class Movement : MonoBehaviour
 	private bool respawnKeyPressed = false;
 	private bool resetKeyPressed = false;
 	private bool crouchKeyPressed = false;
+
+    private Vector3 lastFrameVelocity = Vector3.zero;
 
 	void Awake()
 	{
@@ -118,6 +121,8 @@ public class Movement : MonoBehaviour
 		//Kill player if below map
 		if(transform.position.y <= WorldInfo.info.deathHeight)
 			respawnPlayer(true);
+
+        lastFrameVelocity = GetComponent<Rigidbody>().velocity;
 	}
 
     public bool Noclip
@@ -244,16 +249,22 @@ public class Movement : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        bool canMove = true;
+        bool doStepUp = true;
+        float footHeight = transform.position.y - GetComponent<Collider>().bounds.extents.y;
 
         foreach (ContactPoint p in col.contacts)
         {
-            if (p.point.y + 0.05f < col.collider.transform.position.y + col.collider.bounds.extents.y)
-                canMove = false;
+            // TODO this works for boxes but not complicated 3d models
+            if (footHeight + maxStepHeight < p.otherCollider.transform.position.y + p.otherCollider.bounds.extents.y)
+                doStepUp = false;
         }
 
-        if (canMove)
+        if (doStepUp)
+        {
+            // TODO check if there is space for the player
             transform.position = new Vector3(transform.position.x, col.collider.transform.position.y + col.collider.bounds.extents.y + GetComponent<Collider>().bounds.extents.y + 0.001f, transform.position.z);
+            GetComponent<Rigidbody>().velocity = lastFrameVelocity;
+        }
     }
 
 	//Spawn at a specific checkpoint

@@ -565,6 +565,7 @@ MonoBehaviour:
   maxAirSpeed: 0.6
   friction: 8
   jumpForce: 5
+  maxStepHeight: 0.201
   groundLayers:
     serializedVersion: 2
     m_Bits: 1281
@@ -1288,7 +1289,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: maxStepHeight
+      value: 0.201
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100002}
