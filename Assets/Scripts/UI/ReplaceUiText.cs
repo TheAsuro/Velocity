@@ -61,6 +61,21 @@ public class ReplaceUiText : MonoBehaviour
         if (temp.Contains("$wr")) { temp = temp.Replace("$wr", wr); }
         if (temp.Contains("$pb")) { temp = temp.Replace("$pb", pb); }
 
+        if (temp.Contains("$ispb"))
+        {
+            // TODO
+            if (true)
+                temp = temp.Replace("$ispb", "You scored a new personal best!");
+            else
+                temp = temp.Replace("$ispb", "");    
+        }
+
+        if (temp.Contains("$rank"))
+        {
+            // TODO
+            temp = temp.Replace("$rank", "1234");
+        }
+
         if (temp.Contains("$currentplayer"))
         {
             if (playerSave != null && !playerSave.Account.Name.Equals(""))

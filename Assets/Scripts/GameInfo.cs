@@ -124,7 +124,7 @@ public class GameInfo : MonoBehaviour
 		myConsoleWindow = myCanvas.transform.Find("Console").gameObject;
 		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<Text>();
-		myLeaderboardObj = myCanvas.transform.Find("Leaderboards").gameObject;
+		myLeaderboardObj = endLevel.transform.Find("Leaderboards").gameObject;
 		SetMenuState(MenuState.closed);
 
         fx = new GameInfoFX(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
