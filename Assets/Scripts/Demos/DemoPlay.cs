@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 public class DemoPlay : MonoBehaviour
@@ -18,6 +17,7 @@ public class DemoPlay : MonoBehaviour
 	private GameObject ghost;
 	private GameObject ghostCam;
 	private List<DemoTick> tickList;
+    private bool looping = false;
 
     private Action MyCallback;
 
@@ -85,15 +85,25 @@ public class DemoPlay : MonoBehaviour
                     ghostCam.transform.rotation = ghost.transform.rotation;
 			}
 
-            if (Input.GetButtonDown("Menu") || nextFrameTime == -1f)
+            if (nextFrameTime == -1f)
+            {
+                if (looping)
+                    ResetDemo();
+                else
+                    StopDemoPlayback();
+            }
+
+            if (Input.GetButtonDown("Menu"))
             {
                 StopDemoPlayback();
             }
 		}
 	}
 
-	public void playDemo(Demo demo, Action Callback)
+	public void playDemo(Demo demo, Action Callback, bool doLoop = false)
 	{
+        looping = doLoop;
+
         //Reset if currently playing
 		StopDemoPlayback(true);
 
@@ -137,4 +147,18 @@ public class DemoPlay : MonoBehaviour
 	{
         StopDemoPlayback(false);
 	}
+
+    public void ResetDemo()
+    {
+        if (!playing || ghost == null)
+            throw new InvalidOperationException("Can't reset a not playing demo!");
+
+        ghost.transform.position = tickList[0].getPosition();
+        ghost.transform.rotation = tickList[0].getRotation();
+        ghostCam.transform.position = tickList[0].getPosition();
+        ghostCam.transform.rotation = tickList[0].getRotation();
+        startPlayTime = Time.time;
+
+        playing = true;
+    }
 }
