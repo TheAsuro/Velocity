@@ -23,7 +23,7 @@ public class RaceScript : MonoBehaviour
 	private Text speedText;
 	private Text nameText;
 	private Text countdownText;
-	private Text wrText;
+    private GameObject wrDisplay;
 
     private Stopwatch playTime;
     private TimeSpan elapsedTime
@@ -49,7 +49,7 @@ public class RaceScript : MonoBehaviour
 		speedText = canvas.Find("Speed").Find("Text").GetComponent<Text>();
 		nameText = canvas.Find("Player").Find("Text").GetComponent<Text>();
 		countdownText = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
-		wrText = canvas.Find("WR").Find("Text").GetComponent<Text>();
+        wrDisplay = canvas.Find("WR").gameObject;
 	}
 
 	void Update()
@@ -101,19 +101,19 @@ public class RaceScript : MonoBehaviour
 		if(remainingFreezeTime > 0f)
 		{
 			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-			wrText.gameObject.transform.parent.gameObject.SetActive(true);
+			wrDisplay.SetActive(true);
 			countdownText.text = Mathf.Ceil(remainingFreezeTime).ToString();
 		}
 		else if(remainingFreezeTime > -1f)
 		{
 			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-			wrText.gameObject.transform.parent.gameObject.SetActive(true);
+			wrDisplay.SetActive(true);
 			countdownText.text = "GO!";
 		}
 		else
 		{
 			countdownText.gameObject.transform.parent.gameObject.SetActive(false);
-			wrText.gameObject.transform.parent.gameObject.SetActive(false);
+			wrDisplay.SetActive(false);
 		}
 	}
 	
