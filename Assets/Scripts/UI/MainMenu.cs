@@ -35,7 +35,8 @@ public class MainMenu : MonoBehaviour
         NewPlayer,
         Demos,
         Settings,
-        Leaderboards
+        Leaderboards,
+        BugReport
     }
 
     public enum GameSelectionContent
