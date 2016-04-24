@@ -254,9 +254,19 @@ public class Movement : MonoBehaviour
 
         foreach (ContactPoint p in col.contacts)
         {
-            // TODO this works for boxes but not complicated 3d models
-            if (footHeight + maxStepHeight < p.otherCollider.transform.position.y + p.otherCollider.bounds.extents.y)
+            Debug.DrawLine(p.point, p.point + p.normal, Color.red, 1f);
+
+            // TODO this assumes box is aabb, but this isn't always true
+            if (p.otherCollider.GetType() == typeof(BoxCollider))
+            {
+                if (footHeight + maxStepHeight < p.otherCollider.transform.position.y + p.otherCollider.bounds.extents.y)
+                    doStepUp = false;
+            }
+            else if (p.otherCollider.GetType() == typeof(MeshCollider))
+            {
+                // TODO do stuff here
                 doStepUp = false;
+            }
         }
 
         if (doStepUp)

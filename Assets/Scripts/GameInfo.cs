@@ -561,11 +561,11 @@ public class GameInfo : MonoBehaviour
         myDemoPlayer.playDemo(currentDemo, delegate { loadMode = LevelLoadMode.play; loadLevel("MainMenu"); });
 	}
 
-    //Plays the current demo and returns to end level screen
+    //Plays the current demo after a race is finished
 	private void PlayRaceDemo()
 	{
         if(myDemoPlayer != null && currentDemo != null)
-            myDemoPlayer.playDemo(currentDemo, delegate { menuLocked = false; SetMenuState(MenuState.endlevel); });
+            myDemoPlayer.playDemo(currentDemo, delegate { menuLocked = false; SetMenuState(MenuState.endlevel); }, true);
 	}
 
 	public decimal getLastTime()
