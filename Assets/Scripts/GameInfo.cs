@@ -38,10 +38,6 @@ public class GameInfo : MonoBehaviour
 	private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
 	private bool runValid = false;
     public LevelLoadMode loadMode = LevelLoadMode.play;
-
-    //Server
-    private ServerConnection serverConnection;
-    private GameServer server;
 	
 	//Debug window (top-left corner, toggle with f8)
 	public bool logToConsole = true;
@@ -433,16 +429,7 @@ public class GameInfo : MonoBehaviour
 		}
 		SetMenuState(MenuState.leaderboard);
 	}
-
-    public void connectToServer(string ip, int port, string password = "")
-    {
-        if (serverConnection != null)
-            serverConnection.Disconnect();
-
-        serverConnection = new ServerConnection(ip, port, password);
-        serverConnection.Connect(connected);
-    }
-
+    
     private void connected()
     {
         print("connected");
