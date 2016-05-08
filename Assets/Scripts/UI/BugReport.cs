@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class BugReport : MonoBehaviour
 {
-    const string BUG_REPORT_URL = "http://theasuro.de/asuro/Velocity/Api/bugreport.php";
+    const string BUG_REPORT_URL = "http://theasuro.de/Velocity/Api/bugreport.php";
 
     [SerializeField]
     private Button sendButton;

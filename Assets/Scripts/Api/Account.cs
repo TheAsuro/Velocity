@@ -6,7 +6,7 @@ namespace Api
 {
     public class Account
     {
-        private const string LOGIN_API_URL = "http://theasuro.de/asuro/Velocity/Api/account.php";
+        private const string LOGIN_API_URL = "http://theasuro.de/Velocity/Api/account.php";
 
         public event EventHandler<EventArgs<string>> OnLoginFinished;
         public event EventHandler<EventArgs<string>> OnAccountRequestFinished;
