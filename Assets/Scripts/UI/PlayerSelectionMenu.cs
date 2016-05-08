@@ -13,6 +13,9 @@ public class PlayerSelectionMenu : MainSubMenu
     [SerializeField]
     private InputField passField;
 
+    [SerializeField]
+    private Text errorTextField;
+
     public void OnLoginClick()
     {
         GameInfo.info.CurrentSave = new SaveData(nameField.text);
@@ -21,6 +24,8 @@ public class PlayerSelectionMenu : MainSubMenu
         {
             if (!e.Error)
                 LoginFinished(sender, e);
+            else
+                errorTextField.text = e.ErrorText;
         };
     }
 
