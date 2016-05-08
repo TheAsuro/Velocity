@@ -81,6 +81,9 @@ public class GameInfo : MonoBehaviour
         }
     }
 
+    private bool lastRunWasPB;
+    public bool LastRunWasPB { get { return lastRunWasPB; } }
+
     public enum MenuState
 	{
 		closed,
@@ -236,8 +239,8 @@ public class GameInfo : MonoBehaviour
 		stopDemo();
 		cleanUpPlayer();
         lastTime = time.Ticks / (decimal)10000000;
-        
-		CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
+
+        lastRunWasPB = CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
 
         currentDemo = myPlayer.getDemo();
         sendLeaderboardEntry(lastTime, SceneManager.GetActiveScene().name, currentDemo);

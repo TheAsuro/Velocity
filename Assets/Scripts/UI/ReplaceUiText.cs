@@ -10,8 +10,13 @@ public class ReplaceUiText : MonoBehaviour
     }
 
     private string initialText = "";
+
     private string wr = "";
     private bool loadingWr = false;
+
+    private string bestEntry = "";
+    private bool loadingBestEntry = false;
+
     private string pb = "";
 
     void Start()
@@ -63,17 +68,19 @@ public class ReplaceUiText : MonoBehaviour
 
         if (temp.Contains("$ispb"))
         {
-            // TODO
-            if (true)
+            if (GameInfo.info.LastRunWasPB)
                 temp = temp.Replace("$ispb", "You scored a new personal best!");
             else
-                temp = temp.Replace("$ispb", "");    
+                temp = temp.Replace("$ispb", "");
         }
 
         if (temp.Contains("$rank"))
         {
-            // TODO
-            temp = temp.Replace("$rank", "1234");
+            if (!loadingBestEntry && bestEntry == "")
+            {
+                // TODO
+                loadingBestEntry = true;
+            }
         }
 
         if (temp.Contains("$currentplayer"))
