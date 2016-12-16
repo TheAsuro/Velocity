@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Security;
 using System.Text;
 
 namespace Api
@@ -76,24 +77,25 @@ namespace Api
 
             try
             {
-                Stream stream = info.request.EndGetRequestStream(result);
-                StreamWriter sw = new StreamWriter(stream, Encoding.ASCII);
-
-                bool first = true;
-
-                foreach (KeyValuePair<string, string> pair in info.data)
+                using (Stream stream = info.request.EndGetRequestStream(result))
                 {
-                    if (!first)
-                        sw.Write("&");
-                    else
-                        first = false;
-                    
-                    sw.Write(pair.Key + "=" + pair.Value);
-                }
+                    using (StreamWriter sw = new StreamWriter(stream, Encoding.ASCII))
+                    {
+                        bool first = true;
 
-                sw.Flush();
-                sw.Dispose();
-                stream.Dispose();
+                        foreach (KeyValuePair<string, string> pair in info.data)
+                        {
+                            if (!first)
+                                sw.Write("&");
+                            else
+                                first = false;
+
+                            sw.Write(pair.Key + "=" + pair.Value);
+                        }
+
+                        sw.Flush();
+                    }
+                }
 
                 info.request.BeginGetResponse(new AsyncCallback(ProcessResponse), new ResponseInfo() { request = info.request, callback = info.callback });
             }
@@ -128,7 +130,7 @@ namespace Api
             {
                 StreamReader reader = new StreamReader(ex.Response.GetResponseStream());
                 if (callback != null)
-                    callbacks.Add(callback, new ApiResult() { error = true, text = "", errorText = reader.ReadToEnd() });
+                    callbacks.Add(callback, new ApiResult() { error = true, text = "", errorText = ex.Message + "\n" + reader.ReadToEnd() });
             }
             else
             {

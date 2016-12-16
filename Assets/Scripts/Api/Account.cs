@@ -6,7 +6,7 @@ namespace Api
 {
     public class Account
     {
-        private const string LOGIN_API_URL = "http://theasuro.de/Velocity/Api/account.php";
+        private const string LOGIN_API_URL = "https://theasuro.de/Velocity/Api/account.php";
 
         public event EventHandler<EventArgs<string>> OnLoginFinished;
         public event EventHandler<EventArgs<string>> OnAccountRequestFinished;
@@ -60,6 +60,7 @@ namespace Api
             if (!result.error)
             {
                 Token = result.text;
+
                 PlayerPrefs.SetString(SaveData.SaveName(Name) + "_token", Token);
                 IsLoggedIn = true;
                 Debug.Log("Logged in.");

@@ -6,7 +6,7 @@ namespace Api
 {
     static class Leaderboard
     {
-        private const string LEADERBOARD_URL = "http://theasuro.de/Velocity/Api/leaderboard.php";
+        private const string LEADERBOARD_URL = "https://theasuro.de/Velocity/Api/leaderboard.php";
 
         //Request leaderboard entries from the server
         public static void GetEntries(string map, int index, int count, Action<LeaderboardEntry[]> callback)

@@ -15,48 +15,38 @@ Material:
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MainTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
-      data:
-        first:
-          name: PixelSnap
-        second: 0
-      data:
-        first:
-          name: _InnerRadius
-        second: 0.1
-      data:
-        first:
-          name: _RadiusOffset
-        second: 0.03
-      data:
-        first:
-          name: _Thickness
-        second: 0.005
-      data:
-        first:
-          name: _CircleSpeed
-        second: 7
-      data:
-        first:
-          name: _Speed
-        second: 0
-      data:
-        first:
-          name: _FirstCircleSpeed
-        second: 7
-      data:
-        first:
-          name: _OtherCircleSpeed
-        second: 10
+    - first:
+        name: PixelSnap
+      second: 0
+    - first:
+        name: _CircleSpeed
+      second: 7
+    - first:
+        name: _FirstCircleSpeed
+      second: 7
+    - first:
+        name: _InnerRadius
+      second: 0.1
+    - first:
+        name: _OtherCircleSpeed
+      second: 10
+    - first:
+        name: _RadiusOffset
+      second: 0.03
+    - first:
+        name: _Speed
+      second: 0
+    - first:
+        name: _Thickness
+      second: 0.005
     m_Colors:
-      data:
-        first:
-          name: _Color
-        second: {r: 0.625, g: 0.19301471, b: 0.19301471, a: 1}
+    - first:
+        name: _Color
+      second: {r: 0.625, g: 0.19301471, b: 0.19301471, a: 1}
