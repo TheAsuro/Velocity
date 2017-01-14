@@ -46,7 +46,7 @@ namespace Movement
 
         private void Update()
         {
-            if (frozen || GameInfo.info.IsConsoleOpen())
+            if (frozen)
                 return;
 
             //Set key states

@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using Api;
 using Demos;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MenuWindows
 {
-    public class Console : MonoBehaviour
+    public class ConsoleWindow : MonoBehaviour, MenuWindow
     {
         public TextAsset helpFile;
         public int rowCount = 22;
 
-        private bool visible = false;
-        private GameObject myConsole;
+        private Canvas myCanvas;
         private Text myOutput;
         private InputField myInput;
 
@@ -23,37 +19,25 @@ namespace UI
 
         private void Start()
         {
-            //Tell the GameInfo script that this is the console
-            GameInfo.info.SetConsole(this);
-
             //Find all parts of the console
-            myConsole = gameObject.transform.Find("Console").gameObject;
-            myOutput = myConsole.transform.Find("ConsoleOutput").Find("Mask").Find("Text").GetComponent<Text>();
-            myInput = myConsole.transform.Find("ConsoleInput").GetComponent<InputField>();
-
-            //Registering events
-            myInput.onEndEdit.AddListener(InputSubmit);
+            myCanvas = gameObject.transform.parent.GetComponent<Canvas>();
+            myOutput = transform.Find("ConsoleOutput").Find("Mask").Find("Text").GetComponent<Text>();
+            myInput = transform.Find("ConsoleInput").GetComponent<InputField>();
         }
 
         private void Update()
         {
-            if (Input.GetButtonDown("Console"))
-            {
-                ToggleVisibility();
-            }
-
             if (Input.GetMouseButtonDown(0))
             {
                 Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-                Rect titleRect = GameInfo.info.GetConsoleTitleRect();
+                Rect titleRect = GetConsoleTitleRect();
 
                 if (titleRect.x <= mousePos.x && mousePos.x <= titleRect.x + titleRect.width &&
                     titleRect.y <= mousePos.y && mousePos.y <= titleRect.y + titleRect.height)
                 {
                     mouseDown = true;
-                    RectTransform t = (RectTransform) myConsole.transform;
 
-                    clickDelta = mousePos - t.anchoredPosition;
+                    clickDelta = mousePos - ((RectTransform) transform).anchoredPosition;
                 }
             }
 
@@ -61,7 +45,7 @@ namespace UI
             {
                 if (mouseDown)
                 {
-                    RectTransform t = (RectTransform) myConsole.transform;
+                    RectTransform t = (RectTransform) transform;
                     Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
                     t.anchoredPosition = mousePos - clickDelta;
                     Vector2 newPos = t.anchoredPosition;
@@ -91,28 +75,49 @@ namespace UI
             }
         }
 
-        private void ToggleVisibility()
+        public void Activate()
         {
-            visible = !visible;
-            myInput.OnDeselect(null);
-            myConsole.SetActive(visible);
+            //Registering events
+            Console.ContentUpdate += OnConsoleContentUpdate;
+            myInput.onEndEdit.AddListener(InputSubmit);
+        }
+
+        public void SetAsBackground()
+        {
+
+        }
+
+        public void Close()
+        {
+            Console.ContentUpdate -= OnConsoleContentUpdate;
+            myInput.onEndEdit.RemoveListener(InputSubmit);
+        }
+
+        private void OnConsoleContentUpdate(object s, EventArgs<string> e)
+        {
+            Write(e.Content);
+        }
+
+        private Rect GetConsoleTitleRect()
+        {
+            RectTransform titleTransform = transform.Find("Title").gameObject.GetComponent<RectTransform>();
+            Rect r = new Rect(titleTransform.position.x * myCanvas.scaleFactor - (titleTransform.rect.width / 2f),
+                titleTransform.position.y * myCanvas.scaleFactor - (titleTransform.rect.height / 2f),
+                titleTransform.rect.width,
+                titleTransform.rect.height);
+            return r;
         }
 
         public void InputSubmit(string input)
         {
-            WriteToConsole(input);
+            Write(input);
             ExecuteCommand(input);
             myInput.text = "";
         }
 
-        public void WriteToConsole(string content)
+        private void Write(string content)
         {
-            myOutput.text += "\n" + content;
-        }
-
-        public bool IsVisible()
-        {
-            return visible;
+            myOutput.text += content;
         }
 
         public void ExecuteCommand(string command)
@@ -125,7 +130,7 @@ namespace UI
             switch (commandParts[0].ToLower())
             {
                 case "help": //Print helpful information
-                    WriteToConsole(helpFile.text);
+                    Write(helpFile.text);
                     break;
                 case "quit": //Quit the game
                     GameInfo.info.Quit();
@@ -167,7 +172,7 @@ namespace UI
                     CheatsCommand(commandParts);
                     break;
                 default:
-                    WriteToConsole("'" + command + "' is not a valid command!");
+                    Write("'" + command + "' is not a valid command!");
                     break;
             }
         }
@@ -188,7 +193,7 @@ namespace UI
             }
             else
             {
-                WriteToConsole("Usage: logToConsole <true/false/1/0>");
+                Write("Usage: logToConsole <true/false/1/0>");
             }
         }
 
@@ -200,13 +205,13 @@ namespace UI
                 Demo demo = new Demo(System.IO.Path.Combine(Application.dataPath, input[1]));
 
                 if (demo.DidLoadFromFileFail())
-                    WriteToConsole("Could not open demo!");
+                    Write("Could not open demo!");
                 else
                     GameInfo.info.PlayDemo(demo);
             }
             else
             {
-                WriteToConsole("Usage: playdemo <demo name>");
+                Write("Usage: playdemo <demo name>");
             }
         }
 
@@ -216,13 +221,13 @@ namespace UI
 
             if (myPlayerInfo == null)
             {
-                WriteToConsole("No player loaded!");
+                Write("No player loaded!");
                 return;
             }
             switch (input.Length)
             {
                 case 1:
-                    WriteToConsole("Current friction: " + myPlayerInfo.GetFriction());
+                    Write("Current friction: " + myPlayerInfo.GetFriction());
                     break;
                 case 2:
                     float newVal;
@@ -232,7 +237,7 @@ namespace UI
                     }
                     break;
                 default:
-                    WriteToConsole("Usage: move_friction (new friction)");
+                    Write("Usage: move_friction (new friction)");
                     break;
             }
         }
@@ -243,13 +248,13 @@ namespace UI
 
             if (myPlayerInfo == null)
             {
-                WriteToConsole("No player loaded!");
+                Write("No player loaded!");
                 return;
             }
             switch (input.Length)
             {
                 case 1:
-                    WriteToConsole("Current acceleration: " + myPlayerInfo.GetAcceleration());
+                    Write("Current acceleration: " + myPlayerInfo.GetAcceleration());
                     break;
                 case 2:
                     float newVal;
@@ -259,7 +264,7 @@ namespace UI
                     }
                     break;
                 default:
-                    WriteToConsole("Usage: move_accel (new accel)");
+                    Write("Usage: move_accel (new accel)");
                     break;
             }
         }
@@ -270,13 +275,13 @@ namespace UI
 
             if (myPlayerInfo == null)
             {
-                WriteToConsole("No player loaded!");
+                Write("No player loaded!");
                 return;
             }
             switch (input.Length)
             {
                 case 1:
-                    WriteToConsole("Current air acceleration: " + myPlayerInfo.GetAirAcceleration());
+                    Write("Current air acceleration: " + myPlayerInfo.GetAirAcceleration());
                     break;
                 case 2:
                     float newVal;
@@ -286,7 +291,7 @@ namespace UI
                     }
                     break;
                 default:
-                    WriteToConsole("Usage: move_airaccel (new air acceleration)");
+                    Write("Usage: move_airaccel (new air acceleration)");
                     break;
             }
         }
@@ -297,13 +302,13 @@ namespace UI
 
             if (myPlayerInfo == null)
             {
-                WriteToConsole("No player loaded!");
+                Write("No player loaded!");
                 return;
             }
             switch (input.Length)
             {
                 case 1:
-                    WriteToConsole("Current speed limit: " + myPlayerInfo.GetMaxSpeed());
+                    Write("Current speed limit: " + myPlayerInfo.GetMaxSpeed());
                     break;
                 case 2:
                     float newVal;
@@ -311,14 +316,14 @@ namespace UI
                     {
                         if (newVal == 0f)
                         {
-                            WriteToConsole("Value can not be 0!");
+                            Write("Value can not be 0!");
                             return;
                         }
                         myPlayerInfo.SetMaxSpeed(newVal);
                     }
                     break;
                 default:
-                    WriteToConsole("Usage: move_maxspeed (new max speed)");
+                    Write("Usage: move_maxspeed (new max speed)");
                     break;
             }
         }
@@ -329,13 +334,13 @@ namespace UI
 
             if (myPlayerInfo == null)
             {
-                WriteToConsole("No player loaded!");
+                Write("No player loaded!");
                 return;
             }
             switch (input.Length)
             {
                 case 1:
-                    WriteToConsole("Current air speed limit: " + myPlayerInfo.GetMaxAirSpeed());
+                    Write("Current air speed limit: " + myPlayerInfo.GetMaxAirSpeed());
                     break;
                 case 2:
                     float newVal;
@@ -343,14 +348,14 @@ namespace UI
                     {
                         if (newVal == 0f)
                         {
-                            WriteToConsole("Value can not be 0!");
+                            Write("Value can not be 0!");
                             return;
                         }
                         myPlayerInfo.SetMaxAirSpeed(newVal);
                     }
                     break;
                 default:
-                    WriteToConsole("Usage: move_maxairspeed (new max air speed)");
+                    Write("Usage: move_maxairspeed (new max air speed)");
                     break;
             }
         }
@@ -361,13 +366,13 @@ namespace UI
 
             if (myPlayerInfo == null)
             {
-                WriteToConsole("No player loaded!");
+                Write("No player loaded!");
                 return;
             }
             switch (input.Length)
             {
                 case 1:
-                    WriteToConsole("Current jump height: " + myPlayerInfo.GetJumpForce());
+                    Write("Current jump height: " + myPlayerInfo.GetJumpForce());
                     break;
                 case 2:
                     float newVal;
@@ -377,7 +382,7 @@ namespace UI
                     }
                     break;
                 default:
-                    WriteToConsole("Usage: move_jumpheight (new jump height)");
+                    Write("Usage: move_jumpheight (new jump height)");
                     break;
             }
         }
@@ -387,17 +392,17 @@ namespace UI
             switch (input.Length)
             {
                 case 1:
-                    WriteToConsole("Current gravity: " + Physics.gravity.y);
+                    Write("Current gravity: " + Physics.gravity.y);
                     break;
                 case 2:
                     float newVal;
-                    if(float.TryParse(input[1], out newVal))
+                    if (float.TryParse(input[1], out newVal))
                     {
                         GameInfo.info.SetGravity(newVal);
                     }
                     break;
                 default:
-                    WriteToConsole("Usage: move_gravity (new gravity)");
+                    Write("Usage: move_gravity (new gravity)");
                     break;
             }
         }
@@ -408,25 +413,25 @@ namespace UI
 
             if (myPlayerInfo == null)
             {
-                WriteToConsole("No player loaded!");
+                Write("No player loaded!");
                 return;
             }
 
-            if (input.Length == 1)
+            switch (input.Length)
             {
-                WriteToConsole("Noclip: " + myPlayerInfo.GetNoclip());
-            }
-            else if (input.Length == 2)
-            {
-                int newVal;
-                if (int.TryParse(input[1], out newVal))
-                {
-                    myPlayerInfo.SetNoclip(newVal != 0);
-                }
-            }
-            else
-            {
-                WriteToConsole("Usage: noclip (1 or 0)");
+                case 1:
+                    Write("Noclip: " + myPlayerInfo.GetNoclip());
+                    break;
+                case 2:
+                    int newVal;
+                    if (int.TryParse(input[1], out newVal))
+                    {
+                        myPlayerInfo.SetNoclip(newVal != 0);
+                    }
+                    break;
+                default:
+                    Write("Usage: noclip (1 or 0)");
+                    break;
             }
         }
 
@@ -436,14 +441,14 @@ namespace UI
 
             if (myPlayerInfo == null)
             {
-                WriteToConsole("No player loaded!");
+                Write("No player loaded!");
                 return;
             }
 
             switch (input.Length)
             {
                 case 1:
-                    WriteToConsole("Cheats: " + myPlayerInfo.GetCheats());
+                    Write("Cheats: " + myPlayerInfo.GetCheats());
                     break;
                 case 2:
                     int newVal;
@@ -453,7 +458,7 @@ namespace UI
                     }
                     break;
                 default:
-                    WriteToConsole("Usage: cheats (1 or 0)");
+                    Write("Usage: cheats (1 or 0)");
                     break;
             }
         }

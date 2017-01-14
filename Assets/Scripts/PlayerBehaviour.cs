@@ -279,7 +279,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void PrintCheatWarning()
     {
-        GameInfo.info.WriteToConsole("This command is cheat protected, turn on cheats with 'cheats 1'!");
+        Console.Write("This command is cheat protected, turn on cheats with 'cheats 1'!");
     }
 
     public void SetNoclip(bool value)

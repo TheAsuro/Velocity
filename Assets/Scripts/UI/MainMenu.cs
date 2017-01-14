@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Api;
 using Demos;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,11 +55,9 @@ namespace UI
         private void Awake()
         {
             SetMenuState(MenuState.MAIN_MENU);
-            GameInfo.info.SetMenuState(GameInfo.MenuState.OTHERMENU);
-            GameInfo.info.LockMenu();
             LoadLastPlayer();
 
-            returnToMenu = new Action<object, EventArgs>((s, e) => SetMenuState(MenuState.MAIN_MENU));
+            returnToMenu = (s, e) => SetMenuState(MenuState.MAIN_MENU);
             MainSubMenu.GoToMainMenu += returnToMenu.Invoke;
             GetSubMenu<NewPlayerMenu>(MenuState.NEW_PLAYER).onCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
             GetSubMenu<PlayerSelectionMenu>(MenuState.PLAYER_SELECTION).loginFinished += (s, e) => SetMenuState(MenuState.GAME_SELECTION);

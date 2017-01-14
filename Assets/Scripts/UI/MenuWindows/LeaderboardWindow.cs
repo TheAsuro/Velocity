@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using Api;
 using Demos;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MenuWindows
 {
-    public class LeaderboardDisplay : MainSubMenu
+    public class LeaderboardWindow : MainSubMenu, MenuWindow
     {
         public InputField mapNameInput;
         public List<LeaderboardPanel> entryPanels; //Must always have ELEMENTS_PER_SITE elements!
@@ -22,16 +24,39 @@ namespace UI
             }
         }
 
+        private void LoadMap(string mapName)
+        {
+            Leaderboard.GetEntries(mapName, startIndex, ELEMENTS_PER_SITE, DisplayData);
+            lastLoadedMap = mapName;
+        }
+
+        public void AddIndex(int add)
+        {
+            startIndex += add;
+            if (startIndex < 0)
+                startIndex = 0;
+            LoadMap(lastLoadedMap);
+        }
+
+        public void Activate()
+        {
+            LoadMap(SceneManager.GetActiveScene().name);
+        }
+
+        public void SetAsBackground()
+        {
+            // TODO
+        }
+
+        public void Close()
+        {
+            // TODO
+        }
+
         private void ChangeMap(string mapName)
         {
             startIndex = 0;
             LoadMap(mapName);
-        }
-
-        public void LoadMap(string mapName)
-        {
-            Leaderboard.GetEntries(mapName, startIndex, ELEMENTS_PER_SITE, DisplayData);
-            lastLoadedMap = mapName;
         }
 
         private void DisplayData(LeaderboardEntry[] entries)
@@ -62,14 +87,6 @@ namespace UI
         {
             print("Player: " + demo.GetPlayerName());
             print("Level: " + demo.GetLevelName());
-        }
-
-        public void AddIndex(int add)
-        {
-            startIndex += add;
-            if (startIndex < 0)
-                startIndex = 0;
-            LoadMap(lastLoadedMap);
         }
     }
 }

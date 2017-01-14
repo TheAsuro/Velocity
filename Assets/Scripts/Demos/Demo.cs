@@ -68,7 +68,7 @@ namespace Demos
             }
             catch (FileNotFoundException ex)
             {
-                GameInfo.info.WriteToConsole(ex.Message);
+                Console.Write(ex.Message);
                 loadFromFileFailed = true;
             }
         }
