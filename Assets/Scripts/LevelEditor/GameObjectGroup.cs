@@ -1,21 +1,24 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-[System.Serializable]
-public class GameObjectGroup
+namespace LevelEditor
 {
-	public string name;
-	public List<GameObject> objects;
+    [System.Serializable]
+    public class GameObjectGroup
+    {
+        public string name;
+        public List<GameObject> objects;
 
-	public GameObjectGroup(string pName)
-	{
-		name = pName;
-		objects = new List<GameObject>();
-	}
+        public GameObjectGroup(string pName)
+        {
+            name = pName;
+            objects = new List<GameObject>();
+        }
 
-	public GameObjectGroup(string pName, List<GameObject> pObjects)
-	{
-		name = pName;
-		objects = pObjects;
-	}
+        public GameObjectGroup(string pName, List<GameObject> pObjects)
+        {
+            name = pName;
+            objects = pObjects;
+        }
+    }
 }

@@ -1,22 +1,25 @@
 ﻿using UnityEngine;
 
-public class JumpBridgePart : MonoBehaviour
+namespace Special_Levels
 {
-    [SerializeField]
-    private JumpBridge bridge;
-
-    void Start()
+    public class JumpBridgePart : MonoBehaviour
     {
-        bridge.RegisterPart(gameObject);
-    }
+        [SerializeField]
+        private JumpBridge bridge;
 
-    void OnCollisionEnter()
-    {
-        bridge.CollisionEnter(gameObject);
-    }
+        private void Start()
+        {
+            bridge.RegisterPart(gameObject);
+        }
 
-    void OnCollisionExit()
-    {
-        bridge.CollisionLeave(gameObject);
+        private void OnCollisionEnter()
+        {
+            bridge.CollisionEnter(gameObject);
+        }
+
+        private void OnCollisionExit()
+        {
+            bridge.CollisionLeave(gameObject);
+        }
     }
 }

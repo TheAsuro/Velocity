@@ -2,19 +2,22 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Selectable))]
-public class MenuItem : MonoBehaviour
+namespace UI
 {
-    public List<KeyCode> nextKeys = new List<KeyCode>() { KeyCode.Tab };
-    public Vector3 nextDirection = Vector3.down;
-
-    void Update()
+    [RequireComponent(typeof(Selectable))]
+    public class MenuItem : MonoBehaviour
     {
-        foreach (KeyCode nextKey in nextKeys)
+        public List<KeyCode> nextKeys = new List<KeyCode>() { KeyCode.Tab };
+        public Vector3 nextDirection = Vector3.down;
+
+        private void Update()
         {
-            if (Input.GetKeyDown(nextKey))
+            foreach (KeyCode nextKey in nextKeys)
             {
-                GetComponent<Selectable>().FindSelectable(nextDirection).Select();
+                if (Input.GetKeyDown(nextKey))
+                {
+                    GetComponent<Selectable>().FindSelectable(nextDirection).Select();
+                }
             }
         }
     }

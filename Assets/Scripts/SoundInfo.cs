@@ -13,12 +13,12 @@ public class SoundInfo
 		clip = pClip;
 	}
 
-	public string getName()
+	public string GetName()
 	{
 		return soundName;
 	}
 
-	public AudioClip getClip()
+	public AudioClip GetClip()
 	{
 		return clip;
 	}

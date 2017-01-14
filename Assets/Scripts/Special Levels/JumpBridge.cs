@@ -1,55 +1,58 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class JumpBridge : MonoBehaviour
+namespace Special_Levels
 {
-    [SerializeField]
-    private float maxCollisionTime = 0.2f;
-    [SerializeField]
-    private float cooldownMultiplier = 0.1f;
-
-    private float collisionTime = 0f;
-
-    private List<GameObject> allParts = new List<GameObject>();
-    private List<GameObject> playerCollisionParts = new List<GameObject>();
-
-    void Awake()
+    public class JumpBridge : MonoBehaviour
     {
-        WorldInfo.info.addResetMethod(() => playerCollisionParts.Clear(), "bridgeReset" + gameObject.GetInstanceID());
-    }
+        [SerializeField]
+        private float maxCollisionTime = 0.2f;
+        [SerializeField]
+        private float cooldownMultiplier = 0.1f;
 
-    public void RegisterPart(GameObject go)
-    {
-        allParts.Add(go);
-    }
+        private float collisionTime = 0f;
 
-    public void CollisionEnter(GameObject go)
-    {
-        if (!playerCollisionParts.Contains(go))
-            playerCollisionParts.Add(go);
-    }
+        private List<GameObject> allParts = new List<GameObject>();
+        private List<GameObject> playerCollisionParts = new List<GameObject>();
 
-    public void CollisionLeave(GameObject go)
-    {
-        if (playerCollisionParts.Contains(go))
-            playerCollisionParts.Remove(go);
-    }
-
-    void Update()
-    {
-        if (playerCollisionParts.Count > 0)
-            collisionTime = Mathf.Min(collisionTime + Time.deltaTime, maxCollisionTime);
-        else
-            collisionTime = Mathf.Max(collisionTime - Time.deltaTime * cooldownMultiplier, 0f);
-
-        foreach (GameObject go in allParts)
+        private void Awake()
         {
-            var renderer = go.GetComponent<Renderer>();
-            if (renderer != null)
-                renderer.material.color = new Color(1f, 1f - collisionTime / maxCollisionTime, 1f - collisionTime / maxCollisionTime);
+            WorldInfo.info.AddResetMethod(() => playerCollisionParts.Clear(), "bridgeReset" + gameObject.GetInstanceID());
         }
 
-        if (collisionTime >= maxCollisionTime)
-            GameInfo.info.reset();
+        public void RegisterPart(GameObject go)
+        {
+            allParts.Add(go);
+        }
+
+        public void CollisionEnter(GameObject go)
+        {
+            if (!playerCollisionParts.Contains(go))
+                playerCollisionParts.Add(go);
+        }
+
+        public void CollisionLeave(GameObject go)
+        {
+            if (playerCollisionParts.Contains(go))
+                playerCollisionParts.Remove(go);
+        }
+
+        private void Update()
+        {
+            if (playerCollisionParts.Count > 0)
+                collisionTime = Mathf.Min(collisionTime + Time.deltaTime, maxCollisionTime);
+            else
+                collisionTime = Mathf.Max(collisionTime - Time.deltaTime * cooldownMultiplier, 0f);
+
+            foreach (GameObject go in allParts)
+            {
+                var renderer = go.GetComponent<Renderer>();
+                if (renderer != null)
+                    renderer.material.color = new Color(1f, 1f - collisionTime / maxCollisionTime, 1f - collisionTime / maxCollisionTime);
+            }
+
+            if (collisionTime >= maxCollisionTime)
+                GameInfo.info.Reset();
+        }
     }
 }

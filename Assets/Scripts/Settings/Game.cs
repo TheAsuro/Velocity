@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Settings
 {
-    public enum AAValue
+    public enum AaValue
     {
-        Off = 0,
+        OFF = 0,
         X2 = 1,
         X4 = 2,
         X8 = 3
@@ -14,17 +14,17 @@ namespace Settings
 
     public enum TexSize
     {
-        Full = 0,
-        Half = 1,
-        Quarter = 2
+        FULL = 0,
+        HALF = 1,
+        QUARTER = 2
     }
 
     public enum FrameQueueLimit
     {
-        Zero = 0,
-        One = 1,
-        Two = 2,
-        Unlimited = -1
+        ZERO = 0,
+        ONE = 1,
+        TWO = 2,
+        UNLIMITED = -1
     }
 
     public static class Game
@@ -46,7 +46,7 @@ namespace Settings
         public static float Fov { get { return (float)AllSettings.GetSetting(FOV); } set { AllSettings.SetSetting(FOV, value); } }
         public static float Volume { get { return (float)AllSettings.GetSetting(VOLUME); } set { AllSettings.SetSetting(VOLUME, value); } }
         public static AnisotropicFiltering AnisotropicFiltering { get { return (AnisotropicFiltering)AllSettings.GetSetting(ANISOTROPIC_FILTERING); } set { AllSettings.SetSetting(ANISOTROPIC_FILTERING, (int)value); } }
-        public static AAValue AntiAliasing { get { return (AAValue)AllSettings.GetSetting(ANTI_ALIASING); } set { AllSettings.SetSetting(ANTI_ALIASING, value); } }
+        public static AaValue AntiAliasing { get { return (AaValue)AllSettings.GetSetting(ANTI_ALIASING); } set { AllSettings.SetSetting(ANTI_ALIASING, value); } }
         public static TexSize TextureSize { get { return (TexSize)AllSettings.GetSetting(TEXTURE_SIZE); } set { AllSettings.SetSetting(TEXTURE_SIZE, value); } }
         public static bool VSync { get { return (bool)AllSettings.GetSetting(V_SYNC); } set { AllSettings.SetSetting(V_SYNC, value); } }
         public static bool RawMouse { get { return (bool)AllSettings.GetSetting(RAW_MOUSE); } set { AllSettings.SetSetting(RAW_MOUSE, value); } }
@@ -73,10 +73,10 @@ namespace Settings
             AllSettings.AddSetting(new IntSetting(ANISOTROPIC_FILTERING, (int)AnisotropicFiltering.Enable));
             conversions.Add(ANISOTROPIC_FILTERING, new EnumSettingConverter<AnisotropicFiltering>((anVal) => (int)anVal, (fVal) => (AnisotropicFiltering)Mathf.RoundToInt(fVal)));
 
-            AllSettings.AddSetting(new IntSetting(ANTI_ALIASING, (int)AAValue.Off));
-            conversions.Add(ANTI_ALIASING, new EnumSettingConverter<AAValue>((iVal) => (int)iVal, (fVal) => (AAValue)Mathf.RoundToInt(fVal)));
+            AllSettings.AddSetting(new IntSetting(ANTI_ALIASING, (int)AaValue.OFF));
+            conversions.Add(ANTI_ALIASING, new EnumSettingConverter<AaValue>((iVal) => (int)iVal, (fVal) => (AaValue)Mathf.RoundToInt(fVal)));
 
-            AllSettings.AddSetting(new IntSetting(TEXTURE_SIZE, (int)TexSize.Full));
+            AllSettings.AddSetting(new IntSetting(TEXTURE_SIZE, (int)TexSize.FULL));
             conversions.Add(TEXTURE_SIZE, new EnumSettingConverter<TexSize>((texVal) => (int)texVal, (fVal) => (TexSize)Mathf.RoundToInt(fVal)));
 
             AllSettings.AddSetting(new BoolSetting(V_SYNC, false));

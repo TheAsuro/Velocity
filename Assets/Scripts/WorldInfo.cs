@@ -6,7 +6,7 @@ public class WorldInfo : MonoBehaviour
 {
 	public static WorldInfo info;
 	
-	public GameInfo.MenuState beginState = GameInfo.MenuState.closed;
+	public GameInfo.MenuState beginState = GameInfo.MenuState.CLOSED;
 	public Color worldBackgroundColor = Color.black;
     public Material worldSkybox;
 	public float deathHeight = -100f;
@@ -23,12 +23,12 @@ public class WorldInfo : MonoBehaviour
 	private Respawn currentSpawn = null;
 	private Respawn firstSpawn = null;
 
-	void Awake()
+    private void Awake()
 	{
 		info = this;
 	}
 
-	public void addStartMethod(Start start, string id)
+	public void AddStartMethod(Start start, string id)
 	{
 		if(startList.ContainsKey(id))
 		{
@@ -37,7 +37,7 @@ public class WorldInfo : MonoBehaviour
 		startList.Add(id, start);
 	}
 
-	public void addResetMethod(Reset reset, string id)
+	public void AddResetMethod(Reset reset, string id)
 	{
 		if(resetList.ContainsKey(id))
 		{
@@ -46,27 +46,27 @@ public class WorldInfo : MonoBehaviour
 		resetList.Add(id, reset);
 	}
 
-	public void setSpawn(Respawn spawn)
+	public void SetSpawn(Respawn spawn)
 	{
 		if(firstSpawn == null)
 		{
 			firstSpawn = spawn;
 		}
 		currentSpawn = spawn;
-		addResetMethod(resetSpawn, "spawn reset");
+		AddResetMethod(ResetSpawn, "spawn reset");
 	}
 
-	private void resetSpawn()
+	private void ResetSpawn()
 	{
 		currentSpawn = firstSpawn;
 	}
 
-	public Respawn getCurrentSpawn()
+	public Respawn GetCurrentSpawn()
 	{
 		return currentSpawn;
 	}
 
-	public Respawn getFirstSpawn()
+	public Respawn GetFirstSpawn()
 	{
 		return firstSpawn;
 	}
@@ -79,7 +79,7 @@ public class WorldInfo : MonoBehaviour
 		}
 	}
 
-	public void reset()
+	public void ResetWorld()
 	{
 		foreach(Reset r in resetList.Values)
 		{

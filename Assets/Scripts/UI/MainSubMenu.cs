@@ -1,13 +1,16 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using UnityEngine;
 
-public class MainSubMenu : MonoBehaviour
+namespace UI
 {
-    public static event EventHandler GoToMainMenu;
-
-    public void BackButtonClick()
+    public class MainSubMenu : MonoBehaviour
     {
-        if (GoToMainMenu != null)
-            GoToMainMenu(this, null);
+        public static event EventHandler GoToMainMenu;
+
+        public void BackButtonClick()
+        {
+            if (GoToMainMenu != null)
+                GoToMainMenu(this, null);
+        }
     }
 }

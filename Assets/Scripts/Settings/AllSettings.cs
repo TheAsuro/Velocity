@@ -64,7 +64,7 @@ namespace Settings
         public abstract void Delete();
     }
 
-    abstract class Setting<T> : Setting
+    internal abstract class Setting<T> : Setting
     {
         protected abstract void Save(T value);
 
@@ -106,7 +106,7 @@ namespace Settings
         private T val;
     }
 
-    class BoolSetting : Setting<bool>
+    internal class BoolSetting : Setting<bool>
     {
         public BoolSetting(string name, bool defaultValue) : base(name, defaultValue) { }
 
@@ -124,7 +124,7 @@ namespace Settings
         }
     }
 
-    class IntSetting : Setting<int>
+    internal class IntSetting : Setting<int>
     {
         public IntSetting(string name, int defaultValue) : base(name, defaultValue) { }
 
@@ -142,7 +142,7 @@ namespace Settings
         }
     }
 
-    class FloatSetting : Setting<float>
+    internal class FloatSetting : Setting<float>
     {
         public FloatSetting(string name, float defaultValue) : base(name, defaultValue) { }
 
@@ -160,7 +160,7 @@ namespace Settings
         }
     }
 
-    class StringSetting : Setting<string>
+    internal class StringSetting : Setting<string>
     {
         public StringSetting(string name, string defaultValue) : base(name, defaultValue) { }
 
@@ -178,7 +178,7 @@ namespace Settings
         }
     }
 
-    class SettingConverter
+    internal class SettingConverter
     {
         protected Func<object, float> toFloat;
         protected Func<float, object> fromFloat;
@@ -210,7 +210,7 @@ namespace Settings
         }
     }
 
-    class EnumSettingConverter<T> : SettingConverter
+    internal class EnumSettingConverter<T> : SettingConverter
     {
         public EnumSettingConverter(Func<object, float> toFloat, Func<float, object> fromFloat) : base(toFloat, fromFloat, (obj) => Enum.GetName(typeof(T), obj)) { }
     }

@@ -26,7 +26,7 @@ public class RaceScript : MonoBehaviour
     private GameObject wrDisplay;
 
     private Stopwatch playTime;
-    private TimeSpan elapsedTime
+    private TimeSpan ElapsedTime
     {
         get
         {
@@ -36,13 +36,13 @@ public class RaceScript : MonoBehaviour
                 return playTime.Elapsed;
         }
     }
-    private string timeString
+    private string TimeString
     {
-        get { return (new DateTime(elapsedTime.Ticks)).ToString("mm:ss.ffff"); }
+        get { return (new DateTime(ElapsedTime.Ticks)).ToString("mm:ss.ffff"); }
     }
 	
 	//Handle player GUI
-	void Awake()
+    private void Awake()
 	{
 		Transform canvas = gameObject.transform.parent.Find("Canvas");
 		timeText = canvas.Find("Time").Find("Text").GetComponent<Text>();
@@ -52,12 +52,12 @@ public class RaceScript : MonoBehaviour
         wrDisplay = canvas.Find("WR").gameObject;
 	}
 
-	void Update()
+    private void Update()
 	{
 		//Freeze time is up, start the race!
 		if(!started && paused && Time.time >= unfreezeTime)
 		{
-			startRace();
+			StartRace();
 		}
 
         //Check time validity every second
@@ -75,14 +75,14 @@ public class RaceScript : MonoBehaviour
         }
 
 		//Display time
-		timeText.text = timeString;
+		timeText.text = TimeString;
         if (GameInfo.info.IsRunValid())
             timeText.color = Color.white;
         else
             timeText.color = Color.red;
 
 		//Display speed
-		speedText.text = GameInfo.info.getPlayerInfo().getCurrentSpeed().ToString() + " m/s";
+		speedText.text = GameInfo.info.GetPlayerInfo().GetCurrentSpeed().ToString() + " m/s";
 
 		//Display player name
 		if(!editorMode)
@@ -93,7 +93,7 @@ public class RaceScript : MonoBehaviour
 		//Skip countdown with use key
 		if(Input.GetButtonDown("Skip") && !started)
 		{
-			startRace();
+			StartRace();
 		}
 
 		//countdown
@@ -116,8 +116,8 @@ public class RaceScript : MonoBehaviour
 			wrDisplay.SetActive(false);
 		}
 	}
-	
-	void OnTriggerEnter(Collider other)
+
+    private void OnTriggerEnter(Collider other)
 	{
 		if(other.tag.Equals("Checkpoint"))
 		{
@@ -128,7 +128,7 @@ public class RaceScript : MonoBehaviour
 			
 			if(end && nr == checkpoint + 1 && !finished) //End
 			{
-                endRace();
+                EndRace();
 			}
 			else if(nr == checkpoint + 1) //next checkpoint
 			{
@@ -138,7 +138,7 @@ public class RaceScript : MonoBehaviour
 	}
 
 	//Starts a new race (resets the current one if there is one)
-	public void prepareRace(float newFreezeDuration = 0f)
+	public void PrepareRace(float newFreezeDuration = 0f)
 	{
 		checkpoint = 0;
         started = false;
@@ -150,57 +150,57 @@ public class RaceScript : MonoBehaviour
 
 		if(freezeDuration > 0f)
 		{
-            pause();
+            Pause();
             unfreezeTime = Time.time + freezeDuration;
 		}
         else
         {
-            startRace();
+            StartRace();
         }
 
-		GameInfo.info.startDemo();
+		GameInfo.info.StartDemo();
 	}
 
-	private void startRace()
+	private void StartRace()
 	{
         started = true;
         WorldInfo.info.DoStart();
-        unpause();
+        Unpause();
         unfreezeTime = Time.time;
         lastSecondComputer = DateTime.Now;
         lastSecondGame = Time.time;
 	}
 
-    private void endRace()
+    private void EndRace()
     {
         playTime.Stop();
         finished = true;
-        GameInfo.info.runFinished(elapsedTime);
+        GameInfo.info.RunFinished(ElapsedTime);
     }
 
-    public void pause()
+    public void Pause()
     {
         playTime.Stop();
         paused = true;
-        GameInfo.info.getPlayerInfo().freeze();
+        GameInfo.info.GetPlayerInfo().Freeze();
     }
 
-    public void unpause()
+    public void Unpause()
     {
         if(started)
         {
             playTime.Start();
             paused = false;
-            GameInfo.info.getPlayerInfo().unfreeze();
+            GameInfo.info.GetPlayerInfo().Unfreeze();
         }
     }
 
-	public void setEditorMode(bool value)
+	public void SetEditorMode(bool value)
 	{
 		editorMode = value;
 	}
 
-	public bool getEditorMode()
+	public bool GetEditorMode()
 	{
 		return editorMode;
 	}

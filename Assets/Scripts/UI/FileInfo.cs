@@ -1,48 +1,50 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
-public class FileInfo : MonoBehaviour
+namespace UI
 {
-    private FileSelection fileSel;
-    private Text label;
-    private Button button;
-    private float originalHeight;
-    RectTransform rt;
-
-    void Awake()
+    public class FileInfo : MonoBehaviour
     {
-        rt = (RectTransform)transform;
-        originalHeight = rt.rect.height;
-    }
+        private FileSelection fileSel;
+        private Text label;
+        private Button button;
+        private float originalHeight;
+        private RectTransform rt;
 
-    public string text
-    {
-        get { return label.text; }
-        set { label.text = value; }
-    }
+        private void Awake()
+        {
+            rt = (RectTransform)transform;
+            originalHeight = rt.rect.height;
+        }
 
-    public void Initialize()
-    {
-        fileSel = transform.parent.parent.parent.gameObject.GetComponent<FileSelection>();
-        button = transform.Find("Button").gameObject.GetComponent<Button>();
-        label = transform.Find("Button").gameObject.GetComponent<Text>();
-        button.onClick.AddListener(Select);
-    }
+        public string Text
+        {
+            get { return label.text; }
+            set { label.text = value; }
+        }
 
-    private void Select()
-    {
-        fileSel.UpdatePath(label.text);
-    }
+        public void Initialize()
+        {
+            fileSel = transform.parent.parent.parent.gameObject.GetComponent<FileSelection>();
+            button = transform.Find("Button").gameObject.GetComponent<Button>();
+            label = transform.Find("Button").gameObject.GetComponent<Text>();
+            button.onClick.AddListener(Select);
+        }
 
-    public void SetVerticalOffset(int position)
-    {
-        rt.offsetMax = new Vector2(rt.offsetMax.x, position * originalHeight * -1f);
-        rt.offsetMin = new Vector2(rt.offsetMin.x, position * originalHeight * -1f - originalHeight);
-    }
+        private void Select()
+        {
+            fileSel.UpdatePath(label.text);
+        }
 
-    public float GetOriginalHeight()
-    {
-        return originalHeight;
+        public void SetVerticalOffset(int position)
+        {
+            rt.offsetMax = new Vector2(rt.offsetMax.x, position * originalHeight * -1f);
+            rt.offsetMin = new Vector2(rt.offsetMin.x, position * originalHeight * -1f - originalHeight);
+        }
+
+        public float GetOriginalHeight()
+        {
+            return originalHeight;
+        }
     }
 }

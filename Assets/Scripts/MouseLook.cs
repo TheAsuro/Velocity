@@ -17,8 +17,8 @@ using System.Collections;
 [AddComponentMenu("Camera-Control/Mouse Look")]
 public class MouseLook : MonoBehaviour {
 
-	public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
-	public RotationAxes axes = RotationAxes.MouseXAndY;
+	public enum RotationAxes { MOUSE_X_AND_Y = 0, MOUSE_X = 1, MOUSE_Y = 2 }
+	public RotationAxes axes = RotationAxes.MOUSE_X_AND_Y;
 	public float sensitivityX = 15F;
 	public float sensitivityY = 15F;
 
@@ -30,14 +30,14 @@ public class MouseLook : MonoBehaviour {
 
 	public bool invertY = false;
 
-	float rotationY = 0F;
+    private float rotationY = 0F;
 
-	void Update ()
+    private void Update ()
 	{
 		float ySens = sensitivityY;
 		if(invertY) { ySens *= -1f; }
 
-		if (axes == RotationAxes.MouseXAndY)
+		if (axes == RotationAxes.MOUSE_X_AND_Y)
 		{
 			float rotationX = transform.localEulerAngles.y + GetMouseX() * sensitivityX;
 			
@@ -46,7 +46,7 @@ public class MouseLook : MonoBehaviour {
 			
 			transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
 		}
-		else if (axes == RotationAxes.MouseX)
+		else if (axes == RotationAxes.MOUSE_X)
 		{
 			transform.Rotate(0, GetMouseX() * sensitivityX, 0);
 		}
@@ -58,15 +58,15 @@ public class MouseLook : MonoBehaviour {
 			transform.localEulerAngles = new Vector3(-rotationY, transform.localEulerAngles.y, 0);
 		}
 	}
-	
-	void Start ()
+
+    private void Start ()
 	{
 		// Make the rigid body not change rotation
 		if (GetComponent<Rigidbody>())
 			GetComponent<Rigidbody>().freezeRotation = true;
 	}
 
-    float GetMouseX()
+    private float GetMouseX()
     {
         if (Settings.Game.RawMouse)
             return Input.GetAxisRaw("Mouse X");
@@ -74,7 +74,7 @@ public class MouseLook : MonoBehaviour {
             return Input.GetAxis("Mouse X");
     }
 
-    float GetMouseY()
+    private float GetMouseY()
     {
         if (Settings.Game.RawMouse)
             return Input.GetAxisRaw("Mouse Y");

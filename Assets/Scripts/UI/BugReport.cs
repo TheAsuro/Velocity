@@ -1,55 +1,58 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
-public class BugReport : MonoBehaviour
+namespace UI
 {
-    const string BUG_REPORT_URL = "https://theasuro.de/Velocity/Api/bugreport.php";
-
-    [SerializeField]
-    private Button sendButton;
-
-    [SerializeField]
-    private Text sendInfo;
-
-    [SerializeField]
-    private InputField userNameField;
-
-    [SerializeField]
-    private InputField bugReportMessageField;
-
-    void Awake()
+    public class BugReport : MonoBehaviour
     {
-        sendButton.onClick.AddListener(OnSendClick);
-    }
+        private const string BUG_REPORT_URL = "https://theasuro.de/Velocity/Api/bugreport.php";
 
-    void OnSendClick()
-    {
-        if (userNameField.text == "")
+        [SerializeField]
+        private Button sendButton;
+
+        [SerializeField]
+        private Text sendInfo;
+
+        [SerializeField]
+        private InputField userNameField;
+
+        [SerializeField]
+        private InputField bugReportMessageField;
+
+        private void Awake()
         {
-            sendInfo.text = "Username missing!";
-            return;
+            sendButton.onClick.AddListener(OnSendClick);
         }
 
-        if (bugReportMessageField.text == "")
+        private void OnSendClick()
         {
-            sendInfo.text = "Bug Report missing!";
-            return;
+            if (userNameField.text == "")
+            {
+                sendInfo.text = "Username missing!";
+                return;
+            }
+
+            if (bugReportMessageField.text == "")
+            {
+                sendInfo.text = "Bug Report missing!";
+                return;
+            }
+
+            var data = new Dictionary<string, string>();
+            data.Add("user", userNameField.text);
+            data.Add("report", bugReportMessageField.text);
+
+            Api.HttpApi.StartRequest(BUG_REPORT_URL, "POST", OnMessageSent, data);
+            sendInfo.text = "Sending...";
         }
 
-        var data = new Dictionary<string, string>();
-        data.Add("user", userNameField.text);
-        data.Add("report", bugReportMessageField.text);
-
-        Api.HttpApi.StartRequest(BUG_REPORT_URL, "POST", OnMessageSent, data);
-        sendInfo.text = "Sending...";
-    }
-
-    void OnMessageSent(Api.HttpApi.ApiResult result)
-    {
-        if (result.error)
-            sendInfo.text = result.errorText;
-        else
-            sendInfo.text = "Message sent.";
+        private void OnMessageSent(Api.HttpApi.ApiResult result)
+        {
+            if (result.error)
+                sendInfo.text = result.errorText;
+            else
+                sendInfo.text = "Message sent.";
+        }
     }
 }

@@ -9,26 +9,26 @@ public class Respawn : MonoBehaviour
 	public Vector3 respawnPosition;
 	public float respawnYRotation = 0f;
 
-	void Start()
+    private void Start()
 	{
 		if(isFistSpawn)
 		{
             if (WorldInfo.info == null)
                 throw new System.InvalidOperationException("This scene does not have a WoldInfo object! Game can not initialize.");
 
-			WorldInfo.info.setSpawn(this);
+			WorldInfo.info.SetSpawn(this);
 		}
 	}
 
-	void OnTriggerEnter(Collider col)
+    private void OnTriggerEnter(Collider col)
 	{
 		if(col.gameObject.tag.Equals("Player"))
 		{
-			WorldInfo.info.setSpawn(this);
+			WorldInfo.info.SetSpawn(this);
 		}
 	}
 
-	public Vector3 getSpawnPos()
+	public Vector3 GetSpawnPos()
 	{
 		if(respawnPositionIsRelative)
 		{
@@ -40,7 +40,7 @@ public class Respawn : MonoBehaviour
 		}
 	}
 
-	public Quaternion getSpawnRot()
+	public Quaternion GetSpawnRot()
 	{
 		Vector3 respawnRotation = new Vector3(0f, respawnYRotation, 0f);
 		if(respawnRotationIsRelative)

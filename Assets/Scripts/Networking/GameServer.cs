@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class GameServer
+﻿namespace Networking
 {
+    public class GameServer
+    {
 
+    }
 }

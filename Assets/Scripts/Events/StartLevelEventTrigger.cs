@@ -1,18 +1,20 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class StartLevelEventTrigger : EventTrigger
+namespace Events
 {
-	void Start()
-	{
-		WorldInfo.info.addStartMethod(DoTrigger, "start level event trigger");
-	}
+    public class StartLevelEventTrigger : MonoBehaviour
+    {
+        public List<Event> eventComponent;
 
-	void DoTrigger()
-	{
-		foreach(Event e in eventComponent)
-		{
-			e.fire(null);
-		}
-	}
+        private void Start()
+        {
+            WorldInfo.info.AddStartMethod(DoTrigger, "start level event trigger");
+        }
+
+        private void DoTrigger()
+        {
+            eventComponent.ForEach(comp => comp.Fire());
+        }
+    }
 }

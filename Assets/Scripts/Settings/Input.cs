@@ -9,8 +9,8 @@ namespace Settings
     {
         public enum OtherCode
         {
-            MouseWheelUp = -1,
-            MouseWheelDown = -2
+            MOUSE_WHEEL_UP = -1,
+            MOUSE_WHEEL_DOWN = -2
         }
 
         private static Dictionary<int, List<Action>> actions = new Dictionary<int, List<Action>>();
@@ -63,9 +63,9 @@ namespace Settings
                 {
                     switch ((OtherCode)inputCode)
                     {
-                        case OtherCode.MouseWheelUp:
+                        case OtherCode.MOUSE_WHEEL_UP:
                             return UnityEngine.Input.mouseScrollDelta.y > 0f;
-                        case OtherCode.MouseWheelDown:
+                        case OtherCode.MOUSE_WHEEL_DOWN:
                             return UnityEngine.Input.mouseScrollDelta.y < 0f;
                     }
                 }
@@ -96,9 +96,9 @@ namespace Settings
                 {
                     switch ((OtherCode)inputCode)
                     {
-                        case OtherCode.MouseWheelUp:
+                        case OtherCode.MOUSE_WHEEL_UP:
                             return UnityEngine.Input.mouseScrollDelta.y > 0f;
-                        case OtherCode.MouseWheelDown:
+                        case OtherCode.MOUSE_WHEEL_DOWN:
                             return UnityEngine.Input.mouseScrollDelta.y < 0f;
                     }
                 }

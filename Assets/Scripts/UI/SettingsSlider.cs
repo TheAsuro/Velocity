@@ -1,8 +1,9 @@
 ﻿using System;
+using Settings;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Settings
+namespace UI
 {
     public class SettingsSlider : MonoBehaviour
     {
@@ -10,7 +11,7 @@ namespace Settings
         public Text display;
         public string settingName;
 
-        void Awake()
+        private void Awake()
         {
             slider.onValueChanged.AddListener(OnValueChanged);
             SettingsMenu.UpdateSettingSliders += OnLoadSettings;

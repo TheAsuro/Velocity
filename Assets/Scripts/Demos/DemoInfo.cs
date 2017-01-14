@@ -1,31 +1,31 @@
-﻿using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿using System.IO;
+using UnityEngine;
 
-static class DemoInfo
+namespace Demos
 {
-    public static Demo[] GetAllDemos()
+    internal static class DemoInfo
     {
-        string[] names = GetDemoNames();
-        Demo[] ret = new Demo[names.Length];
-
-        for(int i = 0; i < names.Length; i++)
+        public static Demo[] GetAllDemos()
         {
-            ret[i] = new Demo(names[i]);
+            string[] names = GetDemoNames();
+            Demo[] ret = new Demo[names.Length];
+
+            for(int i = 0; i < names.Length; i++)
+            {
+                ret[i] = new Demo(names[i]);
+            }
+
+            return ret;
         }
 
-        return ret;
-    }
+        public static void DeleteDemoFile(string path)
+        {
+            File.Delete(path);
+        }
 
-    public static void DeleteDemoFile(string path)
-    {
-        File.Delete(path);
-    }
-
-    public static string[] GetDemoNames()
-    {
-        return Directory.GetFiles(Application.dataPath, "*.vdem");
+        public static string[] GetDemoNames()
+        {
+            return Directory.GetFiles(Application.dataPath, "*.vdem");
+        }
     }
 }

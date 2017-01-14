@@ -1,17 +1,18 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class PlayerCollisionEventTrigger : EventTrigger
+namespace Events
 {
-	void OnTriggerEnter(Collider col)
-	{
-		if(col.tag.Equals("Player"))
-		{
-			foreach(Event eComp in eventComponent)
-			{
-				fireEvent(eComp, new object[0]);
-			}
-		}
-	}
+    public class PlayerCollisionEventTrigger : MonoBehaviour
+    {
+        public List<Event> eventComponent;
+
+        private void OnTriggerEnter(Collider col)
+        {
+            if(col.tag.Equals("Player"))
+            {
+                eventComponent.ForEach(comp => comp.Fire());
+            }
+        }
+    }
 }

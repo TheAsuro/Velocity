@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public abstract class Event : MonoBehaviour
+namespace Events
 {
-	public virtual void fire(params object[] parameters)
-	{
+    public abstract class Event : MonoBehaviour
+    {
+        public virtual void Fire(params object[] parameters)
+        {
 
-	}
+        }
 
-	public virtual void reset()
-	{
+        public virtual void Reset()
+        {
 		
-	}
+        }
+    }
 }

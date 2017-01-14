@@ -1,42 +1,45 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 
-public class DemoRecord : MonoBehaviour
+namespace Demos
 {
-	private List<DemoTick> tickList;
-	private bool recording = false;
-	private Demo completeDemo;
-	private string playerName;
-	private string levelName;
-	private float startPlayTime;
+    public class DemoRecord : MonoBehaviour
+    {
+        private List<DemoTick> tickList;
+        private bool recording = false;
+        private Demo completeDemo;
+        private string playerName;
+        private string levelName;
+        private float startPlayTime;
 
-	void FixedUpdate()
-	{
-		if(recording)
-		{
-            DemoTick tick = new DemoTick((decimal)(Time.time - startPlayTime), transform.position, transform.FindChild("Camera").rotation);
-			tickList.Add(tick);
-		}
-	}
+        private void FixedUpdate()
+        {
+            if(recording)
+            {
+                DemoTick tick = new DemoTick((decimal)(Time.time - startPlayTime), transform.position, transform.FindChild("Camera").rotation);
+                tickList.Add(tick);
+            }
+        }
 
-	public void startDemo(string pPlayerName)
-	{
-		startPlayTime = Time.time;
-		tickList = new List<DemoTick>();
-		playerName = pPlayerName;
-		levelName = SceneManager.GetActiveScene().name;
-		recording = true;
-	}
+        public void StartDemo(string pPlayerName)
+        {
+            startPlayTime = Time.time;
+            tickList = new List<DemoTick>();
+            playerName = pPlayerName;
+            levelName = SceneManager.GetActiveScene().name;
+            recording = true;
+        }
 
-	public void stopDemo()
-	{
-		recording = false;
-		completeDemo = new Demo(tickList, playerName, levelName);
-	}
+        public void StopDemo()
+        {
+            recording = false;
+            completeDemo = new Demo(tickList, playerName, levelName);
+        }
 
-	public Demo getDemo()
-	{
-		return completeDemo;
-	}
+        public Demo GetDemo()
+        {
+            return completeDemo;
+        }
+    }
 }

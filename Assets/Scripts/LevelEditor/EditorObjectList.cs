@@ -1,88 +1,94 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-[System.Serializable]
-public class EditorObjectList : MonoBehaviour
+namespace LevelEditor
 {
-	private List<GameObject> currentCollectionObjects;
-	private string currentCollectionName = "";
-	private EditorObjectDisplay[] displays;
-	private int pageNumber = 0;
+    [System.Serializable]
+    public class EditorObjectList : MonoBehaviour
+    {
+        private const int PAGE_SIZE = 6;
 
-	void Awake()
-	{
-		displays = new EditorObjectDisplay[6];
+        private List<GameObject> currentCollectionObjects;
+        private string currentCollectionName = "";
+        private EditorObjectDisplay[] displays;
+        private int pageNumber = 0;
 
-		for(int i = 0; i < displays.Length; i++)
-		{
-			displays[i] = transform.Find("Obj" + (i + 1).ToString()).GetComponent<EditorObjectDisplay>();
-		}
-	}
+        private void Awake()
+        {
+            displays = new EditorObjectDisplay[6];
 
-	public void ToggleToCollection(string collectionName)
-	{
-		pageNumber = 0;
+            for(int i = 0; i < displays.Length; i++)
+            {
+                displays[i] = transform.Find("Obj" + (i + 1).ToString()).GetComponent<EditorObjectDisplay>();
+            }
+        }
 
-		if(currentCollectionName == collectionName)
-		{
-			SetVisible(false);
-			return;
-		}
+        public void ToggleToCollection(string collectionName)
+        {
+            pageNumber = 0;
 
-		SetVisible(true);
+            if(currentCollectionName == collectionName)
+            {
+                SetVisible(false);
+                return;
+            }
 
-		currentCollectionName = collectionName;
-		currentCollectionObjects = EditorObjects.OBJ.GetObjectGroupByName(collectionName);
-		UpdateDisplays();
-	}
+            SetVisible(true);
 
-	private void UpdateDisplays()
-	{
-		for(int i = 0; i < displays.Length; i++)
-		{
-			int itemPosition = i + pageNumber * 6;
-			if (itemPosition < currentCollectionObjects.Count)
-			{
-				displays[i].SetObject(currentCollectionObjects[itemPosition]);
-			}
-			else
-			{
-				displays[i].SetText("");
-				displays[i].SetImage(null);
-			}	
-		}
-	}
+            currentCollectionName = collectionName;
+            currentCollectionObjects = EditorObjects.singletonInstance.GetObjectGroupByName(collectionName);
+            UpdateDisplays();
+        }
 
-	public void addPageNumber(int add)
-	{
-		if(currentCollectionObjects != null)
-		{
-			pageNumber += add;
+        private void UpdateDisplays()
+        {
+            for(int i = 0; i < displays.Length; i++)
+            {
+                int itemPosition = i + pageNumber * PAGE_SIZE;
+                if (itemPosition < currentCollectionObjects.Count)
+                {
+                    // TODO get texture
+                    //displays[i].SetObject(currentCollectionObjects[itemPosition], texture);
+                }
+                else
+                {
+                    displays[i].SetText("");
+                    displays[i].SetImage(null);
+                }	
+            }
+        }
 
-			if(pageNumber < 0)
-				pageNumber = 0;
+        public void AddPageNumber(int add)
+        {
+            if(currentCollectionObjects != null)
+            {
+                pageNumber += add;
 
-			if(pageNumber * 6 >= currentCollectionObjects.Count)
-			{
-				pageNumber -= add;
-			}
-			else
-			{
-				UpdateDisplays();
-			}
-		}
-	}
+                if(pageNumber < 0)
+                    pageNumber = 0;
 
-	public void SetVisible(bool visible)
-	{
-		if(visible)
-		{
-			gameObject.SetActive(true);
-		}
-		else
-		{
-			gameObject.SetActive(false);
-			currentCollectionName = "";
-		}
-	}
+                if(pageNumber * 6 >= currentCollectionObjects.Count)
+                {
+                    pageNumber -= add;
+                }
+                else
+                {
+                    UpdateDisplays();
+                }
+            }
+        }
+
+        public void SetVisible(bool visible)
+        {
+            if(visible)
+            {
+                gameObject.SetActive(true);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                currentCollectionName = "";
+            }
+        }
+    }
 }

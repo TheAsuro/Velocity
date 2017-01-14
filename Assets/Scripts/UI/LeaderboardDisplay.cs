@@ -1,73 +1,75 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Demos;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using Api;
 
-public class LeaderboardDisplay : MainSubMenu
+namespace UI
 {
-    public InputField mapNameInput;
-    public List<LeaderboardPanel> entryPanels; //Must always have ELEMENTS_PER_SITE elements!
-
-    private const int ELEMENTS_PER_SITE = 10;
-
-    private string lastLoadedMap = "";
-    private int startIndex = 0;
-
-    void Awake()
+    public class LeaderboardDisplay : MainSubMenu
     {
-        if (mapNameInput)
+        public InputField mapNameInput;
+        public List<LeaderboardPanel> entryPanels; //Must always have ELEMENTS_PER_SITE elements!
+
+        private const int ELEMENTS_PER_SITE = 10;
+
+        private string lastLoadedMap = "";
+        private int startIndex = 0;
+
+        private void Awake()
         {
-            mapNameInput.onEndEdit.AddListener(ChangeMap);
-        }
-    }
-
-    private void ChangeMap(string mapName)
-    {
-        startIndex = 0;
-        LoadMap(mapName);
-    }
-
-    public void LoadMap(string mapName)
-    {
-        Leaderboard.GetEntries(mapName, startIndex, ELEMENTS_PER_SITE, DisplayData);
-        lastLoadedMap = mapName;
-    }
-
-    private void DisplayData(LeaderboardEntry[] entries)
-    {
-        for(int i = 0; i < ELEMENTS_PER_SITE; i++)
-        {
-            if (entries.Length <= i)
+            if (mapNameInput)
             {
-                entryPanels[i].time = "";
-                entryPanels[i].player = "";
-                entryPanels[i].rank = "";
-                entryPanels[i].SetButtonAction(delegate { });
-                entryPanels[i].SetButtonActive(false);
-            }
-            else
-            {
-                entryPanels[i].time = entries[i].time.ToString("0.0000");
-                entryPanels[i].player = entries[i].playerName;
-                entryPanels[i].rank = entries[i].rank.ToString();
-                int id = entries[i].id;
-                entryPanels[i].SetButtonAction(() => Leaderboard.GetDemo(id, ProcessDownloadedDemo));
-                entryPanels[i].SetButtonActive(true);
+                mapNameInput.onEndEdit.AddListener(ChangeMap);
             }
         }
-    }
 
-    private void ProcessDownloadedDemo(Demo demo)
-    {
-        print("Player: " + demo.getPlayerName());
-        print("Level: " + demo.getLevelName());
-    }
-
-    public void AddIndex(int add)
-    {
-        startIndex += add;
-        if (startIndex < 0)
+        private void ChangeMap(string mapName)
+        {
             startIndex = 0;
-        LoadMap(lastLoadedMap);
+            LoadMap(mapName);
+        }
+
+        public void LoadMap(string mapName)
+        {
+            Leaderboard.GetEntries(mapName, startIndex, ELEMENTS_PER_SITE, DisplayData);
+            lastLoadedMap = mapName;
+        }
+
+        private void DisplayData(LeaderboardEntry[] entries)
+        {
+            for(int i = 0; i < ELEMENTS_PER_SITE; i++)
+            {
+                if (entries.Length <= i)
+                {
+                    entryPanels[i].Time = "";
+                    entryPanels[i].Player = "";
+                    entryPanels[i].Rank = "";
+                    entryPanels[i].SetButtonAction(delegate { });
+                    entryPanels[i].SetButtonActive(false);
+                }
+                else
+                {
+                    entryPanels[i].Time = entries[i].time.ToString("0.0000");
+                    entryPanels[i].Player = entries[i].playerName;
+                    entryPanels[i].Rank = entries[i].rank.ToString();
+                    int id = entries[i].id;
+                    entryPanels[i].SetButtonAction(() => Leaderboard.GetDemo(id, ProcessDownloadedDemo));
+                    entryPanels[i].SetButtonActive(true);
+                }
+            }
+        }
+
+        private void ProcessDownloadedDemo(Demo demo)
+        {
+            print("Player: " + demo.GetPlayerName());
+            print("Level: " + demo.GetLevelName());
+        }
+
+        public void AddIndex(int add)
+        {
+            startIndex += add;
+            if (startIndex < 0)
+                startIndex = 0;
+            LoadMap(lastLoadedMap);
+        }
     }
 }

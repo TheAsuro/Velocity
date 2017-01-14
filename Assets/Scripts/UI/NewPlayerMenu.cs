@@ -1,75 +1,78 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
 using Api;
-using System;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class NewPlayerMenu : MainSubMenu
+namespace UI
 {
-    public EventHandler<EventArgs<string>> OnCreatedNewPlayer;
-
-    private string currentName;
-
-    [SerializeField]
-    private InputField playerNameField;
-
-    [SerializeField]
-    private InputField playerPassField;
-
-    [SerializeField]
-    private InputField playerMailField;
-
-    [SerializeField]
-    private Text resultText;
-
-    [SerializeField]
-    private Button okButton;
-
-    void Awake()
+    public class NewPlayerMenu : MainSubMenu
     {
-        okButton.onClick.AddListener(OnOkClick);
-    }
+        public EventHandler<EventArgs<string>> onCreatedNewPlayer;
 
-    private void OnOkClick()
-    {
-        currentName = playerNameField.text;
-        SaveData sd = new SaveData(currentName);
-        // TODO remove events when done
-        sd.Account.OnAccountRequestFinished += (s, e) => FinishedAccountRequest(sd, e);
-        sd.Account.OnLoginFinished += (s, e) => FinishedLoginRequest(sd, e);
-        sd.Account.StartCreate(playerPassField.text, playerMailField.text);
+        private string currentName;
 
-        SetInteractive(false);
-    }
+        [SerializeField]
+        private InputField playerNameField;
 
-    private void SetInteractive(bool value)
-    {
-        playerNameField.interactable = value;
-        playerPassField.interactable = value;
-        playerMailField.interactable = value;
-        okButton.interactable = value;
-    }
+        [SerializeField]
+        private InputField playerPassField;
 
-    private void FinishedAccountRequest(SaveData sd, EventArgs<string> e)
-    {
-        if (e.Error)
+        [SerializeField]
+        private InputField playerMailField;
+
+        [SerializeField]
+        private Text resultText;
+
+        [SerializeField]
+        private Button okButton;
+
+        private void Awake()
         {
-            resultText.text = e.ErrorText;
+            okButton.onClick.AddListener(OnOkClick);
+        }
+
+        private void OnOkClick()
+        {
+            currentName = playerNameField.text;
+            SaveData sd = new SaveData(currentName);
+            // TODO remove events when done
+            sd.Account.OnAccountRequestFinished += (s, e) => FinishedAccountRequest(sd, e);
+            sd.Account.OnLoginFinished += (s, e) => FinishedLoginRequest(sd, e);
+            sd.Account.StartCreate(playerPassField.text, playerMailField.text);
+
+            SetInteractive(false);
+        }
+
+        private void SetInteractive(bool value)
+        {
+            playerNameField.interactable = value;
+            playerPassField.interactable = value;
+            playerMailField.interactable = value;
+            okButton.interactable = value;
+        }
+
+        private void FinishedAccountRequest(SaveData sd, EventArgs<string> e)
+        {
+            if (e.Error)
+            {
+                resultText.text = e.ErrorText;
+                SetInteractive(true);
+            }
+        }
+
+        private void FinishedLoginRequest(SaveData sd, EventArgs<string> e)
+        {
             SetInteractive(true);
-        }
-    }
 
-    private void FinishedLoginRequest(SaveData sd, EventArgs<string> e)
-    {
-        SetInteractive(true);
-
-        if (!e.Error)
-        {
-            if (OnCreatedNewPlayer != null)
-                OnCreatedNewPlayer(this, new EventArgs<string>(currentName));
-        }
-        else
-        {
-            resultText.text = e.ErrorText;
+            if (!e.Error)
+            {
+                if (onCreatedNewPlayer != null)
+                    onCreatedNewPlayer(this, new EventArgs<string>(currentName));
+            }
+            else
+            {
+                resultText.text = e.ErrorText;
+            }
         }
     }
 }

@@ -10,12 +10,12 @@ public class InfoText : MonoBehaviour
 	private bool display = false;
 	private GUISkin skin;
 
-	void Awake()
+    private void Awake()
 	{
 		skin = GameInfo.info.skin;
 	}
 
-	void OnTriggerEnter(Collider col)
+    private void OnTriggerEnter(Collider col)
 	{
 		if(col.gameObject.tag.Equals("Player"))
 		{
@@ -23,7 +23,7 @@ public class InfoText : MonoBehaviour
 		}
 	}
 
-	void OnTriggerExit(Collider col)
+    private void OnTriggerExit(Collider col)
 	{
 		if(col.gameObject.tag.Equals("Player"))
 		{
@@ -31,7 +31,7 @@ public class InfoText : MonoBehaviour
 		}
 	}
 
-	void OnGUI()
+    private void OnGUI()
 	{
 		if(display && (Settings.Game.ShowHelp || ignoreDisabledHelp))
 		{

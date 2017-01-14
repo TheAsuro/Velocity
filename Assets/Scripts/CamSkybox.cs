@@ -11,7 +11,7 @@ using System.Collections;
 
 public class CamSkybox : MonoBehaviour
 {
-    void Awake()
+    private void Awake()
     {
         if (!gameObject.GetComponent<Skybox>())
         {

@@ -3,6 +3,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+using Demos;
+using UI;
+using Console = UI.Console;
 
 public class GameInfo : MonoBehaviour
 {
@@ -14,7 +17,7 @@ public class GameInfo : MonoBehaviour
 	
 	//Gamestates
 	private bool gamePaused = false;
-	private MenuState menuState = MenuState.closed;
+	private MenuState menuState = MenuState.CLOSED;
 	private bool viewLocked = false;
 	public bool menuLocked = false;
 
@@ -24,7 +27,7 @@ public class GameInfo : MonoBehaviour
 	private GameObject myLeaderboardObj;
 	private string selectedMap;
 	private string selectedAuthor = "?";
-    private GameInfoFX fx;
+    private GameInfoFx fx;
 
 	//Sound
 	public List<string> soundNames;
@@ -33,11 +36,11 @@ public class GameInfo : MonoBehaviour
 	//Stuff
 	private Demo currentDemo;
 	private decimal lastTime = -1;
-    public string lastTimeString
+    public string LastTimeString
     { get { return lastTime.ToString("0.0000"); } }
 	private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
 	private bool runValid = false;
-    public LevelLoadMode loadMode = LevelLoadMode.play;
+    public LevelLoadMode loadMode = LevelLoadMode.PLAY;
 	
 	//Debug window (top-left corner, toggle with f8)
 	public bool logToConsole = true;
@@ -54,8 +57,8 @@ public class GameInfo : MonoBehaviour
     //Editor
     public string editorLevelName = "";
 
-	//References
-	private PlayerInfo myPlayer;
+    //References
+    private PlayerBehaviour myPlayer;
 	private DemoPlay myDemoPlayer;
 	private Console myConsole;
 	private GameObject myCanvas;
@@ -81,29 +84,29 @@ public class GameInfo : MonoBehaviour
         }
     }
 
-    private bool lastRunWasPB;
-    public bool LastRunWasPB { get { return lastRunWasPB; } }
+    private bool lastRunWasPb;
+    public bool LastRunWasPb { get { return lastRunWasPb; } }
 
     public enum MenuState
 	{
-		closed,
-		escmenu,
-		inactive,
-		demo,
-		leaderboard,
-		endlevel,
-		othermenu,
-		editor,
-		editorplay
+		CLOSED,
+		ESCMENU,
+		INACTIVE,
+		DEMO,
+		LEADERBOARD,
+		ENDLEVEL,
+		OTHERMENU,
+		EDITOR,
+		EDITORPLAY
 	}
 
     public enum LevelLoadMode
     {
-        play,
-        demo
+        PLAY,
+        DEMO
     }
-	
-	void Awake()
+
+    private void Awake()
 	{
 		if(GameInfo.info == null)
 		{
@@ -124,12 +127,12 @@ public class GameInfo : MonoBehaviour
 		myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
 		myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<Text>();
 		myLeaderboardObj = endLevel.transform.Find("Leaderboards").gameObject;
-		SetMenuState(MenuState.closed);
+		SetMenuState(MenuState.CLOSED);
 
-        fx = new GameInfoFX(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
+        fx = new GameInfoFx(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
 	}
 
-	void Update()
+    private void Update()
 	{
         Settings.Input.ExecuteBoundActions();
         Api.HttpApi.ConsumeCallbacks();
@@ -142,14 +145,9 @@ public class GameInfo : MonoBehaviour
 		
 		if(Input.GetButtonDown("Menu"))
 		{
-			toggleEscMenu();
+			ToggleEscMenu();
 		}
-
-        if (Input.GetButtonDown("HideUI") && myPlayer != null)
-        {
-            myPlayer.CanvasEnabled = !myPlayer.CanvasEnabled;
-        }
-
+        
 		//Update fps every 0.1 seconds
 		if(lastFpsRecordTime + 0.1f < Time.time || lastFpsRecordTime < 0f)
 		{
@@ -159,7 +157,7 @@ public class GameInfo : MonoBehaviour
 		myDebugWindowText.text = lastFps.ToString() + " FPS\n";
 
 		//Draw debug window lines
-		if(getPlayerInfo() != null)
+		if(GetPlayerInfo() != null)
 		{
 			string str = "";
 		
@@ -180,26 +178,26 @@ public class GameInfo : MonoBehaviour
 	}
 
 	//Prepare for new level
-	void OnLevelWasLoaded(int level)
+    private void OnLevelWasLoaded(int level)
 	{
         Settings.AllSettings.LoadSettings();
 
-        removeAllWindowLines();
+        RemoveAllWindowLines();
 
         menuLocked = false;
         WorldInfo wInfo = WorldInfo.info;
 
         //Initialize based on loadMode
-        if(loadMode == LevelLoadMode.play)
+        if(loadMode == LevelLoadMode.PLAY)
         {
             if (wInfo != null)
                 SetMenuState(wInfo.beginState);
             else
-                SetMenuState(MenuState.inactive);
+                SetMenuState(MenuState.INACTIVE);
         }
-        else if(loadMode == LevelLoadMode.demo)
+        else if(loadMode == LevelLoadMode.DEMO)
         {
-            SetMenuState(MenuState.demo);
+            SetMenuState(MenuState.DEMO);
             PlayDemo(currentDemo);
         }
 
@@ -207,64 +205,57 @@ public class GameInfo : MonoBehaviour
 	}
 
 	//Load a level
-	public void loadLevel(string name)
+	public void LoadLevel(string name)
 	{
         //Server stuff might be here later
         fx.StartFadeToColor(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, delegate { SceneManager.LoadScene(name); });
 	}
 
 	//Creates a new local player (the one that is controlled by the current user)
-	public void spawnNewPlayer(Respawn spawnpoint, bool killOldPlayer = true, bool startInEditorMode = false)
+	public void SpawnNewPlayer(Respawn spawnpoint, bool killOldPlayer = true, bool startInEditorMode = false)
 	{
-		if(killOldPlayer || getPlayerInfo() == null)
+		if(killOldPlayer || GetPlayerInfo() == null)
 		{
 			//Remove old player
-			setPlayerInfo(null);
+			SetPlayerInfo(null);
 
 			//Instantiate a new player at the spawnpoint's location
 			GameObject newPlayer = (GameObject)GameObject.Instantiate(playerTemplate, Vector3.zero, Quaternion.identity);
-			setPlayerInfo(newPlayer.GetComponent<PlayerInfo>());
+			SetPlayerInfo(newPlayer.GetComponent<PlayerBehaviour>());
 
 			//Set up player
-			myPlayer.resetPosition(spawnpoint.getSpawnPos(), spawnpoint.getSpawnRot());
-			myPlayer.setWorldBackgroundColor(WorldInfo.info.worldBackgroundColor);
+			myPlayer.ResetPosition(spawnpoint.GetSpawnPos(), spawnpoint.GetSpawnRot());
+			myPlayer.SetWorldBackgroundColor(WorldInfo.info.worldBackgroundColor);
 		}
 
-		myPlayer.editorMode = startInEditorMode;
+		myPlayer.EditorMode = startInEditorMode;
 	}
 
 	//Player hit the goal
-	public void runFinished(TimeSpan time)
+	public void RunFinished(TimeSpan time)
 	{
-		stopDemo();
-		cleanUpPlayer();
+		StopDemo();
+		CleanUpPlayer();
         lastTime = time.Ticks / (decimal)10000000;
 
-        lastRunWasPB = CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
+        lastRunWasPb = CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
 
-        currentDemo = myPlayer.getDemo();
-        sendLeaderboardEntry(lastTime, SceneManager.GetActiveScene().name, currentDemo);
+        currentDemo = myPlayer.GetDemo();
+        SendLeaderboardEntry(lastTime, SceneManager.GetActiveScene().name, currentDemo);
 	}
 
 	//Player hit the exit trigger
-	public void levelFinished()
+	public void LevelFinished()
 	{
-        //If we are in editor, stop the test run
-        if (myPlayer.editorMode)
-        {
-            EditorInfo.info.EndTest();
-            return;
-        }
-
-		SetMenuState(MenuState.endlevel);
+        SetMenuState(MenuState.ENDLEVEL);
 
         PlayRaceDemo();
 
-		setPlayerInfo(null);
+		SetPlayerInfo(null);
 	}
 
 	//Plays a sound at the player position
-	public void playSound(string name)
+	public void PlaySound(string name)
 	{
 		if(myPlayer != null)
 		{
@@ -272,42 +263,42 @@ public class GameInfo : MonoBehaviour
 			{
 				if(soundNames[i] == name)
 				{
-					myPlayer.playSound(soundClips[i]);
+					myPlayer.PlaySound(soundClips[i]);
 				}
 			}
 		}
 	}
 
 	//Reset everything in the world to its initial state
-	public void reset()
+	public void Reset()
 	{
-		stopDemo();
-		cleanUpPlayer();
-		WorldInfo.info.reset();
-        unlockMenu();
-		SetMenuState(MenuState.closed);
-		startDemo();
+		StopDemo();
+		CleanUpPlayer();
+		WorldInfo.info.ResetWorld();
+        UnlockMenu();
+		SetMenuState(MenuState.CLOSED);
+		StartDemo();
 	}
 
 	//Removes all leftover things that could reference the player
-	public void cleanUpPlayer()
+	public void CleanUpPlayer()
 	{
-		removeAllWindowLines();
+		RemoveAllWindowLines();
         currentDemo = null;
 	}
 
 	//Leave the game
-	public void quit()
+	public void Quit()
 	{
 		Application.Quit();
 	}
 
-	public bool isConsoleOpen()
+	public bool IsConsoleOpen()
 	{
-		return myConsole.isVisible();
+		return myConsole.IsVisible();
 	}
 
-	public Rect getConsoleTitleRect()
+	public Rect GetConsoleTitleRect()
 	{
 		Canvas c = myCanvas.GetComponent<Canvas>();
 		RectTransform titleTransform = myConsoleWindow.transform.Find("Title").gameObject.GetComponent<RectTransform>();
@@ -324,31 +315,31 @@ public class GameInfo : MonoBehaviour
 		switch(state)
 		{
 			case "closed":
-				SetMenuState(MenuState.closed);
+				SetMenuState(MenuState.CLOSED);
 				break;
 			case "escmenu":
-				SetMenuState(MenuState.escmenu);
+				SetMenuState(MenuState.ESCMENU);
 				break;
 			case "inactive":
-				SetMenuState(MenuState.inactive);
+				SetMenuState(MenuState.INACTIVE);
 				break;
 			case "demo":
-				SetMenuState(MenuState.demo);
+				SetMenuState(MenuState.DEMO);
 				break;
 			case "leaderboard":
-				SetMenuState(MenuState.leaderboard);
+				SetMenuState(MenuState.LEADERBOARD);
 				break;
 			case "endlevel":
-				SetMenuState(MenuState.endlevel);
+				SetMenuState(MenuState.ENDLEVEL);
 				break;
 			case "othermenu":
-				SetMenuState(MenuState.othermenu);
+				SetMenuState(MenuState.OTHERMENU);
 				break;
 			case "editor":
-				SetMenuState(MenuState.editor);
+				SetMenuState(MenuState.EDITOR);
 				break;
 			case "editorplay":
-				SetMenuState(MenuState.editorplay);
+				SetMenuState(MenuState.EDITORPLAY);
 				break;
 		}
 	}
@@ -359,7 +350,7 @@ public class GameInfo : MonoBehaviour
         if(!menuLocked)
 		{
 			//Reset all states
-			setGamePaused(true);
+			SetGamePaused(true);
 			escMenu.SetActive(false);
 			endLevel.SetActive(false);
 			myLeaderboardObj.SetActive(false);
@@ -367,42 +358,42 @@ public class GameInfo : MonoBehaviour
 
 			switch(state)
 			{
-				case MenuState.closed:
-					setGamePaused(false);
+				case MenuState.CLOSED:
+					SetGamePaused(false);
                     SetCursorLock(true);
 					break;
-				case MenuState.escmenu:
+				case MenuState.ESCMENU:
 					escMenu.SetActive(true);
 					break;
-				case MenuState.demo:
-					setGamePaused(false);
-					setMouseView(false);
+				case MenuState.DEMO:
+					SetGamePaused(false);
+					SetMouseView(false);
                     menuLocked = true;
                     SetCursorLock(true);
 					break;
-				case MenuState.leaderboard:
-					setMouseView(false);
+				case MenuState.LEADERBOARD:
+					SetMouseView(false);
 					endLevel.SetActive(true);
 					myLeaderboardObj.SetActive(true);
                     myLeaderboardObj.GetComponent<LeaderboardDisplay>().LoadMap(SceneManager.GetActiveScene().name);
 					menuLocked = true;
 					break;
-				case MenuState.endlevel:
-					setGamePaused(false);
-					setMouseView(false);
+				case MenuState.ENDLEVEL:
+					SetGamePaused(false);
+					SetMouseView(false);
 					endLevel.SetActive(true);
 					menuLocked = true;
 					break;
-				case MenuState.othermenu:
+				case MenuState.OTHERMENU:
 					menuLocked = true;
 					break;
-				case MenuState.editor:
+				case MenuState.EDITOR:
 					menuLocked = true;
-					setGamePaused(false);
+					SetGamePaused(false);
 					break;
-				case MenuState.editorplay:
+				case MenuState.EDITORPLAY:
 					menuLocked = true;
-					setGamePaused(false);
+					SetGamePaused(false);
                     SetCursorLock(true);
 					break;
 			}
@@ -411,97 +402,97 @@ public class GameInfo : MonoBehaviour
 		}
 	}
 
-	private void toggleEscMenu()
+	private void ToggleEscMenu()
 	{
-		if(menuState == MenuState.closed)
+		if(menuState == MenuState.CLOSED)
 		{
-			SetMenuState(MenuState.escmenu);
+			SetMenuState(MenuState.ESCMENU);
 		}
 		else
 		{
-			SetMenuState(MenuState.closed);
+			SetMenuState(MenuState.CLOSED);
 		}
 	}
 
-	public void toggleLeaderboard()
+	public void ToggleLeaderboard()
 	{
 		if(myLeaderboardObj.activeSelf)
 		{
-			SetMenuState(MenuState.endlevel);
+			SetMenuState(MenuState.ENDLEVEL);
 			return;
 		}
-		SetMenuState(MenuState.leaderboard);
+		SetMenuState(MenuState.LEADERBOARD);
 	}
     
-    private void connected()
+    private void Connected()
     {
         print("connected");
     }
 
-	public MenuState getMenuState()
+	public MenuState GetMenuState()
 	{
 		return menuState;
 	}
 	
 	//Draws some info in the debug window, add a prefix and a function that returns a string
-	public void addWindowLine(string prefix, InfoString stringFunction)
+	public void AddWindowLine(string prefix, InfoString stringFunction)
 	{
 		linePrefixes.Add(prefix);
 		windowLines.Add(stringFunction);
 	}
 
 	//Remove everything from the debug window
-	private void removeAllWindowLines()
+	private void RemoveAllWindowLines()
 	{
 		linePrefixes.Clear();
 		windowLines.Clear();
 	}
 	
-	private void setGamePaused(bool value)
+	private void SetGamePaused(bool value)
 	{
 		gamePaused = value;
 	
 		if(value)
 		{
-			setMouseView(false);
+			SetMouseView(false);
 			Time.timeScale = 0f;
-            if (getPlayerInfo() != null)
-                getPlayerInfo().setPause(true);
+            if (GetPlayerInfo() != null)
+                GetPlayerInfo().SetPause(true);
 		}
 		else
 		{
-			setMouseView(true);
+			SetMouseView(true);
 			Time.timeScale = 1f;
-            if(getPlayerInfo() != null)
-                getPlayerInfo().setPause(false);
+            if(GetPlayerInfo() != null)
+                GetPlayerInfo().SetPause(false);
 		}
 	}
 
-	public void setConsole(Console pConsole)
+	public void SetConsole(Console pConsole)
 	{
 		myConsole = pConsole;
 	}
 
-	public Console getConsole()
+	public Console GetConsole()
 	{
 		return myConsole;
 	}
 
 	//Write a string to the console
-	public void writeToConsole(string text)
+	public void WriteToConsole(string text)
 	{
 		if(myConsole)
-			myConsole.writeToConsole(text);
+			myConsole.WriteToConsole(text);
 	}
 	
-	public bool getGamePaused()
+	public bool GetGamePaused()
 	{
 		return gamePaused;
 	}
 
 	//Sets the reference to the player
 	//If info is null, current player will be removed
-	public void setPlayerInfo(PlayerInfo info)
+	public void SetPlayerInfo(PlayerBehaviour info)
 	{
 		if(info == null)
 		{
@@ -515,24 +506,24 @@ public class GameInfo : MonoBehaviour
 		myPlayer = info;
 	}
 
-	public PlayerInfo getPlayerInfo()
+	public PlayerBehaviour GetPlayerInfo()
 	{
 		return myPlayer;
 	}
 
-	public void startDemo()
+	public void StartDemo()
 	{
-		resetRun();
+		ResetRun();
 
 		//check if there is a player and we are not in editor
-		if(myPlayer != null && getMenuState() != MenuState.editor && getMenuState() != MenuState.editorplay)
-			myPlayer.startDemo(currentSave.Account.Name);
+		if(myPlayer != null && GetMenuState() != MenuState.EDITOR && GetMenuState() != MenuState.EDITORPLAY)
+			myPlayer.StartDemo(currentSave.Account.Name);
 	}
 
-	public void stopDemo()
+	public void StopDemo()
 	{
 		if(myPlayer != null)
-			myPlayer.stopDemo();
+			myPlayer.StopDemo();
 	}
 
 	//Plays a demo and returns to main menu
@@ -541,89 +532,89 @@ public class GameInfo : MonoBehaviour
         currentDemo = demo;
 
         //Reload level if in wrong mode/level (this function will be called again)
-        if(currentDemo.getLevelName() != SceneManager.GetActiveScene().name || loadMode != LevelLoadMode.demo)
+        if(currentDemo.GetLevelName() != SceneManager.GetActiveScene().name || loadMode != LevelLoadMode.DEMO)
         {
-            loadMode = LevelLoadMode.demo;
-            loadLevel(currentDemo.getLevelName());
+            loadMode = LevelLoadMode.DEMO;
+            LoadLevel(currentDemo.GetLevelName());
             return;
         }
 
-        myDemoPlayer.playDemo(currentDemo, delegate { loadMode = LevelLoadMode.play; loadLevel("MainMenu"); });
+        myDemoPlayer.PlayDemo(currentDemo, delegate { loadMode = LevelLoadMode.PLAY; LoadLevel("MainMenu"); });
 	}
 
     //Plays the current demo after a race is finished
 	private void PlayRaceDemo()
 	{
         if(myDemoPlayer != null && currentDemo != null)
-            myDemoPlayer.playDemo(currentDemo, delegate { menuLocked = false; SetMenuState(MenuState.endlevel); }, true);
+            myDemoPlayer.PlayDemo(currentDemo, delegate { menuLocked = false; SetMenuState(MenuState.ENDLEVEL); }, true);
 	}
 
-	public decimal getLastTime()
+	public decimal GetLastTime()
 	{
 		return lastTime;
 	}
 
 	//Save demo to ".vdem" file, does not work in web player
-	public void saveLastDemo()
+	public void SaveLastDemo()
 	{
         if (currentDemo != null)
-		    currentDemo.saveToFile(Application.dataPath);
+		    currentDemo.SaveToFile(Application.dataPath);
 	}
 
 	//Can the player move the camera with the mouse
 	//Can be blocked by lockMouseView
-	public void setMouseView(bool value)
+	public void SetMouseView(bool value)
 	{
 		if(!viewLocked)
 		{
 			if(myPlayer != null)
 			{
-				myPlayer.setMouseView(value);
+				myPlayer.SetMouseView(value);
 			}
 		}
 	}
 
 	//MouseLook is locked to given value, even if menu states change
 	//Overrides old locked value
-	public void lockMouseView(bool value)
+	public void LockMouseView(bool value)
 	{
 		if(myPlayer != null)
 		{
-			myPlayer.setMouseView(value);
+			myPlayer.SetMouseView(value);
 		}
 		viewLocked = true;
 	}
 
 	//MouseLook can be changed by menu again
-	public void unlockMouseView()
+	public void UnlockMouseView()
 	{
 		viewLocked = false;
 	}
 
 	//MenuState can not be changed
-	public void lockMenu()
+	public void LockMenu()
 	{
 		menuLocked = true;
 	}
 
-	public void unlockMenu()
+	public void UnlockMenu()
 	{
 		menuLocked = false;
 	}
 	
 	//Map selection in main menu
-	public void setSelectedMap(string map, string author = "?")
+	public void SetSelectedMap(string map, string author = "?")
 	{
 		selectedMap = map;
 		selectedAuthor = author;
 	}
 
-	public string getSelectedMap()
+	public string GetSelectedMap()
 	{
 		return selectedMap;
 	}
 
-	public string getSelectedAuthor()
+	public string GetSelectedAuthor()
 	{
 		return selectedAuthor;
 	}
@@ -631,9 +622,9 @@ public class GameInfo : MonoBehaviour
 	//Send a leaderboard entry to leaderboard server, with a automatically generated hash.
 	//This includes a secret key that will be included in the final game (and not uploaded to github),
 	//so nobody can send fake entries.
-	private void sendLeaderboardEntry(decimal time, string map, Demo demo)
+	private void SendLeaderboardEntry(decimal time, string map, Demo demo)
 	{
-		invalidRunCheck();
+		InvalidRunCheck();
         if (!runValid)
         {
             print("Invalid run!");
@@ -650,7 +641,7 @@ public class GameInfo : MonoBehaviour
             return;
         }
 
-        Api.Leaderboard.SendEntry(currentSave.Account.Name, time, map, currentSave.Account.Token, demo);
+        Leaderboard.SendEntry(currentSave.Account.Name, time, map, currentSave.Account.Token, demo);
 	}
 
 	//Create a md5 hash from a string
@@ -675,14 +666,14 @@ public class GameInfo : MonoBehaviour
 	}
 
 	//Setting gravity directly, this is the only game variable that is not set in playerinfo
-	public void setGravity(float value)
+	public void SetGravity(float value)
 	{
 		Physics.gravity = new Vector3(0f, value, 0f);
-		invalidateRun("Changed gravity");
+		InvalidateRun("Changed gravity");
 	}
 
 	//Run will not be uploaded to leaderboards
-	public void invalidateRun(string message = "undefined")
+	public void InvalidateRun(string message = "undefined")
 	{
 		runValid = false;
         print("Run was invalidated. Reason: " + message);
@@ -693,22 +684,22 @@ public class GameInfo : MonoBehaviour
         return runValid;
     }
 
-	private void invalidRunCheck()
+	private void InvalidRunCheck()
 	{
-		if(getPlayerInfo().getCheats() || Physics.gravity != defGravity)
-			invalidateRun("Cheat check returned positive");
+		if(GetPlayerInfo().GetCheats() || Physics.gravity != defGravity)
+			InvalidateRun("Cheat check returned positive");
 	}
 
-	private void resetRun()
+	private void ResetRun()
 	{
-		if(getPlayerInfo().getCheats())
+		if(GetPlayerInfo().GetCheats())
 		{
 			runValid = false;
 		}
 		else
 		{
 			runValid = true;
-			invalidRunCheck();
+			InvalidRunCheck();
 		}
 	}
 
@@ -722,7 +713,7 @@ public class GameInfo : MonoBehaviour
     }
 }
 
-class GameInfoFX
+internal class GameInfoFx
 {
     public delegate void Callback();
     private delegate void EffectUpdate(Effect effect);
@@ -731,7 +722,7 @@ class GameInfoFX
 
     private List<Effect> activeEffects;
 
-    struct Effect
+    private struct Effect
     {
         public float startTime;
         public float duration;
@@ -741,7 +732,7 @@ class GameInfoFX
         public Color endColor;
     }
 
-    public GameInfoFX(Image image)
+    public GameInfoFx(Image image)
     {
         activeEffects = new List<Effect>();
 
