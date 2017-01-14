@@ -1596,6 +1596,7 @@ GameObject:
   - component: {fileID: 1453612872}
   - component: {fileID: 169137253}
   - component: {fileID: 169137252}
+  - component: {fileID: 169137250}
   m_Layer: 0
   m_Name: GameInfo
   m_TagString: Untagged
@@ -1603,6 +1604,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &169137250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 169137249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7fe9bbe7e3e37a4a8a23e36e04bc6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuProperties: {fileID: 0}
+  fileSelection: {fileID: 2111640083}
 --- !u!114 &169137252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1633,7 +1647,6 @@ MonoBehaviour:
   playerTemplate: {fileID: 100002, guid: 5cb025783319fe14b9119fbbe02c92bb, type: 2}
   skin: {fileID: 11400000, guid: a2187eef99ad36e46b23c442d417131e, type: 2}
   secretKey: 
-  menuProperties: {fileID: 11400000, guid: d415f0442bdfb6e4cbf683d33848010d, type: 2}
   soundNames:
   - jump
   soundClips:
@@ -13641,6 +13654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7fe9bbe7e3e37a4a8a23e36e04bc6e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuProperties: {fileID: 0}
   fileSelection: {fileID: 2111640083}
 --- !u!224 &1453612877
 RectTransform:
