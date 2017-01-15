@@ -20,25 +20,20 @@ public class GameInfo : MonoBehaviour
 
     //Gamestates
     private bool gamePaused = false;
-
     private bool viewLocked = false;
 
     //GUI
     private string selectedMap;
-
     private string selectedAuthor = "?";
     private GameInfoFx fx;
 
     //Sound
     public List<string> soundNames;
-
     public List<AudioClip> soundClips;
 
     //Stuff
     private Demo currentDemo;
-
     private decimal lastTime = -1;
-
     public string LastTimeString
     {
         get { return lastTime.ToString("0.0000"); }
@@ -50,7 +45,6 @@ public class GameInfo : MonoBehaviour
 
     //Debug window (top-left corner, toggle with f8)
     public bool logToConsole = true;
-
     private float lastFps = 0f;
     private float lastFpsRecordTime = -1f;
     private List<string> linePrefixes = new List<string>();
@@ -58,7 +52,6 @@ public class GameInfo : MonoBehaviour
 
     //GUI settings
     public float circleSpeed1 = 10f;
-
     public float circleSpeed2 = 20f;
     public float circleSpeed3 = 30f;
 
@@ -67,7 +60,6 @@ public class GameInfo : MonoBehaviour
 
     //References
     private PlayerBehaviour myPlayer;
-
     private DemoPlay myDemoPlayer;
     private ConsoleWindow myConsoleWindow;
     private GameObject myCanvas;
@@ -77,7 +69,6 @@ public class GameInfo : MonoBehaviour
 
     //Load infos like player name, pb's, etc.
     private SaveData currentSave;
-
     public SaveData CurrentSave
     {
         get { return currentSave; }
@@ -124,7 +115,6 @@ public class GameInfo : MonoBehaviour
     {
         Settings.Input.ExecuteBoundActions();
         HttpApi.ConsumeCallbacks();
-
 
 
         //TODO put into binds
@@ -174,7 +164,7 @@ public class GameInfo : MonoBehaviour
             PlayDemo(currentDemo);
         }
 
-        fx.StartFadeToColor(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f, delegate { });
+        fx.StartFadeToColor(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
     }
 
     //Load a level
@@ -311,11 +301,6 @@ public class GameInfo : MonoBehaviour
                 SetCursorLock(true);
                 break;
         }*/
-    }
-
-    private void Connected()
-    {
-        print("connected");
     }
 
     //Draws some info in the debug window, add a prefix and a function that returns a string
@@ -492,7 +477,7 @@ public class GameInfo : MonoBehaviour
         }
         if (currentSave == null)
         {
-            print("Invalid save.");
+            print("Invalid save!");
             return;
         }
         if (!currentSave.Account.IsLoggedIn)
@@ -612,7 +597,7 @@ internal class GameInfoFx
         Settings.Input.ExecuteBoundActions();
     }
 
-    public void StartFadeToColor(Color start, Color end, float duration, Callback callback)
+    public void StartFadeToColor(Color start, Color end, float duration, Callback callback = null)
     {
         Effect e = new Effect
         {
@@ -635,7 +620,8 @@ internal class GameInfoFx
         //Check if we are done
         if (progress >= 1f)
         {
-            effect.callback();
+            if (effect.callback != null)
+                effect.callback();
             activeEffects.Remove(effect);
         }
     }

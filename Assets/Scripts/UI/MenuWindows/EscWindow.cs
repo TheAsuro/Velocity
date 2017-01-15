@@ -10,6 +10,12 @@ namespace UI.MenuWindows
             ((RectTransform)transform).anchoredPosition = Vector2.zero;
         }
 
+        private void Update()
+        {
+            if (Input.GetButtonDown("Menu"))
+                GameMenu.SingletonInstance.CloseWindow();
+        }
+
         public void Activate()
         {
             gameObject.SetActive(true);

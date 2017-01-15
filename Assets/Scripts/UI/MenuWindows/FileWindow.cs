@@ -5,9 +5,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MenuWindows
 {
-    public class FileSelection : MonoBehaviour
+    public class FileWindow : MonoBehaviour, MenuWindow
     {
         public enum Mode
         {
@@ -16,7 +16,10 @@ namespace UI
             OPEN_DIR
         }
 
-        public GameObject filePrefab;
+        [SerializeField]
+        private GameObject filePrefab;
+
+        public Action<string> OkAction { get; set; }
 
         private List<FileInfo> fileDisplays;
         private InputField pathField;
@@ -25,8 +28,6 @@ namespace UI
 
         private RectTransform rt;
         private float startHeight;
-
-        private Action<string> okAction;
 
         private string SelectedPath
         {
@@ -42,16 +43,6 @@ namespace UI
             itemList = filePanel.transform.Find("Items").gameObject;
             rt = (RectTransform)itemList.transform;
             startHeight = rt.rect.height;
-
-            DisplayDriveList();
-        }
-
-        public void Show(Action<string> okAction, string startPath = "")
-        {
-            this.okAction = okAction;
-            gameObject.SetActive(true);
-            if (startPath != "")
-                UpdatePath(startPath);
         }
 
         public void UpdatePath(string newPath)
@@ -85,6 +76,22 @@ namespace UI
             }
         }
 
+        public void Activate()
+        {
+            gameObject.SetActive(true);
+            DisplayDriveList();
+        }
+
+        public void SetAsBackground()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Close()
+        {
+            Destroy(gameObject);
+        }
+
         private void UpdatePathFromInput()
         {
             UpdatePath(pathField.text);
@@ -94,7 +101,7 @@ namespace UI
         {
             foreach (FileInfo display in fileDisplays)
             {
-                GameObject.Destroy(display.gameObject);
+                Destroy(display.gameObject);
             }
             fileDisplays.Clear();
         }
@@ -114,14 +121,8 @@ namespace UI
                 string[] files = Directory.GetFiles(directory);
                 string[] dirs = Directory.GetDirectories(directory);
 
-                foreach (string file in files)
-                {
-                    fileNames.Add(file);
-                }
-                foreach (string dir in dirs)
-                {
-                    dirNames.Add(dir);
-                }
+                fileNames.AddRange(files);
+                dirNames.AddRange(dirs);
             }
             catch (IOException ex)
             {
@@ -172,9 +173,9 @@ namespace UI
         {
             if (File.Exists(SelectedPath))
             {
-                if (okAction != null)
-                    okAction(SelectedPath);
-                gameObject.SetActive(false);
+                if (OkAction != null)
+                    OkAction(SelectedPath);
+                GameMenu.SingletonInstance.CloseWindow();
             }
             else
             {
@@ -184,7 +185,7 @@ namespace UI
 
         private void CancelPress()
         {
-            gameObject.SetActive(false);
+            GameMenu.SingletonInstance.CloseWindow();
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using UI.MenuWindows;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
 {
     public class FileInfo : MonoBehaviour
     {
-        private FileSelection fileSel;
+        private FileWindow fileSel;
         private Text label;
         private Button button;
         private float originalHeight;
@@ -25,7 +26,7 @@ namespace UI
 
         public void Initialize()
         {
-            fileSel = transform.parent.parent.parent.gameObject.GetComponent<FileSelection>();
+            fileSel = transform.parent.parent.parent.gameObject.GetComponent<FileWindow>();
             button = transform.Find("Button").gameObject.GetComponent<Button>();
             label = transform.Find("Button").gameObject.GetComponent<Text>();
             button.onClick.AddListener(Select);

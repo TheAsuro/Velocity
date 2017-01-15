@@ -13,7 +13,8 @@ namespace UI
         LEADERBOARD,
         ENDLEVEL,
         EDITOR,
-        EDITORPLAY
+        EDITORPLAY,
+        FILE
     }
 
     public class GameMenu : MonoBehaviour
@@ -21,7 +22,6 @@ namespace UI
         public static GameMenu SingletonInstance { get; private set; }
 
         [SerializeField] private MenuProperties menuProperties;
-        [SerializeField] private FileSelection fileSelection;
 
         private Window currentWindow = Window.NONE;
         private Stack<MenuWindow> menuStack = new Stack<MenuWindow>();
@@ -29,11 +29,15 @@ namespace UI
 
         private void Awake()
         {
-            if (SingletonInstance != null)
-                throw new InvalidOperationException();
-
-            SingletonInstance = this;
-            myCanvas = transform.Find("Canvas").GetComponent<Canvas>();
+            if (SingletonInstance == null)
+            {
+                SingletonInstance = this;
+                myCanvas = GetComponent<Canvas>();
+            }
+            else
+            {
+                Destroy(this);
+            }
         }
 
         private void Update()
@@ -42,28 +46,27 @@ namespace UI
                 AddWindow(Window.ESCMENU);
         }
 
-        public void AddWindow(Window window)
+        public MenuWindow AddWindow(Window window)
         {
             currentWindow = window;
             MenuWindow menu = menuProperties.CreateWindow(window, myCanvas.transform);
             menu.Activate();
             menuStack.Push(menu);
+            return menu;
         }
 
         public void CloseWindow()
         {
+            if (menuStack.Count == 0)
+                throw new InvalidOperationException();
             menuStack.Pop().Close();
+            currentWindow = menuStack.Count == 0 ? Window.NONE : menuProperties.FindWindowType(menuStack.Peek());
         }
 
         public void CloseAllWindows()
         {
             while (menuStack.Count > 0)
                 CloseWindow();
-        }
-
-        public void ShowFileWindow(Action<string> okAction)
-        {
-            fileSelection.Show(okAction);
         }
     }
 }

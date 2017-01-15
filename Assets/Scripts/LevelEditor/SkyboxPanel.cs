@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using UI;
+using UI.MenuWindows;
 using UnityEngine;
 
 /*
@@ -41,7 +42,8 @@ namespace LevelEditor
 
         public void OpenImageDialog(string side)
         {
-            GameMenu.SingletonInstance.ShowFileWindow(path => SetImage(side, path));
+            FileWindow fileWindow = GameMenu.SingletonInstance.AddWindow(Window.FILE) as FileWindow;
+            fileWindow.OkAction = path => SetImage(side, path);
         }
 
         private void SetImage(string side, string path)
