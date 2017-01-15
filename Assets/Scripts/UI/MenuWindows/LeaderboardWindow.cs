@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace UI.MenuWindows
 {
-    public class LeaderboardWindow : MainSubMenu, MenuWindow
+    public class LeaderboardWindow : DefaultMenuWindow
     {
         public InputField mapNameInput;
         public List<LeaderboardPanel> entryPanels; //Must always have ELEMENTS_PER_SITE elements!
@@ -19,6 +19,10 @@ namespace UI.MenuWindows
             if (mapNameInput)
             {
                 mapNameInput.onEndEdit.AddListener(ChangeMap);
+            }
+            else
+            {
+                LoadMap(SceneManager.GetActiveScene().name);
             }
         }
 
@@ -34,22 +38,6 @@ namespace UI.MenuWindows
             if (startIndex < 0)
                 startIndex = 0;
             LoadMap(lastLoadedMap);
-        }
-
-        public void OnActivate()
-        {
-            LoadMap(SceneManager.GetActiveScene().name);
-            gameObject.SetActive(true);
-        }
-
-        public void OnSetAsBackground()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void OnClose()
-        {
-            Destroy(gameObject);
         }
 
         private void ChangeMap(string mapName)

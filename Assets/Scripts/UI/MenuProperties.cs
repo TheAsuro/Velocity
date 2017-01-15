@@ -15,6 +15,7 @@ namespace UI
         [SerializeField] private GameObject fileWindowPrefab;
         [SerializeField] private GameObject leaderboardWindowPrefab;
         [SerializeField] private GameObject loginWindowPrefab;
+        [SerializeField] private GameObject newPlayerWindow;
         [SerializeField] private GameObject settingsWindowPrefab;
 
         private Dictionary<Window, StateMatch> typePairs;
@@ -32,6 +33,7 @@ namespace UI
                 {Window.FILE, new StateMatch(typeof(FileWindow), fileWindowPrefab)},
                 {Window.LEADERBOARD, new StateMatch(typeof(LeaderboardWindow), leaderboardWindowPrefab)},
                 {Window.LOGIN, new StateMatch(typeof(LoginWindow), loginWindowPrefab)},
+                {Window.NEW_PLAYER, new StateMatch(typeof(NewPlayerWindow), newPlayerWindow)},
                 {Window.SETTINGS, new StateMatch(typeof(SettingsWindow), settingsWindowPrefab)},
             };
         }

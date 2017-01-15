@@ -2,27 +2,12 @@
 
 namespace UI.MenuWindows
 {
-    public class EscWindow : MonoBehaviour, MenuWindow
+    public class EscWindow : DefaultMenuWindow
     {
         private void Update()
         {
             if (Input.GetButtonDown("Menu"))
                 GameMenu.SingletonInstance.CloseWindow();
-        }
-
-        public void OnActivate()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void OnSetAsBackground()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void OnClose()
-        {
-            Destroy(gameObject);
         }
 
         public void ToMainMenu()

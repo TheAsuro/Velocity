@@ -5,12 +5,18 @@ using UnityEngine.UI;
 
 namespace UI.MenuWindows
 {
-    public class DemoListWindow : MonoBehaviour, MenuWindow
+    public class DemoListWindow : DefaultMenuWindow
     {
         [SerializeField] private GameObject demoContentPanel;
         [SerializeField] private GameObject demoPanelPrefab;
 
-        public void OnActivate()
+        public override void OnActivate()
+        {
+            base.OnActivate();
+            Load();
+        }
+
+        private void Load()
         {
             //Clear all children
             foreach (Transform child in demoContentPanel.transform)
@@ -27,16 +33,6 @@ namespace UI.MenuWindows
             {
                 CreateDemoPanel(i, allDemos[i].GetLevelName(), allDemos[i].GetTime().ToString(), allDemos[i].GetPlayerName(), allDemoFiles[i]);
             }
-        }
-
-        public void OnSetAsBackground()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void OnClose()
-        {
-            Destroy(gameObject);
         }
 
         private void CreateDemoPanel(int slot, string map, string time, string player, string fileName)

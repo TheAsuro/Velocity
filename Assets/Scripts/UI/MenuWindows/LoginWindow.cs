@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI.MenuWindows
 {
-    public class LoginWindow : MonoBehaviour, MenuWindow
+    public class LoginWindow : DefaultMenuWindow
     {
         [SerializeField]
         private InputField nameField;
@@ -14,21 +14,6 @@ namespace UI.MenuWindows
 
         [SerializeField]
         private Text errorTextField;
-
-        public void OnActivate()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void OnSetAsBackground()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void OnClose()
-        {
-            Destroy(gameObject);
-        }
 
         public void OnLoginClick()
         {
@@ -51,8 +36,7 @@ namespace UI.MenuWindows
 
         public void OnRegisterClick()
         {
-            GameMenu.SingletonInstance.CloseWindow();
-            // TODO GameMenu.SingletonInstance.AddWindow(Window.REGISTER);
+            GameMenu.SingletonInstance.AddWindow(Window.NEW_PLAYER);
         }
 
         private void LoginFinished()

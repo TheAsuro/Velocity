@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace UI.MenuWindows
 {
-    public class FileWindow : MonoBehaviour, MenuWindow
+    public class FileWindow : DefaultMenuWindow
     {
         public enum Mode
         {
@@ -43,6 +43,7 @@ namespace UI.MenuWindows
             itemList = filePanel.transform.Find("Items").gameObject;
             rt = (RectTransform)itemList.transform;
             startHeight = rt.rect.height;
+            DisplayDriveList();
         }
 
         public void UpdatePath(string newPath)
@@ -74,22 +75,6 @@ namespace UI.MenuWindows
                     UpdateDisplayedDirectory(SelectedPath);
                 }
             }
-        }
-
-        public void OnActivate()
-        {
-            gameObject.SetActive(true);
-            DisplayDriveList();
-        }
-
-        public void OnSetAsBackground()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void OnClose()
-        {
-            Destroy(gameObject);
         }
 
         private void UpdatePathFromInput()
@@ -124,9 +109,9 @@ namespace UI.MenuWindows
                 fileNames.AddRange(files);
                 dirNames.AddRange(dirs);
             }
-            catch (IOException ex)
+            catch (IOException)
             {
-                // TODO
+                // TODO show error dialog or something
             }
 
             UpdateDisplay(fileNames, dirNames);

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI.MenuWindows
 {
-    public class ConsoleWindow : MonoBehaviour, MenuWindow
+    public class ConsoleWindow : DefaultMenuWindow
     {
         public TextAsset helpFile;
         public int rowCount = 22;
@@ -75,20 +75,18 @@ namespace UI.MenuWindows
             }
         }
 
-        public void OnActivate()
+        public override void OnActivate()
         {
-            //Registering events
+            base.OnActivate();
+
             Console.ContentUpdate += OnConsoleContentUpdate;
             myInput.onEndEdit.AddListener(InputSubmit);
         }
 
-        public void OnSetAsBackground()
+        public override void OnClose()
         {
+            base.OnActivate();
 
-        }
-
-        public void OnClose()
-        {
             Console.ContentUpdate -= OnConsoleContentUpdate;
             myInput.onEndEdit.RemoveListener(InputSubmit);
         }

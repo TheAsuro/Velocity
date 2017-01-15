@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Api;
-using Demos;
-using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.UI;
 

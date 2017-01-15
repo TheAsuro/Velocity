@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace UI.MenuWindows
 {
-    public class SettingsWindow : MonoBehaviour, MenuWindow
+    public class SettingsWindow : DefaultMenuWindow
     {
         public static event System.EventHandler UpdateSettingSliders;
 
@@ -44,19 +44,10 @@ namespace UI.MenuWindows
             Settings.AllSettings.SaveSettings();
         }
 
-        public void OnActivate()
+        public override void OnActivate()
         {
+            base.OnActivate();
             Load();
-        }
-
-        public void OnSetAsBackground()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void OnClose()
-        {
-            Destroy(gameObject);
         }
     }
 }

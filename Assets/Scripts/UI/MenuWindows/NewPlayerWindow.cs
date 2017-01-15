@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using Api;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MenuWindows
 {
-    public class NewPlayerMenu : MainSubMenu
+    public class NewPlayerWindow : DefaultMenuWindow
     {
         public EventHandler<EventArgs<string>> onCreatedNewPlayer;
 
@@ -23,15 +24,7 @@ namespace UI
         [SerializeField]
         private Text resultText;
 
-        [SerializeField]
-        private Button okButton;
-
-        private void Awake()
-        {
-            okButton.onClick.AddListener(OnOkClick);
-        }
-
-        private void OnOkClick()
+        public void OnOkClick()
         {
             currentName = playerNameField.text;
             SaveData sd = new SaveData(currentName);
@@ -41,14 +34,6 @@ namespace UI
             sd.Account.StartCreate(playerPassField.text, playerMailField.text);
 
             SetInteractive(false);
-        }
-
-        private void SetInteractive(bool value)
-        {
-            playerNameField.interactable = value;
-            playerPassField.interactable = value;
-            playerMailField.interactable = value;
-            okButton.interactable = value;
         }
 
         private void FinishedAccountRequest(SaveData sd, EventArgs<string> e)

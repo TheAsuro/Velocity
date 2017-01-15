@@ -15,7 +15,7 @@ namespace UI
         FILE,
         LEADERBOARD,
         LOGIN,
-        REGISTER,
+        NEW_PLAYER,
         SETTINGS,
     }
 

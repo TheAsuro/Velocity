@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MenuWindows
 {
-    public class BugReportWindow : MonoBehaviour, MenuWindow
+    public class BugReportWindow : DefaultMenuWindow
     {
         private const string BUG_REPORT_URL = "https://theasuro.de/Velocity/Api/bugreport.php";
 
@@ -20,21 +19,6 @@ namespace UI
         private void Awake()
         {
             sendButton.onClick.AddListener(OnSendClick);
-        }
-
-        public void OnActivate()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void OnSetAsBackground()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void OnClose()
-        {
-            Destroy(gameObject);
         }
 
         private void OnSendClick()
