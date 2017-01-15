@@ -44,17 +44,17 @@ namespace UI.MenuWindows
             Settings.AllSettings.SaveSettings();
         }
 
-        public void Activate()
+        public void OnActivate()
         {
             Load();
         }
 
-        public void SetAsBackground()
+        public void OnSetAsBackground()
         {
             gameObject.SetActive(false);
         }
 
-        public void Close()
+        public void OnClose()
         {
             Destroy(gameObject);
         }

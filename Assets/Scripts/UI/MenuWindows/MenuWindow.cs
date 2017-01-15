@@ -2,8 +2,8 @@
 {
     public interface MenuWindow
     {
-        void Activate();
-        void SetAsBackground();
-        void Close();
+        void OnActivate();
+        void OnSetAsBackground();
+        void OnClose();
     }
 }

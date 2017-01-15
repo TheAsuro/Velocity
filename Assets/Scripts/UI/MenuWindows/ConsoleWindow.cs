@@ -75,19 +75,19 @@ namespace UI.MenuWindows
             }
         }
 
-        public void Activate()
+        public void OnActivate()
         {
             //Registering events
             Console.ContentUpdate += OnConsoleContentUpdate;
             myInput.onEndEdit.AddListener(InputSubmit);
         }
 
-        public void SetAsBackground()
+        public void OnSetAsBackground()
         {
 
         }
 
-        public void Close()
+        public void OnClose()
         {
             Console.ContentUpdate -= OnConsoleContentUpdate;
             myInput.onEndEdit.RemoveListener(InputSubmit);

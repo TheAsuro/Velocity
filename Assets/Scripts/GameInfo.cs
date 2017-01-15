@@ -265,7 +265,7 @@ public class GameInfo : MonoBehaviour
             case MenuState.ESCMENU:
                 SetMouseView(false);
                 EscWindow escWindow = Instantiate(menuProperties.escWindowPrefab, myCanvas.transform).GetComponent<EscWindow>();
-                escWindow.Activate();
+                escWindow.OnActivate();
                 menuStack.Push(escWindow);
                 break;
             case MenuState.DEMO:
@@ -278,7 +278,7 @@ public class GameInfo : MonoBehaviour
                 SetMouseView(false);
                 endLevel.SetActive(true);
                 MenuWindow leaderboard = WindowManager.CreateWindow<LeaderboardWindow>(menuProperties.leaderboardDisplayPrefab, myCanvas.transform);
-                leaderboard.Activate();
+                leaderboard.OnActivate();
                 menuStack.Push(leaderboard);
                 menuLocked = true;
                 break;

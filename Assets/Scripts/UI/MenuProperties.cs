@@ -9,6 +9,7 @@ namespace UI
     [CreateAssetMenu]
     public class MenuProperties : ScriptableObject
     {
+        [SerializeField] private GameObject bugReportPrefab;
         [SerializeField] private GameObject demoListPrefab;
         [SerializeField] private GameObject escWindowPrefab;
         [SerializeField] private GameObject fileWindowPrefab;
@@ -24,6 +25,7 @@ namespace UI
 
             typePairs = new Dictionary<Window, StateMatch>()
             {
+                {Window.BUGREPORT, new StateMatch(typeof(BugReportWindow), bugReportPrefab)},
                 {Window.DEMOLIST, new StateMatch(typeof(DemoListWindow), demoListPrefab)},
                 {Window.ESCMENU, new StateMatch(typeof(EscWindow), escWindowPrefab)},
                 {Window.FILE, new StateMatch(typeof(FileWindow), fileWindowPrefab)},

@@ -36,18 +36,18 @@ namespace UI.MenuWindows
             LoadMap(lastLoadedMap);
         }
 
-        public void Activate()
+        public void OnActivate()
         {
             LoadMap(SceneManager.GetActiveScene().name);
             gameObject.SetActive(true);
         }
 
-        public void SetAsBackground()
+        public void OnSetAsBackground()
         {
             gameObject.SetActive(false);
         }
 
-        public void Close()
+        public void OnClose()
         {
             Destroy(gameObject);
         }

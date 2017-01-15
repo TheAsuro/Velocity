@@ -10,17 +10,17 @@ namespace UI.MenuWindows
                 GameMenu.SingletonInstance.CloseWindow();
         }
 
-        public void Activate()
+        public void OnActivate()
         {
             gameObject.SetActive(true);
         }
 
-        public void SetAsBackground()
+        public void OnSetAsBackground()
         {
             gameObject.SetActive(false);
         }
 
-        public void Close()
+        public void OnClose()
         {
             Destroy(gameObject);
         }

@@ -10,7 +10,7 @@ namespace UI.MenuWindows
         [SerializeField] private GameObject demoContentPanel;
         [SerializeField] private GameObject demoPanelPrefab;
 
-        public void Activate()
+        public void OnActivate()
         {
             //Clear all children
             foreach (Transform child in demoContentPanel.transform)
@@ -29,12 +29,12 @@ namespace UI.MenuWindows
             }
         }
 
-        public void SetAsBackground()
+        public void OnSetAsBackground()
         {
             gameObject.SetActive(false);
         }
 
-        public void Close()
+        public void OnClose()
         {
             Destroy(gameObject);
         }

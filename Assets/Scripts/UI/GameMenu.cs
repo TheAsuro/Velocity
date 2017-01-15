@@ -8,6 +8,7 @@ namespace UI
     public enum Window
     {
         NONE,
+        BUGREPORT,
         SETTINGS,
         ESCMENU,
         DEMOLIST,
@@ -67,7 +68,7 @@ namespace UI
 
             currentWindow = window;
             MenuWindow menu = menuProperties.CreateWindow(window, myCanvas.transform);
-            menu.Activate();
+            menu.OnActivate();
             menuStack.Push(menu);
             return menu;
         }
@@ -76,7 +77,7 @@ namespace UI
         {
             if (menuStack.Count == 0)
                 throw new InvalidOperationException();
-            menuStack.Pop().Close();
+            menuStack.Pop().OnClose();
             currentWindow = menuStack.Count == 0 ? Window.NONE : menuProperties.FindWindowType(menuStack.Peek());
         }
 
