@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Api;
 using Demos;
+using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,8 +24,6 @@ namespace UI
         public Text blogText;
 
         public MenuState CurrentState { get; private set; }
-
-        private T GetSubMenu<T>(MenuState menuType) where T : MainSubMenu { return menuObjects[(int)menuType].GetComponent<T>(); }
 
         private Action<object, EventArgs> returnToMenu;
 
@@ -51,9 +50,6 @@ namespace UI
 
             returnToMenu = (s, e) => SetMenuState(MenuState.MAIN_MENU);
             MainSubMenu.GoToMainMenu += returnToMenu.Invoke;
-            GetSubMenu<NewPlayerMenu>(MenuState.NEW_PLAYER).onCreatedNewPlayer += (s, e) => OnPlayerCreated(e.Content);
-            GetSubMenu<PlayerSelectionMenu>(MenuState.PLAYER_SELECTION).loginFinished += (s, e) => SetMenuState(MenuState.GAME_SELECTION);
-            GetSubMenu<PlayerSelectionMenu>(MenuState.PLAYER_SELECTION).openRegisterMenu += (s, e) => SetMenuState(MenuState.NEW_PLAYER);
         }
 
         private void OnDestroy()

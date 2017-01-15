@@ -262,7 +262,7 @@ public class GameInfo : MonoBehaviour
                 SetGamePaused(false);
                 SetCursorLock(true);
                 break;
-            case MenuState.ESCMENU:
+            case MenuState.ESC_MENU:
                 SetMouseView(false);
                 EscWindow escWindow = Instantiate(menuProperties.escWindowPrefab, myCanvas.transform).GetComponent<EscWindow>();
                 escWindow.OnActivate();
@@ -282,7 +282,7 @@ public class GameInfo : MonoBehaviour
                 menuStack.Push(leaderboard);
                 menuLocked = true;
                 break;
-            case MenuState.ENDLEVEL:
+            case MenuState.END_LEVEL:
                 SetGamePaused(false);
                 SetMouseView(false);
                 endLevel.SetActive(true);
@@ -402,7 +402,7 @@ public class GameInfo : MonoBehaviour
     private void PlayRaceDemo()
     {
         if (myDemoPlayer != null && currentDemo != null)
-            myDemoPlayer.PlayDemo(currentDemo, delegate { GameMenu.SingletonInstance.AddWindow(Window.ENDLEVEL); }, true);
+            myDemoPlayer.PlayDemo(currentDemo, delegate { GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL); }, true);
     }
 
     public decimal GetLastTime()

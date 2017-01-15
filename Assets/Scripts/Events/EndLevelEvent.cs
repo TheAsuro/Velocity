@@ -6,7 +6,7 @@ namespace Events
     {
         public override void Fire(params object[] stuff)
         {
-            GameMenu.SingletonInstance.AddWindow(Window.ENDLEVEL);
+            GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
             GameInfo.info.LevelFinished();
         }
     }

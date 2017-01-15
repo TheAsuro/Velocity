@@ -2,13 +2,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MenuWindows
 {
-    public class PlayerSelectionMenu : MainSubMenu
+    public class LoginWindow : MonoBehaviour, MenuWindow
     {
-        public EventHandler loginFinished;
-        public EventHandler openRegisterMenu;
-
         [SerializeField]
         private InputField nameField;
 
@@ -18,6 +15,21 @@ namespace UI
         [SerializeField]
         private Text errorTextField;
 
+        public void OnActivate()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void OnSetAsBackground()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void OnClose()
+        {
+            Destroy(gameObject);
+        }
+
         public void OnLoginClick()
         {
             GameInfo.info.CurrentSave = new SaveData(nameField.text);
@@ -25,7 +37,7 @@ namespace UI
             GameInfo.info.CurrentSave.Account.OnLoginFinished += (sender, e) =>
             {
                 if (!e.Error)
-                    loginFinished(sender, e);
+                    LoginFinished();
                 else
                     errorTextField.text = e.ErrorText;
             };
@@ -34,15 +46,19 @@ namespace UI
         public void OnOfflineClick()
         {
             GameInfo.info.CurrentSave = new SaveData(nameField.text);
-            if (loginFinished != null)
-                loginFinished(this, null);
-            else
-                throw new InvalidOperationException("MainMenu should always register on the LoginFinished event");
+            LoginFinished();
         }
 
         public void OnRegisterClick()
         {
-            openRegisterMenu(this, null);
+            GameMenu.SingletonInstance.CloseWindow();
+            // TODO GameMenu.SingletonInstance.AddWindow(Window.REGISTER);
+        }
+
+        private void LoginFinished()
+        {
+            GameMenu.SingletonInstance.CloseWindow();
+            // TODO GameMenu.SingletonInstance.AddWindow(Window.something);
         }
     }
 }

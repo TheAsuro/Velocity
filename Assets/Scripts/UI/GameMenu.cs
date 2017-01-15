@@ -8,15 +8,15 @@ namespace UI
     public enum Window
     {
         NONE,
-        BUGREPORT,
-        SETTINGS,
-        ESCMENU,
-        DEMOLIST,
+        BUG_REPORT,
+        DEMO_LIST,
+        END_LEVEL,
+        ESC_MENU,
+        FILE,
         LEADERBOARD,
-        ENDLEVEL,
-        EDITOR,
-        EDITORPLAY,
-        FILE
+        LOGIN,
+        REGISTER,
+        SETTINGS,
     }
 
     public class GameMenu : MonoBehaviour
@@ -58,7 +58,7 @@ namespace UI
         private void Update()
         {
             if (Input.GetButtonDown("Menu") && currentWindow == Window.NONE)
-                AddWindow(Window.ESCMENU);
+                AddWindow(Window.ESC_MENU);
         }
 
         public MenuWindow AddWindow(Window window)

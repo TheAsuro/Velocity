@@ -14,6 +14,7 @@ namespace UI
         [SerializeField] private GameObject escWindowPrefab;
         [SerializeField] private GameObject fileWindowPrefab;
         [SerializeField] private GameObject leaderboardWindowPrefab;
+        [SerializeField] private GameObject loginWindowPrefab;
         [SerializeField] private GameObject settingsWindowPrefab;
 
         private Dictionary<Window, StateMatch> typePairs;
@@ -25,11 +26,12 @@ namespace UI
 
             typePairs = new Dictionary<Window, StateMatch>()
             {
-                {Window.BUGREPORT, new StateMatch(typeof(BugReportWindow), bugReportPrefab)},
-                {Window.DEMOLIST, new StateMatch(typeof(DemoListWindow), demoListPrefab)},
-                {Window.ESCMENU, new StateMatch(typeof(EscWindow), escWindowPrefab)},
+                {Window.BUG_REPORT, new StateMatch(typeof(BugReportWindow), bugReportPrefab)},
+                {Window.DEMO_LIST, new StateMatch(typeof(DemoListWindow), demoListPrefab)},
+                {Window.ESC_MENU, new StateMatch(typeof(EscWindow), escWindowPrefab)},
                 {Window.FILE, new StateMatch(typeof(FileWindow), fileWindowPrefab)},
                 {Window.LEADERBOARD, new StateMatch(typeof(LeaderboardWindow), leaderboardWindowPrefab)},
+                {Window.LOGIN, new StateMatch(typeof(LoginWindow), loginWindowPrefab)},
                 {Window.SETTINGS, new StateMatch(typeof(SettingsWindow), settingsWindowPrefab)},
             };
         }
