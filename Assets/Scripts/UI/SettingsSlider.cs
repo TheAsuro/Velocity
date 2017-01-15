@@ -1,5 +1,6 @@
 ﻿using System;
 using Settings;
+using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,7 @@ namespace UI
         private void Awake()
         {
             slider.onValueChanged.AddListener(OnValueChanged);
-            SettingsMenu.UpdateSettingSliders += OnLoadSettings;
+            SettingsWindow.UpdateSettingSliders += OnLoadSettings;
             OnLoadSettings(this, null);
         }
 

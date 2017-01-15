@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.MenuWindows
 {
-    public class SettingsMenu : MainSubMenu
+    public class SettingsWindow : MonoBehaviour, MenuWindow
     {
         public static event System.EventHandler UpdateSettingSliders;
 
@@ -42,6 +42,21 @@ namespace UI
         public void Save()
         {
             Settings.AllSettings.SaveSettings();
+        }
+
+        public void Activate()
+        {
+            Load();
+        }
+
+        public void SetAsBackground()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Close()
+        {
+            Destroy(gameObject);
         }
     }
 }

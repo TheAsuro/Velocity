@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 222579167194967244}
   - component: {fileID: 114459500697915462}
   - component: {fileID: 114303515503083440}
+  - component: {fileID: 114563348793286770}
   m_Layer: 5
   m_Name: Continue
   m_TagString: Untagged
@@ -210,18 +211,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114459500697915462}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114020419952677366}
-        m_MethodName: ToPreviousMenu
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: closed
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114317163294230456
@@ -396,6 +386,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Quit
+--- !u!114 &114563348793286770
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1237251429681806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c1fe46a652803458b4511d2c144fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114807526404193394
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using Api;
 using Demos;
 using UnityEngine;
@@ -38,7 +37,6 @@ namespace UI
             PLAYER_SELECTION,
             NEW_PLAYER,
             DEMOS,
-            SETTINGS,
             LEADERBOARDS,
             BUG_REPORT
         }
@@ -46,8 +44,6 @@ namespace UI
         public enum GameSelectionContent
         {
             PLAYABLE_MAP_LIST,
-            SERVER_LIST,
-            NEW_SERVER_SETTINGS,
             NEW_MAP_SETTINGS,
             EDITABLE_MAP_LIST
         }
@@ -138,11 +134,6 @@ namespace UI
                     break;
                 case MenuState.DEMOS:
                     LoadDemoPanels();
-                    break;
-                case MenuState.SETTINGS:
-                    Settings.AllSettings.LoadSettings();
-                    GetSubMenu<SettingsMenu>(MenuState.SETTINGS).SetSettingGroup(0);
-                    GetSubMenu<SettingsMenu>(MenuState.SETTINGS).Load();
                     break;
             }
 
@@ -302,12 +293,6 @@ namespace UI
         {
             DemoInfo.DeleteDemoFile(name);
             SetMenuState(MenuState.DEMOS);
-        }
-
-        private string ParseDate(string text)
-        {
-            Regex r = new Regex("(.*, \\d* .* \\d*) ");
-            return r.Match(text).Captures[0].Value;
         }
 
         public void LoadEditorWithLevel(string levelName)

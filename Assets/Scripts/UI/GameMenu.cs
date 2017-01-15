@@ -8,6 +8,7 @@ namespace UI
     public enum Window
     {
         NONE,
+        SETTINGS,
         ESCMENU,
         DEMO,
         LEADERBOARD,
@@ -48,6 +49,9 @@ namespace UI
 
         public MenuWindow AddWindow(Window window)
         {
+            if (window == Window.NONE)
+                throw new ArgumentException("Can't add NONE window!");
+
             currentWindow = window;
             MenuWindow menu = menuProperties.CreateWindow(window, myCanvas.transform);
             menu.Activate();

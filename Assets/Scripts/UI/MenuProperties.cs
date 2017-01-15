@@ -9,9 +9,10 @@ namespace UI
     [CreateAssetMenu]
     public class MenuProperties : ScriptableObject
     {
-        [SerializeField] private GameObject fileWindowPrefab;
         [SerializeField] private GameObject escWindowPrefab;
-        [SerializeField] private GameObject leaderboardDisplayPrefab;
+        [SerializeField] private GameObject fileWindowPrefab;
+        [SerializeField] private GameObject leaderboardWindowPrefab;
+        [SerializeField] private GameObject settingsWindowPrefab;
 
         private Dictionary<Window, StateMatch> typePairs;
 
@@ -22,16 +23,17 @@ namespace UI
 
             typePairs = new Dictionary<Window, StateMatch>()
             {
-                {Window.FILE, new StateMatch(typeof(FileWindow), fileWindowPrefab)},
                 {Window.ESCMENU, new StateMatch(typeof(EscWindow), escWindowPrefab)},
-                {Window.LEADERBOARD, new StateMatch(typeof(LeaderboardWindow), leaderboardDisplayPrefab)}
+                {Window.FILE, new StateMatch(typeof(FileWindow), fileWindowPrefab)},
+                {Window.LEADERBOARD, new StateMatch(typeof(LeaderboardWindow), leaderboardWindowPrefab)},
+                {Window.SETTINGS, new StateMatch(typeof(SettingsWindow), settingsWindowPrefab)},
             };
         }
 
         public MenuWindow CreateWindow(Window window, Transform spawnTransform)
         {
             StateMatch match = GetTypeFromState(window);
-            return (MenuWindow) Instantiate(match.prefab, spawnTransform).GetComponent(match.type);
+            return (MenuWindow) Instantiate(match.prefab, spawnTransform, false).GetComponent(match.type);
         }
 
         public Window FindWindowType(MenuWindow menuWindow)

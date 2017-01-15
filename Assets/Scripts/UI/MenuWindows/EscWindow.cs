@@ -4,12 +4,6 @@ namespace UI.MenuWindows
 {
     public class EscWindow : MonoBehaviour, MenuWindow
     {
-        private void Start()
-        {
-            // TODO this is shit
-            ((RectTransform)transform).anchoredPosition = Vector2.zero;
-        }
-
         private void Update()
         {
             if (Input.GetButtonDown("Menu"))
@@ -29,11 +23,6 @@ namespace UI.MenuWindows
         public void Close()
         {
             Destroy(gameObject);
-        }
-
-        public void ToPreviousMenu()
-        {
-            GameMenu.SingletonInstance.CloseWindow();
         }
 
         public void ToMainMenu()
