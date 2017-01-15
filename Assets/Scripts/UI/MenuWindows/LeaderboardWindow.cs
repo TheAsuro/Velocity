@@ -11,8 +11,6 @@ namespace UI.MenuWindows
         public InputField mapNameInput;
         public List<LeaderboardPanel> entryPanels; //Must always have ELEMENTS_PER_SITE elements!
 
-        private const int ELEMENTS_PER_SITE = 10;
-
         private string lastLoadedMap = "";
         private int startIndex = 0;
 
@@ -26,7 +24,7 @@ namespace UI.MenuWindows
 
         private void LoadMap(string mapName)
         {
-            Leaderboard.GetEntries(mapName, startIndex, ELEMENTS_PER_SITE, DisplayData);
+            Leaderboard.GetEntries(mapName, startIndex, entryPanels.Count, DisplayData);
             lastLoadedMap = mapName;
         }
 
@@ -62,7 +60,7 @@ namespace UI.MenuWindows
 
         private void DisplayData(LeaderboardEntry[] entries)
         {
-            for(int i = 0; i < ELEMENTS_PER_SITE; i++)
+            for(int i = 0; i < entryPanels.Count; i++)
             {
                 if (entries.Length <= i)
                 {

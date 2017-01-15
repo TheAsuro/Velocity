@@ -10,7 +10,7 @@ namespace UI
         NONE,
         SETTINGS,
         ESCMENU,
-        DEMO,
+        DEMOLIST,
         LEADERBOARD,
         ENDLEVEL,
         EDITOR,
@@ -27,6 +27,19 @@ namespace UI
         private Window currentWindow = Window.NONE;
         private Stack<MenuWindow> menuStack = new Stack<MenuWindow>();
         private Canvas myCanvas;
+
+        public static GameObject CreatePanel(int slot, GameObject prefab, Transform parent)
+        {
+            GameObject panel = Instantiate(prefab);
+            RectTransform t = (RectTransform)panel.transform;
+            t.SetParent(parent);
+            t.offsetMin = new Vector2(5f, 0f);
+            t.offsetMax = new Vector2(-5f, 0f);
+            t.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f);
+            float heightOffset = ((RectTransform)parent.transform).rect.height / 2f;
+            t.localPosition = new Vector3(t.localPosition.x, -42.5f - slot * 75f + heightOffset, 0f);
+            return panel;
+        }
 
         private void Awake()
         {

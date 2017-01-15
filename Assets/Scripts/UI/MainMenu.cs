@@ -18,9 +18,7 @@ namespace UI
 
         //References to specific things
         public GameObject gameSelectionContentPanel;
-        public GameObject demoContentPanel;
         public GameObject mapPanelPrefab;
-        public GameObject demoPanelPrefab;
         public GameObject editPanelPrefab;
         public Text blogText;
 
@@ -36,7 +34,6 @@ namespace UI
             GAME_SELECTION,
             PLAYER_SELECTION,
             NEW_PLAYER,
-            DEMOS,
             BUG_REPORT
         }
 
@@ -131,9 +128,6 @@ namespace UI
                 case MenuState.GAME_SELECTION:
                     SetGameSelectionContent(GameSelectionContent.PLAYABLE_MAP_LIST);
                     break;
-                case MenuState.DEMOS:
-                    LoadDemoPanels();
-                    break;
             }
 
             CurrentState = newState;
@@ -207,18 +201,7 @@ namespace UI
             wrObj.GetComponent<Text>().text = "WR: " + entry.time + " by " + entry.playerName;
         }
 
-        private GameObject CreatePanel(int slot, GameObject prefab, Transform parent)
-        {
-            GameObject panel = (GameObject)GameObject.Instantiate(prefab);
-            RectTransform t = (RectTransform)panel.transform;
-            t.SetParent(parent);
-            t.offsetMin = new Vector2(5f, 0f);
-            t.offsetMax = new Vector2(-5f, 0f);
-            t.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f);
-            float heightOffset = ((RectTransform)parent.transform).rect.height / 2f;
-            t.localPosition = new Vector3(t.localPosition.x, -42.5f - slot * 75f + heightOffset, 0f);
-            return panel;
-        }
+
 
         private void SetObjectText(Transform objTrans, string value)
         {
@@ -227,7 +210,7 @@ namespace UI
 
         private void CreateMapPanel(int slot, string name, string author, Texture2D preview, string pb)
         {
-            Transform t = CreatePanel(slot, mapPanelPrefab, gameSelectionContentPanel.transform).transform;
+            Transform t = GameMenu.CreatePanel(slot, mapPanelPrefab, gameSelectionContentPanel.transform).transform;
 
             t.FindChild("Name").GetComponent<Text>().text = name;
             t.FindChild("Author").GetComponent<Text>().text = "Map by " + author;
@@ -240,58 +223,15 @@ namespace UI
 
         private void CreateEditPanel(int slot, string fileName)
         {
-            Transform t = CreatePanel(slot, editPanelPrefab, gameSelectionContentPanel.transform).transform;
+            Transform t = GameMenu.CreatePanel(slot, editPanelPrefab, gameSelectionContentPanel.transform).transform;
 
             t.FindChild("Name").GetComponent<Text>().text = fileName;
             t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { LoadEditorWithLevel(fileName); });
         }
 
-        private void CreateDemoPanel(int slot, string map, string time, string player, string fileName)
-        {
-            Transform t = CreatePanel(slot, demoPanelPrefab, demoContentPanel.transform).transform;
-
-            t.FindChild("Map").GetComponent<Text>().text = map;
-            t.FindChild("Time").GetComponent<Text>().text = time;
-            t.FindChild("Player").GetComponent<Text>().text = player;
-
-            t.FindChild("Button").GetComponent<Button>().onClick.AddListener(delegate { PlayDemo(fileName); });
-            t.FindChild("Remove").GetComponent<Button>().onClick.AddListener(delegate { DeleteDemo(fileName); });
-        }
-
-        private void LoadDemoPanels()
-        {
-            //Clear all children
-            foreach (Transform child in demoContentPanel.transform)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-
-            //Create a list of all playable maps
-            Demo[] allDemos = DemoInfo.GetAllDemos();
-            string[] allDemoFiles = DemoInfo.GetDemoNames();
-            ((RectTransform)demoContentPanel.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * allDemos.Length + 10f);
-
-            for (int i = 0; i < allDemos.Length; i++)
-            {
-                CreateDemoPanel(i, allDemos[i].GetLevelName(), allDemos[i].GetTime().ToString(), allDemos[i].GetPlayerName(), allDemoFiles[i]);
-            }
-        }
-
         private void OnPlayableMapClick(string mapName)
         {
             GameInfo.info.LoadLevel(mapName);
-        }
-
-        private void PlayDemo(string name)
-        {
-            Demo demo = new Demo(Path.Combine(Application.dataPath, name));
-            GameInfo.info.PlayDemo(demo);
-        }
-
-        private void DeleteDemo(string name)
-        {
-            DemoInfo.DeleteDemoFile(name);
-            SetMenuState(MenuState.DEMOS);
         }
 
         public void LoadEditorWithLevel(string levelName)
