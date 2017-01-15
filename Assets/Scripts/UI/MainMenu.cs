@@ -37,7 +37,6 @@ namespace UI
             PLAYER_SELECTION,
             NEW_PLAYER,
             DEMOS,
-            LEADERBOARDS,
             BUG_REPORT
         }
 

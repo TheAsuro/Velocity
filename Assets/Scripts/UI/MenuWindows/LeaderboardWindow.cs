@@ -41,16 +41,17 @@ namespace UI.MenuWindows
         public void Activate()
         {
             LoadMap(SceneManager.GetActiveScene().name);
+            gameObject.SetActive(true);
         }
 
         public void SetAsBackground()
         {
-            // TODO
+            gameObject.SetActive(false);
         }
 
         public void Close()
         {
-            // TODO
+            Destroy(gameObject);
         }
 
         private void ChangeMap(string mapName)
