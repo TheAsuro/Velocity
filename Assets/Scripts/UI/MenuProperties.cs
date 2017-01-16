@@ -13,34 +13,36 @@ namespace UI
         [SerializeField] private GameObject demoListPrefab;
         [SerializeField] private GameObject escWindowPrefab;
         [SerializeField] private GameObject fileWindowPrefab;
+        [SerializeField] private GameObject gameSelectionPrefab;
         [SerializeField] private GameObject leaderboardWindowPrefab;
         [SerializeField] private GameObject loginWindowPrefab;
         [SerializeField] private GameObject newPlayerWindow;
         [SerializeField] private GameObject settingsWindowPrefab;
 
-        private Dictionary<Window, StateMatch> typePairs;
+        private Dictionary<Window, TypeAndPrefab> typePairs;
 
         private void TryCreateTypePairsInstance()
         {
             if (typePairs != null)
                 return;
 
-            typePairs = new Dictionary<Window, StateMatch>()
+            typePairs = new Dictionary<Window, TypeAndPrefab>()
             {
-                {Window.BUG_REPORT, new StateMatch(typeof(BugReportWindow), bugReportPrefab)},
-                {Window.DEMO_LIST, new StateMatch(typeof(DemoListWindow), demoListPrefab)},
-                {Window.ESC_MENU, new StateMatch(typeof(EscWindow), escWindowPrefab)},
-                {Window.FILE, new StateMatch(typeof(FileWindow), fileWindowPrefab)},
-                {Window.LEADERBOARD, new StateMatch(typeof(LeaderboardWindow), leaderboardWindowPrefab)},
-                {Window.LOGIN, new StateMatch(typeof(LoginWindow), loginWindowPrefab)},
-                {Window.NEW_PLAYER, new StateMatch(typeof(NewPlayerWindow), newPlayerWindow)},
-                {Window.SETTINGS, new StateMatch(typeof(SettingsWindow), settingsWindowPrefab)},
+                {Window.BUG_REPORT, new TypeAndPrefab(typeof(BugReportWindow), bugReportPrefab)},
+                {Window.DEMO_LIST, new TypeAndPrefab(typeof(DemoListWindow), demoListPrefab)},
+                {Window.ESC_MENU, new TypeAndPrefab(typeof(EscWindow), escWindowPrefab)},
+                {Window.FILE, new TypeAndPrefab(typeof(FileWindow), fileWindowPrefab)},
+                {Window.GAME_SELECTION, new TypeAndPrefab(typeof(GameSelectionWindow), gameSelectionPrefab)},
+                {Window.LEADERBOARD, new TypeAndPrefab(typeof(LeaderboardWindow), leaderboardWindowPrefab)},
+                {Window.LOGIN, new TypeAndPrefab(typeof(LoginWindow), loginWindowPrefab)},
+                {Window.NEW_PLAYER, new TypeAndPrefab(typeof(NewPlayerWindow), newPlayerWindow)},
+                {Window.SETTINGS, new TypeAndPrefab(typeof(SettingsWindow), settingsWindowPrefab)},
             };
         }
 
         public MenuWindow CreateWindow(Window window, Transform spawnTransform)
         {
-            StateMatch match = GetTypeFromState(window);
+            TypeAndPrefab match = GetTypeFromState(window);
             return (MenuWindow) Instantiate(match.prefab, spawnTransform, false).GetComponent(match.type);
         }
 
@@ -50,7 +52,7 @@ namespace UI
             return typePairs.First(pair => pair.Value.type == menuWindow.GetType()).Key;
         }
 
-        private StateMatch GetTypeFromState(Window window)
+        private TypeAndPrefab GetTypeFromState(Window window)
         {
             TryCreateTypePairsInstance();
             if (!typePairs.ContainsKey(window))
@@ -58,12 +60,12 @@ namespace UI
             return typePairs[window];
         }
 
-        private struct StateMatch
+        private struct TypeAndPrefab
         {
             public Type type;
             public GameObject prefab;
 
-            public StateMatch(Type type, GameObject prefab)
+            public TypeAndPrefab(Type type, GameObject prefab)
             {
                 this.type = type;
                 this.prefab = prefab;

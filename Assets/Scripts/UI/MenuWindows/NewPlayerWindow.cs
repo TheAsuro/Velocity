@@ -8,8 +8,6 @@ namespace UI.MenuWindows
 {
     public class NewPlayerWindow : DefaultMenuWindow
     {
-        public EventHandler<EventArgs<string>> onCreatedNewPlayer;
-
         private string currentName;
 
         [SerializeField]
@@ -51,8 +49,7 @@ namespace UI.MenuWindows
 
             if (!e.Error)
             {
-                if (onCreatedNewPlayer != null)
-                    onCreatedNewPlayer(this, new EventArgs<string>(currentName));
+                GameInfo.info.CurrentSave = new SaveData(currentName);
             }
             else
             {

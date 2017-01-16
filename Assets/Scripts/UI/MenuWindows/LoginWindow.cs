@@ -17,10 +17,14 @@ namespace UI.MenuWindows
 
         public void OnLoginClick()
         {
+            SetInteractive(false);
+
             GameInfo.info.CurrentSave = new SaveData(nameField.text);
             GameInfo.info.CurrentSave.Account.StartLogin(passField.text);
             GameInfo.info.CurrentSave.Account.OnLoginFinished += (sender, e) =>
             {
+                SetInteractive(true);
+
                 if (!e.Error)
                     LoginFinished();
                 else
@@ -42,7 +46,7 @@ namespace UI.MenuWindows
         private void LoginFinished()
         {
             GameMenu.SingletonInstance.CloseWindow();
-            // TODO GameMenu.SingletonInstance.AddWindow(Window.something);
+            GameMenu.SingletonInstance.AddWindow(Window.GAME_SELECTION);
         }
     }
 }

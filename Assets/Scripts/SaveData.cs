@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using Api;
 
 public class SaveData
@@ -32,7 +31,7 @@ public class SaveData
 	public bool SaveIfPersonalBest(decimal time, string mapName)
 	{
         decimal pbTime = GetPersonalBest(mapName);
-        if(pbTime <= 0 || time < pbTime)
+        if (pbTime <= 0 || time < pbTime)
         {
             PlayerPrefs.SetString(SaveName(Name) + "_" + mapName, time.ToString());
             return true;
@@ -54,13 +53,9 @@ public class SaveData
             return -1;
 	}
 
-	public void DeleteData(List<string> mapNames)
+	public void DeleteData()
 	{
 		PlayerPrefs.DeleteKey(SaveName(Name));
-
-        foreach(string map in mapNames)
-        {
-            PlayerPrefs.DeleteKey(SaveName(Name) + "_" + map);
-        }
+        // TODO - delete map times
 	}
 }
