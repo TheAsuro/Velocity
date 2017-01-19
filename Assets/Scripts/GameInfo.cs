@@ -56,8 +56,6 @@ public class GameInfo : MonoBehaviour
     private PlayerBehaviour myPlayer;
     private DemoPlay myDemoPlayer;
     private GameObject myCanvas;
-    private GameObject myDebugWindow;
-    private Text myDebugWindowText;
 
     //Load infos like player name, pb's, etc.
     private SaveData currentSave;
@@ -97,8 +95,6 @@ public class GameInfo : MonoBehaviour
         myDemoPlayer = gameObject.GetComponent<DemoPlay>();
 
         myCanvas = transform.Find("Canvas").gameObject;
-        myDebugWindow = myCanvas.transform.Find("Debug").gameObject;
-        myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<Text>();
 
         fx = new GameInfoFx(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
 
@@ -115,13 +111,6 @@ public class GameInfo : MonoBehaviour
     {
         Settings.Input.ExecuteBoundActions();
         HttpApi.ConsumeCallbacks();
-
-
-        //TODO put into binds
-        if (Input.GetButtonDown("Debug"))
-        {
-            myDebugWindow.SetActive(!myDebugWindow.activeSelf);
-        }
 
         //Update effects
         fx.Update();
