@@ -47,10 +47,10 @@ namespace UI.MenuWindows
                 .GetComponent<Button>()
                 .onClick.AddListener(() =>
                 {
-                    Demo demo = new Demo(Path.Combine(Application.dataPath, fileName));
+                    Demo demo = new Demo(Path.Combine(Application.dataPath, name));
                     GameInfo.info.PlayDemo(demo);
                 });
-            t.FindChild("Remove").GetComponent<Button>().onClick.AddListener(() => DemoInfo.DeleteDemoFile(fileName));
+            t.FindChild("Remove").GetComponent<Button>().onClick.AddListener(() => DemoInfo.DeleteDemoFile(name));
         }
     }
 }
