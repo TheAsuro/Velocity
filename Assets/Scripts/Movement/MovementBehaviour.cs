@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UI;
+using UnityEngine;
 
 namespace Movement
 {
@@ -37,11 +38,12 @@ namespace Movement
 
         public void Start()
         {
-            GameInfo.info.AddWindowLine("XZ-Speed: ", GetXzVelocityString);
-            GameInfo.info.AddWindowLine("Y-Speed: ", GetYVelocityString);
-            GameInfo.info.AddWindowLine("Speed 'limit': ", GetMaxSpeedString);
-            GameInfo.info.AddWindowLine("Crouched: ", GetCrouchedString);
-            GameInfo.info.AddWindowLine("On Ground: ", GetGroundString);
+            DebugWindow debugWindow = GameMenu.SingletonInstance.GetDebugWindow();
+            debugWindow.AddDisplayAction(() => "XZ-Speed: " + GetXzVelocityString());
+            debugWindow.AddDisplayAction(() => "Y-Speed: " + GetYVelocityString());
+            debugWindow.AddDisplayAction(() => "Speed 'limit': " + GetMaxSpeedString());
+            debugWindow.AddDisplayAction(() => "Crouched: " + GetCrouchedString());
+            debugWindow.AddDisplayAction(() => "On Ground: " + GetGroundString());
         }
 
         private void Update()
@@ -411,11 +413,6 @@ namespace Movement
                     }
                 }
             }
-        }
-
-        private float GetVelocity()
-        {
-            return Vector3.Magnitude(GetComponent<Rigidbody>().velocity);
         }
 
         public string GetXzVelocityString()

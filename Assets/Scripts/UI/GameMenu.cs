@@ -27,6 +27,7 @@ namespace UI
         public static GameMenu SingletonInstance { get; private set; }
 
         [SerializeField] private MenuProperties menuProperties;
+        [SerializeField] private GameObject debugWindow;
 
         private Window currentWindow = Window.NONE;
         private Stack<MenuWindow> menuStack = new Stack<MenuWindow>();
@@ -88,6 +89,16 @@ namespace UI
         {
             while (menuStack.Count > 0)
                 CloseWindow();
+        }
+
+        public void ToggleDebugWindow()
+        {
+            debugWindow.SetActive(!debugWindow.activeSelf);
+        }
+
+        public DebugWindow GetDebugWindow()
+        {
+            return debugWindow.GetComponent<DebugWindow>();
         }
     }
 }

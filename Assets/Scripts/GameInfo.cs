@@ -12,8 +12,6 @@ public class GameInfo : MonoBehaviour
 {
     public static GameInfo info;
 
-    public delegate string InfoString();
-
     public GameObject playerTemplate;
     public GUISkin skin;
     public string secretKey = "";
@@ -45,10 +43,6 @@ public class GameInfo : MonoBehaviour
 
     //Debug window (top-left corner, toggle with f8)
     public bool logToConsole = true;
-    private float lastFps = 0f;
-    private float lastFpsRecordTime = -1f;
-    private List<string> linePrefixes = new List<string>();
-    private List<InfoString> windowLines = new List<InfoString>();
 
     //GUI settings
     public float circleSpeed1 = 10f;
@@ -129,31 +123,6 @@ public class GameInfo : MonoBehaviour
             myDebugWindow.SetActive(!myDebugWindow.activeSelf);
         }
 
-        //Update fps every 0.1 seconds
-        if (lastFpsRecordTime + 0.1f < Time.time || lastFpsRecordTime < 0f)
-        {
-            lastFps = Mathf.RoundToInt(1 / Time.smoothDeltaTime);
-            lastFpsRecordTime = Time.time;
-        }
-        myDebugWindowText.text = lastFps.ToString() + " FPS\n";
-
-        //Draw debug window lines
-        if (GetPlayerInfo() != null)
-        {
-            string str = "";
-
-            for (int i = 0; i < windowLines.Count; i++)
-            {
-                str += linePrefixes[i] + windowLines[i]() + "\n";
-            }
-
-            myDebugWindowText.text += str;
-        }
-        else
-        {
-            myDebugWindowText.text += "No player";
-        }
-
         //Update effects
         fx.Update();
     }
@@ -162,7 +131,6 @@ public class GameInfo : MonoBehaviour
     private void OnLevelWasLoaded(int level)
     {
         Settings.AllSettings.LoadSettings();
-        RemoveAllWindowLines();
 
         //Initialize based on loadMode
         if (loadMode == LevelLoadMode.DEMO)
@@ -248,7 +216,6 @@ public class GameInfo : MonoBehaviour
     //Removes all leftover things that could reference the player
     public void CleanUpPlayer()
     {
-        RemoveAllWindowLines();
         currentDemo = null;
     }
 
@@ -256,71 +223,6 @@ public class GameInfo : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
-    }
-
-    //Menu state manager
-    public void SetMenuState()
-    {
-        /*
-        switch (state)
-        {
-            case MenuState.CLOSED:
-                SetGamePaused(false);
-                SetCursorLock(true);
-                break;
-            case MenuState.ESC_MENU:
-                SetMouseView(false);
-                EscWindow escWindow = Instantiate(menuProperties.escWindowPrefab, myCanvas.transform).GetComponent<EscWindow>();
-                escWindow.OnActivate();
-                menuStack.Push(escWindow);
-                break;
-            case MenuState.DEMO:
-                SetGamePaused(false);
-                SetMouseView(false);
-                menuLocked = true;
-                SetCursorLock(true);
-                break;
-            case MenuState.LEADERBOARD:
-                SetMouseView(false);
-                endLevel.SetActive(true);
-                MenuWindow leaderboard = WindowManager.CreateWindow<LeaderboardWindow>(menuProperties.leaderboardDisplayPrefab, myCanvas.transform);
-                leaderboard.OnActivate();
-                menuStack.Push(leaderboard);
-                menuLocked = true;
-                break;
-            case MenuState.END_LEVEL:
-                SetGamePaused(false);
-                SetMouseView(false);
-                endLevel.SetActive(true);
-                menuLocked = true;
-                break;
-            case MenuState.OTHERMENU:
-                menuLocked = true;
-                break;
-            case MenuState.EDITOR:
-                menuLocked = true;
-                SetGamePaused(false);
-                break;
-            case MenuState.EDITORPLAY:
-                menuLocked = true;
-                SetGamePaused(false);
-                SetCursorLock(true);
-                break;
-        }*/
-    }
-
-    //Draws some info in the debug window, add a prefix and a function that returns a string
-    public void AddWindowLine(string prefix, InfoString stringFunction)
-    {
-        linePrefixes.Add(prefix);
-        windowLines.Add(stringFunction);
-    }
-
-    //Remove everything from the debug window
-    private void RemoveAllWindowLines()
-    {
-        linePrefixes.Clear();
-        windowLines.Clear();
     }
 
     private void SetGamePaused(bool value)
