@@ -16,6 +16,7 @@ namespace UI
         [SerializeField] private GameObject gameSelectionPrefab;
         [SerializeField] private GameObject leaderboardWindowPrefab;
         [SerializeField] private GameObject loginWindowPrefab;
+        [SerializeField] private GameObject mainMenuPrefab;
         [SerializeField] private GameObject newPlayerWindow;
         [SerializeField] private GameObject settingsWindowPrefab;
 
@@ -35,6 +36,7 @@ namespace UI
                 {Window.GAME_SELECTION, new TypeAndPrefab(typeof(GameSelectionWindow), gameSelectionPrefab)},
                 {Window.LEADERBOARD, new TypeAndPrefab(typeof(LeaderboardWindow), leaderboardWindowPrefab)},
                 {Window.LOGIN, new TypeAndPrefab(typeof(LoginWindow), loginWindowPrefab)},
+                {Window.MAIN_MENU, new TypeAndPrefab(typeof(MainMenu), mainMenuPrefab)},
                 {Window.NEW_PLAYER, new TypeAndPrefab(typeof(NewPlayerWindow), newPlayerWindow)},
                 {Window.SETTINGS, new TypeAndPrefab(typeof(SettingsWindow), settingsWindowPrefab)},
             };

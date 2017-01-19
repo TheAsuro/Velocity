@@ -61,9 +61,7 @@ public class GameInfo : MonoBehaviour
     //References
     private PlayerBehaviour myPlayer;
     private DemoPlay myDemoPlayer;
-    private ConsoleWindow myConsoleWindow;
     private GameObject myCanvas;
-    private GameObject myConsoleWindowObject;
     private GameObject myDebugWindow;
     private Text myDebugWindowText;
 
@@ -92,7 +90,7 @@ public class GameInfo : MonoBehaviour
 
     private void Awake()
     {
-        if (GameInfo.info == null)
+        if (info == null)
         {
             info = this;
             DontDestroyOnLoad(gameObject);
@@ -109,6 +107,14 @@ public class GameInfo : MonoBehaviour
         myDebugWindowText = myDebugWindow.transform.Find("Text").GetComponent<Text>();
 
         fx = new GameInfoFx(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
+
+        if (!PlayerPrefs.HasKey("lastplayer"))
+            CurrentSave = new SaveData(PlayerPrefs.GetString("lastplayer"));
+    }
+
+    private void Start()
+    {
+        GameMenu.SingletonInstance.AddWindow(Window.MAIN_MENU);
     }
 
     private void Update()
@@ -340,6 +346,16 @@ public class GameInfo : MonoBehaviour
     public bool GetGamePaused()
     {
         return gamePaused;
+    }
+
+    public void DeletePlayer(string name)
+    {
+        SaveData sd = new SaveData(name);
+        sd.DeleteData();
+
+        //Log out from current player if we deleted that one
+        if (CurrentSave != null && CurrentSave.Name == name)
+            CurrentSave = null;
     }
 
     //Sets the reference to the player
