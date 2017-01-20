@@ -167,6 +167,9 @@ public class GameInfo : MonoBehaviour
         LastRunWasPb = CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
 
         currentDemo = myPlayer.GetDemo();
+        EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
+        window.Initialize(currentDemo, myDemoPlayer);
+
         SendLeaderboardEntry(lastTime, SceneManager.GetActiveScene().name, currentDemo);
     }
 

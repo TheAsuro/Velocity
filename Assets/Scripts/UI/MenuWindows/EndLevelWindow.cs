@@ -8,7 +8,7 @@ namespace UI.MenuWindows
         private Demo demo;
         private DemoPlay demoPlayer;
 
-        public EndLevelWindow(Demo demo, DemoPlay demoPlayer)
+        public void Initialize(Demo demo, DemoPlay demoPlayer)
         {
             this.demo = demo;
             this.demoPlayer = demoPlayer;
@@ -22,15 +22,13 @@ namespace UI.MenuWindows
 
         public void PlayRaceDemo()
         {
-            if (demoPlayer != null && demo != null)
-                demoPlayer.PlayDemo(demo, delegate { GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL); }, true);
+            demoPlayer.PlayDemo(demo, () => GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL), true);
         }
 
         //Save demo to ".vdem" file, does not work in web player
         public void SaveLastDemo()
         {
-            if (demo != null)
-                demo.SaveToFile(Application.dataPath);
+            demo.SaveToFile(Application.dataPath);
         }
 
         public void ToMainMenu()

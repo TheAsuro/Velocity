@@ -7,61 +7,57 @@ using System.Diagnostics;
 //Interacts with checkpoint triggers, must be added to every player
 public class RaceScript : MonoBehaviour
 {
-	private bool editorMode = false;
+    private bool editorMode = false;
 
-	private int checkpoint = -1;
+    private int checkpoint = -1;
     private bool started = false;
-	private bool finished = false;
-	private bool paused = false;
+    private bool finished = false;
+    private bool paused = false;
 
-	private float freezeDuration = 3f;
-	private float unfreezeTime = float.PositiveInfinity;
+    private float freezeDuration = 3f;
+    private float unfreezeTime = float.PositiveInfinity;
     private float lastSecondGame;
     private DateTime lastSecondComputer;
 
-	private Text timeText;
-	private Text speedText;
-	private Text nameText;
-	private Text countdownText;
+    private Text timeText;
+    private Text speedText;
+    private Text nameText;
+    private Text countdownText;
     private GameObject wrDisplay;
 
     private Stopwatch playTime;
+
     private TimeSpan ElapsedTime
     {
-        get
-        {
-            if (playTime == null)
-                return TimeSpan.MaxValue;
-            else
-                return playTime.Elapsed;
-        }
+        get { return playTime == null ? TimeSpan.MaxValue : playTime.Elapsed; }
     }
+
     private string TimeString
     {
         get { return (new DateTime(ElapsedTime.Ticks)).ToString("mm:ss.ffff"); }
     }
-	
-	//Handle player GUI
+
+    //Handle player GUI
     private void Awake()
-	{
-		Transform canvas = gameObject.transform.parent.Find("Canvas");
-		timeText = canvas.Find("Time").Find("Text").GetComponent<Text>();
-		speedText = canvas.Find("Speed").Find("Text").GetComponent<Text>();
-		nameText = canvas.Find("Player").Find("Text").GetComponent<Text>();
-		countdownText = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
+    {
+        Transform canvas = gameObject.transform.parent.Find("Canvas");
+        timeText = canvas.Find("Time").Find("Text").GetComponent<Text>();
+        speedText = canvas.Find("Speed").Find("Text").GetComponent<Text>();
+        nameText = canvas.Find("Player").Find("Text").GetComponent<Text>();
+        countdownText = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
         wrDisplay = canvas.Find("WR").gameObject;
-	}
+    }
 
     private void Update()
-	{
-		//Freeze time is up, start the race!
-		if(!started && paused && Time.time >= unfreezeTime)
-		{
-			StartRace();
-		}
+    {
+        //Freeze time is up, start the race!
+        if (!started && paused && Time.time >= unfreezeTime)
+        {
+            StartRace();
+        }
 
         //Check time validity every second
-        if(started && Time.time > lastSecondGame + 1f)
+        if (started && Time.time > lastSecondGame + 1f)
         {
             TimeSpan difference = DateTime.Now - lastSecondComputer;
             double offset = 1000 - difference.TotalMilliseconds;
@@ -74,102 +70,96 @@ public class RaceScript : MonoBehaviour
             lastSecondComputer = DateTime.Now;
         }
 
-		//Display time
-		timeText.text = TimeString;
-        if (GameInfo.info.IsRunValid())
-            timeText.color = Color.white;
+        //Display time
+        timeText.text = TimeString;
+        timeText.color = GameInfo.info.IsRunValid() ? Color.white : Color.red;
+
+        //Display speed
+        speedText.text = GameInfo.info.GetPlayerInfo().GetCurrentSpeed().ToString() + " m/s";
+
+        //Display player name
+        nameText.text = editorMode ? "Editor" : GameInfo.info.CurrentSave.Account.Name;
+
+        //Skip countdown with use key
+        if (Input.GetButtonDown("Skip") && !started)
+        {
+            StartRace();
+        }
+
+        //countdown
+        float remainingFreezeTime = unfreezeTime - Time.time;
+        if (remainingFreezeTime > 0f)
+        {
+            countdownText.gameObject.transform.parent.gameObject.SetActive(true);
+            wrDisplay.SetActive(true);
+            countdownText.text = Mathf.Ceil(remainingFreezeTime).ToString();
+        }
+        else if (remainingFreezeTime > -1f)
+        {
+            countdownText.gameObject.transform.parent.gameObject.SetActive(true);
+            wrDisplay.SetActive(true);
+            countdownText.text = "GO!";
+        }
         else
-            timeText.color = Color.red;
-
-		//Display speed
-		speedText.text = GameInfo.info.GetPlayerInfo().GetCurrentSpeed().ToString() + " m/s";
-
-		//Display player name
-		if(!editorMode)
-			nameText.text = GameInfo.info.CurrentSave.Account.Name;
-		else
-			nameText.text = "Editor";
-
-		//Skip countdown with use key
-		if(Input.GetButtonDown("Skip") && !started)
-		{
-			StartRace();
-		}
-
-		//countdown
-		float remainingFreezeTime = unfreezeTime - Time.time;
-		if(remainingFreezeTime > 0f)
-		{
-			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-			wrDisplay.SetActive(true);
-			countdownText.text = Mathf.Ceil(remainingFreezeTime).ToString();
-		}
-		else if(remainingFreezeTime > -1f)
-		{
-			countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-			wrDisplay.SetActive(true);
-			countdownText.text = "GO!";
-		}
-		else
-		{
-			countdownText.gameObject.transform.parent.gameObject.SetActive(false);
-			wrDisplay.SetActive(false);
-		}
-	}
+        {
+            countdownText.gameObject.transform.parent.gameObject.SetActive(false);
+            wrDisplay.SetActive(false);
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
-	{
-		if(other.tag.Equals("Checkpoint"))
-		{
-			//Get checkpoint info
-			Checkpoint cp = other.GetComponent<Checkpoint>();
-			int nr = cp.checkpointNumber;
-			bool end = cp.isEnd;
-			
-			if(end && nr == checkpoint + 1 && !finished) //End
-			{
-                EndRace();
-			}
-			else if(nr == checkpoint + 1) //next checkpoint
-			{
-				checkpoint++;
-			}
-		}
-	}
+    {
+        if (other.tag.Equals("Checkpoint"))
+        {
+            //Get checkpoint info
+            Checkpoint cp = other.GetComponent<Checkpoint>();
+            int nr = cp.checkpointNumber;
+            bool end = cp.isEnd;
 
-	//Starts a new race (resets the current one if there is one)
-	public void PrepareRace(float newFreezeDuration = 0f)
-	{
-		checkpoint = 0;
+            if (end && nr == checkpoint + 1 && !finished) //End
+            {
+                EndRace();
+            }
+            else if (nr == checkpoint + 1) //next checkpoint
+            {
+                checkpoint++;
+            }
+        }
+    }
+
+    //Starts a new race (resets the current one if there is one)
+    public void PrepareRace(float newFreezeDuration = 0f)
+    {
+        checkpoint = 0;
         started = false;
-		finished = false;
-		freezeDuration = newFreezeDuration;
+        finished = false;
+        freezeDuration = newFreezeDuration;
         paused = true;
 
         playTime = new Stopwatch();
 
-		if(freezeDuration > 0f)
-		{
+        if (freezeDuration > 0f)
+        {
             Pause();
             unfreezeTime = Time.time + freezeDuration;
-		}
+        }
         else
         {
             StartRace();
         }
 
-		GameInfo.info.StartDemo();
-	}
+        GameInfo.info.StartDemo();
+    }
 
-	private void StartRace()
-	{
+    private void StartRace()
+    {
         started = true;
         WorldInfo.info.DoStart();
         Unpause();
         unfreezeTime = Time.time;
         lastSecondComputer = DateTime.Now;
         lastSecondGame = Time.time;
-	}
+    }
 
     private void EndRace()
     {
@@ -187,7 +177,7 @@ public class RaceScript : MonoBehaviour
 
     public void Unpause()
     {
-        if(started)
+        if (started)
         {
             playTime.Start();
             paused = false;
@@ -195,13 +185,13 @@ public class RaceScript : MonoBehaviour
         }
     }
 
-	public void SetEditorMode(bool value)
-	{
-		editorMode = value;
-	}
+    public void SetEditorMode(bool value)
+    {
+        editorMode = value;
+    }
 
-	public bool GetEditorMode()
-	{
-		return editorMode;
-	}
+    public bool GetEditorMode()
+    {
+        return editorMode;
+    }
 }
