@@ -127,14 +127,14 @@ public class GameInfo : MonoBehaviour
             PlayDemo(currentDemo);
         }
 
-        fx.StartFadeToColor(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
+        fx.StartColorFade(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
     }
 
     //Load a level
     public void LoadLevel(string levelName)
     {
         //Server stuff might be here later
-        fx.StartFadeToColor(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, delegate { SceneManager.LoadScene(levelName); });
+        fx.StartColorFade(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, () => SceneManager.LoadScene(levelName));
     }
 
     //Creates a new local player (the one that is controlled by the current user)
@@ -173,7 +173,6 @@ public class GameInfo : MonoBehaviour
     //Player hit the exit trigger
     public void LevelFinished()
     {
-        PlayRaceDemo();
         SetPlayerInfo(null);
     }
 
@@ -305,23 +304,9 @@ public class GameInfo : MonoBehaviour
         });
     }
 
-    //Plays the current demo after a race is finished
-    private void PlayRaceDemo()
-    {
-        if (myDemoPlayer != null && currentDemo != null)
-            myDemoPlayer.PlayDemo(currentDemo, delegate { GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL); }, true);
-    }
-
     public decimal GetLastTime()
     {
         return lastTime;
-    }
-
-    //Save demo to ".vdem" file, does not work in web player
-    public void SaveLastDemo()
-    {
-        if (currentDemo != null)
-            currentDemo.SaveToFile(Application.dataPath);
     }
 
     //Can the player move the camera with the mouse
@@ -504,7 +489,7 @@ internal class GameInfoFx
         Settings.Input.ExecuteBoundActions();
     }
 
-    public void StartFadeToColor(Color start, Color end, float duration, Callback callback = null)
+    public void StartColorFade(Color start, Color end, float duration, Callback callback = null)
     {
         Effect e = new Effect
         {

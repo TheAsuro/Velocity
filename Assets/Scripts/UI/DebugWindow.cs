@@ -1,11 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using  System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
 {
+    internal class DisplayAction
+    {
+        public Func<string> Action { get; private set; }
+        public GameObject Obj { get; private set; }
+        public bool HasObject { get; private set; }
+
+        public DisplayAction(Func<string> action)
+        {
+            Action = action;
+            HasObject = false;
+        }
+
+        public DisplayAction(Func<string> action, GameObject obj)
+        {
+            Action = action;
+            Obj = obj;
+            HasObject = true;
+        }
+    }
+
     public class DebugWindow : MonoBehaviour
     {
         [SerializeField] private Text displayText;
@@ -13,7 +32,7 @@ namespace UI
         private float lastFps = 0f;
         private float lastFpsRecordTime = -1f;
 
-        private List<Func<string>> displayActions = new List<Func<string>>();
+        private List<DisplayAction> displayActions = new List<DisplayAction>();
 
         private void Start()
         {
@@ -32,12 +51,16 @@ namespace UI
         private void Update()
         {
             displayText.text = "";
-            displayActions.ForEach(action => displayText.text = action() + '\n');
+            displayActions.RemoveAll(action => action.HasObject && action.Obj == null);
+            displayActions.ForEach(action => displayText.text = action.Action() + '\n');
         }
 
-        public void AddDisplayAction(Func<string> action)
+        public void AddDisplayAction(Func<string> action, GameObject obj = null)
         {
-            displayActions.Add(action);
+            if (obj == null)
+                displayActions.Add(new DisplayAction(action));
+            else
+                displayActions.Add(new DisplayAction(action, obj));
         }
     }
 }

@@ -36,14 +36,19 @@ namespace Movement
             camObj = transform.FindChild("Camera").gameObject;
         }
 
-        public void Start()
+        private void Start()
         {
             DebugWindow debugWindow = GameMenu.SingletonInstance.GetDebugWindow();
-            debugWindow.AddDisplayAction(() => "XZ-Speed: " + GetXzVelocityString());
-            debugWindow.AddDisplayAction(() => "Y-Speed: " + GetYVelocityString());
-            debugWindow.AddDisplayAction(() => "Speed 'limit': " + GetMaxSpeedString());
-            debugWindow.AddDisplayAction(() => "Crouched: " + GetCrouchedString());
-            debugWindow.AddDisplayAction(() => "On Ground: " + GetGroundString());
+            debugWindow.AddDisplayAction(() => "XZ-Speed: " + GetXzVelocityString(), gameObject);
+            debugWindow.AddDisplayAction(() => "Y-Speed: " + GetYVelocityString(), gameObject);
+            debugWindow.AddDisplayAction(() => "Speed 'limit': " + GetMaxSpeedString(), gameObject);
+            debugWindow.AddDisplayAction(() => "Crouched: " + GetCrouchedString(), gameObject);
+            debugWindow.AddDisplayAction(() => "On Ground: " + GetGroundString(), gameObject);
+        }
+
+        private void OnDestroy()
+        {
+
         }
 
         private void Update()

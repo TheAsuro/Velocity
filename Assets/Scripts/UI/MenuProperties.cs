@@ -11,6 +11,7 @@ namespace UI
     {
         [SerializeField] private GameObject bugReportPrefab;
         [SerializeField] private GameObject demoListPrefab;
+        [SerializeField] private GameObject endLevelPrefab;
         [SerializeField] private GameObject escWindowPrefab;
         [SerializeField] private GameObject fileWindowPrefab;
         [SerializeField] private GameObject gameSelectionPrefab;
@@ -31,6 +32,7 @@ namespace UI
             {
                 {Window.BUG_REPORT, new TypeAndPrefab(typeof(BugReportWindow), bugReportPrefab)},
                 {Window.DEMO_LIST, new TypeAndPrefab(typeof(DemoListWindow), demoListPrefab)},
+                {Window.END_LEVEL, new TypeAndPrefab(typeof(EndLevelWindow), endLevelPrefab)},
                 {Window.ESC_MENU, new TypeAndPrefab(typeof(EscWindow), escWindowPrefab)},
                 {Window.FILE, new TypeAndPrefab(typeof(FileWindow), fileWindowPrefab)},
                 {Window.GAME_SELECTION, new TypeAndPrefab(typeof(GameSelectionWindow), gameSelectionPrefab)},
@@ -58,7 +60,7 @@ namespace UI
         {
             TryCreateTypePairsInstance();
             if (!typePairs.ContainsKey(window))
-                throw new NotImplementedException();
+                throw new NotImplementedException(window.ToString());
             return typePairs[window];
         }
 
