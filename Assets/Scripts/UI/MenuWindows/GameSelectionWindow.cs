@@ -87,6 +87,7 @@ namespace UI.MenuWindows
 
         private void OnPlayableMapClick(string mapName)
         {
+            GameMenu.SingletonInstance.CloseAllWindows();
             GameInfo.info.LoadLevel(mapName);
         }
 

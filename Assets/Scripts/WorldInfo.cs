@@ -27,7 +27,8 @@ public class WorldInfo : MonoBehaviour
     private void Awake()
 	{
 		info = this;
-	    GameMenu.SingletonInstance.AddWindow(beginWindow);
+	    if (beginWindow != Window.NONE)
+	        GameMenu.SingletonInstance.AddWindow(beginWindow);
 	}
 
 	public void AddStartMethod(Start start, string id)

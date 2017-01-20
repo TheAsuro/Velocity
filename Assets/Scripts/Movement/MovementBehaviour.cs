@@ -419,19 +419,17 @@ namespace Movement
         {
             float mag = new Vector3(GetComponent<Rigidbody>().velocity.x, 0f, GetComponent<Rigidbody>().velocity.z)
                 .magnitude;
-            string magstr = mag.ToString();
-            return magstr.ToLower().Contains("e") ? "0" : RoundString(magstr, 2);
+            return mag.ToString("0.00");
         }
 
         public string GetYVelocityString()
         {
-            string v = GetComponent<Rigidbody>().velocity.y.ToString();
-            return v.ToLower().Contains("e") ? "0" : RoundString(v, 2);
+            return GetComponent<Rigidbody>().velocity.y.ToString("0.00");
         }
 
         private string GetMaxSpeedString()
         {
-            return maxSpeed.ToString();
+            return maxSpeed.ToString("0.00");
         }
 
         private string GetCrouchedString()
@@ -442,11 +440,6 @@ namespace Movement
         private string GetGroundString()
         {
             return CheckGround().ToString();
-        }
-
-        private string RoundString(string input, int digitsAfterDot)
-        {
-            return input.Contains(".") ? input.Substring(0, input.IndexOf('.') + digitsAfterDot) : input;
         }
 
         public float XzVelocity
