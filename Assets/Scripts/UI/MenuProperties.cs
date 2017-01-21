@@ -19,6 +19,7 @@ namespace UI
         [SerializeField] private GameObject loginWindowPrefab;
         [SerializeField] private GameObject mainMenuPrefab;
         [SerializeField] private GameObject newPlayerWindow;
+        [SerializeField] private GameObject playWindow;
         [SerializeField] private GameObject settingsWindowPrefab;
 
         private Dictionary<Window, TypeAndPrefab> typePairs;
@@ -40,6 +41,7 @@ namespace UI
                 {Window.LOGIN, new TypeAndPrefab(typeof(LoginWindow), loginWindowPrefab)},
                 {Window.MAIN_MENU, new TypeAndPrefab(typeof(MainMenu), mainMenuPrefab)},
                 {Window.NEW_PLAYER, new TypeAndPrefab(typeof(NewPlayerWindow), newPlayerWindow)},
+                {Window.PLAY, new TypeAndPrefab(typeof(PlayWindow), playWindow)},
                 {Window.SETTINGS, new TypeAndPrefab(typeof(SettingsWindow), settingsWindowPrefab)},
             };
         }

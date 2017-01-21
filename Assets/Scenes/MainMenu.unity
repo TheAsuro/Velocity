@@ -99,6 +99,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 72204412}
+  - component: {fileID: 72204413}
   m_Layer: 0
   m_Name: DemoPlayer
   m_TagString: Untagged
@@ -119,6 +120,20 @@ Transform:
   m_Father: {fileID: 1453612872}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &72204413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 72204411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e1c11aec4b9af346879ac5883944e61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostPrefab: {fileID: 100000, guid: a4a93747b7895864ba8bcfb521e1e547, type: 2}
+  ghostCamPrefab: {fileID: 100000, guid: f11dc40ee198a214f90c767b786980b9, type: 2}
+  thirdPersonOffset: {x: 0, y: 0, z: -5}
 --- !u!1 &75616400
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bc318c80a5bd14a87a0cd5fcc24a81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultDemo: F:\Programming\Velocity\Assets\default.vdem
+  defaultDemo: default.vdem
 --- !u!4 &907232350
 Transform:
   m_ObjectHideFlags: 0
