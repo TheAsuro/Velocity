@@ -8,13 +8,11 @@ public class PlayerBehaviour : MonoBehaviour
     //References
     private GameObject myMesh;
 
-    private Canvas myCanvas;
     private RaceScript myRaceScript;
     private MouseLook myMouseLook;
     private Camera myCamera;
     private DemoRecord myRecorder;
-    private MovementBehaviour myMovement;
-    private Image myCrosshair;
+    public MovementBehaviour Movement { get; private set; }
 
     //Default values for movement variables
     //Speed, AirSpeed, MaxSpeed, Friction, Jump
@@ -26,20 +24,13 @@ public class PlayerBehaviour : MonoBehaviour
     private void Awake()
     {
         myMesh = transform.Find("Mesh").gameObject;
-        myCanvas = transform.Find("Canvas").GetComponent<Canvas>();
         myRaceScript = myMesh.GetComponent<RaceScript>();
         myCamera = myMesh.transform.Find("Camera").gameObject.GetComponent<Camera>();
         myMouseLook = myCamera.gameObject.GetComponent<MouseLook>();
         myRecorder = myMesh.GetComponent<DemoRecord>();
-        myMovement = myMesh.GetComponent<MovementBehaviour>();
-        myCrosshair = myCanvas.transform.Find("CrosshairCircle").GetComponent<Image>();
+        Movement = myMesh.GetComponent<MovementBehaviour>();
 
         ApplySettings();
-    }
-
-    private void Update()
-    {
-        myCrosshair.material.SetFloat("_Speed", myMovement.XzVelocity);
     }
 
     public void ApplySettings()
@@ -70,7 +61,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public string GetCurrentSpeed()
     {
-        return myMovement.GetXzVelocityString();
+        return Movement.GetXzVelocityString();
     }
 
     public void SetMouseSens(float sensitivity)
@@ -116,31 +107,31 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void Freeze()
     {
-        myMovement.Freeze();
+        Movement.Freeze();
     }
 
     public void Unfreeze()
     {
-        myMovement.Unfreeze();
+        Movement.Unfreeze();
     }
 
     public void SetFriction(float value)
     {
         if (cheats)
-            myMovement.friction = value;
+            Movement.friction = value;
         else
             PrintCheatWarning();
     }
 
     public float GetFriction()
     {
-        return myMovement.friction;
+        return Movement.friction;
     }
 
     public void SetAcceleration(float value)
     {
         if (cheats)
-            myMovement.accel = value;
+            Movement.accel = value;
         else
             PrintCheatWarning();
     }
@@ -148,59 +139,59 @@ public class PlayerBehaviour : MonoBehaviour
     //Gets input multiplier, not current speed!
     public float GetAcceleration()
     {
-        return myMovement.accel;
+        return Movement.accel;
     }
 
     public void SetAirAcceleration(float value)
     {
         if (cheats)
-            myMovement.airAccel = value;
+            Movement.airAccel = value;
         else
             PrintCheatWarning();
     }
 
     public float GetAirAcceleration()
     {
-        return myMovement.airAccel;
+        return Movement.airAccel;
     }
 
     public void SetMaxSpeed(float value)
     {
         if (cheats)
-            myMovement.maxSpeed = value;
+            Movement.maxSpeed = value;
         else
             PrintCheatWarning();
     }
 
     public float GetMaxSpeed()
     {
-        return myMovement.maxSpeed;
+        return Movement.maxSpeed;
     }
 
     public void SetMaxAirSpeed(float value)
     {
         if (cheats)
-            myMovement.maxAirSpeed = value;
+            Movement.maxAirSpeed = value;
         else
             PrintCheatWarning();
     }
 
     public float GetMaxAirSpeed()
     {
-        return myMovement.maxAirSpeed;
+        return Movement.maxAirSpeed;
     }
 
     public void SetJumpForce(float value)
     {
         if (cheats)
-            myMovement.jumpForce = value;
+            Movement.jumpForce = value;
         else
             PrintCheatWarning();
     }
 
     public float GetJumpForce()
     {
-        return myMovement.jumpForce;
+        return Movement.jumpForce;
     }
 
     public void SetWorldBackgroundColor(Color color)
@@ -261,22 +252,6 @@ public class PlayerBehaviour : MonoBehaviour
         get { return myCamera; }
     }
 
-    public bool CanvasEnabled
-    {
-        get
-        {
-            return myCanvas != null && myCanvas.enabled;
-        }
-        set
-        {
-            if (myCanvas == null)
-            {
-                return;
-            }
-            myCanvas.enabled = value;
-        }
-    }
-
     private void PrintCheatWarning()
     {
         Console.Write("This command is cheat protected, turn on cheats with 'cheats 1'!");
@@ -285,13 +260,13 @@ public class PlayerBehaviour : MonoBehaviour
     public void SetNoclip(bool value)
     {
         if (cheats || value == false)
-            myMovement.Noclip = value;
+            Movement.Noclip = value;
         else
             PrintCheatWarning();
     }
 
     public bool GetNoclip()
     {
-        return myMovement.Noclip;
+        return Movement.Noclip;
     }
 }

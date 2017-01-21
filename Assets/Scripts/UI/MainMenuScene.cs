@@ -10,7 +10,7 @@ namespace UI
     {
         [SerializeField] private string defaultDemo;
 
-        private void Awake()
+        private void Start()
         {
             if (defaultDemo == "")
                 throw new MissingReferenceException("Put in default demo pls");
@@ -25,7 +25,7 @@ namespace UI
             {
                 Demo demo = new Demo(absolutePath);
                 SceneManager.LoadScene(demo.GetLevelName(), LoadSceneMode.Additive);
-                DemoPlayer.SingletonInstance.PlayDemo(demo);
+                DemoPlayer.SingletonInstance.PlayDemo(demo, true);
             }
             else
             {

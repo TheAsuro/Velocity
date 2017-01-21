@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UI;
 
 public class WorldInfo : MonoBehaviour
 {
 	public static WorldInfo info;
-	
-	public Window beginWindow = Window.NONE;
+
 	public Color worldBackgroundColor = Color.black;
     public Material worldSkybox;
 	public float deathHeight = -100f;
@@ -27,8 +25,6 @@ public class WorldInfo : MonoBehaviour
     private void Awake()
 	{
 		info = this;
-	    if (beginWindow != Window.NONE)
-	        GameMenu.SingletonInstance.AddWindow(beginWindow);
 	}
 
 	public void AddStartMethod(Start start, string id)

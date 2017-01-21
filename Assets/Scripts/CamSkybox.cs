@@ -11,7 +11,7 @@ using System.Collections;
 
 public class CamSkybox : MonoBehaviour
 {
-    private void Awake()
+    private void Start()
     {
         if (!gameObject.GetComponent<Skybox>())
         {
@@ -25,6 +25,5 @@ public class CamSkybox : MonoBehaviour
     public void UpdateSkybox()
     {
         gameObject.GetComponent<Skybox>().material = WorldInfo.info.worldSkybox;
-
     }
 }

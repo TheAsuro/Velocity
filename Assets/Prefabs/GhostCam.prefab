@@ -5,14 +5,14 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 400000}
-  - 20: {fileID: 2094182}
-  - 114: {fileID: 11474012}
+  - component: {fileID: 400000}
+  - component: {fileID: 2094182}
+  - component: {fileID: 11474012}
   m_Layer: 0
   m_Name: GhostCam
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,6 +29,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &2094182
 Camera:
   m_ObjectHideFlags: 1
@@ -47,7 +48,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 40
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -55,7 +56,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: ddd2ddfa291429e4884f36ffdf837d93, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
