@@ -1,4 +1,5 @@
-﻿using Api;
+﻿using System.IO;
+using Api;
 using Demos;
 using UnityEngine;
 using UnityEngine.UI;
@@ -200,12 +201,15 @@ namespace UI.MenuWindows
         {
             if (input.Length == 2)
             {
-                Demo demo = new Demo(System.IO.Path.Combine(Application.dataPath, input[1]));
-
-                if (demo.DidLoadFromFileFail())
-                    Write("Could not open demo!");
-                else
-                    GameInfo.info.PlayDemo(demo);
+                try
+                {
+                    Demo demo = new Demo(Path.Combine(Application.dataPath, input[1]));
+                    DemoPlayer.SingletonInstance.PlayDemo(demo);
+                }
+                catch (IOException e)
+                {
+                    Write("Could not open demo! \n" + e.StackTrace);
+                }
             }
             else
             {

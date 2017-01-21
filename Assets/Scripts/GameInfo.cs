@@ -39,7 +39,6 @@ public class GameInfo : MonoBehaviour
 
     private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
     private bool runValid = false;
-    public LevelLoadMode loadMode = LevelLoadMode.PLAY;
 
     //Debug window (top-left corner, toggle with f8)
     public bool logToConsole = true;
@@ -54,7 +53,6 @@ public class GameInfo : MonoBehaviour
 
     //References
     private PlayerBehaviour myPlayer;
-    private DemoPlay myDemoPlayer;
     private GameObject myCanvas;
 
     //Load infos like player name, pb's, etc.
@@ -74,12 +72,6 @@ public class GameInfo : MonoBehaviour
 
     public bool LastRunWasPb { get; private set; }
 
-    public enum LevelLoadMode
-    {
-        PLAY,
-        DEMO
-    }
-
     private void Awake()
     {
         if (info == null)
@@ -91,8 +83,6 @@ public class GameInfo : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        myDemoPlayer = gameObject.GetComponent<DemoPlay>();
 
         myCanvas = transform.Find("Canvas").gameObject;
 
@@ -119,14 +109,6 @@ public class GameInfo : MonoBehaviour
     //Prepare for new level
     private void OnLevelWasLoaded(int level)
     {
-        Settings.AllSettings.LoadSettings();
-
-        //Initialize based on loadMode
-        if (loadMode == LevelLoadMode.DEMO)
-        {
-            PlayDemo(currentDemo);
-        }
-
         fx.StartColorFade(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
     }
 
@@ -160,7 +142,7 @@ public class GameInfo : MonoBehaviour
     //Player hit the goal
     public void RunFinished(TimeSpan time)
     {
-        StopDemo();
+        myPlayer.StopRecording();
         CleanUpPlayer();
         lastTime = time.Ticks / (decimal) 10000000;
 
@@ -168,7 +150,7 @@ public class GameInfo : MonoBehaviour
 
         currentDemo = myPlayer.GetDemo();
         EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
-        window.Initialize(currentDemo, myDemoPlayer);
+        window.Initialize(currentDemo);
 
         SendLeaderboardEntry(lastTime, SceneManager.GetActiveScene().name, currentDemo);
     }
@@ -197,11 +179,10 @@ public class GameInfo : MonoBehaviour
     //Reset everything in the world to its initial state
     public void Reset()
     {
-        StopDemo();
+        DemoPlayer.SingletonInstance.StopDemoPlayback(true);
         CleanUpPlayer();
         WorldInfo.info.ResetWorld();
         GameMenu.SingletonInstance.CloseAllWindows();
-        StartDemo();
     }
 
     //Removes all leftover things that could reference the player
@@ -270,41 +251,6 @@ public class GameInfo : MonoBehaviour
     public PlayerBehaviour GetPlayerInfo()
     {
         return myPlayer;
-    }
-
-    public void StartDemo()
-    {
-        ResetRun();
-
-        //check if there is a player and we are not in editor
-        if (myPlayer != null)
-            myPlayer.StartDemo(currentSave.Account.Name);
-    }
-
-    public void StopDemo()
-    {
-        if (myPlayer != null)
-            myPlayer.StopDemo();
-    }
-
-    //Plays a demo and returns to main menu
-    public void PlayDemo(Demo demo)
-    {
-        currentDemo = demo;
-
-        //Reload level if in wrong mode/level (this function will be called again)
-        if (currentDemo.GetLevelName() != SceneManager.GetActiveScene().name || loadMode != LevelLoadMode.DEMO)
-        {
-            loadMode = LevelLoadMode.DEMO;
-            LoadLevel(currentDemo.GetLevelName());
-            return;
-        }
-
-        myDemoPlayer.PlayDemo(currentDemo, delegate
-        {
-            loadMode = LevelLoadMode.PLAY;
-            LoadLevel("MainMenu");
-        });
     }
 
     public decimal GetLastTime()

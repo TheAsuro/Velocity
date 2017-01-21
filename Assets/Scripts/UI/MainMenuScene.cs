@@ -24,7 +24,7 @@ namespace UI
             {
                 Demo demo = new Demo(path);
                 SceneManager.LoadScene(demo.GetLevelName(), LoadSceneMode.Additive);
-                // TODO play demo
+                // TODO set up demo player
             }
             else
             {

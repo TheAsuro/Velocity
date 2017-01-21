@@ -89,12 +89,12 @@ public class PlayerBehaviour : MonoBehaviour
         myMesh.GetComponent<AudioSource>().volume = volume;
     }
 
-    public void StartDemo(string playerName)
+    public void StartRecording(string playerName)
     {
         myRecorder.StartDemo(playerName);
     }
 
-    public void StopDemo()
+    public void StopRecording()
     {
         myRecorder.StopDemo();
     }

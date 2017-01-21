@@ -4,11 +4,14 @@ using UnityEngine;
 
 namespace Demos
 {
-    public class DemoPlay : MonoBehaviour
+    public class DemoPlayer : MonoBehaviour
     {
+        public static DemoPlayer SingletonInstance;
+
         public static bool thirdPersonDemoView = false;
 
-        public delegate void FinishedPlaying();
+        public event EventHandler OnFinishedPlaying;
+
         public GameObject ghostPrefab;
         public GameObject ghostCamPrefab;
         public Vector3 thirdPersonOffset;
@@ -21,12 +24,18 @@ namespace Demos
         private List<DemoTick> tickList;
         private bool looping = false;
 
-        private Action myCallback;
+        private void Awake()
+        {
+            if (SingletonInstance == null)
+                SingletonInstance = this;
+            else
+                throw new InvalidOperationException("Two DemoPlayer instances!");
+        }
 
         private void Update()
         {
             //If we are playing and there is a valid ghost
-            if(playing && ghost != null)
+            if (playing && ghost != null)
             {
                 float playTime = Time.time - startPlayTime; //Time since we began playing
                 float lastFrameTime = -1f; //Last recorded frame
@@ -37,21 +46,21 @@ namespace Demos
                 Quaternion nextRot = new Quaternion();
 
                 //Go through all frames
-                foreach(DemoTick tick in tickList)
+                foreach (DemoTick tick in tickList)
                 {
                     //Find the highest one that is smaller than playTime
-                    if((float)tick.GetTime() <= playTime && (float)tick.GetTime() > lastFrameTime)
+                    if ((float) tick.GetTime() <= playTime && (float) tick.GetTime() > lastFrameTime)
                     {
-                        lastFrameTime = (float)tick.GetTime();
+                        lastFrameTime = (float) tick.GetTime();
                         lastPos = tick.GetPosition();
                         lastRot = tick.GetRotation();
                     }
                     //Find the one after that
                     else
                     {
-                        if((float)tick.GetTime() > (float)lastFrameTime && nextFrameTime == -1f)
+                        if ((float) tick.GetTime() > (float) lastFrameTime && nextFrameTime == -1f)
                         {
-                            nextFrameTime = (float)tick.GetTime();
+                            nextFrameTime = (float) tick.GetTime();
                             nextPos = tick.GetPosition();
                             nextRot = tick.GetRotation();
                         }
@@ -59,7 +68,7 @@ namespace Demos
                 }
 
                 //If demo is running
-                if(lastFrameTime > 0f && nextFrameTime > 0f)
+                if (lastFrameTime > 0f && nextFrameTime > 0f)
                 {
                     float frameStep = nextFrameTime - lastFrameTime;
                     float timeToNextFrame = nextFrameTime - playTime;
@@ -72,10 +81,7 @@ namespace Demos
                     ghost.transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, t);
 
                     //Update first/third person view
-                    if (!thirdPersonDemoView)
-                        camDistance = new Vector3(0f, 0.5f, 0f); //First person view
-                    else
-                        camDistance = thirdPersonOffset; //Third person view
+                    camDistance = thirdPersonDemoView ? thirdPersonOffset : new Vector3(0f, 0.5f, 0f);
 
                     //make obj at ghost position and child at cam distance
                     ghostCam.transform.position = ghost.transform.position + (ghost.transform.rotation * camDistance);
@@ -102,7 +108,7 @@ namespace Demos
             }
         }
 
-        public void PlayDemo(Demo demo, Action callback, bool doLoop = false)
+        public void PlayDemo(Demo demo, bool doLoop = false)
         {
             looping = doLoop;
 
@@ -113,8 +119,8 @@ namespace Demos
             tickList = demo.GetTickList();
 
             //Get ghost spawn
-            ghost = (GameObject)GameObject.Instantiate(ghostPrefab, tickList[0].GetPosition(), tickList[0].GetRotation());
-            ghostCam = (GameObject)GameObject.Instantiate(ghostCamPrefab, tickList[0].GetPosition(), tickList[0].GetRotation());
+            ghost = Instantiate(ghostPrefab, tickList[0].GetPosition(), tickList[0].GetRotation());
+            ghostCam = Instantiate(ghostCamPrefab, tickList[0].GetPosition(), tickList[0].GetRotation());
 
             //Set up camera
             Camera cam = ghostCam.GetComponent<Camera>();
@@ -125,29 +131,21 @@ namespace Demos
             startPlayTime = Time.time;
 
             //Stop playback on world reset
-            WorldInfo.Reset resetPlay = new WorldInfo.Reset(StopDemoPlayback);
+            WorldInfo.Reset resetPlay = () => StopDemoPlayback(true);
             WorldInfo.info.AddResetMethod(resetPlay, "GhostReset");
-
-            //Save callback
-            myCallback = callback;
 
             //Start playing
             playing = true;
         }
 
-        public void StopDemoPlayback(bool interrupt)
+        public void StopDemoPlayback(bool interrupt = false)
         {
             playing = false;
-            GameObject.Destroy(ghost);
-            GameObject.Destroy(ghostCam);
+            Destroy(ghost);
+            Destroy(ghostCam);
 
-            if (myCallback != null && !interrupt)
-                myCallback();
-        }
-
-        public void StopDemoPlayback()
-        {
-            StopDemoPlayback(false);
+            if (OnFinishedPlaying != null && !interrupt)
+                OnFinishedPlaying(this, new EventArgs());
         }
 
         public void ResetDemo()

@@ -147,8 +147,6 @@ public class RaceScript : MonoBehaviour
         {
             StartRace();
         }
-
-        GameInfo.info.StartDemo();
     }
 
     private void StartRace()

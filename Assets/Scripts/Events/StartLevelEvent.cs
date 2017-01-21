@@ -15,7 +15,8 @@ namespace Events
         private void Start()
         {
             WorldInfo.info.AddResetMethod(Reset, "start level reset");
-            if(!inEditor && !(GameInfo.info.loadMode == GameInfo.LevelLoadMode.DEMO))
+            // TODO don't fire when playing demos
+            if(!inEditor)
                 Fire(null);
         }
 

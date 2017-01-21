@@ -48,7 +48,7 @@ namespace UI.MenuWindows
                 .onClick.AddListener(() =>
                 {
                     Demo demo = new Demo(Path.Combine(Application.dataPath, fileName));
-                    GameInfo.info.PlayDemo(demo);
+                    DemoPlayer.SingletonInstance.PlayDemo(demo);
                 });
             t.FindChild("Remove").GetComponent<Button>().onClick.AddListener(() => DemoInfo.DeleteDemoFile(fileName));
         }
