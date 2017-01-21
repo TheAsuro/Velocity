@@ -25,7 +25,7 @@ namespace UI
             {
                 Demo demo = new Demo(absolutePath);
                 SceneManager.LoadScene(demo.GetLevelName(), LoadSceneMode.Additive);
-                DemoPlayer.SingletonInstance.PlayDemo(demo, true);
+                DemoPlayer.SingletonInstance.PlayDemo(demo, true, true);
             }
             else
             {
