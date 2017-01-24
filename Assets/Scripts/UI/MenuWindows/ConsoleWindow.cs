@@ -4,6 +4,7 @@ using System.Linq;
 using Api;
 using Console;
 using Demos;
+using Game;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +31,20 @@ namespace UI.MenuWindows
             myOutput = transform.Find("ConsoleOutput").Find("Mask").Find("Text").GetComponent<Text>();
             myInput = transform.Find("ConsoleInput").GetComponent<InputField>();
 
-            consoleCommands.Add(new QuitCommand());
+            consoleCommands.Add(new HelpCommand(this));
+            consoleCommands.Add(new QuitCommand(this));
+            consoleCommands.Add(new LogCommand(this));
+            consoleCommands.Add(new PlayDemoCommand(this));
+            consoleCommands.Add(new CheatsCommand(this));
+
+            consoleCommands.Add(new FrictionCommand(this));
+            consoleCommands.Add(new AcclerationCommand(this));
+            consoleCommands.Add(new AirAcclerationCommand(this));
+            consoleCommands.Add(new MaxSpeedCommand(this));
+            consoleCommands.Add(new MaxAirSpeedCommand(this));
+            consoleCommands.Add(new JumpHeightCommand(this));
+            consoleCommands.Add(new GravityCommand(this));
+            consoleCommands.Add(new NoclipCommand(this));
         }
 
         private void Update()
@@ -144,287 +158,6 @@ namespace UI.MenuWindows
             else
             {
                 Write("'" + command + "' is not a valid command!");
-            }
-
-            switch (commandParts[0].ToLower())
-            {
-                case "move_friction":
-                    FrictionCommand(commandParts);
-                    break;
-                case "move_accel":
-                    AccelerationCommand(commandParts);
-                    break;
-                case "move_airaccel":
-                    AirAccelerationCommand(commandParts);
-                    break;
-                case "move_maxspeed":
-                    MaxSpeedCommand(commandParts);
-                    break;
-                case "move_maxairspeed":
-                    MaxAirSpeedCommand(commandParts);
-                    break;
-                case "move_jumpheight":
-                    JumpHeightCommand(commandParts);
-                    break;
-                case "move_gravity":
-                    GravityCommand(commandParts);
-                    break;
-                case "noclip":
-                    NoclipCommand(commandParts);
-                    break;
-                case "cheats":
-                    CheatsCommand(commandParts);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void FrictionCommand(string[] input)
-        {
-            PlayerBehaviour myPlayerInfo = GameInfo.info.GetPlayerInfo();
-
-            if (myPlayerInfo == null)
-            {
-                Write("No player loaded!");
-                return;
-            }
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Current friction: " + myPlayerInfo.GetFriction());
-                    break;
-                case 2:
-                    float newVal;
-                    if (float.TryParse(input[1], out newVal))
-                    {
-                        myPlayerInfo.SetFriction(newVal);
-                    }
-                    break;
-                default:
-                    Write("Usage: move_friction (new friction)");
-                    break;
-            }
-        }
-
-        private void AccelerationCommand(string[] input)
-        {
-            PlayerBehaviour myPlayerInfo = GameInfo.info.GetPlayerInfo();
-
-            if (myPlayerInfo == null)
-            {
-                Write("No player loaded!");
-                return;
-            }
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Current acceleration: " + myPlayerInfo.GetAcceleration());
-                    break;
-                case 2:
-                    float newVal;
-                    if (float.TryParse(input[1], out newVal))
-                    {
-                        myPlayerInfo.SetAcceleration(newVal);
-                    }
-                    break;
-                default:
-                    Write("Usage: move_accel (new accel)");
-                    break;
-            }
-        }
-
-        private void AirAccelerationCommand(string[] input)
-        {
-            PlayerBehaviour myPlayerInfo = GameInfo.info.GetPlayerInfo();
-
-            if (myPlayerInfo == null)
-            {
-                Write("No player loaded!");
-                return;
-            }
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Current air acceleration: " + myPlayerInfo.GetAirAcceleration());
-                    break;
-                case 2:
-                    float newVal;
-                    if (float.TryParse(input[1], out newVal))
-                    {
-                        myPlayerInfo.SetAirAcceleration(newVal);
-                    }
-                    break;
-                default:
-                    Write("Usage: move_airaccel (new air acceleration)");
-                    break;
-            }
-        }
-
-        private void MaxSpeedCommand(string[] input)
-        {
-            PlayerBehaviour myPlayerInfo = GameInfo.info.GetPlayerInfo();
-
-            if (myPlayerInfo == null)
-            {
-                Write("No player loaded!");
-                return;
-            }
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Current speed limit: " + myPlayerInfo.GetMaxSpeed());
-                    break;
-                case 2:
-                    float newVal;
-                    if (float.TryParse(input[1], out newVal))
-                    {
-                        if (newVal == 0f)
-                        {
-                            Write("Value can not be 0!");
-                            return;
-                        }
-                        myPlayerInfo.SetMaxSpeed(newVal);
-                    }
-                    break;
-                default:
-                    Write("Usage: move_maxspeed (new max speed)");
-                    break;
-            }
-        }
-
-        private void MaxAirSpeedCommand(string[] input)
-        {
-            PlayerBehaviour myPlayerInfo = GameInfo.info.GetPlayerInfo();
-
-            if (myPlayerInfo == null)
-            {
-                Write("No player loaded!");
-                return;
-            }
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Current air speed limit: " + myPlayerInfo.GetMaxAirSpeed());
-                    break;
-                case 2:
-                    float newVal;
-                    if (float.TryParse(input[1], out newVal))
-                    {
-                        if (newVal == 0f)
-                        {
-                            Write("Value can not be 0!");
-                            return;
-                        }
-                        myPlayerInfo.SetMaxAirSpeed(newVal);
-                    }
-                    break;
-                default:
-                    Write("Usage: move_maxairspeed (new max air speed)");
-                    break;
-            }
-        }
-
-        private void JumpHeightCommand(string[] input)
-        {
-            PlayerBehaviour myPlayerInfo = GameInfo.info.GetPlayerInfo();
-
-            if (myPlayerInfo == null)
-            {
-                Write("No player loaded!");
-                return;
-            }
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Current jump height: " + myPlayerInfo.GetJumpForce());
-                    break;
-                case 2:
-                    float newVal;
-                    if (float.TryParse(input[1], out newVal))
-                    {
-                        myPlayerInfo.SetJumpForce(newVal);
-                    }
-                    break;
-                default:
-                    Write("Usage: move_jumpheight (new jump height)");
-                    break;
-            }
-        }
-
-        private void GravityCommand(string[] input)
-        {
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Current gravity: " + Physics.gravity.y);
-                    break;
-                case 2:
-                    float newVal;
-                    if (float.TryParse(input[1], out newVal))
-                    {
-                        GameInfo.info.SetGravity(newVal);
-                    }
-                    break;
-                default:
-                    Write("Usage: move_gravity (new gravity)");
-                    break;
-            }
-        }
-
-        private void NoclipCommand(string[] input)
-        {
-            PlayerBehaviour myPlayerInfo = GameInfo.info.GetPlayerInfo();
-
-            if (myPlayerInfo == null)
-            {
-                Write("No player loaded!");
-                return;
-            }
-
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Noclip: " + myPlayerInfo.GetNoclip());
-                    break;
-                case 2:
-                    int newVal;
-                    if (int.TryParse(input[1], out newVal))
-                    {
-                        myPlayerInfo.SetNoclip(newVal != 0);
-                    }
-                    break;
-                default:
-                    Write("Usage: noclip (1 or 0)");
-                    break;
-            }
-        }
-
-        private void CheatsCommand(string[] input)
-        {
-            PlayerBehaviour myPlayerInfo = GameInfo.info.GetPlayerInfo();
-
-            if (myPlayerInfo == null)
-            {
-                Write("No player loaded!");
-                return;
-            }
-
-            switch (input.Length)
-            {
-                case 1:
-                    Write("Cheats: " + myPlayerInfo.GetCheats());
-                    break;
-                case 2:
-                    int newVal;
-                    if (int.TryParse(input[1], out newVal))
-                    {
-                        myPlayerInfo.SetCheats(newVal != 0);
-                    }
-                    break;
-                default:
-                    Write("Usage: cheats (1 or 0)");
-                    break;
             }
         }
     }

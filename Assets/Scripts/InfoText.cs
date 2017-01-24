@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Game;
 
 public class InfoText : MonoBehaviour
 {
@@ -8,12 +9,6 @@ public class InfoText : MonoBehaviour
 	public bool ignoreDisabledHelp = false;
 
 	private bool display = false;
-	private GUISkin skin;
-
-    private void Awake()
-	{
-		skin = GameInfo.info.skin;
-	}
 
     private void OnTriggerEnter(Collider col)
 	{
@@ -36,7 +31,7 @@ public class InfoText : MonoBehaviour
 		if(display && (Settings.Game.ShowHelp || ignoreDisabledHelp))
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height - 50f - boxMargin, 400f, 50f));
-			GUILayout.Box(content, skin.box);
+			GUILayout.Box(content);
 			GUILayout.EndArea();
 		}
 	}

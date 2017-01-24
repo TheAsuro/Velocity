@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using Demos;
+using Game;
 using Movement;
 using Input = UnityEngine.Input;
 

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Demos;
+using Game;
 using UI.MenuWindows;
 using UnityEngine;
 
@@ -45,7 +46,6 @@ namespace Console
     {
         public PlayDemoCommand(ConsoleWindow window) : base(window, "playdemo") { }
 
-        //Play a demo from a file
         public override void Run(string[] arguments)
         {
             try
@@ -67,6 +67,21 @@ namespace Console
         public override string UsageMessage()
         {
             return "Usage: playdemo <demo name>";
+        }
+    }
+
+    public class CheatsCommand : IntConsoleCommand
+    {
+        public CheatsCommand(ConsoleWindow window) : base(window, "cheats") { }
+
+        protected override void RunWithValue(int value)
+        {
+            GameInfo.info.CheatsActive = value != 0;
+        }
+
+        protected override string PrintStatus()
+        {
+            return "Cheats: " + GameInfo.info.CheatsActive;
         }
     }
 }

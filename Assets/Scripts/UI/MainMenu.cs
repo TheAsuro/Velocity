@@ -1,4 +1,5 @@
-﻿using UI.MenuWindows;
+﻿using Game;
+using UI.MenuWindows;
 
 namespace UI
 {
