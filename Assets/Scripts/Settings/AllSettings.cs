@@ -8,11 +8,6 @@ namespace Settings
     {
         private static Dictionary<string, Setting> settings = new Dictionary<string, Setting>();
 
-        static AllSettings()
-        {
-            Game.Initialize();
-        }
-
         public static void AddSetting(Setting setting)
         {
             settings.Add(setting.Name, setting);

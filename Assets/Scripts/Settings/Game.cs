@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 namespace Settings
@@ -57,7 +56,7 @@ namespace Settings
 
         static Game()
         {
-            var boolConverter = new SettingConverter((bVal) => (bool)bVal ? 1f : 0f, (fVal) => fVal == 1f, (bVal) => (bool)bVal ? "On" : "Off");
+            SettingConverter boolConverter = new SettingConverter((bVal) => (bool)bVal ? 1f : 0f, (fVal) => fVal == 1f, (bVal) => (bool)bVal ? "On" : "Off");
 
             AllSettings.AddSetting(new FloatSetting(MOUSE_SPEED, 1f));
             conversions.Add(MOUSE_SPEED, new SettingConverter((fVal) => Mathf.Round((float)fVal * 10f) / 10f, (fVal) => fVal));
@@ -91,8 +90,6 @@ namespace Settings
             AllSettings.AddSetting(new BoolSetting(SHOW_HELP, true));
             conversions.Add(SHOW_HELP, boolConverter);
         }
-
-        public static void Initialize() { }
 
         public static string GetSettingValueName(string name)
         {

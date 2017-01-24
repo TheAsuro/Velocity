@@ -1,5 +1,4 @@
 ﻿using System;
-using Settings;
 using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,13 +31,13 @@ namespace UI
 
         private void SetSetting(float value)
         {
-            Game.SetSettingFloat(settingName, value);
+            Settings.Game.SetSettingFloat(settingName, value);
         }
 
         private void DisplaySetting()
         {
-            slider.value = Game.GetSettingFloat(settingName);
-            display.text = Game.GetSettingValueName(settingName);
+            slider.value = Settings.Game.GetSettingFloat(settingName);
+            display.text = Settings.Game.GetSettingValueName(settingName);
         }
     }
 }

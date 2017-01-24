@@ -122,7 +122,9 @@ public class RaceScript : MonoBehaviour
         freezeDuration = 3f;
         paused = true;
 
-        // TODO - set player position
+        currentSpawn = firstSpawn;
+        transform.position = firstSpawn.GetSpawnPos();
+        transform.rotation = firstSpawn.GetSpawnRot();
 
         playTime = new Stopwatch();
 
@@ -145,7 +147,7 @@ public class RaceScript : MonoBehaviour
         lastSecondGame = Time.time;
 
         Unpause();
-        demoRecorder.StartDemo(GameInfo.info);
+        demoRecorder.StartDemo(GameInfo.info.PlayerData.PlayerName);
 
         if (OnStart != null)
             OnStart(this, new EventArgs());

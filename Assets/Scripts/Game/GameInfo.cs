@@ -14,6 +14,8 @@ namespace Game
     {
         public static GameInfo info;
 
+        public PlayerData PlayerData { get; private set; }
+
         public string secretKey = "";
         public TextAsset helpFile;
 
