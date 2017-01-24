@@ -24,6 +24,6 @@ public class CamSkybox : MonoBehaviour
 
     public void UpdateSkybox()
     {
-        gameObject.GetComponent<Skybox>().material = WorldInfo.info.worldSkybox;
+        gameObject.GetComponent<Skybox>().material = WorldInfo.info.WorldData.skybox;
     }
 }

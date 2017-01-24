@@ -1,90 +1,53 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using UI;
 
 public class WorldInfo : MonoBehaviour
 {
-	public static WorldInfo info;
+    public static WorldInfo info;
 
-	public Color worldBackgroundColor = Color.black;
-    public Material worldSkybox;
-	public float deathHeight = -100f;
+    [SerializeField] private WorldData worldData;
 
-	public delegate void Start();
-	public delegate void Reset();
+    [SerializeField] private Respawn firstSpawn = null;
 
-	private Dictionary<string,Start> startList = new Dictionary<string,Start>();
-	private Dictionary<string,Reset> resetList = new Dictionary<string,Reset>();
+    public RaceScript RaceScript
+    {
+        get { return GetComponent<RaceScript>(); }
+    }
+
+    public Respawn FirstSpawn
+    {
+        get { return firstSpawn; }
+    }
 
     private List<GameObject> skyboxWatchers = new List<GameObject>();
 
-	//Respawn with r
-	private Respawn currentSpawn = null;
-	private Respawn firstSpawn = null;
-
     private void Awake()
-	{
-		info = this;
-	}
+    {
+        info = this;
+        CreatePlayer(firstSpawn);
+        RaceScript.OnReset += (s, e) => GameMenu.SingletonInstance.CloseAllWindows();
+    }
 
-	public void AddStartMethod(Start start, string id)
-	{
-		if(startList.ContainsKey(id))
-		{
-			startList.Remove(id);
-		}
-		startList.Add(id, start);
-	}
+    private void OnDestroy()
+    {
+        info = null;
+    }
 
-	public void AddResetMethod(Reset reset, string id)
-	{
-		if(resetList.ContainsKey(id))
-		{
-			resetList.Remove(id);
-		}
-		resetList.Add(id, reset);
-	}
+    public void CreatePlayer(Respawn spawnpoint, bool startInEditorMode = false)
+    {
+        //Instantiate a new player at the spawnpoint's location
+        GameObject newPlayer = Instantiate(worldData.playerTemplate, Vector3.zero, Quaternion.identity);
+        PlayerBehaviour newPlayerBehaviour = newPlayer.GetComponent<PlayerBehaviour>();
 
-	public void SetSpawn(Respawn spawn)
-	{
-		if(firstSpawn == null)
-		{
-			firstSpawn = spawn;
-		}
-		currentSpawn = spawn;
-		AddResetMethod(ResetSpawn, "spawn reset");
-	}
+        //Set up player
+        newPlayerBehaviour.ResetPosition(spawnpoint.GetSpawnPos(), spawnpoint.GetSpawnRot());
+        newPlayerBehaviour.SetWorldBackgroundColor(worldData.backgroundColor);
 
-	private void ResetSpawn()
-	{
-		currentSpawn = firstSpawn;
-	}
-
-	public Respawn GetCurrentSpawn()
-	{
-		return currentSpawn;
-	}
-
-	public Respawn GetFirstSpawn()
-	{
-		return firstSpawn;
-	}
-
-	public void DoStart()
-	{
-		foreach(Start s in startList.Values)
-		{
-			s();
-		}
-	}
-
-	public void ResetWorld()
-	{
-		foreach(Reset r in resetList.Values)
-		{
-			r();
-		}
-	}
+        // UI
+        GameMenu.SingletonInstance.AddWindow(Window.PLAY);
+    }
 
     public void AddSkyboxWatcher(GameObject watcher)
     {
@@ -97,5 +60,10 @@ public class WorldInfo : MonoBehaviour
         {
             watcher.GetComponent<CamSkybox>().UpdateSkybox();
         }
+    }
+
+    public WorldData WorldData
+    {
+        get { return worldData; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using UI;
+﻿using System.Media;
+using UI;
 using UnityEngine;
 
 namespace Movement
@@ -25,8 +26,6 @@ namespace Movement
         private bool frozen = false;
 
         private bool jumpKeyPressed = false;
-        private bool respawnKeyPressed = false;
-        private bool resetKeyPressed = false;
         private bool crouchKeyPressed = false;
 
         private Vector3 lastFrameVelocity = Vector3.zero;
@@ -46,11 +45,6 @@ namespace Movement
             debugWindow.AddDisplayAction(() => "On Ground: " + GetGroundString(), gameObject);
         }
 
-        private void OnDestroy()
-        {
-
-        }
-
         private void Update()
         {
             if (frozen)
@@ -58,30 +52,13 @@ namespace Movement
 
             //Set key states
             jumpKeyPressed = Input.GetButton("Jump");
-            respawnKeyPressed = Input.GetButtonDown("Respawn");
-            resetKeyPressed = Input.GetButtonDown("Reset");
             crouchKeyPressed = Input.GetButton("Crouch");
 
             if (jumpKeyPressed)
             {
                 lastJumpPress = Time.time;
             }
-
-            if (respawnKeyPressed)
-            {
-                RespawnPlayer(false);
-            }
-            if (resetKeyPressed)
-            {
-                GameInfo.info.Reset();
-            }
             SetCrouched(crouchKeyPressed);
-        }
-
-        public virtual void FixedMoveUpdate()
-        {
-            if (transform.position.y <= WorldInfo.info.deathHeight)
-                RespawnPlayer(true);
         }
 
         public void Freeze()
@@ -111,10 +88,6 @@ namespace Movement
             {
                 GetComponent<Rigidbody>().velocity = tempVelocity;
             }
-
-            //Kill player if below map
-            if (transform.position.y <= WorldInfo.info.deathHeight)
-                RespawnPlayer(true);
 
             lastFrameVelocity = GetComponent<Rigidbody>().velocity;
         }
@@ -209,7 +182,7 @@ namespace Movement
             if (Time.time < lastJumpPress + jumpPressDuration && yVelocity < jumpForce && CheckGround())
             {
                 lastJumpPress = -1f;
-                GameInfo.info.PlaySound("jump");
+                SoundManager.SingletonInstance.PlaySound("jump");
                 jumpVelocity = new Vector3(0f, jumpForce - yVelocity, 0f);
             }
 
@@ -230,10 +203,6 @@ namespace Movement
                 {
                     GetComponent<Rigidbody>().velocity = Vector3.zero;
                 }
-            }
-            else if (other.tag.Equals("Kill"))
-            {
-                RespawnPlayer(true);
             }
         }
 
@@ -282,20 +251,6 @@ namespace Movement
             }
             else
                 throw new System.InvalidOperationException("Tried to spawn, but no spawnpoint selected.");
-        }
-
-        //Reset and spawn at the last checkpoint
-        public void RespawnPlayer(bool resetAtStart)
-        {
-            //Restart race if it is wanted and we would go to the first checkpoint
-            if (resetAtStart && WorldInfo.info.GetCurrentSpawn() == WorldInfo.info.GetFirstSpawn())
-            {
-                GameInfo.info.Reset();
-                return;
-            }
-
-            //Don't reset the game, just spawn the player at the last (possibly first checkpoint)
-            SpawnPlayer(WorldInfo.info.GetCurrentSpawn());
         }
 
         public bool GetJumpKeyPressed()

@@ -26,7 +26,7 @@ namespace Events
         {
             if(addToResetList)
             {
-                WorldInfo.info.AddResetMethod(Reset, "reset door " + GetInstanceID().ToString());
+                WorldInfo.info.RaceScript.OnReset += (s, e) => Reset();
             }
         }
 

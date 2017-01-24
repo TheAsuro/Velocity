@@ -1,13 +1,19 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
-using UnityEngine.UI;
 using System.Diagnostics;
+using Demos;
+using Movement;
+using Input = UnityEngine.Input;
 
 //Interacts with checkpoint triggers, must be added to every player
 public class RaceScript : MonoBehaviour
 {
-    private bool editorMode = false;
+    public event EventHandler OnStart;
+    public event EventHandler OnReset;
+
+    public MovementBehaviour Movement { get; private set; }
+    public float UnfreezeTime { get; private set; }
+    public bool RunVaild { get; private set; }
 
     private int checkpoint = -1;
     private bool started = false;
@@ -15,43 +21,33 @@ public class RaceScript : MonoBehaviour
     private bool paused = false;
 
     private float freezeDuration = 3f;
-    private float unfreezeTime = float.PositiveInfinity;
     private float lastSecondGame;
     private DateTime lastSecondComputer;
 
-    private Text timeText;
-    private Text speedText;
-    private Text nameText;
-    private Text countdownText;
-    private GameObject wrDisplay;
+    private Respawn firstSpawn;
+    private Respawn currentSpawn;
 
     private Stopwatch playTime;
+    private DemoRecord demoRecorder;
 
-    private TimeSpan ElapsedTime
+    public TimeSpan ElapsedTime
     {
         get { return playTime == null ? TimeSpan.MaxValue : playTime.Elapsed; }
     }
 
-    private string TimeString
-    {
-        get { return (new DateTime(ElapsedTime.Ticks)).ToString("mm:ss.ffff"); }
-    }
-
-    //Handle player GUI
     private void Awake()
     {
-        Transform canvas = gameObject.transform.parent.Find("Canvas");
-        timeText = canvas.Find("Time").Find("Text").GetComponent<Text>();
-        speedText = canvas.Find("Speed").Find("Text").GetComponent<Text>();
-        nameText = canvas.Find("Player").Find("Text").GetComponent<Text>();
-        countdownText = canvas.Find("Countdown").Find("Text").GetComponent<Text>();
-        wrDisplay = canvas.Find("WR").gameObject;
+        UnfreezeTime = float.PositiveInfinity;
+        Movement = GetComponent<MovementBehaviour>();
+        demoRecorder = GetComponent<DemoRecord>();
+        firstSpawn = WorldInfo.info.FirstSpawn;
+        currentSpawn = firstSpawn;
     }
 
     private void Update()
     {
         //Freeze time is up, start the race!
-        if (!started && paused && Time.time >= unfreezeTime)
+        if (!started && paused && (Time.time >= UnfreezeTime || Input.GetButtonDown("Skip")))
         {
             StartRace();
         }
@@ -70,41 +66,23 @@ public class RaceScript : MonoBehaviour
             lastSecondComputer = DateTime.Now;
         }
 
-        //Display time
-        timeText.text = TimeString;
-        timeText.color = GameInfo.info.IsRunValid() ? Color.white : Color.red;
-
-        //Display speed
-        speedText.text = GameInfo.info.GetPlayerInfo().GetCurrentSpeed().ToString() + " m/s";
-
-        //Display player name
-        nameText.text = editorMode ? "Editor" : GameInfo.info.CurrentSave.Account.Name;
-
-        //Skip countdown with use key
-        if (Input.GetButtonDown("Skip") && !started)
+        if (Input.GetButtonDown("Respawn"))
         {
-            StartRace();
+            ResetToLastCheckpoint();
+        }
+        if (Input.GetButtonDown("Reset"))
+        {
+            PrepareNewRace();
         }
 
-        //countdown
-        float remainingFreezeTime = unfreezeTime - Time.time;
-        if (remainingFreezeTime > 0f)
-        {
-            countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-            wrDisplay.SetActive(true);
-            countdownText.text = Mathf.Ceil(remainingFreezeTime).ToString();
-        }
-        else if (remainingFreezeTime > -1f)
-        {
-            countdownText.gameObject.transform.parent.gameObject.SetActive(true);
-            wrDisplay.SetActive(true);
-            countdownText.text = "GO!";
-        }
-        else
-        {
-            countdownText.gameObject.transform.parent.gameObject.SetActive(false);
-            wrDisplay.SetActive(false);
-        }
+        InvalidRunCheck();
+    }
+
+    private void FixedUpdate()
+    {
+        //Kill player if below map
+        if (transform.position.y <= WorldInfo.info.WorldData.deathHeight)
+            ResetToLastCheckpoint();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -125,23 +103,32 @@ public class RaceScript : MonoBehaviour
                 checkpoint++;
             }
         }
+        else if (other.tag.Equals("Kill"))
+        {
+            ResetToLastCheckpoint();
+        }
     }
 
     //Starts a new race (resets the current one if there is one)
-    public void PrepareRace(float newFreezeDuration = 0f)
+    public void PrepareNewRace()
     {
+        if (OnReset != null)
+            OnReset(this, new EventArgs());
+
         checkpoint = 0;
         started = false;
         finished = false;
-        freezeDuration = newFreezeDuration;
+        freezeDuration = 3f;
         paused = true;
+
+        // TODO - set player position
 
         playTime = new Stopwatch();
 
         if (freezeDuration > 0f)
         {
             Pause();
-            unfreezeTime = Time.time + freezeDuration;
+            UnfreezeTime = Time.time + freezeDuration;
         }
         else
         {
@@ -152,25 +139,32 @@ public class RaceScript : MonoBehaviour
     private void StartRace()
     {
         started = true;
-        WorldInfo.info.DoStart();
-        Unpause();
-        unfreezeTime = Time.time;
+        UnfreezeTime = Time.time;
         lastSecondComputer = DateTime.Now;
         lastSecondGame = Time.time;
+
+        Unpause();
+        demoRecorder.StartDemo(GameInfo.info);
+
+        if (OnStart != null)
+            OnStart(this, new EventArgs());
     }
 
     private void EndRace()
     {
         playTime.Stop();
+
         finished = true;
-        GameInfo.info.RunFinished(ElapsedTime);
+        demoRecorder.StopDemo();
+
+        GameInfo.info.RunFinished(ElapsedTime, demoRecorder.GetDemo());
     }
 
     public void Pause()
     {
         playTime.Stop();
         paused = true;
-        GameInfo.info.GetPlayerInfo().Freeze();
+        Movement.Freeze();
     }
 
     public void Unpause()
@@ -179,17 +173,21 @@ public class RaceScript : MonoBehaviour
         {
             playTime.Start();
             paused = false;
-            GameInfo.info.GetPlayerInfo().Unfreeze();
+            Movement.Unfreeze();
         }
     }
 
-    public void SetEditorMode(bool value)
+    public void ResetToLastCheckpoint()
     {
-        editorMode = value;
+        if (currentSpawn == firstSpawn)
+            WorldInfo.info.RaceScript.PrepareNewRace();
+        else
+            throw new NotImplementedException();
     }
 
-    public bool GetEditorMode()
+    private void InvalidRunCheck()
     {
-        return editorMode;
+        if (GameInfo.info.CheatsActive || Physics.gravity != new Vector3(0f, -15f, 0f))
+            RunVaild = false;
     }
 }

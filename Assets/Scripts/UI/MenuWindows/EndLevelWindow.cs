@@ -15,7 +15,7 @@ namespace UI.MenuWindows
 
         public void RestartRun()
         {
-            GameInfo.info.Reset();
+            WorldInfo.info.RaceScript.PrepareNewRace();
         }
 
         public void PlayRaceDemo()

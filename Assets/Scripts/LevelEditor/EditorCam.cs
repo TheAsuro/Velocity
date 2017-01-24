@@ -18,12 +18,10 @@ namespace LevelEditor
             if(Input.GetKey(KeyCode.LeftShift))
                 currentMoveSpeed = fastCamMoveSpeed;
 
-            if((GameInfo.info) && (GameInfo.info.GetPlayerInfo() == null || !GameInfo.info.GetPlayerInfo().EditorMode))
-            {
-                Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")) * currentMoveSpeed * Time.deltaTime;
-                Quaternion viewRot = transform.rotation;
-                transform.position = transform.position + viewRot * input;
-            }
+            Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")) * currentMoveSpeed * Time.deltaTime;
+            Quaternion viewRot = transform.rotation;
+            transform.position = transform.position + viewRot * input;
+
 
             if(Input.GetMouseButton(1))
             {

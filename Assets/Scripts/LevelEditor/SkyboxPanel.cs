@@ -18,7 +18,7 @@ namespace LevelEditor
 
         private void Awake()
         {
-            newSkyboxMaterial = new Material(WorldInfo.info.worldSkybox);
+            newSkyboxMaterial = new Material(WorldInfo.info.WorldData.skybox);
         }
 
         public void ClearSkybox()
@@ -35,14 +35,14 @@ namespace LevelEditor
 
         public void SaveSkybox()
         {
-            WorldInfo.info.worldSkybox = newSkyboxMaterial;
+            WorldInfo.info.WorldData.skybox = newSkyboxMaterial;
             WorldInfo.info.UpdateCameraSkyboxes();
             SetVisible(false);
         }
 
         public void OpenImageDialog(string side)
         {
-            FileWindow fileWindow = GameMenu.SingletonInstance.AddWindow(Window.FILE) as FileWindow;
+            FileWindow fileWindow = (FileWindow) GameMenu.SingletonInstance.AddWindow(Window.FILE);
             fileWindow.OkAction = path => SetImage(side, path);
         }
 
@@ -82,7 +82,7 @@ namespace LevelEditor
             using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 byte[] buffer;
-                int streamLength = (int)stream.Length;
+                int streamLength = (int) stream.Length;
                 buffer = new byte[streamLength];
                 int count, sum = 0;
                 while ((count = stream.Read(buffer, sum, streamLength - sum)) > 0) sum += count;

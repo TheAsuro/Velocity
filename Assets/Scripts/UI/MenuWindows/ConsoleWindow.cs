@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Api;
+using Console;
 using Demos;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,12 +21,16 @@ namespace UI.MenuWindows
         private Vector2 clickDelta = Vector2.zero;
         private bool mouseDown;
 
+        private List<ConsoleCommand> consoleCommands = new List<ConsoleCommand>();
+
         private void Start()
         {
             //Find all parts of the console
             myCanvas = gameObject.transform.parent.GetComponent<Canvas>();
             myOutput = transform.Find("ConsoleOutput").Find("Mask").Find("Text").GetComponent<Text>();
             myInput = transform.Find("ConsoleInput").GetComponent<InputField>();
+
+            consoleCommands.Add(new QuitCommand());
         }
 
         private void Update()
@@ -80,7 +87,7 @@ namespace UI.MenuWindows
         {
             base.OnActivate();
 
-            Console.ContentUpdate += OnConsoleContentUpdate;
+            Console.Console.ContentUpdate += OnConsoleContentUpdate;
             myInput.onEndEdit.AddListener(InputSubmit);
         }
 
@@ -88,7 +95,7 @@ namespace UI.MenuWindows
         {
             base.OnActivate();
 
-            Console.ContentUpdate -= OnConsoleContentUpdate;
+            Console.Console.ContentUpdate -= OnConsoleContentUpdate;
             myInput.onEndEdit.RemoveListener(InputSubmit);
         }
 
@@ -114,7 +121,7 @@ namespace UI.MenuWindows
             myInput.text = "";
         }
 
-        private void Write(string content)
+        public void Write(string content)
         {
             myOutput.text += content;
         }
@@ -126,23 +133,21 @@ namespace UI.MenuWindows
 
             string[] commandParts = command.Trim().Split(' ');
 
+            ConsoleCommand selectedCommand = consoleCommands.FirstOrDefault(cmd => cmd.MatchesName(commandParts[0]));
+            if (selectedCommand != null)
+            {
+                if (selectedCommand.GetArgumentCounts().Length == 0 || selectedCommand.GetArgumentCounts().Contains(commandParts.Length - 1))
+                    selectedCommand.Run(commandParts.Where((_, index) => index != 0).ToArray());
+                else
+                    Write(selectedCommand.UsageMessage());
+            }
+            else
+            {
+                Write("'" + command + "' is not a valid command!");
+            }
+
             switch (commandParts[0].ToLower())
             {
-                case "help": //Print helpful information
-                    Write(helpFile.text);
-                    break;
-                case "quit": //Quit the game
-                    GameInfo.info.Quit();
-                    break;
-                case "forcequit":
-                    ForceQuitCommand(commandParts);
-                    break;
-                case "logtoconsole":
-                    LogCommand(commandParts);
-                    break;
-                case "playdemo":
-                    PlayDemoCommand(commandParts);
-                    break;
                 case "move_friction":
                     FrictionCommand(commandParts);
                     break;
@@ -171,49 +176,7 @@ namespace UI.MenuWindows
                     CheatsCommand(commandParts);
                     break;
                 default:
-                    Write("'" + command + "' is not a valid command!");
                     break;
-            }
-        }
-
-        //Quits the game no matter what
-        private void ForceQuitCommand(string[] input)
-        {
-            Application.Quit();
-        }
-
-        //Enables logging of certain changes
-        private void LogCommand(string[] input)
-        {
-            if (input.Length == 2)
-            {
-                bool value = input[1].Equals("true") || input[1].Equals("1");
-                GameInfo.info.logToConsole = value;
-            }
-            else
-            {
-                Write("Usage: logToConsole <true/false/1/0>");
-            }
-        }
-
-        //Play a demo from a file
-        private void PlayDemoCommand(string[] input)
-        {
-            if (input.Length == 2)
-            {
-                try
-                {
-                    Demo demo = new Demo(Path.Combine(Application.dataPath, input[1]));
-                    DemoPlayer.SingletonInstance.PlayDemo(demo);
-                }
-                catch (IOException e)
-                {
-                    Write("Could not open demo! \n" + e.StackTrace);
-                }
-            }
-            else
-            {
-                Write("Usage: playdemo <demo name>");
             }
         }
 

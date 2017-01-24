@@ -17,7 +17,7 @@ namespace Special_Levels
 
         private void Awake()
         {
-            WorldInfo.info.AddResetMethod(() => playerCollisionParts.Clear(), "bridgeReset" + gameObject.GetInstanceID());
+            WorldInfo.info.RaceScript.OnReset += (s, e) => playerCollisionParts.Clear();
         }
 
         public void RegisterPart(GameObject go)
@@ -46,13 +46,13 @@ namespace Special_Levels
 
             foreach (GameObject go in allParts)
             {
-                var renderer = go.GetComponent<Renderer>();
+                Renderer renderer = go.GetComponent<Renderer>();
                 if (renderer != null)
                     renderer.material.color = new Color(1f, 1f - collisionTime / maxCollisionTime, 1f - collisionTime / maxCollisionTime);
             }
 
             if (collisionTime >= maxCollisionTime)
-                GameInfo.info.Reset();
+                WorldInfo.info.RaceScript.PrepareNewRace();
         }
     }
 }

@@ -126,15 +126,14 @@ namespace Demos
 
             //Set up camera
             Camera cam = ghostCam.GetComponent<Camera>();
-            cam.backgroundColor = WorldInfo.info.worldBackgroundColor;
+            cam.backgroundColor = WorldInfo.info.WorldData.backgroundColor;
             cam.fieldOfView = Settings.Game.Fov;
 
             //Set start time to current time
             startPlayTime = Time.time;
 
             //Stop playback on world reset
-            WorldInfo.Reset resetPlay = () => StopDemoPlayback(true);
-            WorldInfo.info.AddResetMethod(resetPlay, "GhostReset");
+            WorldInfo.info.RaceScript.OnReset += (s, e) => StopDemoPlayback(true);
 
             playing = true;
             ResetDemo();

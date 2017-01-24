@@ -12,13 +12,9 @@ public class GameInfo : MonoBehaviour
 {
     public static GameInfo info;
 
-    public GameObject playerTemplate;
     public GUISkin skin;
     public string secretKey = "";
-
-    //Gamestates
-    private bool gamePaused = false;
-    private bool viewLocked = false;
+    public TextAsset helpFile;
 
     //GUI
     private string selectedMap;
@@ -37,9 +33,6 @@ public class GameInfo : MonoBehaviour
         get { return lastTime.ToString("0.0000"); }
     }
 
-    private static Vector3 defGravity = new Vector3(0f, -15f, 0f);
-    private bool runValid = false;
-
     //Debug window (top-left corner, toggle with f8)
     public bool logToConsole = true;
 
@@ -49,10 +42,10 @@ public class GameInfo : MonoBehaviour
     public float circleSpeed3 = 30f;
 
     //Editor
+    public bool InEditor { get; private set; }
     public string editorLevelName = "";
 
     //References
-    private PlayerBehaviour myPlayer;
     private GameObject myCanvas;
 
     //Load infos like player name, pb's, etc.
@@ -71,6 +64,8 @@ public class GameInfo : MonoBehaviour
     }
 
     public bool LastRunWasPb { get; private set; }
+
+    public bool CheatsActive { get; private set; }
 
     private void Awake()
     {
@@ -115,111 +110,47 @@ public class GameInfo : MonoBehaviour
     //Load a level
     public void LoadLevel(string levelName)
     {
+        // TODO - better?
+        InEditor = levelName == "editor";
+
         //Server stuff might be here later
         fx.StartColorFade(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, () => SceneManager.LoadScene(levelName));
     }
 
-    //Creates a new local player (the one that is controlled by the current user)
-    public void SpawnNewPlayer(Respawn spawnpoint, bool killOldPlayer = true, bool startInEditorMode = false)
-    {
-        if (killOldPlayer || GetPlayerInfo() == null)
-        {
-            //Remove old player
-            SetPlayerInfo(null);
-
-            //Instantiate a new player at the spawnpoint's location
-            GameObject newPlayer = Instantiate(playerTemplate, Vector3.zero, Quaternion.identity);
-            SetPlayerInfo(newPlayer.GetComponent<PlayerBehaviour>());
-
-            //Set up player
-            myPlayer.ResetPosition(spawnpoint.GetSpawnPos(), spawnpoint.GetSpawnRot());
-            myPlayer.SetWorldBackgroundColor(WorldInfo.info.worldBackgroundColor);
-        }
-
-        myPlayer.EditorMode = startInEditorMode;
-    }
-
     //Player hit the goal
-    public void RunFinished(TimeSpan time)
+    public void RunFinished(TimeSpan time, Demo demo)
     {
-        myPlayer.StopRecording();
-        CleanUpPlayer();
+        currentDemo = demo;
         lastTime = time.Ticks / (decimal) 10000000;
 
         LastRunWasPb = CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
 
-        currentDemo = myPlayer.GetDemo();
         EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
         window.Initialize(currentDemo);
 
-        SendLeaderboardEntry(lastTime, SceneManager.GetActiveScene().name, currentDemo);
-    }
-
-    //Player hit the exit trigger
-    public void LevelFinished()
-    {
-        SetPlayerInfo(null);
-    }
-
-    //Plays a sound at the player position
-    public void PlaySound(string soundName)
-    {
-        if (myPlayer != null)
+        if (!WorldInfo.info.RaceScript.RunVaild)
         {
-            for (int i = 0; i < soundNames.Count; i++)
-            {
-                if (soundNames[i] == soundName)
-                {
-                    myPlayer.PlaySound(soundClips[i]);
-                }
-            }
+            print("Invalid run!");
+            return;
         }
-    }
+        if (currentSave == null)
+        {
+            print("Invalid save!");
+            return;
+        }
+        if (!currentSave.Account.IsLoggedIn)
+        {
+            print("Account not logged in!");
+            return;
+        }
 
-    //Reset everything in the world to its initial state
-    public void Reset()
-    {
-        DemoPlayer.SingletonInstance.StopDemoPlayback(true);
-        CleanUpPlayer();
-        WorldInfo.info.ResetWorld();
-        GameMenu.SingletonInstance.CloseAllWindows();
-    }
-
-    //Removes all leftover things that could reference the player
-    public void CleanUpPlayer()
-    {
-        currentDemo = null;
+        Leaderboard.SendEntry(currentSave.Account.Name, lastTime, SceneManager.GetActiveScene().name, currentSave.Account.Token, currentDemo);
     }
 
     //Leave the game
     public void Quit()
     {
         Application.Quit();
-    }
-
-    private void SetGamePaused(bool value)
-    {
-        gamePaused = value;
-
-        if (value)
-        {
-            SetMouseView(false);
-            Time.timeScale = 0f;
-            if (GetPlayerInfo() != null)
-                GetPlayerInfo().SetPause(true);
-        }
-        else
-        {
-            SetMouseView(true);
-            Time.timeScale = 1f;
-            if (GetPlayerInfo() != null)
-                GetPlayerInfo().SetPause(false);
-        }
-    }
-
-    public bool GetGamePaused()
-    {
-        return gamePaused;
     }
 
     public void DeletePlayer(string name)
@@ -232,60 +163,9 @@ public class GameInfo : MonoBehaviour
             CurrentSave = null;
     }
 
-    //Sets the reference to the player
-    //If info is null, current player will be removed
-    public void SetPlayerInfo(PlayerBehaviour behaviour)
-    {
-        if (behaviour == null)
-        {
-            //Destroy the player if there still is one
-            if (myPlayer != null)
-            {
-                Destroy(myPlayer.gameObject);
-            }
-        }
-
-        myPlayer = behaviour;
-    }
-
-    public PlayerBehaviour GetPlayerInfo()
-    {
-        return myPlayer;
-    }
-
     public decimal GetLastTime()
     {
         return lastTime;
-    }
-
-    //Can the player move the camera with the mouse
-    //Can be blocked by lockMouseView
-    public void SetMouseView(bool value)
-    {
-        if (!viewLocked)
-        {
-            if (myPlayer != null)
-            {
-                myPlayer.SetMouseView(value);
-            }
-        }
-    }
-
-    //MouseLook is locked to given value, even if menu states change
-    //Overrides old locked value
-    public void LockMouseView(bool value)
-    {
-        if (myPlayer != null)
-        {
-            myPlayer.SetMouseView(value);
-        }
-        viewLocked = true;
-    }
-
-    //MouseLook can be changed by menu again
-    public void UnlockMouseView()
-    {
-        viewLocked = false;
     }
 
     //Map selection in main menu
@@ -303,90 +183,6 @@ public class GameInfo : MonoBehaviour
     public string GetSelectedAuthor()
     {
         return selectedAuthor;
-    }
-
-    //Send a leaderboard entry to leaderboard server, with a automatically generated hash.
-    //This includes a secret key that will be included in the final game (and not uploaded to github),
-    //so nobody can send fake entries.
-    private void SendLeaderboardEntry(decimal time, string map, Demo demo)
-    {
-        InvalidRunCheck();
-        if (!runValid)
-        {
-            print("Invalid run!");
-            return;
-        }
-        if (currentSave == null)
-        {
-            print("Invalid save!");
-            return;
-        }
-        if (!currentSave.Account.IsLoggedIn)
-        {
-            print("Account not logged in!");
-            return;
-        }
-
-        Leaderboard.SendEntry(currentSave.Account.Name, time, map, currentSave.Account.Token, demo);
-    }
-
-    //Create a md5 hash from a string
-    public string Md5Sum(string strToEncrypt)
-    {
-        System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
-        byte[] bytes = ue.GetBytes(strToEncrypt);
-
-        //encrypt bytes
-        System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
-        byte[] hashBytes = md5.ComputeHash(bytes);
-
-        //Convert the encrypted bytes back to a string (base 16)
-        string hashString = "";
-
-        foreach (byte hashByte in hashBytes)
-        {
-            hashString += Convert.ToString(hashByte, 16).PadLeft(2, '0');
-        }
-
-        return hashString.PadLeft(32, '0');
-    }
-
-    //Setting gravity directly, this is the only game variable that is not set in playerinfo
-    public void SetGravity(float value)
-    {
-        Physics.gravity = new Vector3(0f, value, 0f);
-        InvalidateRun("Changed gravity");
-    }
-
-    //Run will not be uploaded to leaderboards
-    public void InvalidateRun(string message = "undefined")
-    {
-        runValid = false;
-        print("Run was invalidated. Reason: " + message);
-    }
-
-    public bool IsRunValid()
-    {
-        return runValid;
-    }
-
-    private void InvalidRunCheck()
-    {
-        if (GetPlayerInfo().GetCheats() || Physics.gravity != defGravity)
-            InvalidateRun("Cheat check returned positive");
-    }
-
-    private void ResetRun()
-    {
-        if (GetPlayerInfo().GetCheats())
-        {
-            runValid = false;
-        }
-        else
-        {
-            runValid = true;
-            InvalidRunCheck();
-        }
     }
 
     public void SetCursorLock(bool value)
