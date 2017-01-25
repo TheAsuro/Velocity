@@ -1,35 +1,44 @@
 ﻿using System.Collections.Generic;
 using Api;
-using Demos;
-using UnityEngine.SceneManagement;
+using Game;
 using UnityEngine.UI;
+using Util;
 
 namespace UI.MenuWindows
 {
     public class LeaderboardWindow : DefaultMenuWindow
     {
         public InputField mapNameInput;
-        public List<LeaderboardPanel> entryPanels; //Must always have ELEMENTS_PER_SITE elements!
+        public List<LeaderboardPanel> entryPanels;
 
-        private string lastLoadedMap = "";
+        private MapData loadedMap;
         private int startIndex = 0;
 
         private void Awake()
         {
-            if (mapNameInput)
-            {
-                mapNameInput.onEndEdit.AddListener(ChangeMap);
-            }
-            else
-            {
-                LoadMap(SceneManager.GetActiveScene().name);
-            }
+            mapNameInput.onEndEdit.AddListener(ChangeMap);
         }
 
-        private void LoadMap(string mapName)
+        private void ChangeMap(string mapName)
         {
-            Leaderboard.GetEntries(mapName, startIndex, entryPanels.Count, DisplayData);
-            lastLoadedMap = mapName;
+            startIndex = 0;
+            MapData newMap = GameInfo.info.MapManager.DefaultMaps.Find(map => map.name == mapName);
+            if (newMap != null)
+                LoadMap(newMap);
+            else
+                DisplayData(new LeaderboardEntry[0]);
+        }
+
+        private void LoadMap(MapData map)
+        {
+            loadedMap = map;
+            StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetEntries(map, startIndex, entryPanels.Count), (request) =>
+            {
+                if (!request.Error)
+                    DisplayData(request.Result);
+                else
+                    print(request.ErrorText);
+            }));
         }
 
         public void AddIndex(int add)
@@ -37,13 +46,7 @@ namespace UI.MenuWindows
             startIndex += add;
             if (startIndex < 0)
                 startIndex = 0;
-            LoadMap(lastLoadedMap);
-        }
-
-        private void ChangeMap(string mapName)
-        {
-            startIndex = 0;
-            LoadMap(mapName);
+            LoadMap(loadedMap);
         }
 
         private void DisplayData(LeaderboardEntry[] entries)
@@ -55,7 +58,6 @@ namespace UI.MenuWindows
                     entryPanels[i].Time = "";
                     entryPanels[i].Player = "";
                     entryPanels[i].Rank = "";
-                    entryPanels[i].SetButtonAction(delegate { });
                     entryPanels[i].SetButtonActive(false);
                 }
                 else
@@ -63,17 +65,9 @@ namespace UI.MenuWindows
                     entryPanels[i].Time = entries[i].time.ToString("0.0000");
                     entryPanels[i].Player = entries[i].playerName;
                     entryPanels[i].Rank = entries[i].rank.ToString();
-                    int id = entries[i].id;
-                    entryPanels[i].SetButtonAction(() => Leaderboard.GetDemo(id, ProcessDownloadedDemo));
                     entryPanels[i].SetButtonActive(true);
                 }
             }
-        }
-
-        private void ProcessDownloadedDemo(Demo demo)
-        {
-            print("Player: " + demo.GetPlayerName());
-            print("Level: " + demo.GetLevelName());
         }
     }
 }

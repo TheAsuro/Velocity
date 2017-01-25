@@ -11,6 +11,7 @@ namespace Api
 
         public event EventHandler<EventArgs<string>> OnLoginFinished;
         public event EventHandler<EventArgs<string>> OnAccountRequestFinished;
+        public event EventHandler<EventArgs<bool>> OnLoginCheckFinished;
 
         public string Name { get; private set; }
         public bool IsLoggedIn { get; private set; }
@@ -23,63 +24,61 @@ namespace Api
             if (PlayerPrefs.HasKey(SaveData.SaveName(name) + "_token"))
             {
                 Token = PlayerPrefs.GetString(SaveData.SaveName(name) + "_token");
-                StartLoginCheck((result) => IsLoggedIn = result);
+                StartLoginCheck();
             }
         }
 
         public void StartCreate(string pass, string mail = "")
         {
-            var data = new Dictionary<string, string>();
-            data.Add("user", Name);
-            data.Add("pass", pass);
+            var data = new Dictionary<string, string> {{"user", Name}, {"pass", pass}};
             if (mail != "")
                 data.Add("mail", mail);
-            HttpApi.StartRequest(LOGIN_API_URL, "POST", FinishCreate, data);
+            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "POST", data);
+            rq.OnDone += FinishCreate;
+            rq.StartRequest();
         }
 
-        private void FinishCreate(HttpApi.ApiResult result)
+        private void FinishCreate(object o, RequestFinishedEventArgs<string> eventArgs)
         {
-            if (!result.error)
-            {
-                FinishLogin(result);
-            }
+            FinishLogin(eventArgs);
 
             if (OnAccountRequestFinished != null)
-                OnAccountRequestFinished(this, new EventArgs<string>(result.text, result.error, result.errorText));
+                OnAccountRequestFinished(this, new EventArgs<string>(eventArgs.Result, eventArgs.Error, eventArgs.ErrorText));
         }
 
         public void StartLogin(string pass)
         {
-            var data = new Dictionary<string, string>();
-            data.Add("user", Name);
-            data.Add("pass", pass);
-            HttpApi.StartRequest(LOGIN_API_URL, "GET", FinishLogin, data);
+            var data = new Dictionary<string, string> {{"user", Name}, {"pass", pass}};
+            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "GET", data);
+            rq.StartRequest();
         }
 
-        private void FinishLogin(HttpApi.ApiResult result)
+        private void FinishLogin(RequestFinishedEventArgs<string> eventArgs)
         {
-            if (!result.error)
+            if (!eventArgs.Error)
             {
-                Token = result.text;
+                Token = eventArgs.Result;
 
                 PlayerPrefs.SetString(SaveData.SaveName(Name) + "_token", Token);
                 IsLoggedIn = true;
                 Debug.Log("Logged in.");
-            }
-            else
-            {
-                Debug.Log(result.errorText);
-            }
 
-            if (OnLoginFinished != null)
-                OnLoginFinished(this, new EventArgs<string>(Token, result.error, result.errorText));
+                if (OnLoginFinished != null)
+                    OnLoginFinished(this, new EventArgs<string>(Token, eventArgs.Error, eventArgs.ErrorText));
+            }
         }
 
-        public void StartLoginCheck(Action<bool> callback)
+        public void StartLoginCheck()
         {
-            var data = new Dictionary<string, string>();
-            data.Add("token", Token);
-            HttpApi.StartRequest(LOGIN_API_URL, "POST", (result) => { if (result.text == "1") callback(true); else callback(false); }, data);
+            var data = new Dictionary<string, string> {{"token", Token}};
+            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "POST", data);
+            rq.OnDone += (sender, eventArgs) =>
+            {
+                IsLoggedIn = !eventArgs.Error && eventArgs.Result == "1";
+                if (OnLoginCheckFinished != null)
+                    OnLoginCheckFinished(this, new EventArgs<bool>(IsLoggedIn, eventArgs.Error, eventArgs.ErrorText));
+            };
+            rq.StartRequest();
         }
     }
 

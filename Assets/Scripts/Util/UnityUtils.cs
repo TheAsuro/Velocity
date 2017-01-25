@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using Api;
 using UnityEngine;
 
 namespace Util
@@ -35,6 +37,13 @@ namespace Util
             }
 
             return hashString.PadLeft(32, '0');
+        }
+
+        public static IEnumerator RunWhenDone(LeaderboardRequest request, Action<LeaderboardRequest> action)
+        {
+            while (!request.Done)
+                yield return null;
+            action(request);
         }
     }
 }

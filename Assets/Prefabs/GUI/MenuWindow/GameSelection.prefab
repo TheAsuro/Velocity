@@ -460,33 +460,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42da0c65ee9991469037b57abb5fba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapNames:
-  - Level1
-  - Level2
-  - Level3
-  - Level4
-  - Level5
-  - Level6
-  - v_tempel_v1
-  - Tutorial
-  mapAuthors:
-  - TheAsuro
-  - TheAsuro
-  - TheAsuro
-  - sndrec32
-  - sndrec32
-  - sndrec32
-  - walllucas
-  - TheAsuro
-  mapPreviews:
-  - {fileID: 2800000, guid: 78ccc46fae52c4b4c9f95ac9187a5f18, type: 3}
-  - {fileID: 2800000, guid: 0f3a817688137644ab4ca5c919d24952, type: 3}
-  - {fileID: 2800000, guid: 9f61559d981535342b70675e5ceafbb0, type: 3}
-  - {fileID: 2800000, guid: 392cced18cecc0549ad29067aa63d272, type: 3}
-  - {fileID: 2800000, guid: 4e9cb73c6944f0041a45c894b58dd101, type: 3}
-  - {fileID: 2800000, guid: 0232e9a213bcb2b4a9ca30a4c7554c74, type: 3}
-  - {fileID: 2800000, guid: eb672d71b7c79584f9fdaefea9e427f2, type: 3}
-  - {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
+  defaultMapData:
+  - id: 9
+    name: Level1
+    author: TheAsuro
+    previewImage: {fileID: 2800000, guid: 78ccc46fae52c4b4c9f95ac9187a5f18, type: 3}
+  - id: 5
+    name: Level2
+    author: TheAsuro
+    previewImage: {fileID: 2800000, guid: 0f3a817688137644ab4ca5c919d24952, type: 3}
+  - id: 2
+    name: Level3
+    author: TheAsuro
+    previewImage: {fileID: 2800000, guid: 9f61559d981535342b70675e5ceafbb0, type: 3}
+  - id: 4
+    name: Level4
+    author: bites
+    previewImage: {fileID: 2800000, guid: 392cced18cecc0549ad29067aa63d272, type: 3}
+  - id: 7
+    name: Level5
+    author: bites
+    previewImage: {fileID: 2800000, guid: 4e9cb73c6944f0041a45c894b58dd101, type: 3}
+  - id: 8
+    name: Level6
+    author: bites
+    previewImage: {fileID: 2800000, guid: 0232e9a213bcb2b4a9ca30a4c7554c74, type: 3}
+  - id: 3
+    name: v_tempel_v1
+    author: walllucas
+    previewImage: {fileID: 2800000, guid: eb672d71b7c79584f9fdaefea9e427f2, type: 3}
+  - id: 1
+    name: TestMap
+    author: TheAsuro
+    previewImage: {fileID: 10912, guid: 0000000000000000f000000000000000, type: 0}
   mapPanelPrefab: {fileID: 178082, guid: e48b3b37b96ef184cb9a261c53e356b5, type: 2}
   editPanelPrefab: {fileID: 125750, guid: 848f61b8e0f16d6439b316d522ffd747, type: 2}
   contentTransform: {fileID: 224496850647063640}

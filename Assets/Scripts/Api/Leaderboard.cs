@@ -1,40 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Demos;
-using Newtonsoft.Json;
+using Game;
 
 namespace Api
 {
     internal static class Leaderboard
     {
-        private const string LEADERBOARD_URL = "https://theasuro.de/Velocity/Api/leaderboard.php";
+        private const string LEADERBOARD_URL = "https://theasuro.de/velocity/api/highscores";
+        private const string MAP_PREFIX = "?Map=";
+        private const string OFFSET_PREFIX = "&Offset=";
+        private const string LIMIT_PREFIX = "&Limit=";
+        private const string GET = "GET";
+        private const string POST = "POST";
 
         //Request leaderboard entries from the server
-        public static void GetEntries(string map, int index, int count, Action<LeaderboardEntry[]> callback)
+        public static LeaderboardRequest GetEntries(MapData map, int offset, int limit)
         {
-            HttpApi.StartRequest(LEADERBOARD_URL + "?level=" + map + "&index=" + index + "&count=" + count, "GET", (result) => callback(ParseEntries(result.text, index, map)));
-        }
-
-        private static LeaderboardEntry[] ParseEntries(string entryJson, int rankOffset = 0, string specificMap = "")
-        {
-            if (entryJson == "")
-                return new LeaderboardEntry[0];
-
-            LeaderboardResult[] results = JsonConvert.DeserializeObject<LeaderboardResult[]>(entryJson);
-            LeaderboardEntry[] entries = new LeaderboardEntry[results.Length];
-            for (int i = 0; i < results.Length; i++)
-            {
-                entries[i] = results[i];
-            }
-
-            for (int i = 0; i < entries.Length; i++)
-            {
-                if (specificMap != "")
-                    entries[i].map = specificMap;
-                entries[i].rank = rankOffset + i + 1;
-            }
-
-            return entries;
+            string url = LEADERBOARD_URL + MAP_PREFIX + map.id + OFFSET_PREFIX + offset + LIMIT_PREFIX + limit;
+            return new LeaderboardRequest(new ApiRequest(url, GET), map, offset);
         }
 
         public static void SendEntry(string player, decimal time, string map, string token, Demo demo)
@@ -43,25 +26,13 @@ namespace Api
             Dictionary<string, string> data = new Dictionary<string, string> {{"player", player}, {"time", time.ToString()}, {"level", map}, {"token", token}};
 
             // TODO: Display when entry was successful
-            HttpApi.StartRequest(LEADERBOARD_URL, "POST", null, data);
+            ApiRequest rq = new ApiRequest(LEADERBOARD_URL, POST, data);
+            rq.StartRequest();
         }
 
-        public static void GetRecord(string map, Action<LeaderboardEntry> callback)
+        public static LeaderboardRequest GetRecord(MapData map)
         {
-            // TODO: Fix map with bad characters
-            HttpApi.StartRequest(LEADERBOARD_URL + "?level=" + map, "GET", (result) =>
-            {
-                var entries = ParseEntries(result.text);
-                callback(entries.Length > 0 ? entries[0] : null);
-            });
-        }
-
-        public static void GetDemo(int entryId, Action<Demo> callback)
-        {
-            /*byte[] data = System.Text.Encoding.ASCII.GetBytes(demoText);
-            MemoryStream stream = new MemoryStream(data);
-            Demo downloadedDemo = new Demo(new BinaryReader(stream));*/
-            // TODO: everything
+            return new LeaderboardRequest(new ApiRequest(LEADERBOARD_URL + MAP_PREFIX + map.id + LIMIT_PREFIX + "1", GET), map, 0);
         }
     }
 

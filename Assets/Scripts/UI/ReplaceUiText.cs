@@ -3,6 +3,7 @@ using Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Util;
 
 namespace UI
 {
@@ -36,21 +37,6 @@ namespace UI
             if (temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.Account.Name); }
             if (temp.Contains("$time")) { temp = temp.Replace("$time", (GameInfo.info.LastTimeString).ToString()); }
             if (temp.Contains("$map")) { temp = SceneManager.GetActiveScene().name; }
-
-            if (temp.Contains("$selectedmap")) { temp = temp.Replace("$selectedmap", GameInfo.info.GetSelectedMap()); }
-
-            if (temp.Contains("$selectedauthor"))
-            {
-                string aut = GameInfo.info.GetSelectedAuthor();
-                if (!aut.Equals("?"))
-                {
-                    temp = temp.Replace("$selectedauthor", "by " + aut);
-                }
-                else
-                {
-                    temp = temp.Replace("$selectedauthor", "");
-                }
-            }
 
             if (temp.Contains("$wr"))
             {
@@ -101,16 +87,20 @@ namespace UI
         private void LoadWr()
         {
             loadingWr = true;
-            Leaderboard.GetRecord(SceneManager.GetActiveScene().name, SetWr);
-        }
-
-        private void SetWr(LeaderboardEntry entry)
-        {
-            loadingWr = false;
-            if (entry != null)
-                wr = entry.time + " by " + entry.playerName;
-            else
-                wr = "-";
+            StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(GameInfo.info.MapManager.CurrentMap), (request) =>
+            {
+                loadingWr = false;
+                if (!request.Error)
+                {
+                    LeaderboardEntry entry = request.Result[0];
+                    wr = entry.time + " by " + entry.playerName;
+                }
+                else
+                {
+                    print(request.ErrorText);
+                    wr = "-";
+                }
+            }));
         }
     }
 }

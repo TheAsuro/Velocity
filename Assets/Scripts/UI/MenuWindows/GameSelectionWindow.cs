@@ -4,14 +4,13 @@ using Api;
 using Game;
 using UnityEngine;
 using UnityEngine.UI;
+using Util;
 
 namespace UI.MenuWindows
 {
     public class GameSelectionWindow : DefaultMenuWindow
     {
-        [SerializeField] public List<string> mapNames = new List<string>();
-        [SerializeField] public List<string> mapAuthors = new List<string>();
-        [SerializeField] public List<Texture2D> mapPreviews = new List<Texture2D>();
+        [SerializeField] private List<MapData> defaultMapData;
 
         [SerializeField] private GameObject mapPanelPrefab;
         [SerializeField] private GameObject editPanelPrefab;
@@ -24,16 +23,16 @@ namespace UI.MenuWindows
 
         private void LoadPlayableMaps()
         {
-            int mapCount = Mathf.Min(mapNames.Count, mapAuthors.Count);
-            contentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * mapCount + 10f);
+            contentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * defaultMapData.Count + 10f);
 
-            for (int i = 0; i < mapCount; i++)
+            int counter = 0;
+            foreach (MapData data in defaultMapData)
             {
                 string pb = "-";
-                decimal pbTime = GameInfo.info.CurrentSave.GetPersonalBest(mapNames[i]);
+                decimal pbTime = GameInfo.info.CurrentSave.GetPersonalBest(data.name);
                 if (pbTime != -1)
                     pb = pbTime.ToString("0.0000");
-                CreateMapPanel(i, mapNames[i], mapAuthors[i], mapPreviews[i], pb);
+                CreateMapPanel(counter++, data, pb);
             }
         }
 
@@ -65,17 +64,21 @@ namespace UI.MenuWindows
             wrObj.GetComponent<Text>().text = "WR: " + entry.time + " by " + entry.playerName;
         }
 
-        private void CreateMapPanel(int slot, string name, string author, Texture2D preview, string pb)
+        private void CreateMapPanel(int slot, MapData map, string pb)
         {
             Transform t = GameMenu.CreatePanel(slot, mapPanelPrefab, contentTransform).transform;
 
             t.FindChild("Name").GetComponent<Text>().text = name;
-            t.FindChild("Author").GetComponent<Text>().text = "Map by " + author;
-            t.FindChild("Preview").GetComponent<RawImage>().texture = preview;
+            t.FindChild("Author").GetComponent<Text>().text = "Map by " + map.author;
+            t.FindChild("Preview").GetComponent<RawImage>().texture = map.previewImage;
             t.FindChild("PB").GetComponent<Text>().text = "PB: " + pb;
-            t.FindChild("Button").GetComponent<Button>().onClick.AddListener(() => OnPlayableMapClick(name));
+            t.FindChild("Button").GetComponent<Button>().onClick.AddListener(() => OnPlayableMapClick(map));
 
-            Leaderboard.GetRecord(name, (entry) => SetWrText(t, entry));
+            StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(map), (request) =>
+            {
+                if (!request.Error)
+                    SetWrText(t, request.Result[0]);
+            }));
         }
 
         private void CreateEditPanel(int slot, string fileName)
@@ -86,10 +89,10 @@ namespace UI.MenuWindows
             t.FindChild("Button").GetComponent<Button>().onClick.AddListener(() => LoadEditorWithLevel(fileName));
         }
 
-        private void OnPlayableMapClick(string mapName)
+        private void OnPlayableMapClick(MapData map)
         {
             GameMenu.SingletonInstance.CloseAllWindows();
-            GameInfo.info.PlayLevel(mapName);
+            GameInfo.info.PlayLevel(map);
         }
 
         public void LoadEditorWithLevel(string levelName)

@@ -16,42 +16,30 @@ namespace Game
 
         public string secretKey = "";
         public TextAsset helpFile;
-
-        //GUI
-        private string selectedMap;
-
-        private string selectedAuthor = "?";
-        private GameInfoFx fx;
-
-        //Sound
         public List<string> soundNames;
-
         public List<AudioClip> soundClips;
 
-        //Stuff
-        private Demo currentDemo;
+        [SerializeField] private MapManager mapManager;
+        public MapManager MapManager { get { return mapManager; } }
 
+        public float circleSpeed1 = 10f;
+        public float circleSpeed2 = 20f;
+        public float circleSpeed3 = 30f;
+
+        public bool InEditor { get; private set; }
+        public bool LastRunWasPb { get; private set; }
+        public bool CheatsActive { get; set; }
+
+        private GameInfoFx fx;
+        private Demo currentDemo;
         private decimal lastTime = -1;
+        private GameObject myCanvas;
+        private SaveData currentSave;
 
         public string LastTimeString
         {
             get { return lastTime.ToString("0.0000"); }
         }
-
-        //Debug window (top-left corner, toggle with f8)
-        public bool logToConsole = true;
-
-        //GUI settings
-        public float circleSpeed1 = 10f;
-
-        public float circleSpeed2 = 20f;
-        public float circleSpeed3 = 30f;
-
-        public bool InEditor { get; private set; }
-
-        private GameObject myCanvas;
-
-        private SaveData currentSave;
 
         public SaveData CurrentSave
         {
@@ -65,10 +53,6 @@ namespace Game
                 }
             }
         }
-
-        public bool LastRunWasPb { get; private set; }
-
-        public bool CheatsActive { get; set; }
 
         private void Awake()
         {
@@ -98,7 +82,6 @@ namespace Game
         private void Update()
         {
             Settings.Input.ExecuteBoundActions();
-            HttpApi.ConsumeCallbacks();
 
             //Update effects
             fx.Update();
@@ -111,14 +94,12 @@ namespace Game
         }
 
         //Load a level
-        public void PlayLevel(string levelName)
+        public void PlayLevel(MapData map)
         {
             InEditor = false;
-            SceneManager.sceneLoaded += OnPlayLevelLoaded;
-            SceneManager.LoadScene(levelName);
 
             //Server stuff might be here later
-            fx.StartColorFade(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, () => SceneManager.LoadScene(levelName));
+            fx.StartColorFade(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, () => MapManager.LoadMap(map));
         }
 
         public void LoadEditor(string editorLevelName)
@@ -131,12 +112,6 @@ namespace Game
         {
             GameMenu.SingletonInstance.CloseAllWindows();
             SceneManager.LoadScene("MainMenu");
-        }
-
-        private void OnPlayLevelLoaded(Scene scene, LoadSceneMode mode)
-        {
-            SceneManager.sceneLoaded -= OnPlayLevelLoaded;
-            WorldInfo.info.CreatePlayer(false);
         }
 
         //Player hit the goal
@@ -190,23 +165,6 @@ namespace Game
             return lastTime;
         }
 
-        //Map selection in main menu
-        public void SetSelectedMap(string map, string author = "?")
-        {
-            selectedMap = map;
-            selectedAuthor = author;
-        }
-
-        public string GetSelectedMap()
-        {
-            return selectedMap;
-        }
-
-        public string GetSelectedAuthor()
-        {
-            return selectedAuthor;
-        }
-
         public void SetCursorLock(bool value)
         {
             CursorLockMode mode = CursorLockMode.None;
@@ -214,81 +172,6 @@ namespace Game
                 mode = CursorLockMode.Locked;
             Cursor.lockState = mode;
             Cursor.visible = !value;
-        }
-    }
-
-    internal class GameInfoFx
-    {
-        public delegate void Callback();
-
-        private delegate void EffectUpdate(Effect effect);
-
-        private Image effectImage;
-
-        private List<Effect> activeEffects;
-
-        private struct Effect
-        {
-            public float startTime;
-            public float duration;
-            public EffectUpdate update;
-            public Callback callback;
-            public Color startColor;
-            public Color endColor;
-        }
-
-        public GameInfoFx(Image image)
-        {
-            activeEffects = new List<Effect>();
-
-            effectImage = image;
-        }
-
-        //Call this in the script's update function
-        public void Update()
-        {
-            //Go through active effects and update them
-            for (int i = 0; i < activeEffects.Count; i++)
-            {
-                activeEffects[i].update(activeEffects[i]);
-            }
-
-            Settings.Input.ExecuteBoundActions();
-        }
-
-        public void StartColorFade(Color start, Color end, float duration, Callback callback = null)
-        {
-            Effect e = new Effect
-            {
-                startTime = Time.unscaledTime,
-                duration = duration,
-                startColor = start,
-                endColor = end,
-                update = FadeToColor,
-                callback = callback
-            };
-            activeEffects.Add(e);
-        }
-
-        private void FadeToColor(Effect effect)
-        {
-            //Fade
-            float progress = Interpolate(effect.startTime, Time.unscaledTime, effect.startTime + effect.duration);
-            effectImage.color = Color.Lerp(effect.startColor, effect.endColor, progress);
-
-            //Check if we are done
-            if (progress >= 1f)
-            {
-                if (effect.callback != null)
-                    effect.callback();
-                activeEffects.Remove(effect);
-            }
-        }
-
-        //Returns 0 if current == start; returns 1 if current == end
-        private static float Interpolate(float start, float current, float end)
-        {
-            return (current - start) / (end - start);
         }
     }
 }
