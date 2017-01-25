@@ -46,15 +46,14 @@ namespace Api
 
         public static implicit operator LeaderboardEntry(LeaderboardResult v)
         {
-            return new LeaderboardEntry() { id = v.id, playerName = v.playerName, map = v.mapName, time = v.gameTime, rank = -1 };
+            return new LeaderboardEntry() { id = v.ID, playerName = v.Name, time = v.Time, rank = -1 };
         }
     }
 
     public struct LeaderboardResult
     {
-        public string mapName;
-        public int id;
-        public string playerName;
-        public decimal gameTime;
+        public int ID;
+        public string Name;
+        public decimal Time;
     }
 }
