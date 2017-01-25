@@ -2,6 +2,7 @@
 using Api;
 using UnityEngine;
 using UnityEngine.UI;
+using Util;
 
 namespace UI.MenuWindows
 {
@@ -39,15 +40,15 @@ namespace UI.MenuWindows
             var data = new Dictionary<string, string> {{"user", userNameField.text}, {"report", bugReportMessageField.text}};
 
             ApiRequest rq = new ApiRequest(BUG_REPORT_URL, "POST", data);
-            rq.OnDone += OnMessageSent;
             rq.StartRequest();
+            StartCoroutine(UnityUtils.RunWhenDone(rq, OnMessageSent));
             sendInfo.text = "Sending...";
         }
 
-        private void OnMessageSent(object sender, RequestFinishedEventArgs<string> args)
+        private void OnMessageSent(ApiRequest request)
         {
-            sendInfo.text = args.Error ? args.ErrorText : "Message sent.";
-            if (!args.Error)
+            sendInfo.text = request.Error ? request.ErrorText : "Message sent.";
+            if (!request.Error)
                 GameMenu.SingletonInstance.CloseWindow();
         }
     }

@@ -145,7 +145,6 @@ GameObject:
   - component: {fileID: 222073888346154558}
   - component: {fileID: 114612684085960370}
   - component: {fileID: 114160599862020660}
-  - component: {fileID: 114527923909018208}
   m_Layer: 5
   m_Name: Message
   m_TagString: Untagged
@@ -215,7 +214,6 @@ GameObject:
   - component: {fileID: 222700089372347686}
   - component: {fileID: 114870538058229996}
   - component: {fileID: 114532531643426894}
-  - component: {fileID: 114487837810633542}
   m_Layer: 5
   m_Name: Name
   m_TagString: Untagged
@@ -337,7 +335,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 49b95b425cba7904aad8f265eb233c6e, type: 3}
     m_FontSize: 20
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 4
@@ -497,19 +495,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
---- !u!114 &114487837810633542
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1918523054699890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9551ba80c29004a42bf433dcba5ac20f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nextKeys: 09000000
-  nextDirection: {x: 0, y: -1, z: 0}
 --- !u!114 &114517856282636388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -525,19 +510,6 @@ MonoBehaviour:
   sendInfo: {fileID: 114119600237322082}
   userNameField: {fileID: 114532531643426894}
   bugReportMessageField: {fileID: 114160599862020660}
---- !u!114 &114527923909018208
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1583913867571874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9551ba80c29004a42bf433dcba5ac20f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nextKeys: 09000000
-  nextDirection: {x: 0, y: -1, z: 0}
 --- !u!114 &114532531643426894
 MonoBehaviour:
   m_ObjectHideFlags: 1

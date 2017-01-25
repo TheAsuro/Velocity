@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Api
 {
-    public class LeaderboardRequest
+    public class LeaderboardRequest : Request
     {
         public bool Done { get; private set; }
 

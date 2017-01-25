@@ -8,10 +8,18 @@ using System.Text;
 
 namespace Api
 {
-    public class ApiRequest
+    public interface Request
+    {
+        bool Done { get; }
+        bool Error { get; }
+        string ErrorText { get; }
+    }
+
+    public class ApiRequest : Request
     {
         public event EventHandler<RequestFinishedEventArgs<string>> OnDone;
 
+        public bool Done { get; private set; }
         public bool Error { get; private set; }
         public string ErrorText { get; private set; }
         public string Result { get; private set; }
@@ -129,7 +137,7 @@ namespace Api
             {
                 WebResponse response = HttpWebRequest.EndGetResponse(result);
                 Result = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                Done();
+                Finish();
             }
             catch (WebException ex)
             {
@@ -151,11 +159,12 @@ namespace Api
             {
                 ErrorText = ex.Message;
             }
-            Done();
+            Finish();
         }
 
-        public void Done()
+        private void Finish()
         {
+            Done = true;
             if (OnDone != null)
                 OnDone(this, new RequestFinishedEventArgs<string>(Error, ErrorText, Result));
         }

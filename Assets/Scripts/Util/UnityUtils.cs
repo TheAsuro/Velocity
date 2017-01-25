@@ -39,7 +39,7 @@ namespace Util
             return hashString.PadLeft(32, '0');
         }
 
-        public static IEnumerator RunWhenDone(LeaderboardRequest request, Action<LeaderboardRequest> action)
+        public static IEnumerator RunWhenDone<T>(T request, Action<T> action) where T : Request
         {
             while (!request.Done)
                 yield return null;
