@@ -12,12 +12,11 @@ namespace Api
     {
         public event EventHandler<RequestFinishedEventArgs<string>> OnDone;
 
-        public bool Error { get; set; }
-        public string ErrorText { get; set; }
-        public string Result { get; set; }
+        public bool Error { get; private set; }
+        public string ErrorText { get; private set; }
+        public string Result { get; private set; }
         public HttpWebRequest HttpWebRequest { get; private set; }
         public Dictionary<string, string> RequestData { get; private set; }
-        public HttpWebResponse Response { get; set; }
 
         public ApiRequest(string url, string method, Dictionary<string, string> data = null)
         {
