@@ -21,7 +21,7 @@ namespace UI.MenuWindows
 
         public void PlayRaceDemo()
         {
-            DemoPlayer.SingletonInstance.PlayDemo(demo);
+            WorldInfo.info.PlayDemo(demo, true, false);
         }
 
         //Save demo to ".vdem" file, does not work in web player

@@ -256,7 +256,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c789344c600c24ba7a65a2d696c122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isFistSpawn: 1
   respawnPositionIsRelative: 1
   respawnRotationIsRelative: 1
   respawnPosition: {x: 0, y: 0, z: 0}
@@ -2275,12 +2274,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
-      propertyPath: deathHeight
-      value: -10
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 11400002, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &854006768

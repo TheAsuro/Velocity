@@ -1,7 +1,6 @@
 ﻿using Demos;
-using Movement;
+using Race;
 using UnityEngine;
-using UnityEngine.UI;
 
 // TODO - this class is dumb delete it
 public class PlayerBehaviour : MonoBehaviour

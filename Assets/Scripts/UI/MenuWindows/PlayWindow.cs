@@ -1,5 +1,6 @@
 ﻿using System;
 using Game;
+using Race;
 using UnityEngine;
 using UnityEngine.UI;
 

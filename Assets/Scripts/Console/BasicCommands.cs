@@ -51,7 +51,7 @@ namespace Console
             try
             {
                 Demo demo = new Demo(Path.Combine(Application.dataPath, arguments[1]));
-                DemoPlayer.SingletonInstance.PlayDemo(demo);
+                WorldInfo.info.PlayDemo(demo, false, false);
             }
             catch (IOException e)
             {
