@@ -17,9 +17,6 @@ public class PlayerBehaviour : MonoBehaviour
     //Speed, AirSpeed, MaxSpeed, Friction, Jump
     private static float[] defaults = {200f, 200f, 6.4f, 0.6f, 8f, 5f};
 
-    //Can player change cheat protected variables?
-    private bool cheats = false;
-
     private void Awake()
     {
         myMesh = transform.Find("Mesh").gameObject;
@@ -37,13 +34,6 @@ public class PlayerBehaviour : MonoBehaviour
         InvertYInput = Settings.Game.InvertY;
         SetFov(Settings.Game.Fov);
         SetVolume(Settings.Game.Volume);
-    }
-
-    public void ResetPosition(Vector3 pos, Quaternion rot)
-    {
-        transform.position = Vector3.zero;
-        myMesh.transform.position = pos;
-        myMesh.transform.rotation = rot;
     }
 
     public void PlaySound(AudioClip pClip)
@@ -83,16 +73,6 @@ public class PlayerBehaviour : MonoBehaviour
         return myRecorder.GetDemo();
     }
 
-    public void SetWorldBackgroundColor(Color color)
-    {
-        myCamera.backgroundColor = color;
-    }
-
-    public bool GetCheats()
-    {
-        return cheats;
-    }
-
     public void SetPause(bool value)
     {
         if (value)
@@ -110,10 +90,5 @@ public class PlayerBehaviour : MonoBehaviour
     public Camera PlayerCamera
     {
         get { return myCamera; }
-    }
-
-    private void PrintCheatWarning()
-    {
-        Console.Console.Write("This command is cheat protected, turn on cheats with 'cheats 1'!");
     }
 }

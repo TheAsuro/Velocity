@@ -37,25 +37,21 @@ public class WorldInfo : MonoBehaviour
     public void PlayDemo(Demo demo, bool loop, bool staticCam)
     {
         if (demoPlayer != null)
-        {
-            Destroy(demoPlayer.gameObject);
-        }
+            demoPlayer.StopDemoPlayback();
 
         demoPlayer = Instantiate(worldData.demoPlayerTemplate).GetComponent<DemoPlayer>();
         RaceScript = demoPlayer.GetComponent<DemoRaceScript>();
         demoPlayer.PlayDemo(demo, loop, staticCam);
     }
 
-    public void CreatePlayer(Respawn spawnpoint, bool startInEditorMode = false)
+    public void CreatePlayer(bool startInEditorMode)
     {
         //Instantiate a new player at the spawnpoint's location
         GameObject newPlayer = Instantiate(worldData.playerTemplate, Vector3.zero, Quaternion.identity);
-        PlayerBehaviour newPlayerBehaviour = newPlayer.GetComponent<PlayerBehaviour>();
         RaceScript = newPlayer.GetComponent<GameRaceScript>();
 
         //Set up player
-        newPlayerBehaviour.ResetPosition(spawnpoint.GetSpawnPos(), spawnpoint.GetSpawnRot());
-        newPlayerBehaviour.SetWorldBackgroundColor(worldData.backgroundColor);
+        RaceScript.PrepareNewRace();
 
         // UI
         RaceScript.OnReset += (s, e) => GameMenu.SingletonInstance.CloseAllWindows();

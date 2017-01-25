@@ -89,13 +89,12 @@ namespace UI.MenuWindows
         private void OnPlayableMapClick(string mapName)
         {
             GameMenu.SingletonInstance.CloseAllWindows();
-            GameInfo.info.LoadLevel(mapName);
+            GameInfo.info.PlayLevel(mapName);
         }
 
         public void LoadEditorWithLevel(string levelName)
         {
-            GameInfo.info.editorLevelName = levelName;
-            GameInfo.info.LoadLevel("LevelEditor");
+            GameInfo.info.LoadEditor(levelName);
         }
     }
 }

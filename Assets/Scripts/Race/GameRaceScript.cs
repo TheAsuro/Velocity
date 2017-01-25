@@ -132,7 +132,7 @@ namespace Race
             lastSecondGame = Time.time;
 
             Unpause();
-            demoRecorder.StartDemo(GameInfo.info.PlayerData.PlayerName);
+            demoRecorder.StartDemo(GameInfo.info.CurrentSave.Name);
 
             if (OnStart != null)
                 OnStart(this, new EventArgs());

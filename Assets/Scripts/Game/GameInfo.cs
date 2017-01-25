@@ -14,8 +14,6 @@ namespace Game
     {
         public static GameInfo info;
 
-        public PlayerData PlayerData { get; private set; }
-
         public string secretKey = "";
         public TextAsset helpFile;
 
@@ -49,15 +47,10 @@ namespace Game
         public float circleSpeed2 = 20f;
         public float circleSpeed3 = 30f;
 
-        //Editor
         public bool InEditor { get; private set; }
 
-        public string editorLevelName = "";
-
-        //References
         private GameObject myCanvas;
 
-        //Load infos like player name, pb's, etc.
         private SaveData currentSave;
 
         public SaveData CurrentSave
@@ -118,13 +111,32 @@ namespace Game
         }
 
         //Load a level
-        public void LoadLevel(string levelName)
+        public void PlayLevel(string levelName)
         {
-            // TODO - better?
-            InEditor = levelName == "editor";
+            InEditor = false;
+            SceneManager.sceneLoaded += OnPlayLevelLoaded;
+            SceneManager.LoadScene(levelName);
 
             //Server stuff might be here later
             fx.StartColorFade(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, () => SceneManager.LoadScene(levelName));
+        }
+
+        public void LoadEditor(string editorLevelName)
+        {
+            InEditor = true;
+            SceneManager.LoadScene("LevelEditor");
+        }
+
+        public void LoadMainMenu()
+        {
+            GameMenu.SingletonInstance.CloseAllWindows();
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        private void OnPlayLevelLoaded(Scene scene, LoadSceneMode mode)
+        {
+            SceneManager.sceneLoaded -= OnPlayLevelLoaded;
+            WorldInfo.info.CreatePlayer(false);
         }
 
         //Player hit the goal

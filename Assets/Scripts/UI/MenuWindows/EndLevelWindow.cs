@@ -32,8 +32,7 @@ namespace UI.MenuWindows
 
         public void ToMainMenu()
         {
-            GameMenu.SingletonInstance.CloseAllWindows();
-            GameInfo.info.LoadLevel("MainMenu");
+            GameInfo.info.LoadMainMenu();
         }
     }
 }

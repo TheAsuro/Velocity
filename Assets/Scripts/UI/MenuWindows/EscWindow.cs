@@ -13,7 +13,7 @@ namespace UI.MenuWindows
 
         public void ToMainMenu()
         {
-            GameInfo.info.LoadLevel("MainMenu");
+            GameInfo.info.LoadMainMenu();
         }
 
         public void Quit()
