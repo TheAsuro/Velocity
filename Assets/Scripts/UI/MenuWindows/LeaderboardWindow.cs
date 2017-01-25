@@ -29,7 +29,7 @@ namespace UI.MenuWindows
                 DisplayData(new LeaderboardEntry[0]);
         }
 
-        private void LoadMap(MapData map)
+        public void LoadMap(MapData map)
         {
             loadedMap = map;
             StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetEntries(map, startIndex, entryPanels.Count), (request) =>

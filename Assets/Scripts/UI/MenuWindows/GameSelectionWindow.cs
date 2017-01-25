@@ -2,6 +2,7 @@
 using System.IO;
 using Api;
 using Game;
+using UI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 using Util;
@@ -26,13 +27,14 @@ namespace UI.MenuWindows
             contentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * defaultMapData.Count + 10f);
 
             int counter = 0;
-            foreach (MapData data in defaultMapData)
+            foreach (MapData map in defaultMapData)
             {
                 string pb = "-";
-                decimal pbTime = GameInfo.info.CurrentSave.GetPersonalBest(data.name);
+                decimal pbTime = GameInfo.info.CurrentSave.GetPersonalBest(map.name);
                 if (pbTime != -1)
                     pb = pbTime.ToString("0.0000");
-                CreateMapPanel(counter++, data, pb);
+                GameObject panel = GameMenu.CreatePanel(counter, mapPanelPrefab, contentTransform);
+                panel.GetComponent<MapPanel>().Set(counter++, map, pb);
             }
         }
 
@@ -52,47 +54,12 @@ namespace UI.MenuWindows
             }
         }
 
-        private void SetWrText(Transform panelTransform, LeaderboardEntry entry)
-        {
-            if (panelTransform == null || entry == null)
-                return;
-
-            Transform wrObj = panelTransform.FindChild("WR");
-            if (wrObj == null || wrObj.GetComponent<Text>() == null)
-                return;
-
-            wrObj.GetComponent<Text>().text = "WR: " + entry.time + " by " + entry.playerName;
-        }
-
-        private void CreateMapPanel(int slot, MapData map, string pb)
-        {
-            Transform t = GameMenu.CreatePanel(slot, mapPanelPrefab, contentTransform).transform;
-
-            t.FindChild("Name").GetComponent<Text>().text = name;
-            t.FindChild("Author").GetComponent<Text>().text = "Map by " + map.author;
-            t.FindChild("Preview").GetComponent<RawImage>().texture = map.previewImage;
-            t.FindChild("PB").GetComponent<Text>().text = "PB: " + pb;
-            t.FindChild("Button").GetComponent<Button>().onClick.AddListener(() => OnPlayableMapClick(map));
-
-            StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(map), (request) =>
-            {
-                if (!request.Error)
-                    SetWrText(t, request.Result[0]);
-            }));
-        }
-
         private void CreateEditPanel(int slot, string fileName)
         {
             Transform t = GameMenu.CreatePanel(slot, editPanelPrefab, contentTransform).transform;
 
             t.FindChild("Name").GetComponent<Text>().text = fileName;
             t.FindChild("Button").GetComponent<Button>().onClick.AddListener(() => LoadEditorWithLevel(fileName));
-        }
-
-        private void OnPlayableMapClick(MapData map)
-        {
-            GameMenu.SingletonInstance.CloseAllWindows();
-            GameInfo.info.PlayLevel(map);
         }
 
         public void LoadEditorWithLevel(string levelName)
