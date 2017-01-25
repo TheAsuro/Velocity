@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,7 +18,9 @@ namespace Demos
         private GameObject ghostCam;
         private List<DemoTick> tickList;
         private bool looping = false;
-        private bool staticCam = false;
+        private bool followCam = false;
+        private Vector3 followCamOffset = new Vector3(0f, 3f, -6f);
+        private float followCamSpeed = 2f;
 
         private void Update()
         {
@@ -57,8 +60,8 @@ namespace Demos
                 //If demo is running
                 if (lastFrameTime > 0f && nextFrameTime > 0f)
                 {
-                    float frameStep = nextFrameTime - lastFrameTime;
                     float timeToNextFrame = nextFrameTime - playTime;
+                    float frameStep = nextFrameTime - lastFrameTime;
                     float t = timeToNextFrame / frameStep;
 
                     Quaternion editedLastRot = Quaternion.Euler(lastRot.eulerAngles.x, lastRot.eulerAngles.y, 0f);
@@ -71,23 +74,13 @@ namespace Demos
 
                     //Update first/third person view
                     camDistance = new Vector3(0f, 0.5f, 0f);
-
-                    //make obj at ghost position and child at cam distance
-                    if (staticCam)
-                        ghostCam.transform.LookAt(nextPos);
-                    else
-                    {
-                        ghostCam.transform.position = transform.position + (transform.rotation * camDistance);
-                        ghostCam.transform.rotation = transform.rotation;
-                    }
                 }
 
-                if (nextFrameTime == -1f)
+                // Demo ended
+                if (nextFrameTime < 0f)
                 {
-                    if (looping)
-                        ResetDemo();
-                    else
-                        StopDemoPlayback();
+                    playing = false;
+                    StartCoroutine(EndDemoDelay());
                 }
 
                 if (Input.GetButtonDown("Menu"))
@@ -95,12 +88,33 @@ namespace Demos
                     StopDemoPlayback();
                 }
             }
+
+            //make obj at ghost position and child at cam distance
+            if (followCam)
+            {
+                ghostCam.transform.position = Vector3.Lerp(ghostCam.transform.position, transform.TransformPoint(followCamOffset), Time.deltaTime * followCamSpeed);
+                ghostCam.transform.rotation = Quaternion.Lerp(ghostCam.transform.rotation, Quaternion.LookRotation(transform.position - ghostCam.transform.position, Vector3.up), Time.deltaTime);
+            }
+            else
+            {
+                ghostCam.transform.position = transform.position + (transform.rotation * camDistance);
+                ghostCam.transform.rotation = transform.rotation;
+            }
         }
 
-        public void PlayDemo(Demo demo, bool doLoop = false, bool staticCam = false)
+        private IEnumerator EndDemoDelay()
+        {
+            yield return new WaitForSecondsRealtime(3f);
+            if (looping)
+                ResetDemo();
+            else
+                StopDemoPlayback();
+        }
+
+        public void PlayDemo(Demo demo, bool doLoop = false, bool followCam = false)
         {
             looping = doLoop;
-            this.staticCam = staticCam;
+            this.followCam = followCam;
 
             //Load demo ticks
             tickList = demo.GetTickList();
@@ -136,22 +150,13 @@ namespace Demos
 
         public void ResetDemo()
         {
-            if (!playing)
-                throw new InvalidOperationException("Can't reset a not playing demo!");
-
             transform.position = tickList[0].GetPosition();
-            //ghost.transform.rotation = tickList[0].GetRotation();
-            ghostCam.transform.position = staticCam ? CalculateCamPosition(tickList) : tickList[0].GetPosition();
+            transform.rotation = tickList[0].GetRotation();
+            ghostCam.transform.position = followCam ? tickList[0].GetPosition() + followCamOffset : tickList[0].GetPosition();
             ghostCam.transform.rotation = tickList[0].GetRotation();
             startPlayTime = Time.time;
 
             playing = true;
-        }
-
-        private static Vector3 CalculateCamPosition(IEnumerable<DemoTick> playerPositions)
-        {
-            Vector3 averagePos = playerPositions.Select(tick => tick.GetPosition()).Aggregate((a, b) => new Vector3(a.x + b.x, a.y + b.y, a.z + b.z)) / playerPositions.Count();
-            return averagePos + new Vector3(0f, 10f, 0f);
         }
     }
 }
