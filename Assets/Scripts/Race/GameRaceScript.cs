@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Api;
 using Demos;
 using Game;
 using UnityEngine;
@@ -24,8 +25,8 @@ namespace Race
         private float lastSecondGame;
         private DateTime lastSecondComputer;
 
-        private Respawn firstSpawn;
-        private Respawn currentSpawn;
+        private Checkpoint firstSpawn;
+        private Checkpoint currentSpawn;
 
         private Stopwatch playTime;
         private DemoRecord demoRecorder;
@@ -42,6 +43,7 @@ namespace Race
             demoRecorder = GetComponent<DemoRecord>();
             firstSpawn = WorldInfo.info.FirstSpawn;
             currentSpawn = firstSpawn;
+            WorldInfo.info.OnCheckpointTrigger += CheckpointHit;
         }
 
         private void Update()
@@ -73,25 +75,22 @@ namespace Race
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag.Equals("Checkpoint"))
-            {
-                //Get checkpoint info
-                Checkpoint cp = other.GetComponent<Checkpoint>();
-                int nr = cp.checkpointNumber;
-                bool end = cp.isEnd;
-
-                if (end && nr == checkpoint + 1 && !finished) //End
-                {
-                    EndRace();
-                }
-                else if (nr == checkpoint + 1) //next checkpoint
-                {
-                    checkpoint++;
-                }
-            }
-            else if (other.tag.Equals("Kill"))
+            if (other.tag.Equals("Kill"))
             {
                 ResetToLastCheckpoint();
+            }
+        }
+
+        public void CheckpointHit(object sender, EventArgs<Checkpoint> eventArgs)
+        {
+            int index = eventArgs.Content.Index;
+            if (WorldInfo.info.IsLastCheckpoint(index) && index == checkpoint + 1 && !finished) //End
+            {
+                EndRace();
+            }
+            else if (index == checkpoint + 1) //next checkpoint
+            {
+                checkpoint++;
             }
         }
 

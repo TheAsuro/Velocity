@@ -1,7 +1,10 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using Api;
 using Demos;
+using Game;
 using Race;
 using UI;
 
@@ -9,20 +12,25 @@ public class WorldInfo : MonoBehaviour
 {
     public static WorldInfo info;
 
-    [SerializeField] private WorldData worldData;
-
-    [SerializeField] private Respawn firstSpawn = null;
-
-    private DemoPlayer demoPlayer;
+    public event EventHandler<EventArgs<Checkpoint>> OnCheckpointTrigger;
 
     public RaceScript RaceScript { get; private set; }
 
-    public Respawn FirstSpawn
+    [SerializeField] private Checkpoint firstSpawn;
+    public Checkpoint FirstSpawn
     {
         get { return firstSpawn; }
     }
 
+    [SerializeField] private WorldData worldData;
+    public WorldData WorldData
+    {
+        get { return worldData; }
+    }
+
+    private DemoPlayer demoPlayer;
     private List<GameObject> skyboxWatchers = new List<GameObject>();
+    private SortedList<int, Checkpoint> levelCheckpoints = new SortedList<int, Checkpoint>();
 
     private void Awake()
     {
@@ -70,8 +78,21 @@ public class WorldInfo : MonoBehaviour
         }
     }
 
-    public WorldData WorldData
+    public void AddCheckpoint(Checkpoint cp)
     {
-        get { return worldData; }
+        if (levelCheckpoints.ContainsKey(cp.Index))
+            throw new ArgumentException("Too many checkpoints with #" + cp.Index);
+
+        levelCheckpoints.Add(cp.Index, cp);
+        cp.OnPlayerTrigger += (sender, args) =>
+        {
+            if (OnCheckpointTrigger != null)
+                OnCheckpointTrigger(this, new EventArgs<Checkpoint>(cp));
+        };
+    }
+
+    public bool IsLastCheckpoint(int checkpointIndex)
+    {
+        return levelCheckpoints.Last().Key == checkpointIndex;
     }
 }

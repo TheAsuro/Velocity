@@ -1,4 +1,5 @@
-﻿using UI;
+﻿using Game;
+using UI;
 using UnityEngine;
 
 namespace Race
@@ -239,7 +240,7 @@ namespace Race
         }
 
         //Spawn at a specific checkpoint
-        public void SpawnPlayer(Respawn spawn)
+        public void SpawnPlayer(Checkpoint spawn)
         {
             if (spawn != null)
             {
