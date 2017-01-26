@@ -90,14 +90,13 @@ namespace UI
             StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(GameInfo.info.MapManager.CurrentMap), (request) =>
             {
                 loadingWr = false;
-                if (!request.Error)
+                if (!request.Error && request.Result.Length > 0)
                 {
                     LeaderboardEntry entry = request.Result[0];
                     wr = entry.time + " by " + entry.playerName;
                 }
                 else
                 {
-                    print(request.ErrorText);
                     wr = "-";
                 }
             }));

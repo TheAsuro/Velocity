@@ -25,7 +25,7 @@ namespace Race
 
         public void PrepareNewRace()
         {
-            throw new NotImplementedException();
+            Destroy(gameObject);
         }
     }
 }

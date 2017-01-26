@@ -52,7 +52,6 @@ namespace UI.Elements
 
         private void OnPlayableMapClick(MapData map)
         {
-            GameMenu.SingletonInstance.CloseAllWindows();
             GameInfo.info.PlayLevel(map);
         }
 

@@ -69,14 +69,10 @@ namespace Game
             myCanvas = transform.Find("Canvas").gameObject;
 
             fx = new GameInfoFx(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
+            SceneManager.sceneLoaded += (scene, mode) => fx.StartColorFade(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
 
             if (!PlayerPrefs.HasKey("lastplayer"))
                 CurrentSave = new SaveData(PlayerPrefs.GetString("lastplayer"));
-        }
-
-        private void Start()
-        {
-            GameMenu.SingletonInstance.AddWindow(Window.MAIN_MENU);
         }
 
         private void Update()
@@ -87,19 +83,15 @@ namespace Game
             fx.Update();
         }
 
-        //Prepare for new level
-        private void OnLevelWasLoaded(int level)
-        {
-            fx.StartColorFade(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
-        }
-
         //Load a level
         public void PlayLevel(MapData map)
         {
             InEditor = false;
-
-            //Server stuff might be here later
-            fx.StartColorFade(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, () => MapManager.LoadMap(map));
+            fx.StartColorFade(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, () =>
+            {
+                GameMenu.SingletonInstance.CloseAllWindows();
+                MapManager.LoadMap(map);
+            });
         }
 
         public void LoadEditor(string editorLevelName)
@@ -122,6 +114,7 @@ namespace Game
 
             LastRunWasPb = CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
 
+            GameMenu.SingletonInstance.CloseAllWindows();
             EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
             window.Initialize(currentDemo);
 

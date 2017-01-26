@@ -66,7 +66,7 @@ namespace Race
 
         private void FixedUpdate()
         {
-            //Kill player if below map
+            //Restart if below map
             if (transform.position.y <= WorldInfo.info.WorldData.deathHeight)
                 ResetToLastCheckpoint();
         }

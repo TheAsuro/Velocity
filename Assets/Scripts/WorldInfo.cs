@@ -54,7 +54,6 @@ public class WorldInfo : MonoBehaviour
         RaceScript.PrepareNewRace();
 
         // UI
-        RaceScript.OnReset += (s, e) => GameMenu.SingletonInstance.CloseAllWindows();
         GameMenu.SingletonInstance.AddWindow(Window.PLAY);
     }
 

@@ -16,6 +16,11 @@ public class SoundManager : MonoBehaviour
         soundPlayer = GetComponent<AudioSource>();
     }
 
+    private void OnDestroy()
+    {
+        SingletonInstance = null;
+    }
+
     public void PlaySound(string clipName)
     {
         // TODO

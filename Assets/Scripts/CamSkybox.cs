@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 /*
  * Created by Geordie Powers on Feb 13 2015
@@ -8,7 +7,7 @@ using System.Collections;
  * This script is intended for application to cameras. Anything else would be pointless.
  * 
  */
-
+[RequireComponent(typeof(Camera))]
 public class CamSkybox : MonoBehaviour
 {
     private void Start()

@@ -65,7 +65,7 @@ namespace UI
 
         private void Update()
         {
-            if (Input.GetButtonDown("Menu") && currentWindow == Window.NONE)
+            if (Input.GetButtonDown("Menu") && (currentWindow == Window.NONE || currentWindow == Window.PLAY))
                 AddWindow(Window.ESC_MENU);
             if (Input.GetButtonDown("Debug"))
                 ToggleDebugWindow();

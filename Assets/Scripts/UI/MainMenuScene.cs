@@ -16,23 +16,21 @@ namespace UI
 
         private void Start()
         {
+            GameMenu.SingletonInstance.AddWindow(Window.MAIN_MENU);
+
             if (defaultDemo == "")
                 throw new MissingReferenceException("Put in default demo pls");
 
-            GameMenu.SingletonInstance.OnMenuAdded += (sender, args) =>
-            {
-                if (otherMenusOpen == 0)
-                    Camera.main.gameObject.GetComponent<BlurOptimized>().enabled = true;
-                otherMenusOpen++;
-            };
-            GameMenu.SingletonInstance.OnMenuRemoved += (sender, args) =>
-            {
-                otherMenusOpen--;
-                if (otherMenusOpen == 0)
-                    Camera.main.gameObject.GetComponent<BlurOptimized>().enabled = false;
-            };
+            GameMenu.SingletonInstance.OnMenuAdded += IncreaseMenuCounter;
+            GameMenu.SingletonInstance.OnMenuRemoved += DecreaseMenuCounter;
 
             LoadDemo(defaultDemo);
+        }
+
+        private void OnDestroy()
+        {
+            GameMenu.SingletonInstance.OnMenuAdded -= IncreaseMenuCounter;
+            GameMenu.SingletonInstance.OnMenuAdded -= DecreaseMenuCounter;
         }
 
         private void LoadDemo(string path)
@@ -59,6 +57,20 @@ namespace UI
                 WorldInfo.info.PlayDemo(loadingDemo, true, true);
                 loadingDemo = null;
             }
+        }
+
+        private void IncreaseMenuCounter(object sender, EventArgs eventArgs)
+        {
+            if (otherMenusOpen == 0)
+                Camera.main.gameObject.GetComponent<BlurOptimized>().enabled = true;
+            otherMenusOpen++;
+        }
+
+        private void DecreaseMenuCounter(object sender, EventArgs eventArgs)
+        {
+            otherMenusOpen--;
+            if (otherMenusOpen == 0)
+                Camera.main.gameObject.GetComponent<BlurOptimized>().enabled = false;
         }
     }
 }
