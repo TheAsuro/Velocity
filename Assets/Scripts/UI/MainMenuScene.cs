@@ -3,6 +3,7 @@ using System.IO;
 using Demos;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.ImageEffects;
 
 namespace UI
 {
@@ -11,11 +12,26 @@ namespace UI
         [SerializeField] private string defaultDemo;
 
         private Demo loadingDemo;
+        private int otherMenusOpen = 0;
 
         private void Start()
         {
             if (defaultDemo == "")
                 throw new MissingReferenceException("Put in default demo pls");
+
+            GameMenu.SingletonInstance.OnMenuAdded += (sender, args) =>
+            {
+                if (otherMenusOpen == 0)
+                    Camera.main.gameObject.GetComponent<BlurOptimized>().enabled = true;
+                otherMenusOpen++;
+            };
+            GameMenu.SingletonInstance.OnMenuRemoved += (sender, args) =>
+            {
+                otherMenusOpen--;
+                if (otherMenusOpen == 0)
+                    Camera.main.gameObject.GetComponent<BlurOptimized>().enabled = false;
+            };
+
             LoadDemo(defaultDemo);
         }
 

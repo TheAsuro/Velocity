@@ -27,6 +27,9 @@ namespace UI
     {
         public static GameMenu SingletonInstance { get; private set; }
 
+        public event EventHandler OnMenuAdded;
+        public event EventHandler OnMenuRemoved;
+
         [SerializeField] private MenuProperties menuProperties;
         [SerializeField] private GameObject debugWindow;
 
@@ -77,6 +80,10 @@ namespace UI
             MenuWindow menu = menuProperties.CreateWindow(window, myCanvas.transform);
             menu.OnActivate();
             menuStack.Push(menu);
+
+            if (OnMenuAdded != null)
+                OnMenuAdded(this, new EventArgs());
+
             return menu;
         }
 
@@ -86,6 +93,9 @@ namespace UI
                 throw new InvalidOperationException();
             menuStack.Pop().OnClose();
             currentWindow = menuStack.Count == 0 ? Window.NONE : menuProperties.FindWindowType(menuStack.Peek());
+
+            if (OnMenuRemoved != null)
+                OnMenuRemoved(this, new EventArgs());
         }
 
         public void CloseAllWindows()
