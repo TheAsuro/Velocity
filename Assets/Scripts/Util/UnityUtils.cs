@@ -2,6 +2,7 @@
 using System.Collections;
 using Api;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Util
 {
@@ -44,6 +45,23 @@ namespace Util
             while (!request.Done)
                 yield return null;
             action(request);
+        }
+
+        public static IEnumerator WaitForRemove(Object obj, float duration)
+        {
+            yield return new WaitForSecondsRealtime(duration);
+            Object.Destroy(obj);
+        }
+
+        public static string ShortText(this TimeSpan time)
+        {
+            string result = "";
+            if (time.Days > 0)
+                result += time.Days.ToString("0") + "d ";
+            if (time.Days > 0 || time.Hours > 0)
+                result += time.Hours.ToString("00") + ":";
+            result += time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00") + ":" + time.Milliseconds.ToString("00");
+            return result;
         }
     }
 }

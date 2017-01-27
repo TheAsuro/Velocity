@@ -3,7 +3,9 @@ using System.Diagnostics;
 using Api;
 using Demos;
 using Game;
+using UI;
 using UnityEngine;
+using Util;
 
 namespace Race
 {
@@ -91,6 +93,11 @@ namespace Race
             else if (index == checkpoint + 1) //next checkpoint
             {
                 checkpoint++;
+                GameMenu.SingletonInstance.ShowTextBox("#" + checkpoint + ": " + ElapsedTime.ShortText(), Color.blue);
+            }
+            else
+            {
+                GameMenu.SingletonInstance.ShowTextBox("Wrong Checkpoint!", Color.red);
             }
         }
 

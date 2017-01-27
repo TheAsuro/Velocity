@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UI.MenuWindows;
 using UnityEngine;
+using Util;
 
 namespace UI
 {
@@ -27,6 +29,8 @@ namespace UI
     {
         public static GameMenu SingletonInstance { get; private set; }
 
+        private const float DEFAULT_TEXT_DISPLAY_DURATION = 0.8f;
+
         public event EventHandler OnMenuAdded;
         public event EventHandler OnMenuRemoved;
 
@@ -35,6 +39,7 @@ namespace UI
 
         private Window currentWindow = Window.NONE;
         private Stack<MenuWindow> menuStack = new Stack<MenuWindow>();
+        private List<GameObject> textDisplays = new List<GameObject>();
         private Canvas myCanvas;
 
         public static GameObject CreatePanel(int slot, GameObject prefab, Transform parent)
@@ -112,6 +117,13 @@ namespace UI
         public DebugWindow GetDebugWindow()
         {
             return debugWindow.GetComponent<DebugWindow>();
+        }
+
+        public void ShowTextBox(string text, Color color, float duration = DEFAULT_TEXT_DISPLAY_DURATION)
+        {
+            GameObject textBox = menuProperties.CreateTextDisplay(text, color, myCanvas.transform);
+            textDisplays.Add(textBox);
+            StartCoroutine(UnityUtils.WaitForRemove(textBox, duration));
         }
     }
 }

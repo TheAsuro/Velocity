@@ -33,10 +33,19 @@ namespace UI
         {
             string temp = initialText;
             SaveData playerSave = GameInfo.info.CurrentSave;
-        
-            if (temp.Contains("$player") && playerSave != null) { temp = temp.Replace("$player", playerSave.Account.Name); }
-            if (temp.Contains("$time")) { temp = temp.Replace("$time", (GameInfo.info.LastTimeString).ToString()); }
-            if (temp.Contains("$map")) { temp = SceneManager.GetActiveScene().name; }
+
+            if (temp.Contains("$player") && playerSave != null)
+            {
+                temp = temp.Replace("$player", playerSave.Account.Name);
+            }
+            if (temp.Contains("$time"))
+            {
+                temp = temp.Replace("$time", WorldInfo.info.RaceScript.ElapsedTime.ToString());
+            }
+            if (temp.Contains("$map"))
+            {
+                temp = SceneManager.GetActiveScene().name;
+            }
 
             if (temp.Contains("$wr"))
             {
@@ -47,21 +56,21 @@ namespace UI
             if (pb.Equals("") && playerSave != null)
             {
                 decimal pbTime = playerSave.GetPersonalBest(SceneManager.GetActiveScene().name);
-                if (pbTime <= 0)
-                    pb = "-";
-                else
-                    pb = pbTime.ToString("0.0000");
+                pb = pbTime <= 0 ? "-" : pbTime.ToString("0.0000");
             }
 
-            if (temp.Contains("$wr")) { temp = temp.Replace("$wr", wr); }
-            if (temp.Contains("$pb")) { temp = temp.Replace("$pb", pb); }
+            if (temp.Contains("$wr"))
+            {
+                temp = temp.Replace("$wr", wr);
+            }
+            if (temp.Contains("$pb"))
+            {
+                temp = temp.Replace("$pb", pb);
+            }
 
             if (temp.Contains("$ispb"))
             {
-                if (GameInfo.info.LastRunWasPb)
-                    temp = temp.Replace("$ispb", "You scored a new personal best!");
-                else
-                    temp = temp.Replace("$ispb", "");
+                temp = temp.Replace("$ispb", GameInfo.info.LastRunWasPb ? "New personal record!" : "");
             }
 
             if (temp.Contains("$rank"))

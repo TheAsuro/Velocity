@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UI.MenuWindows;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
     [CreateAssetMenu]
     public class MenuProperties : ScriptableObject
     {
+        [SerializeField] private GameObject textDisplayPrefab;
         [SerializeField] private GameObject bugReportPrefab;
         [SerializeField] private GameObject demoListPrefab;
         [SerializeField] private GameObject endLevelPrefab;
@@ -44,6 +46,15 @@ namespace UI
                 {Window.PLAY, new TypeAndPrefab(typeof(PlayWindow), playWindow)},
                 {Window.SETTINGS, new TypeAndPrefab(typeof(SettingsWindow), settingsWindowPrefab)},
             };
+        }
+
+        public GameObject CreateTextDisplay(string text, Color color, Transform spawnTransform)
+        {
+            GameObject obj = Instantiate(textDisplayPrefab, spawnTransform, false);
+            Text textComponent = obj.transform.GetComponentInChildren<Text>();
+            textComponent.text = text;
+            textComponent.color = color;
+            return obj;
         }
 
         public MenuWindow CreateWindow(Window window, Transform spawnTransform)

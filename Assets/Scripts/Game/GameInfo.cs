@@ -32,14 +32,8 @@ namespace Game
 
         private GameInfoFx fx;
         private Demo currentDemo;
-        private decimal lastTime = -1;
         private GameObject myCanvas;
         private SaveData currentSave;
-
-        public string LastTimeString
-        {
-            get { return lastTime.ToString("0.0000"); }
-        }
 
         public SaveData CurrentSave
         {
@@ -109,10 +103,9 @@ namespace Game
         //Player hit the goal
         public void RunFinished(TimeSpan time, Demo demo)
         {
+            decimal decimalTime = time.Ticks / (decimal) 10000000;
             currentDemo = demo;
-            lastTime = time.Ticks / (decimal) 10000000;
-
-            LastRunWasPb = CurrentSave.SaveIfPersonalBest(lastTime, SceneManager.GetActiveScene().name);
+            LastRunWasPb = CurrentSave.SaveIfPersonalBest(decimalTime, SceneManager.GetActiveScene().name);
 
             GameMenu.SingletonInstance.CloseAllWindows();
             EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
@@ -134,7 +127,7 @@ namespace Game
                 return;
             }
 
-            Leaderboard.SendEntry(currentSave.Account.Name, lastTime, SceneManager.GetActiveScene().name, currentSave.Account.Token, currentDemo);
+            Leaderboard.SendEntry(currentSave.Account.Name, decimalTime, SceneManager.GetActiveScene().name, currentSave.Account.Token, currentDemo);
         }
 
         //Leave the game
@@ -151,11 +144,6 @@ namespace Game
             //Log out from current player if we deleted that one
             if (CurrentSave != null && CurrentSave.Name == name)
                 CurrentSave = null;
-        }
-
-        public decimal GetLastTime()
-        {
-            return lastTime;
         }
 
         public void SetCursorLock(bool value)
