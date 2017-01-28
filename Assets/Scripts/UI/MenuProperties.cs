@@ -11,6 +11,7 @@ namespace UI
     public class MenuProperties : ScriptableObject
     {
         [SerializeField] private GameObject textDisplayPrefab;
+        [SerializeField] private GameObject textDisplayLinePrefab;
         [SerializeField] private GameObject bugReportPrefab;
         [SerializeField] private GameObject demoListPrefab;
         [SerializeField] private GameObject endLevelPrefab;
@@ -48,12 +49,15 @@ namespace UI
             };
         }
 
-        public GameObject CreateTextDisplay(string text, Color color, Transform spawnTransform)
+        public GameObject CreateTextDisplay(IEnumerable<DisplayText> displayTexts, Transform spawnTransform)
         {
             GameObject obj = Instantiate(textDisplayPrefab, spawnTransform, false);
-            Text textComponent = obj.transform.GetComponentInChildren<Text>();
-            textComponent.text = text;
-            textComponent.color = color;
+            foreach (DisplayText disp in displayTexts)
+            {
+                GameObject line = Instantiate(textDisplayLinePrefab, obj.transform, false);
+                line.GetComponent<Text>().text = disp.Text;
+                line.GetComponent<Text>().color = disp.Color;
+            }
             return obj;
         }
 
@@ -87,6 +91,18 @@ namespace UI
                 this.type = type;
                 this.prefab = prefab;
             }
+        }
+    }
+
+    public struct DisplayText
+    {
+        public string Text { get; private set; }
+        public Color Color { get; private set; }
+
+        public DisplayText(string text, Color color) : this()
+        {
+            Text = text;
+            Color = color;
         }
     }
 }

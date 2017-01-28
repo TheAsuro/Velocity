@@ -93,7 +93,12 @@ namespace Race
             else if (index == checkpoint + 1) //next checkpoint
             {
                 checkpoint++;
-                GameMenu.SingletonInstance.ShowTextBox("#" + checkpoint + ": " + ElapsedTime.ShortText(), Color.blue);
+                DisplayText[] lines =
+                {
+                    new DisplayText("+ 12:34.567", Color.red),
+                    new DisplayText("#" + checkpoint + ": " + ElapsedTime.ShortText(), Color.white),
+                };
+                GameMenu.SingletonInstance.ShowTextBox(lines);
             }
             else
             {
