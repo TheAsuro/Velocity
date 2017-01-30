@@ -18,7 +18,7 @@ namespace UI.MenuWindows
         {
             GameMenu.SingletonInstance.CloseAllWindows();
             GameMenu.SingletonInstance.AddWindow(Window.PLAY);
-            WorldInfo.info.RaceScript.PrepareNewRace();
+            WorldInfo.info.RaceScript.PrepareNewRun();
         }
 
         public void PlayRaceDemo()

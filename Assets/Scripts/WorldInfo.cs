@@ -59,7 +59,7 @@ public class WorldInfo : MonoBehaviour
         RaceScript = newPlayer.GetComponent<GameRaceScript>();
 
         //Set up player
-        RaceScript.PrepareNewRace();
+        RaceScript.PrepareNewRun();
 
         // UI
         GameMenu.SingletonInstance.AddWindow(Window.PLAY);

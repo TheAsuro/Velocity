@@ -8,12 +8,12 @@ namespace Race
         event EventHandler OnReset;
 
         MovementBehaviour Movement { get; }
-        bool RunVaild { get; }
+        bool RunValid { get; }
         float UnfreezeTime { get; }
         TimeSpan ElapsedTime { get; }
 
         void Pause();
         void Unpause();
-        void PrepareNewRace();
+        void PrepareNewRun();
     }
 }

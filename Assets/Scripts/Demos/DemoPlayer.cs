@@ -9,7 +9,9 @@ namespace Demos
     {
         public event EventHandler OnFinishedPlaying;
 
-        public GameObject ghostCamPrefab;
+        [SerializeField] private GameObject ghostCamPrefab;
+        [SerializeField] private Vector3 followCamOffset = new Vector3(0f, 3f, -6f);
+        [SerializeField] private float followCamSpeed = 2f;
 
         private Vector3 camDistance;
         private bool playing = false;
@@ -18,8 +20,6 @@ namespace Demos
         private List<DemoTick> tickList;
         private bool looping = false;
         private bool followCam = false;
-        private Vector3 followCamOffset = new Vector3(0f, 3f, -6f);
-        private float followCamSpeed = 2f;
 
         private void Update()
         {
@@ -38,20 +38,20 @@ namespace Demos
                 foreach (DemoTick tick in tickList)
                 {
                     //Find the highest one that is smaller than playTime
-                    if ((float) tick.GetTime() <= playTime && (float) tick.GetTime() > lastFrameTime)
+                    if (tick.Time <= playTime && tick.Time > lastFrameTime)
                     {
-                        lastFrameTime = (float) tick.GetTime();
-                        lastPos = tick.GetPosition();
-                        lastRot = tick.GetRotation();
+                        lastFrameTime = tick.Time;
+                        lastPos = tick.Position;
+                        lastRot = tick.Rotation;
                     }
                     //Find the one after that
                     else
                     {
-                        if ((float) tick.GetTime() > (float) lastFrameTime && nextFrameTime == -1f)
+                        if (tick.Time > lastFrameTime && nextFrameTime == -1f)
                         {
-                            nextFrameTime = (float) tick.GetTime();
-                            nextPos = tick.GetPosition();
-                            nextRot = tick.GetRotation();
+                            nextFrameTime = tick.Time;
+                            nextPos = tick.Position;
+                            nextRot = tick.Rotation;
                         }
                     }
                 }
@@ -116,7 +116,7 @@ namespace Demos
             this.followCam = followCam;
 
             //Load demo ticks
-            tickList = demo.GetTickList();
+            tickList = demo.Ticks;
 
             //Get ghost spawn
             ghostCam = Instantiate(ghostCamPrefab);
@@ -149,10 +149,10 @@ namespace Demos
 
         public void ResetDemo()
         {
-            transform.position = tickList[0].GetPosition();
-            transform.rotation = tickList[0].GetRotation();
-            ghostCam.transform.position = followCam ? tickList[0].GetPosition() + followCamOffset : tickList[0].GetPosition();
-            ghostCam.transform.rotation = tickList[0].GetRotation();
+            transform.position = tickList[0].Position;
+            transform.rotation = tickList[0].Rotation;
+            ghostCam.transform.position = followCam ? tickList[0].Position + followCamOffset : tickList[0].Position;
+            ghostCam.transform.rotation = tickList[0].Rotation;
             startPlayTime = Time.time;
 
             playing = true;

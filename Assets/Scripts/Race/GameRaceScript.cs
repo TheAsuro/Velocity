@@ -16,33 +16,31 @@ namespace Race
 
         public MovementBehaviour Movement { get; private set; }
         public float UnfreezeTime { get; private set; }
-        public bool RunVaild { get; private set; }
+        public bool RunValid { get { return demoRecorder.IsValid; } }
 
-        private int checkpoint = -1;
+        private int currentCheckpoint = 0;
         private bool started = false;
         private bool finished = false;
         private bool paused = false;
 
         private float freezeDuration = 3f;
-        private float lastSecondGame;
-        private DateTime lastSecondComputer;
 
         private Checkpoint firstSpawn;
         private Checkpoint currentSpawn;
 
-        private Stopwatch playTime;
-        private DemoRecord demoRecorder;
+        private Stopwatch stopwatch;
+        private DemoRecorder demoRecorder;
 
         public TimeSpan ElapsedTime
         {
-            get { return playTime == null ? TimeSpan.MaxValue : playTime.Elapsed; }
+            get { return stopwatch == null ? TimeSpan.MaxValue : stopwatch.Elapsed; }
         }
 
         private void Awake()
         {
             UnfreezeTime = float.PositiveInfinity;
             Movement = GetComponent<MovementBehaviour>();
-            demoRecorder = GetComponent<DemoRecord>();
+            demoRecorder = GetComponent<DemoRecorder>();
             firstSpawn = WorldInfo.info.FirstSpawn;
             currentSpawn = firstSpawn;
             WorldInfo.info.OnCheckpointTrigger += CheckpointHit;
@@ -62,14 +60,17 @@ namespace Race
             }
             if (Input.GetButtonDown("Reset"))
             {
-                PrepareNewRace();
+                PrepareNewRun();
             }
 
-            InvalidRunCheck();
+            if (started)
+                demoRecorder.InvalidRunCheck();
         }
 
         private void FixedUpdate()
         {
+            if (started && !paused && !finished)
+                demoRecorder.AddTick(stopwatch.ElapsedTicks);
             //Restart if below map
             if (transform.position.y <= WorldInfo.info.WorldData.deathHeight)
                 ResetToLastCheckpoint();
@@ -86,17 +87,24 @@ namespace Race
         public void CheckpointHit(object sender, EventArgs<Checkpoint> eventArgs)
         {
             int index = eventArgs.Content.Index;
-            if (WorldInfo.info.IsLastCheckpoint(index) && index == checkpoint + 1 && !finished) //End
+            if (WorldInfo.info.IsLastCheckpoint(index) && IsNextCheckpoint(index) && !finished)
             {
-                EndRace();
+                // End of race
+                stopwatch.Stop();
+                demoRecorder.Finish(stopwatch.ElapsedTicks);
+                finished = true;
+
+                GameInfo.info.RunFinished(ElapsedTime, demoRecorder.Demo);
             }
-            else if (index == checkpoint + 1) //next checkpoint
+            else if (IsNextCheckpoint(index))
             {
-                checkpoint++;
+                // Hit next checkpoint
+                currentCheckpoint++;
+                demoRecorder.AddCheckpoint(stopwatch.ElapsedTicks);
                 DisplayText[] lines =
                 {
                     new DisplayText("+ 12:34.567", Color.red),
-                    new DisplayText("#" + checkpoint + ": " + ElapsedTime.ShortText(), Color.white),
+                    new DisplayText("#" + index + ": " + ElapsedTime.ShortText(), Color.white),
                 };
                 GameMenu.SingletonInstance.ShowTextBox(lines);
             }
@@ -106,14 +114,38 @@ namespace Race
             }
         }
 
+        public void Pause()
+        {
+            stopwatch.Stop();
+            paused = true;
+            Movement.Freeze();
+        }
+
+        public void Unpause()
+        {
+            if (started)
+            {
+                stopwatch.Start();
+                paused = false;
+                Movement.Unfreeze();
+            }
+        }
+
+        public void ResetToLastCheckpoint()
+        {
+            if (currentSpawn == firstSpawn)
+                PrepareNewRun();
+            else
+                throw new NotImplementedException();
+        }
+
         //Starts a new race (resets the current one if there is one)
-        public void PrepareNewRace()
+        public void PrepareNewRun()
         {
             if (OnReset != null)
                 OnReset(this, new EventArgs());
 
-            checkpoint = 0;
-            started = false;
+            currentCheckpoint = 0;
             finished = false;
             freezeDuration = 3f;
             paused = true;
@@ -122,7 +154,7 @@ namespace Race
             transform.position = firstSpawn.GetSpawnPos();
             transform.rotation = firstSpawn.GetSpawnRot();
 
-            playTime = new Stopwatch();
+            stopwatch = new Stopwatch();
 
             if (freezeDuration > 0f)
             {
@@ -139,68 +171,20 @@ namespace Race
         {
             started = true;
             UnfreezeTime = Time.time;
-            lastSecondComputer = DateTime.Now;
-            lastSecondGame = Time.time;
 
             Unpause();
-            demoRecorder.StartDemo(GameInfo.info.CurrentSave.Name);
+            demoRecorder.StartRecording(GameInfo.info.CurrentSave.Name);
 
             if (OnStart != null)
                 OnStart(this, new EventArgs());
         }
 
-        private void EndRace()
+        private bool IsNextCheckpoint(int index)
         {
-            playTime.Stop();
+            if (demoRecorder == null)
+                return false;
 
-            finished = true;
-            demoRecorder.StopDemo();
-
-            GameInfo.info.RunFinished(ElapsedTime, demoRecorder.GetDemo());
-        }
-
-        public void Pause()
-        {
-            playTime.Stop();
-            paused = true;
-            Movement.Freeze();
-        }
-
-        public void Unpause()
-        {
-            if (started)
-            {
-                playTime.Start();
-                paused = false;
-                Movement.Unfreeze();
-            }
-        }
-
-        public void ResetToLastCheckpoint()
-        {
-            if (currentSpawn == firstSpawn)
-                PrepareNewRace();
-            else
-                throw new NotImplementedException();
-        }
-
-        private void InvalidRunCheck()
-        {
-            if (GameInfo.info.CheatsActive)
-                RunVaild = false;
-
-            if (started && Time.time > lastSecondGame + 1f)
-            {
-                TimeSpan difference = DateTime.Now - lastSecondComputer;
-                double offset = 1000 - difference.TotalMilliseconds;
-                if (offset > 15 || offset < -15)
-                {
-                    // TODO this is broken (kinda)
-                    //GameInfo.info.invalidateRun("Local time sync failed");
-                }
-                lastSecondGame = Time.time;
-                lastSecondComputer = DateTime.Now;
-            }
+            return currentCheckpoint + 1 == index;
         }
     }
 }

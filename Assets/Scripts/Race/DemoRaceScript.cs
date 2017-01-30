@@ -9,7 +9,7 @@ namespace Race
         public event EventHandler OnReset;
 
         public MovementBehaviour Movement { get; private set; }
-        public bool RunVaild { get; private set; }
+        public bool RunValid { get; private set; }
         public float UnfreezeTime { get; private set; }
         public TimeSpan ElapsedTime { get; private set; }
 
@@ -23,7 +23,7 @@ namespace Race
             throw new NotImplementedException();
         }
 
-        public void PrepareNewRace()
+        public void PrepareNewRun()
         {
             Destroy(gameObject);
         }

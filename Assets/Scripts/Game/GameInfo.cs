@@ -111,7 +111,7 @@ namespace Game
             EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
             window.Initialize(currentDemo);
 
-            if (!WorldInfo.info.RaceScript.RunVaild)
+            if (!demo.RunVaild)
             {
                 print("Invalid run!");
                 return;

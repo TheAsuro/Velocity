@@ -27,7 +27,7 @@ namespace UI.MenuWindows
         {
             //Display time
             timeText.text = TimeString;
-            timeText.color = Rs.RunVaild ? Color.white : Color.red;
+            timeText.color = Rs.RunValid ? Color.white : Color.red;
 
             //Display speed
             speedText.text = Rs.Movement.GetXzVelocityString() + " m/s";

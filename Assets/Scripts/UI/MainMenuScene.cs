@@ -10,6 +10,7 @@ namespace UI
     public class MainMenuScene : MonoBehaviour
     {
         [SerializeField] private string defaultDemo;
+        [SerializeField] private GameObject emergencyCam;
 
         private Demo loadingDemo;
         private int otherMenusOpen = 0;
@@ -35,23 +36,31 @@ namespace UI
 
         private void LoadDemo(string path)
         {
-            string absolutePath = Path.Combine(Application.dataPath, path);
+            try
+            {
+                string absolutePath = Path.Combine(Application.dataPath, path);
 
-            if (File.Exists(absolutePath))
-            {
-                loadingDemo = new Demo(absolutePath);
-                SceneManager.LoadSceneAsync(loadingDemo.GetLevelName(), LoadSceneMode.Additive);
-                SceneManager.sceneLoaded += OnSceneLoaded;
+                if (File.Exists(absolutePath))
+                {
+                    loadingDemo = new Demo(absolutePath);
+                    SceneManager.LoadSceneAsync(loadingDemo.LevelName, LoadSceneMode.Additive);
+                    SceneManager.sceneLoaded += OnSceneLoaded;
+                }
+                else
+                {
+                    throw new ArgumentException("MainMenuScene tried to laod invalid demo: " + absolutePath);
+                }
             }
-            else
+            catch (Exception e)
             {
-                throw new ArgumentException("MainMenuScene tried to laod invalid demo: " + absolutePath);
+                Debug.LogWarning("Could not load default demo!\n" + e.StackTrace);
+                emergencyCam.SetActive(true);
             }
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (loadingDemo != null && scene.name == loadingDemo.GetLevelName())
+            if (loadingDemo != null && scene.name == loadingDemo.LevelName)
             {
                 SceneManager.sceneLoaded -= OnSceneLoaded;
                 WorldInfo.info.PlayDemo(loadingDemo, true, true);

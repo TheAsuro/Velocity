@@ -31,7 +31,7 @@ namespace UI.MenuWindows
 
             for (int i = 0; i < allDemos.Length; i++)
             {
-                CreateDemoPanel(i, allDemos[i].GetLevelName(), allDemos[i].GetTime().ToString(), allDemos[i].GetPlayerName(), allDemoFiles[i]);
+                CreateDemoPanel(i, allDemos[i].LevelName, allDemos[i].Ticks.ToString(), allDemos[i].PlayerName, allDemoFiles[i]);
             }
         }
 

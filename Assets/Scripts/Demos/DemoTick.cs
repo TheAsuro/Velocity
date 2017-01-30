@@ -5,45 +5,15 @@ namespace Demos
     [System.Serializable]
     public class DemoTick
     {
-        private decimal time;
-        private Vector3 position;
-        private Quaternion rotation;
+        public long Time { get; private set; }
+        public Vector3 Position { get; private set; }
+        public Quaternion Rotation { get; private set; }
 
-        public DemoTick(decimal recordtime, Vector3 pos, Quaternion rot)
+        public DemoTick(long time, Vector3 pos, Quaternion rot)
         {
-            time = recordtime;
-            position = pos;
-            rotation = rot;
-        }
-
-        public void SetTime(decimal value)
-        {
-            time = value;
-        }
-
-        public decimal GetTime()
-        {
-            return time;
-        }
-
-        public void SetPosition(Vector3 value)
-        {
-            position = value;
-        }
-
-        public Vector3 GetPosition()
-        {
-            return position;
-        }
-
-        public void SetRotation(Quaternion value)
-        {
-            rotation = value;
-        }
-
-        public Quaternion GetRotation()
-        {
-            return rotation;
+            Time = time;
+            Position = pos;
+            Rotation = rot;
         }
     }
 }

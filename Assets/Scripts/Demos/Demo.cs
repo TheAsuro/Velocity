@@ -8,12 +8,13 @@ namespace Demos
 {
     public class Demo
     {
-        private const string DEMO_VERSION_STRING = "VELOCITYDEMO 1.1.1";
+        private const string DEMO_VERSION_STRING = "VELOCITYDEMO 1.2";
 
-        private List<DemoTick> tickList;
-        private string playerName;
-        private string levelName;
-        private decimal finalTime = -1;
+        public string PlayerName { get; private set; }
+        public string LevelName { get; private set; }
+        public long TotalTickTime { get; private set; }
+        public List<DemoTick> Ticks { get; private set; }
+        public bool RunVaild { get; set; }
 
         /// <summary>
         /// Creates a new Demo, throws IOException.
@@ -26,30 +27,34 @@ namespace Demos
         }
 
         //Make a demo from a list of ticks
-        public Demo(List<DemoTick> pTickList, string pPlayerName, string pLevelName)
+        public Demo(List<DemoTick> pTicks, string pPlayerName, string pLevelName)
         {
-            tickList = pTickList;
-            playerName = pPlayerName;
-            levelName = pLevelName;
+            Ticks = pTicks;
+            PlayerName = pPlayerName;
+            LevelName = pLevelName;
 
-            if(tickList != null && tickList.Count > 0)
-                finalTime = tickList[tickList.Count - 1].GetTime();
+            if(Ticks != null && Ticks.Count > 0)
+                TotalTickTime = Ticks[Ticks.Count - 1].Time;
         }
 
         private void LoadFromBinaryReader(BinaryReader reader)
         {
-            tickList = new List<DemoTick>();
+            Ticks = new List<DemoTick>();
 
             //Read header
-            reader.ReadString(); // demo version
-            playerName = reader.ReadString();
-            levelName = reader.ReadString();
-            finalTime = reader.ReadDecimal();
+            string demoVersion = reader.ReadString();
+            if (demoVersion != DEMO_VERSION_STRING)
+                throw new ArgumentException("Demo version mismatch! File: " + demoVersion + ", current: " + DEMO_VERSION_STRING);
+
+            PlayerName = reader.ReadString();
+            LevelName = reader.ReadString();
+            TotalTickTime = reader.ReadInt64();
+            RunVaild = reader.ReadBoolean();
 
             //Read ticks until end of file
             while (reader.BaseStream.Position < reader.BaseStream.Length)
             {
-                decimal time = reader.ReadDecimal();
+                long time = reader.ReadInt64();
                 float xPos = reader.ReadSingle();
                 float yPos = reader.ReadSingle();
                 float zPos = reader.ReadSingle();
@@ -59,38 +64,13 @@ namespace Demos
                 Quaternion rot = Quaternion.Euler(xRot, yRot, 0f);
                 DemoTick tick = new DemoTick(time, pos, rot);
 
-                tickList.Add(tick);
+                Ticks.Add(tick);
             }
-        }
-
-        public string GetPlayerName()
-        {
-            return playerName;
-        }
-
-        public string GetLevelName()
-        {
-            return levelName;
-        }
-
-        public int GetFrameCount()
-        {
-            return tickList.Count;	
-        }
-
-        public List<DemoTick> GetTickList()
-        {
-            return tickList;
-        }
-
-        public decimal GetTime()
-        {
-            return finalTime;
         }
 
         public void SaveToFile(string path)
         {
-            string filename = Path.Combine(path, playerName + "-" + levelName + ".vdem");
+            string filename = Path.Combine(path, PlayerName + "-" + LevelName + ".vdem");
             using (FileStream stream = new FileStream(filename, FileMode.Create))
             {
                 SaveToStream(stream);
@@ -103,19 +83,20 @@ namespace Demos
             {
                 //header
                 writer.Write(DEMO_VERSION_STRING);
-                writer.Write(playerName);
-                writer.Write(levelName);
-                writer.Write(finalTime);
+                writer.Write(PlayerName);
+                writer.Write(LevelName);
+                writer.Write(TotalTickTime);
+                writer.Write(RunVaild);
 
                 //ticks
-                foreach(DemoTick tick in tickList)
+                foreach(DemoTick tick in Ticks)
                 {
-                    writer.Write(tick.GetTime());
-                    writer.Write(tick.GetPosition().x);
-                    writer.Write(tick.GetPosition().y);
-                    writer.Write(tick.GetPosition().z);
-                    writer.Write(tick.GetRotation().eulerAngles.x);
-                    writer.Write(tick.GetRotation().eulerAngles.y);
+                    writer.Write(tick.Time);
+                    writer.Write(tick.Position.x);
+                    writer.Write(tick.Position.y);
+                    writer.Write(tick.Position.z);
+                    writer.Write(tick.Rotation.eulerAngles.x);
+                    writer.Write(tick.Rotation.eulerAngles.y);
                 }
             }
         }

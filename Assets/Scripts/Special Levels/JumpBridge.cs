@@ -52,7 +52,7 @@ namespace Special_Levels
             }
 
             if (collisionTime >= maxCollisionTime)
-                WorldInfo.info.RaceScript.PrepareNewRace();
+                WorldInfo.info.RaceScript.PrepareNewRun();
         }
     }
 }

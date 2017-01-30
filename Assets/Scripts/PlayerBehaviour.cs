@@ -11,7 +11,6 @@ public class PlayerBehaviour : MonoBehaviour
     private RaceScript myRaceScript;
     private MouseLook myMouseLook;
     private Camera myCamera;
-    private DemoRecord myRecorder;
 
     //Default values for movement variables
     //Speed, AirSpeed, MaxSpeed, Friction, Jump
@@ -23,7 +22,6 @@ public class PlayerBehaviour : MonoBehaviour
         myRaceScript = myMesh.GetComponent<RaceScript>();
         myCamera = myMesh.transform.Find("Camera").gameObject.GetComponent<Camera>();
         myMouseLook = myCamera.gameObject.GetComponent<MouseLook>();
-        myRecorder = myMesh.GetComponent<DemoRecord>();
 
         ApplySettings();
     }
@@ -66,11 +64,6 @@ public class PlayerBehaviour : MonoBehaviour
     public Vector3 GetPosition()
     {
         return myMesh.transform.position;
-    }
-
-    public Demo GetDemo()
-    {
-        return myRecorder.GetDemo();
     }
 
     public void SetPause(bool value)
