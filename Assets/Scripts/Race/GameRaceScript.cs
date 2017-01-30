@@ -146,6 +146,7 @@ namespace Race
                 OnReset(this, new EventArgs());
 
             currentCheckpoint = 0;
+            started = false;
             finished = false;
             freezeDuration = 3f;
             paused = true;
