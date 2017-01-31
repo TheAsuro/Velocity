@@ -28,10 +28,10 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void ApplySettings()
     {
-        SetMouseSens(Settings.Game.MouseSpeed);
-        InvertYInput = Settings.Game.InvertY;
-        SetFov(Settings.Game.Fov);
-        SetVolume(Settings.Game.Volume);
+        SetMouseSens(Settings.GameSettings.SingletonInstance.MouseSpeed);
+        InvertYInput = Settings.GameSettings.SingletonInstance.InvertY.value;
+        SetFov(Settings.GameSettings.SingletonInstance.Fov);
+        SetVolume(Settings.GameSettings.SingletonInstance.Volume);
     }
 
     public void PlaySound(AudioClip pClip)

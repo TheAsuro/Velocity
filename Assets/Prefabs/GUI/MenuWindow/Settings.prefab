@@ -162,7 +162,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224449389446234532}
-  - component: {fileID: 114985128573453674}
   m_Layer: 5
   m_Name: YInvert
   m_TagString: Untagged
@@ -244,7 +243,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224693154447435156}
-  - component: {fileID: 114110030509957114}
   m_Layer: 5
   m_Name: FOV
   m_TagString: Untagged
@@ -260,7 +258,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224804897233505090}
-  - component: {fileID: 114369176584074056}
   m_Layer: 5
   m_Name: MouseSpeed
   m_TagString: Untagged
@@ -324,7 +321,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224145843018799458}
-  - component: {fileID: 114947290337216882}
   m_Layer: 5
   m_Name: TextureSize
   m_TagString: Untagged
@@ -391,7 +387,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224106289181346182}
-  - component: {fileID: 114479844549358704}
   m_Layer: 5
   m_Name: AnisotropicFiltering
   m_TagString: Untagged
@@ -524,7 +519,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224215510843896308}
-  - component: {fileID: 114313440312218480}
   m_Layer: 5
   m_Name: MouseSmoothing
   m_TagString: Untagged
@@ -938,7 +932,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224268801221009238}
-  - component: {fileID: 114116553235089196}
   m_Layer: 5
   m_Name: Volume
   m_TagString: Untagged
@@ -1084,7 +1077,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224223707626866294}
-  - component: {fileID: 114399323746449916}
   m_Layer: 5
   m_Name: AntiAliasing
   m_TagString: Untagged
@@ -1279,7 +1271,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224137206355795438}
-  - component: {fileID: 114294737714283126}
   m_Layer: 5
   m_Name: VSync
   m_TagString: Untagged
@@ -2266,34 +2257,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114110030509957114
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1108005678772912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114874925940904872}
-  display: {fileID: 114750940122833828}
-  settingName: Fov
---- !u!114 &114116553235089196
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1445076743220480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114415093920834930}
-  display: {fileID: 114006581717505322}
-  settingName: Volume
 --- !u!114 &114117023654294038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2524,6 +2487,12 @@ MonoBehaviour:
   - {fileID: 114385970645450292}
   - {fileID: 114690011930509466}
   - {fileID: 114511299135116866}
+  anisoSlider: {fileID: 114523674327019624}
+  anisoDisplay: {fileID: 114178728474792860}
+  aaSlider: {fileID: 114429050503561496}
+  aaDisplay: {fileID: 114516138198331496}
+  fovSlider: {fileID: 114874925940904872}
+  fovDisplay: {fileID: 114750940122833828}
 --- !u!114 &114194789071543506
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2733,20 +2702,6 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 1
---- !u!114 &114294737714283126
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1661595950515670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114085527432123344}
-  display: {fileID: 114198116926984026}
-  settingName: VSync
 --- !u!114 &114311511490647214
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2774,20 +2729,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114313440312218480
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1326930706974856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114398123941860004}
-  display: {fileID: 114336835634332518}
-  settingName: RawMouse
 --- !u!114 &114321489933499520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3043,20 +2984,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114369176584074056
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1120262863182998}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114321489933499520}
-  display: {fileID: 114266365401286784}
-  settingName: MouseSpeed
 --- !u!114 &114373434137620758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3188,20 +3115,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114399323746449916
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1522139164356364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114429050503561496}
-  display: {fileID: 114516138198331496}
-  settingName: AA
 --- !u!114 &114411662163523368
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3493,20 +3406,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114479844549358704
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1204462503922198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114523674327019624}
-  display: {fileID: 114178728474792860}
-  settingName: Aniso
 --- !u!114 &114482853869873000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3781,7 +3680,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 2
   m_WholeNumbers: 1
-  m_Value: 1
+  m_Value: 2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4111,7 +4010,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Reset
+  m_Text: Reset to defaults
 --- !u!114 &114690011930509466
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4631,20 +4530,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: VSync
---- !u!114 &114947290337216882
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1135645349426756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114028354542468622}
-  display: {fileID: 114423392333889552}
-  settingName: TextureSize
 --- !u!114 &114954813608607020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4753,20 +4638,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114985128573453674
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1085988697593436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1811a268f60114142bc95290e7fabe12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 114748431732167214}
-  display: {fileID: 114010820168734584}
-  settingName: InvertY
 --- !u!114 &114990050262939062
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7247,7 +7118,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 20}
-  m_SizeDelta: {x: 100, y: 30}
+  m_SizeDelta: {x: 200, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224940003584371396
 RectTransform:

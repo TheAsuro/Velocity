@@ -7,7 +7,7 @@ namespace Game
     {
         private void Awake()
         {
-            GetComponent<Camera>().fieldOfView = Settings.Game.Fov;
+            GetComponent<Camera>().fieldOfView = Settings.GameSettings.SingletonInstance.Fov;
         }
     }
 }

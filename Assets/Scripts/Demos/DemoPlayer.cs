@@ -124,7 +124,7 @@ namespace Demos
             //Set up camera
             Camera cam = ghostCam.GetComponent<Camera>();
             cam.backgroundColor = WorldInfo.info.WorldData.backgroundColor;
-            cam.fieldOfView = Settings.Game.Fov;
+            cam.fieldOfView = Settings.GameSettings.SingletonInstance.Fov;
 
             //Set start time to current time
             startPlayTime = Time.time;

@@ -107,7 +107,7 @@ namespace UI.MenuWindows
 
         public override void OnClose()
         {
-            base.OnActivate();
+            base.OnClose();
 
             Console.Console.ContentUpdate -= OnConsoleContentUpdate;
             myInput.onEndEdit.RemoveListener(InputSubmit);

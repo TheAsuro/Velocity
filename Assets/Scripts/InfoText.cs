@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Game;
 
 public class InfoText : MonoBehaviour
 {
@@ -28,7 +26,7 @@ public class InfoText : MonoBehaviour
 
     private void OnGUI()
 	{
-		if(display && (Settings.Game.ShowHelp || ignoreDisabledHelp))
+		if(display)
 		{
 			GUILayout.BeginArea(new Rect(Screen.width / 2f - 200f, Screen.height - 50f - boxMargin, 400f, 50f));
 			GUILayout.Box(content);
