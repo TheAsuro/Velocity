@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Api;
+using Sound;
 using UnityEngine;
-using UnityStandardAssets.ImageEffects;
 
 namespace Settings
 {
@@ -11,11 +12,11 @@ namespace Settings
         public readonly float sliderValue;
         public readonly string name;
 
-        private static List<NameSetting<T>> myInstances = new List<NameSetting<T>>();
+        private static Dictionary<Type, List<NameSetting<T>>> myInstances = new Dictionary<Type, List<NameSetting<T>>>();
 
-        public static NameSetting<T> FromSlider(float val)
+        public NameSetting<T> FromSlider(float val)
         {
-            return myInstances.Find(instance => instance.sliderValue == val);
+            return myInstances[GetType()].Find(instance => instance.sliderValue == val);
         }
 
         protected NameSetting(T value, float sliderValue, string name)
@@ -24,7 +25,10 @@ namespace Settings
             this.sliderValue = sliderValue;
             this.name = name;
 
-            myInstances.Add(this);
+            if (!myInstances.ContainsKey(GetType()))
+                myInstances.Add(GetType(), new List<NameSetting<T>>());
+
+            myInstances[GetType()].Add(this);
         }
 
         public override string ToString()
@@ -62,8 +66,8 @@ namespace Settings
 
     public sealed class TextureSizeSetting : NameSetting<int>
     {
-        public static readonly TextureSizeSetting FULL = new TextureSizeSetting(0, 1f, "Full");
-        public static readonly TextureSizeSetting HALF = new TextureSizeSetting(1, 0.5f, "Half");
+        public static readonly TextureSizeSetting FULL = new TextureSizeSetting(0, 2f, "Full");
+        public static readonly TextureSizeSetting HALF = new TextureSizeSetting(1, 1f, "Half");
         public static readonly TextureSizeSetting QUARTER = new TextureSizeSetting(2, 0f, "Quarter");
 
         private TextureSizeSetting(int value, float sliderVal, string name) : base(value, sliderVal, name) { }
@@ -80,8 +84,8 @@ namespace Settings
 
     public sealed class MaxQueuedFramesSetting : NameSetting<int>
     {
-        public static readonly MaxQueuedFramesSetting OFF = new MaxQueuedFramesSetting(0, 1f, "Off");
-        public static readonly MaxQueuedFramesSetting ON = new MaxQueuedFramesSetting(1, 0.5f, "On");
+        public static readonly MaxQueuedFramesSetting OFF = new MaxQueuedFramesSetting(0, 2f, "Off");
+        public static readonly MaxQueuedFramesSetting ON = new MaxQueuedFramesSetting(1, 1f, "On");
         public static readonly MaxQueuedFramesSetting DOUBLE = new MaxQueuedFramesSetting(2, 0f, "Two Frames");
 
         private MaxQueuedFramesSetting(int value, float sliderVal, string name) : base(value, sliderVal, name) { }
@@ -107,6 +111,8 @@ namespace Settings
             singletonInstance = new GameSettings();
         }
 
+        public static event EventHandler<EventArgs<GameSettings>> OnSettingsChanged;
+
         // Since this is cloned, only use structs/primitive types/unchangable values to avoid having to implement deep cloning
         public NameSetting<AnisotropicFiltering> AnisotropicFiltering { get; set; }
         public NameSetting<int> AntiAliasing { get; set; }
@@ -123,14 +129,27 @@ namespace Settings
         {
             AnisotropicFiltering = AnisoFilterSetting.ON;
             AntiAliasing = AntiAliasingSetting.OFF;
+            TextureSize = TextureSizeSetting.FULL;
+            VSyncSetting = Settings.VSyncSetting.OFF;
+            MaxQueuedFrames = MaxQueuedFramesSetting.OFF;
+            Fov = 90f;
+            MouseSpeed = 0.1f;
+            InvertY = OnOff.OFF;
+            RawMouse = OnOff.ON;
+            Volume = 0.5f;
         }
 
-        public void ApplyGraphicsSettings()
+        public void ApplySettings()
         {
+            SoundManager.SingletonInstance.Volume = Volume;
+
             QualitySettings.anisotropicFiltering = AnisotropicFiltering.value;
             QualitySettings.antiAliasing = AntiAliasing.value;
             QualitySettings.masterTextureLimit = TextureSize.value;
             QualitySettings.vSyncCount = VSyncSetting.value;
+
+            if (OnSettingsChanged != null)
+                OnSettingsChanged(this, new EventArgs<GameSettings>(this));
         }
 
         public object Clone()

@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 114048190870145776}
   - component: {fileID: 114811072555169708}
   - component: {fileID: 114765015582945388}
-  - component: {fileID: 114337237151408210}
+  - component: {fileID: 114707956755768150}
   - component: {fileID: 81331689793809184}
   - component: {fileID: 82407473090786148}
   m_Layer: 9
@@ -99,7 +99,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 1000
-  field of view: 60
+  field of view: 20
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -274,17 +274,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b77ebfd75008fa45bf4d8006e5223cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114337237151408210
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1738152539141208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07188f8dd3ed91d458761e228d107ae9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114475353120164930
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -313,6 +302,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc3cec96a5c73b049b19ab090718af45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114707956755768150
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1738152539141208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815bd90c8a5fb6240bcb0ec8be080499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114765015582945388

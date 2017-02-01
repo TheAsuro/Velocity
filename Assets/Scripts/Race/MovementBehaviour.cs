@@ -182,7 +182,7 @@ namespace Race
             if (Time.time < lastJumpPress + jumpPressDuration && yVelocity < jumpForce && CheckGround())
             {
                 lastJumpPress = -1f;
-                SoundManager.SingletonInstance.PlaySound("jump");
+                // TODO @SOUND @NICE play jumping sound
                 jumpVelocity = new Vector3(0f, jumpForce - yVelocity, 0f);
             }
 
@@ -215,6 +215,7 @@ namespace Race
             {
                 Debug.DrawLine(p.point, p.point + p.normal, Color.red, 1f);
 
+                // TODO @PHYISCS @HACK this whole thing is BS, I can do better
                 // TODO this assumes box is aabb, but this isn't always true
                 if (p.otherCollider is BoxCollider)
                 {
@@ -266,6 +267,7 @@ namespace Race
             return CheckCylinder(pos, radiusVector, -0.1f, 8);
         }
 
+        // TODO @HACK that doesn't even work properly
         /// <summary>
         /// Doesn't actually check the volume of a cylinder, instead executes a given number of raycasts in a circle
         /// </summary>

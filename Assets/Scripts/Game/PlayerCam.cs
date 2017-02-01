@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Api;
+using Settings;
+using UnityEngine;
 
 namespace Game
 {
@@ -7,7 +9,23 @@ namespace Game
     {
         private void Awake()
         {
-            GetComponent<Camera>().fieldOfView = Settings.GameSettings.SingletonInstance.Fov;
+            SetFov(GameSettings.SingletonInstance.Fov);
+            GameSettings.OnSettingsChanged += SetFov;
+        }
+
+        private void SetFov(object sender, EventArgs<GameSettings> settings)
+        {
+            SetFov(settings.Content.Fov);
+        }
+
+        private void SetFov(float fov)
+        {
+            GetComponent<Camera>().fieldOfView = fov;
+        }
+
+        private void OnDestroy()
+        {
+            GameSettings.OnSettingsChanged -= SetFov;
         }
     }
 }

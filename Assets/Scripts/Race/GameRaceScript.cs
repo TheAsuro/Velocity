@@ -108,7 +108,7 @@ namespace Race
                 };
                 GameMenu.SingletonInstance.ShowTextBox(lines);
             }
-            else
+            else if (index != currentCheckpoint)
             {
                 GameMenu.SingletonInstance.ShowTextBox("Wrong Checkpoint!", Color.red);
             }

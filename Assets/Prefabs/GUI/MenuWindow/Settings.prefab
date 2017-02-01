@@ -520,7 +520,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224215510843896308}
   m_Layer: 5
-  m_Name: MouseSmoothing
+  m_Name: RawMouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2031,7 +2031,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 2
   m_WholeNumbers: 1
-  m_Value: 2
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2487,12 +2487,24 @@ MonoBehaviour:
   - {fileID: 114385970645450292}
   - {fileID: 114690011930509466}
   - {fileID: 114511299135116866}
+  volumeSlider: {fileID: 114415093920834930}
+  volumeDisplay: {fileID: 114006581717505322}
+  fovSlider: {fileID: 114874925940904872}
+  fovDisplay: {fileID: 114750940122833828}
   anisoSlider: {fileID: 114523674327019624}
   anisoDisplay: {fileID: 114178728474792860}
   aaSlider: {fileID: 114429050503561496}
   aaDisplay: {fileID: 114516138198331496}
-  fovSlider: {fileID: 114874925940904872}
-  fovDisplay: {fileID: 114750940122833828}
+  texSizeSlider: {fileID: 114028354542468622}
+  texSizeDisplay: {fileID: 114423392333889552}
+  vsyncSlider: {fileID: 114085527432123344}
+  vsyncDisplay: {fileID: 114198116926984026}
+  mouseSpeedSlider: {fileID: 114321489933499520}
+  mouseSpeedDisplay: {fileID: 114266365401286784}
+  yInvertSlider: {fileID: 114748431732167214}
+  yInvertDisplay: {fileID: 114010820168734584}
+  mouseRawSlider: {fileID: 114398123941860004}
+  mouseRawDisplay: {fileID: 114336835634332518}
 --- !u!114 &114194789071543506
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2771,7 +2783,7 @@ MonoBehaviour:
   m_MinValue: 0.1
   m_MaxValue: 10
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3109,7 +3121,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 1
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3211,7 +3223,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3319,7 +3331,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 3
   m_WholeNumbers: 1
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3680,7 +3692,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 2
   m_WholeNumbers: 1
-  m_Value: 2
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4377,7 +4389,7 @@ MonoBehaviour:
   m_MinValue: 50
   m_MaxValue: 150
   m_WholeNumbers: 1
-  m_Value: 90
+  m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
