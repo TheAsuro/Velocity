@@ -71,7 +71,7 @@ namespace UI.MenuWindows
             // Save current settings instance for later
             oldSettings = GameSettings.SingletonInstance;
             // Create new settings instance from file
-            GameSettings.Reload();
+            GameSettings.Load();
             if (UpdateSettingSliders != null)
                 UpdateSettingSliders(this, null);
 
@@ -115,17 +115,13 @@ namespace UI.MenuWindows
             slider.onValueChanged.Invoke(slider.value);
         }
 
-        private void OnValueChanged(float value)
-        {
-
-        }
-
         public override void OnClose()
         {
             base.OnClose();
             // Apply stored settings
             GameSettings.SingletonInstance = oldSettings;
             GameSettings.SingletonInstance.ApplySettings();
+            GameSettings.SingletonInstance.Save();
         }
     }
 }

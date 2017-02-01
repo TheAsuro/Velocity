@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Api;
+using Newtonsoft.Json;
 using Sound;
 using UnityEngine;
 
@@ -93,6 +95,8 @@ namespace Settings
 
     public class GameSettings : ICloneable
     {
+        private const string SETTINGS_PATH = "settings.json";
+
         private static GameSettings singletonInstance;
 
         public static GameSettings SingletonInstance
@@ -100,15 +104,23 @@ namespace Settings
             get
             {
                 if (singletonInstance == null)
-                    Reload();
+                    Load();
                 return singletonInstance;
             }
             set { singletonInstance = value; }
         }
 
-        public static void Reload()
+        public static void Load()
         {
-            singletonInstance = new GameSettings();
+            try
+            {
+                GameSettings.SingletonInstance = JsonConvert.DeserializeObject<GameSettings>(File.ReadAllText(SETTINGS_PATH));
+            }
+            catch (IOException e)
+            {
+                Debug.LogWarning("Couldn't load settins file, loading default values instead!");
+                GameSettings.SingletonInstance = new GameSettings();
+            }
         }
 
         public static event EventHandler<EventArgs<GameSettings>> OnSettingsChanged;
@@ -150,6 +162,17 @@ namespace Settings
 
             if (OnSettingsChanged != null)
                 OnSettingsChanged(this, new EventArgs<GameSettings>(this));
+        }
+
+        public void Save()
+        {
+            using (FileStream stream = File.OpenWrite(SETTINGS_PATH))
+            {
+                using (TextWriter writer = new StreamWriter(stream))
+                {
+                    JsonSerializer.CreateDefault().Serialize(writer, this);
+                }
+            }
         }
 
         public object Clone()
