@@ -26,10 +26,9 @@ namespace UI.MenuWindows
             WorldInfo.info.PlayDemo(demo, true, false);
         }
 
-        //Save demo to ".vdem" file, does not work in web player
         public void SaveLastDemo()
         {
-            demo.SaveToFile(Application.dataPath);
+            demo.SaveToFile();
         }
 
         public void ToMainMenu()

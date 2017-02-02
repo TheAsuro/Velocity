@@ -116,7 +116,7 @@ namespace Settings
             {
                 GameSettings.SingletonInstance = JsonConvert.DeserializeObject<GameSettings>(File.ReadAllText(SETTINGS_PATH));
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 Debug.LogWarning("Couldn't load settins file, loading default values instead!");
                 GameSettings.SingletonInstance = new GameSettings();
@@ -127,6 +127,7 @@ namespace Settings
 
         // Since this is cloned, only use structs/primitive types/unchangable values to avoid having to implement deep cloning
         public NameSetting<AnisotropicFiltering> AnisotropicFiltering { get; set; }
+
         public NameSetting<int> AntiAliasing { get; set; }
         public NameSetting<int> TextureSize { get; set; }
         public NameSetting<int> VSyncSetting { get; set; }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEngine;
 
 namespace Demos
 {
     public class Demo
     {
+        private const string DEMO_DIR = "demos";
         private const string DEMO_VERSION_STRING = "VELOCITYDEMO 1.2";
 
         public string PlayerName { get; private set; }
@@ -15,13 +15,15 @@ namespace Demos
         public long TotalTickTime { get; private set; }
         public List<DemoTick> Ticks { get; private set; }
         public bool RunVaild { get; set; }
+        private string DemoName { get; set; }
 
         /// <summary>
         /// Creates a new Demo, throws IOException.
         /// </summary>
-        public Demo(string path)
+        public Demo(string demoName)
         {
-            FileStream stream = new FileStream(path, FileMode.Open);
+            DemoName = demoName;
+            FileStream stream = new FileStream(GetDemoPath(demoName), FileMode.Open);
             BinaryReader reader = new BinaryReader(stream);
             LoadFromBinaryReader(reader);
         }
@@ -32,6 +34,7 @@ namespace Demos
             Ticks = pTicks;
             PlayerName = pPlayerName;
             LevelName = pLevelName;
+            DemoName = Guid.NewGuid().ToString();
 
             if(Ticks != null && Ticks.Count > 0)
                 TotalTickTime = Ticks[Ticks.Count - 1].Time;
@@ -68,10 +71,9 @@ namespace Demos
             }
         }
 
-        public void SaveToFile(string path)
+        public void SaveToFile()
         {
-            string filename = Path.Combine(path, PlayerName + "-" + LevelName + ".vdem");
-            using (FileStream stream = new FileStream(filename, FileMode.Create))
+            using (FileStream stream = new FileStream(GetDemoPath(DemoName), FileMode.Create))
             {
                 SaveToStream(stream);
             }
@@ -99,6 +101,34 @@ namespace Demos
                     writer.Write(tick.Rotation.eulerAngles.y);
                 }
             }
+        }
+
+        public void DeleteDemoFile()
+        {
+            File.Delete(GetDemoPath(DemoName));
+        }
+
+        public static Demo[] GetAllDemos()
+        {
+            string[] names = GetDemoFiles();
+            Demo[] ret = new Demo[names.Length];
+
+            for(int i = 0; i < names.Length; i++)
+            {
+                ret[i] = new Demo(names[i]);
+            }
+
+            return ret;
+        }
+
+        private static string[] GetDemoFiles()
+        {
+            return Directory.GetFiles(Path.Combine(Application.dataPath, DEMO_DIR), "*.vdem");
+        }
+
+        private static string GetDemoPath(string demoName)
+        {
+            return Path.Combine(Path.Combine(Application.dataPath, DEMO_DIR), demoName + ".vdem");
         }
     }
 }

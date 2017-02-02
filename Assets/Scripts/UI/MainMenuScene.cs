@@ -38,22 +38,13 @@ namespace UI
         {
             try
             {
-                string absolutePath = Path.Combine(Application.dataPath, path);
-
-                if (File.Exists(absolutePath))
-                {
-                    loadingDemo = new Demo(absolutePath);
-                    SceneManager.LoadSceneAsync(loadingDemo.LevelName, LoadSceneMode.Additive);
-                    SceneManager.sceneLoaded += OnSceneLoaded;
-                }
-                else
-                {
-                    throw new ArgumentException("MainMenuScene tried to laod invalid demo: " + absolutePath);
-                }
+                loadingDemo = new Demo(path);
+                SceneManager.LoadSceneAsync(loadingDemo.LevelName, LoadSceneMode.Additive);
+                SceneManager.sceneLoaded += OnSceneLoaded;
             }
-            catch (Exception e)
+            catch (IOException e)
             {
-                Debug.LogWarning("Could not load default demo!\n" + e.StackTrace);
+                Debug.LogWarning("Could not load default demo!\n" + e.Message);
                 emergencyCam.SetActive(true);
             }
         }

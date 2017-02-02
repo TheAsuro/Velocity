@@ -1,7 +1,7 @@
-﻿using System.IO;
-using Demos;
+﻿using Demos;
 using UnityEngine;
 using UnityEngine.UI;
+using Util;
 
 namespace UI.MenuWindows
 {
@@ -25,32 +25,25 @@ namespace UI.MenuWindows
             }
 
             //Create a list of all playable maps
-            Demo[] allDemos = DemoInfo.GetAllDemos();
-            string[] allDemoFiles = DemoInfo.GetDemoNames();
+            Demo[] allDemos = Demo.GetAllDemos();
             ((RectTransform) demoContentPanel.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * allDemos.Length + 10f);
 
             for (int i = 0; i < allDemos.Length; i++)
             {
-                CreateDemoPanel(i, allDemos[i].LevelName, allDemos[i].Ticks.ToString(), allDemos[i].PlayerName, allDemoFiles[i]);
+                CreateDemoPanel(i, allDemos[i]);
             }
         }
 
-        private void CreateDemoPanel(int slot, string map, string time, string player, string fileName)
+        private void CreateDemoPanel(int slot, Demo demo)
         {
             Transform t = GameMenu.CreatePanel(slot, demoPanelPrefab, demoContentPanel.transform).transform;
 
-            t.FindChild("Map").GetComponent<Text>().text = map;
-            t.FindChild("Time").GetComponent<Text>().text = time;
-            t.FindChild("Player").GetComponent<Text>().text = player;
+            t.FindChild("Map").GetComponent<Text>().text = demo.LevelName;
+            t.FindChild("Time").GetComponent<Text>().text = demo.TotalTickTime.ToTimeString();
+            t.FindChild("Player").GetComponent<Text>().text = demo.PlayerName;
 
-            t.FindChild("Button")
-                .GetComponent<Button>()
-                .onClick.AddListener(() =>
-                {
-                    Demo demo = new Demo(Path.Combine(Application.dataPath, fileName));
-                    WorldInfo.info.PlayDemo(demo, false, false);
-                });
-            t.FindChild("Remove").GetComponent<Button>().onClick.AddListener(() => DemoInfo.DeleteDemoFile(fileName));
+            t.FindChild("Button").GetComponent<Button>().onClick.AddListener(() => WorldInfo.info.PlayDemo(demo, false, false));
+            t.FindChild("Remove").GetComponent<Button>().onClick.AddListener(demo.DeleteDemoFile);
         }
     }
 }
