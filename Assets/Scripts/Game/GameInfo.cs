@@ -33,20 +33,6 @@ namespace Game
         private GameInfoFx fx;
         private Demo currentDemo;
         private GameObject myCanvas;
-        private SaveData currentSave;
-
-        public SaveData CurrentSave
-        {
-            get { return currentSave; }
-            set
-            {
-                currentSave = value;
-                if (value != null)
-                {
-                    PlayerPrefs.SetString("lastplayer", currentSave.Name);
-                }
-            }
-        }
 
         private void Awake()
         {
@@ -64,9 +50,6 @@ namespace Game
 
             fx = new GameInfoFx(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
             SceneManager.sceneLoaded += (scene, mode) => fx.StartColorFade(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
-
-            if (!PlayerPrefs.HasKey("lastplayer"))
-                CurrentSave = new SaveData(PlayerPrefs.GetString("lastplayer"));
         }
 
         private void Update()
@@ -103,9 +86,8 @@ namespace Game
         //Player hit the goal
         public void RunFinished(TimeSpan time, Demo demo)
         {
-            decimal decimalTime = time.Ticks / (decimal) 10000000;
             currentDemo = demo;
-            LastRunWasPb = CurrentSave.SaveIfPersonalBest(decimalTime, SceneManager.GetActiveScene().name);
+            LastRunWasPb = PlayerSave.current.SaveIfPersonalBest(time.Ticks, MapManager.CurrentMap);
 
             GameMenu.SingletonInstance.CloseAllWindows();
             EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
@@ -116,34 +98,23 @@ namespace Game
                 print("Invalid run!");
                 return;
             }
-            if (currentSave == null)
+            if (PlayerSave.current == null)
             {
                 print("Invalid save!");
                 return;
             }
-            if (!currentSave.Account.IsLoggedIn)
+            if (!PlayerSave.current.IsLoggedIn)
             {
                 print("Account not logged in!");
                 return;
             }
 
-            Leaderboard.SendEntry(currentSave.Account.Name, decimalTime, SceneManager.GetActiveScene().name, currentSave.Account.Token, currentDemo);
+            Leaderboard.SendEntry(PlayerSave.current.Name, time.Ticks, SceneManager.GetActiveScene().name, PlayerSave.current.Token, currentDemo);
         }
 
-        //Leave the game
         public void Quit()
         {
             Application.Quit();
-        }
-
-        public void DeletePlayer(string name)
-        {
-            SaveData sd = new SaveData(name);
-            sd.DeleteData();
-
-            //Log out from current player if we deleted that one
-            if (CurrentSave != null && CurrentSave.Name == name)
-                CurrentSave = null;
         }
 
         public void SetCursorLock(bool value)

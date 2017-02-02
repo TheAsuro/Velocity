@@ -174,7 +174,7 @@ namespace Race
             UnfreezeTime = Time.time;
 
             Unpause();
-            demoRecorder.StartRecording(GameInfo.info.CurrentSave.Name);
+            demoRecorder.StartRecording(PlayerSave.current.Name);
 
             if (OnStart != null)
                 OnStart(this, new EventArgs());

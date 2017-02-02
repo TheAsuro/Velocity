@@ -7,7 +7,7 @@ namespace Demos
 {
     public class Demo
     {
-        private const string DEMO_DIR = "demos";
+        private static readonly string DEMO_DIR = Path.Combine("data","demos");
         private const string DEMO_VERSION_STRING = "VELOCITYDEMO 1.2";
 
         public string PlayerName { get; private set; }
@@ -18,7 +18,7 @@ namespace Demos
         private string DemoName { get; set; }
 
         /// <summary>
-        /// Creates a new Demo, throws IOException.
+        /// Creates a new Demo from a file.
         /// </summary>
         public Demo(string demoName)
         {
@@ -128,7 +128,7 @@ namespace Demos
 
         private static string GetDemoPath(string demoName)
         {
-            return Path.Combine(Path.Combine(Application.dataPath, DEMO_DIR), demoName + ".vdem");
+            return Path.Combine(DEMO_DIR, demoName + ".vdem");
         }
     }
 }

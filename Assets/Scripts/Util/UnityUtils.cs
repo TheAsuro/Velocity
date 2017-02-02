@@ -53,4 +53,24 @@ namespace Util
             Object.Destroy(obj);
         }
     }
+
+    public class EventArgs<T> : EventArgs
+    {
+        public T Content { get; private set; }
+        public bool Error { get; private set; }
+        public string ErrorText { get; private set; }
+
+        public EventArgs(T content) : base()
+        {
+            Content = content;
+            Error = false;
+        }
+
+        public EventArgs(T content, bool error, string errorText) : base()
+        {
+            Content = content;
+            Error = error;
+            ErrorText = errorText;
+        }
+    }
 }

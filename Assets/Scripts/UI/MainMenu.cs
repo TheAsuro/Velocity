@@ -7,8 +7,8 @@ namespace UI
     {
         public void OnPlayButtonPress()
         {
-            SaveData sd = GameInfo.info.CurrentSave;
-            if(sd == null || sd.Account.Name.Equals("") || sd.Account.IsLoggedIn == false)
+            PlayerSave sd = PlayerSave.current;
+            if(sd == null || sd.Name.Equals("") || sd.IsLoggedIn == false)
             {
                 GameMenu.SingletonInstance.AddWindow(Window.LOGIN);
             }

@@ -33,7 +33,7 @@ namespace UI.MenuWindows
             speedText.text = Rs.Movement.GetXzVelocityString() + " m/s";
 
             //Display player name
-            nameText.text = GameInfo.info.InEditor ? "-" : GameInfo.info.CurrentSave.Account.Name;
+            nameText.text = GameInfo.info.InEditor ? "-" : PlayerSave.current.Name;
 
             //countdown
             float remainingFreezeTime = Rs.UnfreezeTime - Time.time;

@@ -20,7 +20,7 @@ namespace Api
             return new LeaderboardRequest(new ApiRequest(url, GET), map, offset);
         }
 
-        public static void SendEntry(string player, decimal time, string map, string token, Demo demo)
+        public static void SendEntry(string player, long time, string map, string token, Demo demo)
         {
             //TODO: upload demo when needed
             Dictionary<string, string> data = new Dictionary<string, string> {{"player", player}, {"time", time.ToString()}, {"level", map}, {"token", token}};
@@ -41,7 +41,7 @@ namespace Api
         public int id;
         public string playerName;
         public string map;
-        public decimal time;
+        public long time;
         public int rank;
 
         public static implicit operator LeaderboardEntry(LeaderboardResult v)
@@ -54,6 +54,6 @@ namespace Api
     {
         public int ID;
         public string Name;
-        public decimal Time;
+        public long Time;
     }
 }

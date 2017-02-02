@@ -18,11 +18,17 @@ namespace UI.MenuWindows
 
         public void OnLoginClick()
         {
+            if (!PlayerSave.PlayerFileExists(nameField.text))
+            {
+                errorTextField.text = "No save file for this player!";
+                return;
+            }
+
             SetInteractive(false);
 
-            GameInfo.info.CurrentSave = new SaveData(nameField.text);
-            GameInfo.info.CurrentSave.Account.StartLogin(passField.text);
-            GameInfo.info.CurrentSave.Account.OnLoginFinished += (sender, e) =>
+            PlayerSave.current = PlayerSave.LoadFromFile(nameField.text);
+            PlayerSave.current.StartLogin(passField.text);
+            PlayerSave.current.OnLoginFinished += (sender, e) =>
             {
                 SetInteractive(true);
 
@@ -35,7 +41,17 @@ namespace UI.MenuWindows
 
         public void OnOfflineClick()
         {
-            GameInfo.info.CurrentSave = new SaveData(nameField.text);
+            if (nameField.text == "")
+            {
+                errorTextField.text = "Please enter a name for the offline player.";
+                return;
+            }
+
+            if (PlayerSave.PlayerFileExists(nameField.text))
+                PlayerSave.current = PlayerSave.LoadFromFile(nameField.text);
+            else
+                PlayerSave.current = new PlayerSave(nameField.text);
+
             LoginFinished();
         }
 

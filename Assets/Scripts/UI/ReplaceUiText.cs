@@ -32,11 +32,11 @@ namespace UI
         private void Update()
         {
             string temp = initialText;
-            SaveData playerSave = GameInfo.info.CurrentSave;
+            PlayerSave playerSave = PlayerSave.current;
 
             if (temp.Contains("$player") && playerSave != null)
             {
-                temp = temp.Replace("$player", playerSave.Account.Name);
+                temp = temp.Replace("$player", playerSave.Name);
             }
             if (temp.Contains("$time"))
             {
@@ -55,8 +55,8 @@ namespace UI
 
             if (pb.Equals("") && playerSave != null)
             {
-                decimal pbTime = playerSave.GetPersonalBest(SceneManager.GetActiveScene().name);
-                pb = pbTime <= 0 ? "-" : pbTime.ToString("0.0000");
+                long pbTime;
+                pb = playerSave.GetPersonalBest(GameInfo.info.MapManager.CurrentMap, out pbTime) ? pbTime.ToTimeString() : "-";
             }
 
             if (temp.Contains("$wr"))
@@ -84,8 +84,8 @@ namespace UI
 
             if (temp.Contains("$currentplayer"))
             {
-                if (playerSave != null && !playerSave.Account.Name.Equals(""))
-                    temp = temp.Replace("$currentplayer", playerSave.Account.Name);
+                if (playerSave != null && !playerSave.Name.Equals(""))
+                    temp = temp.Replace("$currentplayer", playerSave.Name);
                 else
                     temp = temp.Replace("$currentplayer", "No player selected!");
             }

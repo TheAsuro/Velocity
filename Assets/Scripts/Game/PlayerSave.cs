@@ -1,13 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections.Generic;
-using System;
-using Game;
+using System.IO;
+using Api;
+using Newtonsoft.Json;
+using UnityEngine;
+using Util;
 
-namespace Api
+namespace Game
 {
-    public class Account
+    public class PlayerSave
     {
         private const string LOGIN_API_URL = "https://theasuro.de/Velocity/Api/account.php";
+        private static readonly string PLAYER_SAVE_DIR = Path.Combine("data","players");
+
+        public static PlayerSave current;
 
         public event EventHandler<EventArgs<string>> OnLoginFinished;
         public event EventHandler<EventArgs<string>> OnAccountRequestFinished;
@@ -17,15 +23,48 @@ namespace Api
         public bool IsLoggedIn { get; private set; }
         public string Token { get; private set; }
 
-        public Account(string name)
+        // TODO fix this and make it serialize
+        private Dictionary<int, long> personalBestTimes = new Dictionary<int, long>();
+
+        public static PlayerSave LoadFromFile(string playerName)
+        {
+            return JsonConvert.DeserializeObject<PlayerSave>(GetFilePath(playerName));
+        }
+
+        public PlayerSave(string name)
         {
             Name = name;
             IsLoggedIn = false;
-            if (PlayerPrefs.HasKey(SaveData.SaveName(name) + "_token"))
+            SaveFile();
+        }
+
+        public bool SaveIfPersonalBest(long time, MapData map)
+        {
+            long oldTime;
+            if (GetPersonalBest(map, out oldTime))
             {
-                Token = PlayerPrefs.GetString(SaveData.SaveName(name) + "_token");
-                StartLoginCheck();
+                if (time < oldTime)
+                {
+                    personalBestTimes[map.id] = time;
+                    SaveFile();
+                    return true;
+                }
+                return false;
             }
+            personalBestTimes[map.id] = time;
+            SaveFile();
+            return true;
+        }
+
+        public bool GetPersonalBest(MapData map, out long time)
+        {
+            if (personalBestTimes.ContainsKey(map.id))
+            {
+                time = personalBestTimes[map.id];
+                return true;
+            }
+            time = -1;
+            return false;
         }
 
         public void StartCreate(string pass, string mail = "")
@@ -58,9 +97,8 @@ namespace Api
             if (!eventArgs.Error)
             {
                 Token = eventArgs.Result;
-
-                PlayerPrefs.SetString(SaveData.SaveName(Name) + "_token", Token);
                 IsLoggedIn = true;
+                SaveFile();
                 Debug.Log("Logged in.");
 
                 if (OnLoginFinished != null)
@@ -80,25 +118,26 @@ namespace Api
             };
             rq.StartRequest();
         }
-    }
 
-    public class EventArgs<T> : EventArgs
-    {
-        public T Content { get; private set; }
-        public bool Error { get; private set; }
-        public string ErrorText { get; private set; }
-
-        public EventArgs(T content) : base()
+        public void SaveFile()
         {
-            Content = content;
-            Error = false;
+            File.WriteAllText(GetFilePath(Name), JsonConvert.SerializeObject(this));
         }
 
-        public EventArgs(T content, bool error, string errorText) : base()
+        public void DeleteFile()
         {
-            Content = content;
-            Error = error;
-            ErrorText = errorText;
+            if (File.Exists(GetFilePath(Name)))
+                File.Delete(GetFilePath(Name));
+        }
+
+        public static bool PlayerFileExists(string playerName)
+        {
+            return File.Exists(GetFilePath(playerName));
+        }
+
+        private static string GetFilePath(string playerName)
+        {
+            return Path.Combine(PLAYER_SAVE_DIR, playerName + ".vsav");
         }
     }
 }

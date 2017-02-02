@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
-using Api;
-using Game;
+﻿using Game;
 using UnityEngine;
 using UnityEngine.UI;
+using Util;
 
 namespace UI.MenuWindows
 {
@@ -26,16 +24,16 @@ namespace UI.MenuWindows
         public void OnOkClick()
         {
             currentName = playerNameField.text;
-            SaveData sd = new SaveData(currentName);
+            PlayerSave sd = new PlayerSave(currentName);
             // TODO remove events when done
-            sd.Account.OnAccountRequestFinished += (s, e) => FinishedAccountRequest(sd, e);
-            sd.Account.OnLoginFinished += (s, e) => FinishedLoginRequest(sd, e);
-            sd.Account.StartCreate(playerPassField.text, playerMailField.text);
+            sd.OnAccountRequestFinished += (s, e) => FinishedAccountRequest(sd, e);
+            sd.OnLoginFinished += (s, e) => FinishedLoginRequest(sd, e);
+            sd.StartCreate(playerPassField.text, playerMailField.text);
 
             SetInteractive(false);
         }
 
-        private void FinishedAccountRequest(SaveData sd, EventArgs<string> e)
+        private void FinishedAccountRequest(PlayerSave sd, EventArgs<string> e)
         {
             if (e.Error)
             {
@@ -44,15 +42,11 @@ namespace UI.MenuWindows
             }
         }
 
-        private void FinishedLoginRequest(SaveData sd, EventArgs<string> e)
+        private void FinishedLoginRequest(PlayerSave sd, EventArgs<string> e)
         {
             SetInteractive(true);
 
-            if (!e.Error)
-            {
-                GameInfo.info.CurrentSave = new SaveData(currentName);
-            }
-            else
+            if (e.Error)
             {
                 resultText.text = e.ErrorText;
             }

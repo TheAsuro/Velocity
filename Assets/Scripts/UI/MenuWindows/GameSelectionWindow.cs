@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Api;
 using Game;
 using UI.Elements;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 using Util;
 
@@ -30,9 +30,10 @@ namespace UI.MenuWindows
             foreach (MapData map in defaultMapData)
             {
                 string pb = "-";
-                decimal pbTime = GameInfo.info.CurrentSave.GetPersonalBest(map.name);
-                if (pbTime != -1)
-                    pb = pbTime.ToString("0.0000");
+                long pbTime;
+                Assert.IsNotNull(PlayerSave.current);
+                if (PlayerSave.current.GetPersonalBest(map, out pbTime))
+                    pb = pbTime.ToTimeString();
                 GameObject panel = GameMenu.CreatePanel(counter, mapPanelPrefab, contentTransform);
                 panel.GetComponent<MapPanel>().Set(counter++, map, pb);
             }
