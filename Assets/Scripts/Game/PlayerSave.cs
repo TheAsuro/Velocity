@@ -28,7 +28,7 @@ namespace Game
 
         public static PlayerSave LoadFromFile(string playerName)
         {
-            return JsonConvert.DeserializeObject<PlayerSave>(GetFilePath(playerName));
+            return JsonConvert.DeserializeObject<PlayerSave>(File.ReadAllText(GetFilePath(playerName)));
         }
 
         public PlayerSave(string name)
