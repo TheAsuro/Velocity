@@ -6,6 +6,7 @@ using Demos;
 using Game;
 using Race;
 using UI;
+using UnityEngine.Assertions;
 using Util;
 
 public class WorldInfo : MonoBehaviour
@@ -29,6 +30,7 @@ public class WorldInfo : MonoBehaviour
     }
 
     private DemoPlayer demoPlayer;
+
     private List<GameObject> skyboxWatchers = new List<GameObject>();
     private SortedList<int, Checkpoint> levelCheckpoints = new SortedList<int, Checkpoint>();
 
@@ -50,6 +52,13 @@ public class WorldInfo : MonoBehaviour
         demoPlayer = Instantiate(worldData.demoPlayerTemplate).GetComponent<DemoPlayer>();
         RaceScript = demoPlayer.GetComponent<DemoRaceScript>();
         demoPlayer.PlayDemo(demo, loop, staticCam);
+    }
+
+    public void StopDemo()
+    {
+        Assert.IsNotNull(demoPlayer);
+        demoPlayer.StopDemoPlayback(true);
+        RaceScript = null;
     }
 
     public void CreatePlayer(bool startInEditorMode)

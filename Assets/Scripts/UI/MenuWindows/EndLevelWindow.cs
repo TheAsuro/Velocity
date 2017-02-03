@@ -17,8 +17,7 @@ namespace UI.MenuWindows
         public void RestartRun()
         {
             GameMenu.SingletonInstance.CloseAllWindows();
-            GameMenu.SingletonInstance.AddWindow(Window.PLAY);
-            WorldInfo.info.RaceScript.PrepareNewRun();
+            WorldInfo.info.CreatePlayer(false);
         }
 
         public void PlayRaceDemo()
@@ -34,6 +33,12 @@ namespace UI.MenuWindows
         public void ToMainMenu()
         {
             GameInfo.info.LoadMainMenu();
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
+            WorldInfo.info.StopDemo();
         }
     }
 }

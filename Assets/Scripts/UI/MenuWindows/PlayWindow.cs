@@ -2,6 +2,7 @@
 using Game;
 using Race;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 namespace UI.MenuWindows
@@ -25,11 +26,14 @@ namespace UI.MenuWindows
 
         private void Update()
         {
+            Assert.IsNotNull(Rs);
+            Assert.IsNotNull(Rs.Movement);
+
             //Display time
             timeText.text = TimeString;
             timeText.color = Rs.RunValid ? Color.white : Color.red;
 
-            //Display speed
+            //Display speed+
             speedText.text = Rs.Movement.GetXzVelocityString() + " m/s";
 
             //Display player name

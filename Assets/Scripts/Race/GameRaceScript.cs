@@ -95,6 +95,8 @@ namespace Race
                 finished = true;
 
                 GameInfo.info.RunFinished(ElapsedTime, demoRecorder.Demo);
+
+                Destroy(gameObject);
             }
             else if (IsNextCheckpoint(index))
             {
