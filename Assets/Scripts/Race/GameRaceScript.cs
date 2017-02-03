@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using Api;
 using Demos;
 using Game;
 using UI;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Util;
 
 namespace Race
@@ -16,7 +17,11 @@ namespace Race
 
         public MovementBehaviour Movement { get; private set; }
         public float UnfreezeTime { get; private set; }
-        public bool RunValid { get { return demoRecorder.IsValid; } }
+
+        public bool RunValid
+        {
+            get { return demoRecorder.IsValid; }
+        }
 
         private int currentCheckpoint = 0;
         private bool started = false;
@@ -29,6 +34,7 @@ namespace Race
         private Checkpoint currentSpawn;
 
         private Stopwatch stopwatch;
+        private List<long> checkpointTimes;
         private DemoRecorder demoRecorder;
 
         public TimeSpan ElapsedTime
@@ -43,6 +49,7 @@ namespace Race
             demoRecorder = GetComponent<DemoRecorder>();
             firstSpawn = WorldInfo.info.FirstSpawn;
             currentSpawn = firstSpawn;
+            checkpointTimes = new List<long>();
             WorldInfo.info.OnCheckpointTrigger += CheckpointHit;
         }
 
@@ -94,21 +101,48 @@ namespace Race
                 demoRecorder.Finish(stopwatch.ElapsedTicks);
                 finished = true;
 
-                GameInfo.info.RunFinished(ElapsedTime, demoRecorder.Demo);
+                GameInfo.info.RunFinished(checkpointTimes.ToArray(), demoRecorder.Demo);
 
                 Destroy(gameObject);
             }
             else if (IsNextCheckpoint(index))
             {
                 // Hit next checkpoint
-                currentCheckpoint++;
-                demoRecorder.AddCheckpoint(stopwatch.ElapsedTicks);
-                DisplayText[] lines =
+                long checkpointTime = stopwatch.ElapsedTicks;
+
+                demoRecorder.AddCheckpoint(checkpointTime);
+                checkpointTimes.Add(checkpointTime);
+
+                long[] pbTime;
+                List<DisplayText> lines = new List<DisplayText>();
+                lines.Add(new DisplayText("#" + index + ": " + ElapsedTime.ToShortTimeString(), Color.blue));
+
+
+                if (PlayerSave.current.GetPersonalBest(GameInfo.info.MapManager.CurrentMap, out pbTime))
                 {
-                    new DisplayText("+ 12:34.567", Color.red),
-                    new DisplayText("#" + index + ": " + ElapsedTime.ShortText(), Color.white),
-                };
-                GameMenu.SingletonInstance.ShowTextBox(lines);
+                    Assert.IsTrue(pbTime.Length >= currentCheckpoint);
+
+                    string pbComparisonString = "";
+                    long tickDifference = checkpointTime - pbTime[currentCheckpoint];
+                    Color textColor;
+
+                    if (tickDifference > 0)
+                    {
+                        pbComparisonString += "+ ";
+                        textColor = Color.red;
+                    }
+                    else
+                    {
+                        pbComparisonString += "- ";
+                        textColor = Color.blue;
+                    }
+
+                    pbComparisonString += Math.Abs(tickDifference).ToShortTimeString();
+                    lines.Add(new DisplayText(pbComparisonString, textColor));
+                }
+
+                GameMenu.SingletonInstance.ShowTextBox(lines, 1.5f);
+                currentCheckpoint++;
             }
             else if (index != currentCheckpoint)
             {
@@ -152,6 +186,7 @@ namespace Race
             finished = false;
             freezeDuration = 3f;
             paused = true;
+            checkpointTimes.Clear();
 
             currentSpawn = firstSpawn;
             transform.position = firstSpawn.GetSpawnPos();

@@ -26,8 +26,7 @@ namespace Game
         public bool IsLoggedIn { get; private set; }
         public string Token { get; private set; }
 
-        // TODO fix this and make it serialize
-        private Dictionary<int, long> personalBestTimes = new Dictionary<int, long>();
+        private Dictionary<int, long[]> personalBestTimes = new Dictionary<int, long[]>();
 
         public static PlayerSave LoadFromFile(string playerName)
         {
@@ -43,12 +42,12 @@ namespace Game
             IsLoggedIn = false;
         }
 
-        public bool SaveTimeIfPersonalBest(long time, MapData map)
+        public bool SaveTimeIfPersonalBest(long[] time, MapData map)
         {
-            long oldTime;
+            long[] oldTime;
             if (GetPersonalBest(map, out oldTime))
             {
-                if (time < oldTime)
+                if (time.Last() < oldTime.Last())
                 {
                     personalBestTimes[map.id] = time;
                     SaveFile();
@@ -61,14 +60,14 @@ namespace Game
             return true;
         }
 
-        public bool GetPersonalBest(MapData map, out long time)
+        public bool GetPersonalBest(MapData map, out long[] time)
         {
             if (personalBestTimes.ContainsKey(map.id))
             {
                 time = personalBestTimes[map.id];
                 return true;
             }
-            time = -1;
+            time = new long[0];
             return false;
         }
 

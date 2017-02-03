@@ -1,6 +1,8 @@
-﻿using Api;
+﻿using System.Linq;
+using Api;
 using Game;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Util;
@@ -55,8 +57,13 @@ namespace UI
 
             if (pb.Equals("") && playerSave != null)
             {
-                long pbTime;
-                pb = playerSave.GetPersonalBest(GameInfo.info.MapManager.CurrentMap, out pbTime) ? pbTime.ToTimeString() : "-";
+                long[] pbTime;
+                if (playerSave.GetPersonalBest(GameInfo.info.MapManager.CurrentMap, out pbTime))
+                {
+                    Assert.IsTrue(pbTime.Length > 0);
+                    pb = pbTime.Last().ToTimeString();
+                }
+                else pb = "-";
             }
 
             if (temp.Contains("$wr"))

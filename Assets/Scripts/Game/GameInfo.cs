@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Api;
 using Demos;
 using UI;
@@ -84,10 +85,10 @@ namespace Game
         }
 
         //Player hit the goal
-        public void RunFinished(TimeSpan time, Demo demo)
+        public void RunFinished(long[] time, Demo demo)
         {
             currentDemo = demo;
-            LastRunWasPb = PlayerSave.current.SaveTimeIfPersonalBest(time.Ticks, MapManager.CurrentMap);
+            LastRunWasPb = PlayerSave.current.SaveTimeIfPersonalBest(time, MapManager.CurrentMap);
 
             GameMenu.SingletonInstance.CloseAllWindows();
             EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
@@ -109,7 +110,7 @@ namespace Game
                 return;
             }
 
-            Leaderboard.SendEntry(PlayerSave.current.Name, time.Ticks, SceneManager.GetActiveScene().name, PlayerSave.current.Token, currentDemo);
+            Leaderboard.SendEntry(PlayerSave.current.Name, time.Last(), SceneManager.GetActiveScene().name, PlayerSave.current.Token, currentDemo);
         }
 
         public void Quit()
