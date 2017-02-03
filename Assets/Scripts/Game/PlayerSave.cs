@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Api;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using Util;
 
@@ -11,7 +14,7 @@ namespace Game
     public class PlayerSave
     {
         private const string LOGIN_API_URL = "https://theasuro.de/Velocity/Api/account.php";
-        private static readonly string PLAYER_SAVE_DIR = Path.Combine("data","players");
+        private static readonly string PLAYER_SAVE_DIR = Path.Combine("data", "players");
 
         public static PlayerSave current;
 
@@ -28,7 +31,10 @@ namespace Game
 
         public static PlayerSave LoadFromFile(string playerName)
         {
-            return JsonConvert.DeserializeObject<PlayerSave>(File.ReadAllText(GetFilePath(playerName)));
+            return JsonConvert.DeserializeObject<PlayerSave>(File.ReadAllText(GetFilePath(playerName)), new JsonSerializerSettings()
+            {
+                ContractResolver = new PrivateContractResolver()
+            });
         }
 
         public PlayerSave(string name)
@@ -121,7 +127,10 @@ namespace Game
 
         public void SaveFile()
         {
-            File.WriteAllText(GetFilePath(Name), JsonConvert.SerializeObject(this));
+            File.WriteAllText(GetFilePath(Name), JsonConvert.SerializeObject(this, new JsonSerializerSettings()
+            {
+                ContractResolver = new PrivateContractResolver()
+            }));
         }
 
         public void DeleteFile()
@@ -138,6 +147,21 @@ namespace Game
         private static string GetFilePath(string playerName)
         {
             return Path.Combine(PLAYER_SAVE_DIR, playerName + ".vsav");
+        }
+
+        private class PrivateContractResolver : DefaultContractResolver
+        {
+            protected override List<MemberInfo> GetSerializableMembers(Type objectType)
+            {
+                List<MemberInfo> baseMembers = base.GetSerializableMembers(objectType);
+                baseMembers.Add(objectType.GetField("personalBestTimes", BindingFlags.Instance | BindingFlags.NonPublic));
+                return baseMembers;
+            }
+
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                return base.CreateProperties(type, MemberSerialization.Fields);
+            }
         }
     }
 }

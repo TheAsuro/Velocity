@@ -84,7 +84,7 @@ namespace UI
 
             if (temp.Contains("$currentplayer"))
             {
-                if (playerSave != null && !playerSave.Name.Equals(""))
+                if (playerSave != null && playerSave.Name != "")
                     temp = temp.Replace("$currentplayer", playerSave.Name);
                 else
                     temp = temp.Replace("$currentplayer", "No player selected!");
