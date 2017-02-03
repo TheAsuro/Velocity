@@ -6,7 +6,7 @@ namespace Util
     {
         public static string ToTimeString(this long val)
         {
-            return (val / 1000000).ToString();
+            return TimeSpan.FromTicks(val).ShortText();
         }
 
         public static string ShortText(this TimeSpan time)

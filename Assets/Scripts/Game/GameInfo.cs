@@ -87,7 +87,7 @@ namespace Game
         public void RunFinished(TimeSpan time, Demo demo)
         {
             currentDemo = demo;
-            LastRunWasPb = PlayerSave.current.SaveIfPersonalBest(time.Ticks, MapManager.CurrentMap);
+            LastRunWasPb = PlayerSave.current.SaveTimeIfPersonalBest(time.Ticks, MapManager.CurrentMap);
 
             GameMenu.SingletonInstance.CloseAllWindows();
             EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);

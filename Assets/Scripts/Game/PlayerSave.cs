@@ -41,10 +41,9 @@ namespace Game
         {
             Name = name;
             IsLoggedIn = false;
-            SaveFile();
         }
 
-        public bool SaveIfPersonalBest(long time, MapData map)
+        public bool SaveTimeIfPersonalBest(long time, MapData map)
         {
             long oldTime;
             if (GetPersonalBest(map, out oldTime))

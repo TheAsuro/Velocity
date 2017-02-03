@@ -50,7 +50,10 @@ namespace UI.MenuWindows
             if (PlayerSave.PlayerFileExists(nameField.text))
                 PlayerSave.current = PlayerSave.LoadFromFile(nameField.text);
             else
+            {
                 PlayerSave.current = new PlayerSave(nameField.text);
+                PlayerSave.current.SaveFile();
+            }
 
             LoginFinished();
         }

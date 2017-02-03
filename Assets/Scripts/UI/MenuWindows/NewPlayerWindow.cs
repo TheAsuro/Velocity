@@ -25,6 +25,7 @@ namespace UI.MenuWindows
         {
             currentName = playerNameField.text;
             PlayerSave sd = new PlayerSave(currentName);
+            sd.SaveFile();
             // TODO remove events when done
             sd.OnAccountRequestFinished += (s, e) => FinishedAccountRequest(sd, e);
             sd.OnLoginFinished += (s, e) => FinishedLoginRequest(sd, e);
