@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Demos
 {
@@ -26,65 +27,50 @@ namespace Demos
             //If we are playing and there is a valid ghost
             if (playing)
             {
-                float playTime = Time.time - startPlayTime; //Time since we began playing
-                float lastFrameTime = -1f; //Last recorded frame
-                float nextFrameTime = -1f; //Frame that comes after that
-                Vector3 lastPos = Vector3.zero;
-                Vector3 nextPos = Vector3.zero;
-                Quaternion lastRot = new Quaternion();
-                Quaternion nextRot = new Quaternion();
+                float playTime = Time.time - startPlayTime;
+                float lastTickTime = -1f;
+                float nextTickTime = -1f;
+                Vector3 lastTickPos = Vector3.zero;
+                Vector3 nextTickPos = Vector3.zero;
+                Quaternion lastTickRot = new Quaternion();
+                Quaternion nextTickRot = new Quaternion();
 
                 //Go through all frames
-                foreach (DemoTick tick in tickList)
+                bool found = false;
+                for (int i = 0; i + 1 < tickList.Count; i++)
                 {
-                    //Find the highest one that is smaller than playTime
-                    if (tick.Time <= playTime && tick.Time > lastFrameTime)
+                    float nextFrameSeconds = (float)new TimeSpan(tickList[i + 1].Time).TotalSeconds;
+                    if (nextFrameSeconds >= playTime)
                     {
-                        lastFrameTime = tick.Time;
-                        lastPos = tick.Position;
-                        lastRot = tick.Rotation;
-                    }
-                    //Find the one after that
-                    else
-                    {
-                        if (tick.Time > lastFrameTime && nextFrameTime == -1f)
-                        {
-                            nextFrameTime = tick.Time;
-                            nextPos = tick.Position;
-                            nextRot = tick.Rotation;
-                        }
+                        lastTickTime = (float)new TimeSpan(tickList[i].Time).TotalSeconds;
+                        lastTickPos = tickList[i].Position;
+                        lastTickRot = tickList[i].Rotation;
+
+                        nextTickTime = nextFrameSeconds;
+                        nextTickPos = tickList[i].Position;
+                        nextTickRot = tickList[i].Rotation;
+                        found = true;
+                        break;
                     }
                 }
 
                 //If demo is running
-                if (lastFrameTime > 0f && nextFrameTime > 0f)
+                if (found)
                 {
-                    float timeToNextFrame = nextFrameTime - playTime;
-                    float frameStep = nextFrameTime - lastFrameTime;
-                    float t = timeToNextFrame / frameStep;
+                    Quaternion editedLastRot = Quaternion.Euler(lastTickRot.eulerAngles.x, lastTickRot.eulerAngles.y, 0f);
+                    Quaternion editedNextRot = Quaternion.Euler(lastTickRot.eulerAngles.x, nextTickRot.eulerAngles.y, 0f);
 
-                    Quaternion editedLastRot = Quaternion.Euler(lastRot.eulerAngles.x, lastRot.eulerAngles.y, 0f);
-                    Quaternion editedNextRot = Quaternion.Euler(lastRot.eulerAngles.x, nextRot.eulerAngles.y, 0f);
-
-                    Vector3 playerPos = Vector3.Lerp(lastPos, nextPos, t);
-
-                    transform.position = playerPos;
+                    float t = (nextTickTime - lastTickTime) / (playTime - lastTickTime);
+                    transform.position = Vector3.Lerp(lastTickPos, nextTickPos, t);
                     transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, t);
 
                     //Update first/third person view
                     camDistance = new Vector3(0f, 0.5f, 0f);
                 }
-
-                // Demo ended
-                if (nextFrameTime < 0f)
+                else
                 {
                     playing = false;
                     StartCoroutine(EndDemoDelay());
-                }
-
-                if (Input.GetButtonDown("Menu"))
-                {
-                    StopDemoPlayback();
                 }
             }
 
@@ -132,7 +118,6 @@ namespace Demos
             //Stop playback on world reset
             WorldInfo.info.RaceScript.OnReset += (s, e) => StopDemoPlayback(true);
 
-            playing = true;
             ResetDemo();
         }
 
