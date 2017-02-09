@@ -23,15 +23,14 @@ namespace Race
             get { return demoRecorder.IsValid; }
         }
 
-        private int currentCheckpoint = 0;
         private bool started = false;
         private bool finished = false;
         private bool paused = false;
 
         private float freezeDuration = 3f;
 
-        private Checkpoint firstSpawn;
-        private Checkpoint currentSpawn;
+        private Checkpoint firstCheckpoint;
+        private Checkpoint currentCheckpoint;
 
         private Stopwatch stopwatch;
         private List<long> checkpointTimes;
@@ -47,8 +46,8 @@ namespace Race
             UnfreezeTime = float.PositiveInfinity;
             Movement = GetComponent<MovementBehaviour>();
             demoRecorder = GetComponent<DemoRecorder>();
-            firstSpawn = WorldInfo.info.FirstSpawn;
-            currentSpawn = firstSpawn;
+            firstCheckpoint = WorldInfo.info.FirstSpawn;
+            currentCheckpoint = firstCheckpoint;
             checkpointTimes = new List<long>();
             WorldInfo.info.OnCheckpointTrigger += CheckpointHit;
         }
@@ -93,8 +92,7 @@ namespace Race
 
         public void CheckpointHit(object sender, EventArgs<Checkpoint> eventArgs)
         {
-            int index = eventArgs.Content.Index;
-            if (WorldInfo.info.IsLastCheckpoint(index) && IsNextCheckpoint(index) && !finished)
+            if (WorldInfo.info.IsEndCheckpoint(eventArgs.Content) && IsNextCheckpoint(eventArgs.Content) && !finished)
             {
                 // End of race
                 stopwatch.Stop();
@@ -105,7 +103,7 @@ namespace Race
 
                 Destroy(gameObject);
             }
-            else if (IsNextCheckpoint(index))
+            else if (IsNextCheckpoint(eventArgs.Content))
             {
                 // Hit next checkpoint
                 long checkpointTime = stopwatch.ElapsedTicks;
@@ -113,17 +111,16 @@ namespace Race
                 demoRecorder.AddCheckpoint(checkpointTime);
                 checkpointTimes.Add(checkpointTime);
 
-                long[] pbTime;
                 List<DisplayText> lines = new List<DisplayText>();
-                lines.Add(new DisplayText("#" + index + ": " + ElapsedTime.ToShortTimeString(), Color.blue));
+                lines.Add(new DisplayText("  " + ElapsedTime.ToShortTimeString(), Color.blue));
 
-
+                long[] pbTime;
                 if (PlayerSave.current.GetPersonalBest(GameInfo.info.MapManager.CurrentMap, out pbTime))
                 {
-                    Assert.IsTrue(pbTime.Length >= currentCheckpoint);
+                    Assert.IsTrue(pbTime.Length >= currentCheckpoint.Index);
 
                     string pbComparisonString = "";
-                    long tickDifference = checkpointTime - pbTime[currentCheckpoint];
+                    long tickDifference = checkpointTime - pbTime[currentCheckpoint.Index];
                     Color textColor;
 
                     if (tickDifference > 0)
@@ -142,9 +139,9 @@ namespace Race
                 }
 
                 GameMenu.SingletonInstance.ShowTextBox(lines, 1.5f);
-                currentCheckpoint++;
+                currentCheckpoint = eventArgs.Content;
             }
-            else if (index != currentCheckpoint)
+            else if (eventArgs.Content.Index != currentCheckpoint.Index)
             {
                 GameMenu.SingletonInstance.ShowTextBox("Wrong Checkpoint!", Color.red);
             }
@@ -169,10 +166,14 @@ namespace Race
 
         public void ResetToLastCheckpoint()
         {
-            if (currentSpawn == firstSpawn)
+            if (currentCheckpoint == firstCheckpoint)
                 PrepareNewRun();
             else
-                throw new NotImplementedException();
+            {
+                transform.position = currentCheckpoint.GetSpawnPos();
+                transform.rotation = currentCheckpoint.GetSpawnRot();
+                Movement.ResetVelocity();
+            }
         }
 
         //Starts a new race (resets the current one if there is one)
@@ -181,16 +182,16 @@ namespace Race
             if (OnReset != null)
                 OnReset(this, new EventArgs());
 
-            currentCheckpoint = 0;
+            currentCheckpoint = firstCheckpoint;
             started = false;
             finished = false;
             freezeDuration = 3f;
             paused = true;
             checkpointTimes.Clear();
 
-            currentSpawn = firstSpawn;
-            transform.position = firstSpawn.GetSpawnPos();
-            transform.rotation = firstSpawn.GetSpawnRot();
+            currentCheckpoint = firstCheckpoint;
+            transform.position = firstCheckpoint.GetSpawnPos();
+            transform.rotation = firstCheckpoint.GetSpawnRot();
 
             stopwatch = new Stopwatch();
 
@@ -217,12 +218,12 @@ namespace Race
                 OnStart(this, new EventArgs());
         }
 
-        private bool IsNextCheckpoint(int index)
+        private bool IsNextCheckpoint(Checkpoint cp)
         {
             if (demoRecorder == null)
                 return false;
 
-            return currentCheckpoint + 1 == index;
+            return currentCheckpoint.Index + 1 == cp.Index;
         }
     }
 }

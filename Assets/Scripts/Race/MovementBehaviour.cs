@@ -73,6 +73,11 @@ namespace Race
             frozen = false;
         }
 
+        public void ResetVelocity()
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+        }
+
         private void FixedUpdate()
         {
             Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));

@@ -1,17 +1,23 @@
 ﻿using Demos;
 using Game;
 using UnityEngine;
+using UnityEngine.UI;
+using Util;
 
 namespace UI.MenuWindows
 {
     public class EndLevelWindow : DefaultMenuWindow
     {
+        [SerializeField] private Text timeText;
+
         private Demo demo;
 
-        public void Initialize(Demo demo)
+        public void Initialize(Demo demo, bool isPb)
         {
             this.demo = demo;
             PlayRaceDemo();
+            timeText.text = timeText.text.Replace("$time", demo.TotalTickTime.ToTimeString());
+            timeText.text = timeText.text.Replace("$ispb", isPb ? ", a new personal record!" : "");
         }
 
         public void RestartRun()

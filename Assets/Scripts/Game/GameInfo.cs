@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Api;
 using Demos;
@@ -28,7 +27,6 @@ namespace Game
         public float circleSpeed3 = 30f;
 
         public bool InEditor { get; private set; }
-        public bool LastRunWasPb { get; private set; }
         public bool CheatsActive { get; set; }
 
         private GameInfoFx fx;
@@ -88,11 +86,10 @@ namespace Game
         public void RunFinished(long[] time, Demo demo)
         {
             currentDemo = demo;
-            LastRunWasPb = PlayerSave.current.SaveTimeIfPersonalBest(time, MapManager.CurrentMap);
 
             GameMenu.SingletonInstance.CloseAllWindows();
             EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
-            window.Initialize(currentDemo);
+            window.Initialize(currentDemo, PlayerSave.current.SaveTimeIfPersonalBest(time, MapManager.CurrentMap));
 
             if (!demo.RunVaild)
             {

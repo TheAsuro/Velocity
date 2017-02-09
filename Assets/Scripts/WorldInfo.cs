@@ -100,8 +100,8 @@ public class WorldInfo : MonoBehaviour
         };
     }
 
-    public bool IsLastCheckpoint(int checkpointIndex)
+    public bool IsEndCheckpoint(Checkpoint cp)
     {
-        return levelCheckpoints.Last().Key == checkpointIndex;
+        return levelCheckpoints.Last().Value == cp;
     }
 }

@@ -210,7 +210,6 @@ GameObject:
   - component: {fileID: 224321439093419828}
   - component: {fileID: 222835914285696556}
   - component: {fileID: 114734100728093808}
-  - component: {fileID: 114022999892665192}
   m_Layer: 5
   m_Name: RunData
   m_TagString: Untagged
@@ -367,17 +366,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114022999892665192
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1587129441868600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6817cbb83c5e4414085e966b917b0e94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114054197310914720
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1052,9 +1040,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.2
-  m_Text: 'Your time is <b>$time</b>. $ispb
-
-'
+  m_Text: Your time is <b>$time</b>$ispb
 --- !u!114 &114756542339982006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1093,6 +1079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 973a3b6061492274f82129e3cfdfe7cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeText: {fileID: 114734100728093808}
 --- !u!114 &114778948463947866
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -75,11 +75,6 @@ namespace UI
                 temp = temp.Replace("$pb", pb);
             }
 
-            if (temp.Contains("$ispb"))
-            {
-                temp = temp.Replace("$ispb", GameInfo.info.LastRunWasPb ? "New personal record!" : "");
-            }
-
             if (temp.Contains("$rank"))
             {
                 if (!loadingBestEntry && bestEntry == "")
