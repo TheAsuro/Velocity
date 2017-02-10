@@ -20,7 +20,7 @@ namespace Api
             return new LeaderboardRequest(new ApiRequest(url, GET), map, offset);
         }
 
-        public static void SendEntry(string player, long time, string map, string token, Demo demo)
+        public static void SendEntry(string player, string map, string token, long time, Demo demo)
         {
             //TODO: upload demo when needed
             Dictionary<string, string> data = new Dictionary<string, string> {{"player", player}, {"time", time.ToString()}, {"level", map}, {"token", token}};

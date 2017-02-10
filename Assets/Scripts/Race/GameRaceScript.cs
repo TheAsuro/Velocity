@@ -94,6 +94,12 @@ namespace Race
         {
             if (WorldInfo.info.IsEndCheckpoint(eventArgs.Content) && IsNextCheckpoint(eventArgs.Content) && !finished)
             {
+                // Hit last checkpoint
+                long checkpointTime = stopwatch.ElapsedTicks;
+
+                demoRecorder.AddCheckpoint(checkpointTime);
+                checkpointTimes.Add(checkpointTime);
+
                 // End of race
                 stopwatch.Stop();
                 demoRecorder.Finish(stopwatch.ElapsedTicks);

@@ -107,7 +107,7 @@ namespace Game
                 return;
             }
 
-            Leaderboard.SendEntry(PlayerSave.current.Name, time.Last(), SceneManager.GetActiveScene().name, PlayerSave.current.Token, currentDemo);
+            Leaderboard.SendEntry(PlayerSave.current.Name, SceneManager.GetActiveScene().name, PlayerSave.current.Token, time.Last(), currentDemo);
         }
 
         public void Quit()
