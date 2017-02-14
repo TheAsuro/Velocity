@@ -18,16 +18,9 @@ namespace UI.MenuWindows
 
         public void OnLoginClick()
         {
-            if (!PlayerSave.PlayerFileExists(nameField.text))
-            {
-                errorTextField.text = "No save file for this player!";
-                return;
-            }
-
             SetInteractive(false);
+            LoadPlayerFile(nameField.text);
 
-            PlayerSave.current = PlayerSave.LoadFromFile(nameField.text);
-            PlayerSave.current.StartLogin(passField.text);
             PlayerSave.current.OnLoginFinished += (sender, e) =>
             {
                 SetInteractive(true);
@@ -37,6 +30,8 @@ namespace UI.MenuWindows
                 else
                     errorTextField.text = e.ErrorText;
             };
+            errorTextField.text = "Logging in...";
+            PlayerSave.current.StartLogin(passField.text);
         }
 
         public void OnOfflineClick()
@@ -47,15 +42,19 @@ namespace UI.MenuWindows
                 return;
             }
 
-            if (PlayerSave.PlayerFileExists(nameField.text))
-                PlayerSave.current = PlayerSave.LoadFromFile(nameField.text);
+            LoadPlayerFile(nameField.text);
+            LoginFinished();
+        }
+
+        private void LoadPlayerFile(string playerName)
+        {
+            if (PlayerSave.PlayerFileExists(playerName))
+                PlayerSave.current = PlayerSave.LoadFromFile(playerName);
             else
             {
-                PlayerSave.current = new PlayerSave(nameField.text);
+                PlayerSave.current = new PlayerSave(playerName);
                 PlayerSave.current.SaveFile();
             }
-
-            LoginFinished();
         }
 
         public void OnRegisterClick()

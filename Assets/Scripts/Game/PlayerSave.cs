@@ -13,7 +13,7 @@ namespace Game
 {
     public class PlayerSave
     {
-        private const string LOGIN_API_URL = "https://theasuro.de/Velocity/Api/account.php";
+        private const string LOGIN_API_URL = "https://api.theasuro.de/velocity/login";
         private static readonly string PLAYER_SAVE_DIR = Path.Combine("data", "players");
 
         public static PlayerSave current;
@@ -22,6 +22,7 @@ namespace Game
         public event EventHandler<EventArgs<string>> OnAccountRequestFinished;
         public event EventHandler<EventArgs<bool>> OnLoginCheckFinished;
 
+        public int ID { get; private set; }
         public string Name { get; private set; }
         public bool IsLoggedIn { get; private set; }
         public string Token { get; private set; }
@@ -73,17 +74,22 @@ namespace Game
 
         public void StartCreate(string pass, string mail = "")
         {
-            var data = new Dictionary<string, string> {{"user", Name}, {"pass", pass}};
+            var data = new Dictionary<string, string> {{"Name", Name}, {"Key", pass}};
             if (mail != "")
-                data.Add("mail", mail);
-            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "POST", data);
+                data.Add("Mail", mail);
+            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "PUT", data);
             rq.OnDone += FinishCreate;
             rq.StartRequest();
         }
 
         private void FinishCreate(object o, RequestFinishedEventArgs<string> eventArgs)
         {
-            FinishLogin(eventArgs);
+            if (!eventArgs.Error)
+            {
+                AccountCreationResult account = JsonConvert.DeserializeObject<AccountCreationResult>(eventArgs.Result);
+                ID = account.ID;
+                DoLogin(account.Token);
+            }
 
             if (OnAccountRequestFinished != null)
                 OnAccountRequestFinished(this, new EventArgs<string>(eventArgs.Result, eventArgs.Error, eventArgs.ErrorText));
@@ -91,23 +97,27 @@ namespace Game
 
         public void StartLogin(string pass)
         {
-            var data = new Dictionary<string, string> {{"user", Name}, {"pass", pass}};
-            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "GET", data);
+            var data = new Dictionary<string, string> {{"User", Name}, {"pass", pass}};
+            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "POST", data);
+            rq.OnDone += FinishLogin;
             rq.StartRequest();
         }
 
-        private void FinishLogin(RequestFinishedEventArgs<string> eventArgs)
+        private void FinishLogin(object sender, RequestFinishedEventArgs<string> eventArgs)
         {
             if (!eventArgs.Error)
-            {
-                Token = eventArgs.Result;
-                IsLoggedIn = true;
-                SaveFile();
-                Debug.Log("Logged in.");
+                DoLogin(eventArgs.Result);
 
-                if (OnLoginFinished != null)
-                    OnLoginFinished(this, new EventArgs<string>(Token, eventArgs.Error, eventArgs.ErrorText));
-            }
+            if (OnLoginFinished != null)
+                OnLoginFinished(this, new EventArgs<string>(Token, eventArgs.Error, eventArgs.ErrorText));
+        }
+
+        private void DoLogin(string token)
+        {
+            Token = token;
+            IsLoggedIn = true;
+            SaveFile();
+            Debug.Log("Logged in.");
         }
 
         public void StartLoginCheck()
@@ -145,6 +155,12 @@ namespace Game
         private static string GetFilePath(string playerName)
         {
             return Path.Combine(PLAYER_SAVE_DIR, playerName + ".vsav");
+        }
+
+        private class AccountCreationResult
+        {
+            public int ID { get; private set; }
+            public string Token { get; private set; }
         }
 
         private class PrivateContractResolver : DefaultContractResolver
