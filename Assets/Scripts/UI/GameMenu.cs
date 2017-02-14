@@ -80,6 +80,9 @@ namespace UI
             if (window == Window.NONE)
                 throw new ArgumentException("Can't add NONE window!");
 
+            if (menuStack.Count > 0)
+                menuStack.Peek().OnSetAsBackground();
+
             currentWindow = window;
             MenuWindow menu = menuProperties.CreateWindow(window, myCanvas.transform);
             menu.OnActivate();
