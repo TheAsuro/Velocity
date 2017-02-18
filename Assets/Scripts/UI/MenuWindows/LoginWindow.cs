@@ -7,29 +7,27 @@ namespace UI.MenuWindows
 {
     public class LoginWindow : DefaultMenuWindow
     {
-        [SerializeField]
-        private InputField nameField;
-
-        [SerializeField]
-        private InputField passField;
-
-        [SerializeField]
-        private Text errorTextField;
+        [SerializeField] private InputField nameField;
+        [SerializeField] private InputField passField;
+        [SerializeField] private Text errorTextField;
 
         public void OnLoginClick()
         {
             SetInteractive(false);
             LoadPlayerFile(nameField.text);
 
-            PlayerSave.current.OnLoginFinished += (sender, e) =>
+            PlayerSave.current.OnLoginFinished += (sender, e) => GameInfo.info.RunOnMainThread(() =>
             {
                 SetInteractive(true);
 
                 if (!e.Error)
+                {
+                    errorTextField.text = "Login finished.";
                     LoginFinished();
+                }
                 else
                     errorTextField.text = e.ErrorText;
-            };
+            });
             errorTextField.text = "Logging in...";
             PlayerSave.current.StartLogin(passField.text);
         }

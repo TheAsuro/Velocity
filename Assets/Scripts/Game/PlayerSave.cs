@@ -7,6 +7,7 @@ using Api;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Util;
 
 namespace Game
@@ -41,6 +42,7 @@ namespace Game
         {
             Name = name;
             IsLoggedIn = false;
+            ID = -1;
         }
 
         public bool SaveTimeIfPersonalBest(long[] time, MapData map)
@@ -97,7 +99,8 @@ namespace Game
 
         public void StartLogin(string pass)
         {
-            var data = new Dictionary<string, string> {{"User", Name}, {"pass", pass}};
+            Assert.IsFalse(ID == -1);
+            var data = new Dictionary<string, string> {{"User", ID.ToString()}, {"Key", pass}};
             ApiRequest rq = new ApiRequest(LOGIN_API_URL, "POST", data);
             rq.OnDone += FinishLogin;
             rq.StartRequest();

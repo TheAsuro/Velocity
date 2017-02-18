@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Api;
 using Demos;
@@ -33,6 +34,8 @@ namespace Game
         private Demo currentDemo;
         private GameObject myCanvas;
 
+        private List<Action> actionQueue = new List<Action>();
+
         private void Awake()
         {
             if (info == null)
@@ -54,6 +57,8 @@ namespace Game
         private void Update()
         {
             Settings.Input.ExecuteBoundActions();
+
+            actionQueue.ForEach(action => action());
 
             //Update effects
             fx.Update();
@@ -108,6 +113,11 @@ namespace Game
             }
 
             Leaderboard.SendEntry(PlayerSave.current.Name, SceneManager.GetActiveScene().name, PlayerSave.current.Token, time.Last(), currentDemo);
+        }
+
+        public void RunOnMainThread(Action action)
+        {
+            actionQueue.Add(action);
         }
 
         public void Quit()

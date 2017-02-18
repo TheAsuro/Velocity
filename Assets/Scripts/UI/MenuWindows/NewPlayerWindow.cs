@@ -27,8 +27,8 @@ namespace UI.MenuWindows
             PlayerSave sd = new PlayerSave(currentName);
             sd.SaveFile();
             // TODO remove events when done
-            sd.OnAccountRequestFinished += (s, e) => FinishedAccountRequest(sd, e);
-            sd.OnLoginFinished += (s, e) => FinishedLoginRequest(sd, e);
+            sd.OnAccountRequestFinished += (s, e) => GameInfo.info.RunOnMainThread(() => FinishedAccountRequest(sd, e));
+            sd.OnLoginFinished += (s, e) => GameInfo.info.RunOnMainThread(() =>FinishedLoginRequest(sd, e));
             sd.StartCreate(playerPassField.text, playerMailField.text);
 
             SetInteractive(false);
