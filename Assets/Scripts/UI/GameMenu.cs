@@ -99,7 +99,8 @@ namespace UI
             if (menuStack.Count == 0)
                 throw new InvalidOperationException();
             menuStack.Pop().OnClose();
-            menuStack.Peek().OnActivate();
+            if (menuStack.Count > 0)
+                menuStack.Peek().OnActivate();
             currentWindow = menuStack.Count == 0 ? Window.NONE : menuProperties.FindWindowType(menuStack.Peek());
 
             if (OnMenuRemoved != null)
