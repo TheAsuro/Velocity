@@ -74,6 +74,12 @@ public class WorldInfo : MonoBehaviour
         GameMenu.SingletonInstance.AddWindow(Window.PLAY);
     }
 
+    public void RemovePlayer()
+    {
+
+        RaceScript = null;
+    }
+
     public void AddSkyboxWatcher(GameObject watcher)
     {
         skyboxWatchers.Add(watcher);

@@ -106,7 +106,8 @@ namespace Race
                 finished = true;
 
                 GameInfo.info.RunFinished(checkpointTimes.ToArray(), demoRecorder.Demo);
-
+                WorldInfo.info.RemovePlayer();
+                WorldInfo.info.OnCheckpointTrigger -= CheckpointHit;
                 Destroy(gameObject);
             }
             else if (IsNextCheckpoint(eventArgs.Content))
