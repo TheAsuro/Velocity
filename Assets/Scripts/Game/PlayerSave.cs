@@ -138,6 +138,8 @@ namespace Game
 
         public void SaveFile()
         {
+            if (!Directory.Exists(PLAYER_SAVE_DIR))
+                Directory.CreateDirectory(PLAYER_SAVE_DIR);
             File.WriteAllText(GetFilePath(Name), JsonConvert.SerializeObject(this, new JsonSerializerSettings()
             {
                 ContractResolver = new PrivateContractResolver()
