@@ -14,7 +14,7 @@ namespace Demos
         public string LevelName { get; private set; }
         public long TotalTickTime { get; private set; }
         public List<DemoTick> Ticks { get; private set; }
-        public bool RunVaild { get; set; }
+        public bool RunValid { get; set; }
         private string DemoName { get; set; }
 
         /// <summary>
@@ -29,12 +29,13 @@ namespace Demos
         }
 
         //Make a demo from a list of ticks
-        public Demo(List<DemoTick> pTicks, string pPlayerName, string pLevelName)
+        public Demo(List<DemoTick> pTicks, string pPlayerName, string pLevelName, bool valid)
         {
             Ticks = pTicks;
             PlayerName = pPlayerName;
             LevelName = pLevelName;
             DemoName = Guid.NewGuid().ToString();
+            RunValid = valid;
 
             if(Ticks != null && Ticks.Count > 0)
                 TotalTickTime = Ticks[Ticks.Count - 1].Time;
@@ -52,7 +53,7 @@ namespace Demos
             PlayerName = reader.ReadString();
             LevelName = reader.ReadString();
             TotalTickTime = reader.ReadInt64();
-            RunVaild = reader.ReadBoolean();
+            RunValid = reader.ReadBoolean();
 
             //Read ticks until end of file
             while (reader.BaseStream.Position < reader.BaseStream.Length)
@@ -88,7 +89,7 @@ namespace Demos
                 writer.Write(PlayerName);
                 writer.Write(LevelName);
                 writer.Write(TotalTickTime);
-                writer.Write(RunVaild);
+                writer.Write(RunValid);
 
                 //ticks
                 foreach(DemoTick tick in Ticks)

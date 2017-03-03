@@ -194,23 +194,6 @@ namespace Race
             return jumpVelocity;
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.tag.Equals("Teleporter"))
-            {
-                Teleporter tp = other.GetComponent<Teleporter>();
-                transform.position = tp.target;
-                if (tp.applyRotation)
-                {
-                    transform.rotation = tp.targetRotation;
-                }
-                if (tp.cancelVelocity)
-                {
-                    GetComponent<Rigidbody>().velocity = Vector3.zero;
-                }
-            }
-        }
-
         private void OnCollisionEnter(Collision col)
         {
             bool doStepUp = true;
@@ -352,6 +335,9 @@ namespace Race
             }
             else if (crouched && !state)
             {
+                //TODO this is retarded
+                //Better: always extend down, place player exactly on ground if uncrouching would intersect floor
+
                 //extend down if not on ground
                 Vector3 lowerPos = transform.position +
                                    new Vector3(0f, (GetComponent<Collider>().bounds.extents.y * -1f) + 0.05f, 0f);

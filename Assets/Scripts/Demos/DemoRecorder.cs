@@ -28,6 +28,7 @@ namespace Demos
             CheckpointTicks = new List<long>();
             lastSecondComputer = DateTime.Now;
             lastSecondGame = Time.time;
+            IsValid = true;
         }
 
         public void AddCheckpoint(long elapsedTicks)
@@ -43,7 +44,7 @@ namespace Demos
         public void Finish(long elapsedTicks)
         {
             FinalTimeTicks = elapsedTicks;
-            Demo = new Demo(tickList, playerName, levelName);
+            Demo = new Demo(tickList, playerName, levelName, IsValid);
         }
 
         public void InvalidRunCheck()

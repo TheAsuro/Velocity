@@ -7,7 +7,6 @@ using Api;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Util;
 
 namespace Game
@@ -99,7 +98,37 @@ namespace Game
 
         public void StartLogin(string pass)
         {
-            Assert.IsFalse(ID == -1);
+            if (ID == -1)
+            {
+                var data = new Dictionary<string, string> {{"Name", Name}};
+                ApiRequest rq = new ApiRequest(LOGIN_API_URL, "GET", data);
+                rq.OnDone += (sender, args) =>
+                {
+                    if (args.Error)
+                    {
+                        Debug.LogError(args.ErrorText);
+                        if (OnLoginFinished != null)
+                        {
+                            OnLoginFinished(this, new EventArgs<string>(args.Result, args.Error, args.ErrorText));
+                            OnLoginFinished = null;
+                        }
+                    }
+                    else
+                    {
+                        ID = int.Parse(args.Result);
+                        ContinueLogin(pass);
+                    }
+                };
+                rq.StartRequest();
+            }
+            else
+            {
+                ContinueLogin(pass);
+            }
+        }
+
+        private void ContinueLogin(string pass)
+        {
             var data = new Dictionary<string, string> {{"User", ID.ToString()}, {"Key", pass}};
             ApiRequest rq = new ApiRequest(LOGIN_API_URL, "POST", data);
             rq.OnDone += FinishLogin;
@@ -112,7 +141,10 @@ namespace Game
                 DoLogin(eventArgs.Result);
 
             if (OnLoginFinished != null)
+            {
                 OnLoginFinished(this, new EventArgs<string>(Token, eventArgs.Error, eventArgs.ErrorText));
+                OnLoginFinished = null;
+            }
         }
 
         private void DoLogin(string token)
@@ -121,19 +153,6 @@ namespace Game
             IsLoggedIn = true;
             SaveFile();
             Debug.Log("Logged in.");
-        }
-
-        public void StartLoginCheck()
-        {
-            var data = new Dictionary<string, string> {{"token", Token}};
-            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "POST", data);
-            rq.OnDone += (sender, eventArgs) =>
-            {
-                IsLoggedIn = !eventArgs.Error && eventArgs.Result == "1";
-                if (OnLoginCheckFinished != null)
-                    OnLoginCheckFinished(this, new EventArgs<bool>(IsLoggedIn, eventArgs.Error, eventArgs.ErrorText));
-            };
-            rq.StartRequest();
         }
 
         public void SaveFile()

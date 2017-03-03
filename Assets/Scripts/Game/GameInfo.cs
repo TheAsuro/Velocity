@@ -59,6 +59,7 @@ namespace Game
             Settings.Input.ExecuteBoundActions();
 
             actionQueue.ForEach(action => action());
+            actionQueue.Clear();
 
             //Update effects
             fx.Update();
@@ -96,7 +97,7 @@ namespace Game
             EndLevelWindow window = (EndLevelWindow) GameMenu.SingletonInstance.AddWindow(Window.END_LEVEL);
             window.Initialize(currentDemo, PlayerSave.current.SaveTimeIfPersonalBest(time, MapManager.CurrentMap));
 
-            if (!demo.RunVaild)
+            if (!demo.RunValid)
             {
                 print("Invalid run!");
                 return;
