@@ -105,7 +105,7 @@ namespace Race
                 demoRecorder.Finish(stopwatch.ElapsedTicks);
                 finished = true;
 
-                GameInfo.info.RunFinished(checkpointTimes.ToArray(), demoRecorder.Demo);
+                GameInfo.info.RunFinished(checkpointTimes.ToArray(), WorldInfo.info.MapID, demoRecorder.Demo);
                 WorldInfo.info.RemovePlayer();
                 WorldInfo.info.OnCheckpointTrigger -= CheckpointHit;
                 Destroy(gameObject);

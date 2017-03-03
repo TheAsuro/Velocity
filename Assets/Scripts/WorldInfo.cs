@@ -29,6 +29,12 @@ public class WorldInfo : MonoBehaviour
         get { return worldData; }
     }
 
+    [SerializeField] private int mapID;
+    public int MapID
+    {
+        get { return mapID; }
+    }
+
     private DemoPlayer demoPlayer;
 
     private List<GameObject> skyboxWatchers = new List<GameObject>();

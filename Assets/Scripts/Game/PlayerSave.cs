@@ -138,7 +138,12 @@ namespace Game
         private void FinishLogin(object sender, RequestFinishedEventArgs<string> eventArgs)
         {
             if (!eventArgs.Error)
-                DoLogin(eventArgs.Result);
+            {
+                string tokenString = eventArgs.Result;
+                if (tokenString.StartsWith("\""))
+                    tokenString = tokenString.Trim('"');
+                DoLogin(tokenString);
+            }
 
             if (OnLoginFinished != null)
             {

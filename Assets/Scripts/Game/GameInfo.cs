@@ -89,7 +89,7 @@ namespace Game
         }
 
         //Player hit the goal
-        public void RunFinished(long[] time, Demo demo)
+        public void RunFinished(long[] time, int mapID, Demo demo)
         {
             currentDemo = demo;
 
@@ -113,7 +113,7 @@ namespace Game
                 return;
             }
 
-            Leaderboard.SendEntry(PlayerSave.current.Name, SceneManager.GetActiveScene().name, PlayerSave.current.Token, time.Last(), currentDemo);
+            Leaderboard.SendEntry(PlayerSave.current, mapID, time.Last(), currentDemo);
         }
 
         public void RunOnMainThread(Action action)

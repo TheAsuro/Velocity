@@ -47,6 +47,7 @@ namespace UI.MenuWindows
         {
             SetInteractive(true);
 
+            // TODO actually log in player? maybe not? idk
             if (e.Error)
             {
                 resultText.text = e.ErrorText;

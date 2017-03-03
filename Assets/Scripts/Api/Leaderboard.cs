@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Demos;
 using Game;
+using UnityEngine;
 
 namespace Api
 {
@@ -21,13 +22,18 @@ namespace Api
             return new LeaderboardRequest(new ApiRequest(url, GET), map, offset);
         }
 
-        public static void SendEntry(string player, string map, string token, long time, Demo demo)
+        public static void SendEntry(PlayerSave player, int mapID, long time, Demo demo)
         {
             //TODO: upload demo when needed
-            Dictionary<string, string> data = new Dictionary<string, string> {{"player", player}, {"time", time.ToString()}, {"level", map}, {"token", token}};
+            Dictionary<string, string> data = new Dictionary<string, string> {{"User", player.ID.ToString()}, {"Time", time.ToString()}, {"Map", mapID.ToString()}, {"Token", player.Token}};
 
             // TODO: Display when entry was successful
             ApiRequest rq = new ApiRequest(LEADERBOARD_URL, POST, data);
+            rq.OnDone += (sender, args) =>
+            {
+                if (rq.Error)
+                    Debug.LogError(rq.ErrorText);
+            };
             rq.StartRequest();
         }
 
