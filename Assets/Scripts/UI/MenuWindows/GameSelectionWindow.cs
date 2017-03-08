@@ -12,7 +12,7 @@ namespace UI.MenuWindows
 {
     public class GameSelectionWindow : DefaultMenuWindow
     {
-        [SerializeField] private List<MapData> defaultMapData;
+        [SerializeField] private MapManager mapManager;
 
         [SerializeField] private GameObject mapPanelPrefab;
         [SerializeField] private GameObject editPanelPrefab;
@@ -25,10 +25,10 @@ namespace UI.MenuWindows
 
         private void LoadPlayableMaps()
         {
-            contentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * defaultMapData.Count + 10f);
+            contentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 75f * mapManager.DefaultMaps.Count + 10f);
 
             int counter = 0;
-            foreach (MapData map in defaultMapData)
+            foreach (MapData map in mapManager.DefaultMaps)
             {
                 string pb = "-";
                 long[] pbTime;

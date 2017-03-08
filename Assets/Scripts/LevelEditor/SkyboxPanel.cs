@@ -36,7 +36,6 @@ namespace LevelEditor
         public void SaveSkybox()
         {
             WorldInfo.info.WorldData.skybox = newSkyboxMaterial;
-            WorldInfo.info.UpdateCameraSkyboxes();
             SetVisible(false);
         }
 

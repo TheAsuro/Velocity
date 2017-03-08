@@ -37,7 +37,6 @@ public class WorldInfo : MonoBehaviour
 
     private DemoPlayer demoPlayer;
 
-    private List<GameObject> skyboxWatchers = new List<GameObject>();
     private SortedList<int, Checkpoint> levelCheckpoints = new SortedList<int, Checkpoint>();
 
     private void Awake()
@@ -84,19 +83,6 @@ public class WorldInfo : MonoBehaviour
     {
 
         RaceScript = null;
-    }
-
-    public void AddSkyboxWatcher(GameObject watcher)
-    {
-        skyboxWatchers.Add(watcher);
-    }
-
-    public void UpdateCameraSkyboxes()
-    {
-        foreach (GameObject watcher in skyboxWatchers)
-        {
-            watcher.GetComponent<CamSkybox>().UpdateSkybox();
-        }
     }
 
     public void AddCheckpoint(Checkpoint cp)

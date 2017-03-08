@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 20282182084290328}
   - component: {fileID: 92874485212931378}
   - component: {fileID: 114475353120164930}
-  - component: {fileID: 114192487952545206}
   - component: {fileID: 114513104640844094}
   m_Layer: 9
   m_Name: Camera
@@ -74,7 +73,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1738152539141208}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4934485268678716}
@@ -263,17 +262,6 @@ MonoBehaviour:
   crouched: 0
   lastJumpPress: -1
   jumpPressDuration: 0.1
---- !u!114 &114192487952545206
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1461978958144286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b77ebfd75008fa45bf4d8006e5223cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114475353120164930
 MonoBehaviour:
   m_ObjectHideFlags: 1
