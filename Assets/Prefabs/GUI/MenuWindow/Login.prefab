@@ -56,6 +56,8 @@ GameObject:
   - component: {fileID: 222624653742536420}
   - component: {fileID: 114514386273414702}
   - component: {fileID: 114943848195282624}
+  - component: {fileID: 114418891122023148}
+  - component: {fileID: 114621807235972314}
   m_Layer: 5
   m_Name: Pass
   m_TagString: Untagged
@@ -125,6 +127,7 @@ GameObject:
   - component: {fileID: 222891615638812574}
   - component: {fileID: 114567544524811092}
   - component: {fileID: 114273797241615480}
+  - component: {fileID: 114876967746312278}
   m_Layer: 5
   m_Name: Name
   m_TagString: Untagged
@@ -638,6 +641,17 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114418891122023148
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1231375354342890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c68f6dfc27109743942b21a1ccbf095, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114431766399937634
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -826,6 +840,18 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114621807235972314
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1231375354342890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 718c44b421a85e142a7a826320f71041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  confirmButton: {fileID: 114943408289866520}
 --- !u!114 &114789668854287936
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -886,6 +912,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114876967746312278
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1296789068377618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c68f6dfc27109743942b21a1ccbf095, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114877876055313222
 MonoBehaviour:
   m_ObjectHideFlags: 1
