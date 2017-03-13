@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Security.Policy;
 using Api;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using Object = UnityEngine.Object;
 
 namespace Util
@@ -51,6 +55,34 @@ namespace Util
         {
             yield return new WaitForSecondsRealtime(duration);
             Object.Destroy(obj);
+        }
+
+        public static void RunSynchronously(this IEnumerator enumerator, int maxCalls = 0)
+        {
+            int callCount = 0;
+            bool aborted = false;
+            while (enumerator.MoveNext())
+            {
+                callCount++;
+                if (maxCalls > 0 && callCount >= maxCalls)
+                {
+                    aborted = true;
+                    break;
+                }
+            }
+            Assert.IsFalse(aborted);
+        }
+
+        public static void CreateEntry(this EventTrigger eventTrigger, EventTriggerType triggerType, UnityAction<BaseEventData> action)
+        {
+            EventTrigger.TriggerEvent trigger = new EventTrigger.TriggerEvent();
+            trigger.AddListener(action);
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = triggerType,
+                callback = trigger,
+            };
+            eventTrigger.triggers.Add(entry);
         }
     }
 

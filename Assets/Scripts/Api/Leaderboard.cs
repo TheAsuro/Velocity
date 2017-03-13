@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using Demos;
 using Game;
 using UnityEngine;
 
 namespace Api
 {
-    internal static class Leaderboard
+    public static class Leaderboard
     {
         private const string LEADERBOARD_URL = "https://api.theasuro.de/velocity/highscores";
         private const string MAP_PREFIX = "?Map=";
@@ -14,6 +15,7 @@ namespace Api
         private const string VERSION_STRING = "&Version=4";
         private const string GET = "GET";
         private const string POST = "POST";
+        private const decimal TICKS_PER_SECOND = 10000000m;
 
         //Request leaderboard entries from the server
         public static LeaderboardRequest GetEntries(MapData map, int offset, int limit)
@@ -22,10 +24,16 @@ namespace Api
             return new LeaderboardRequest(new ApiRequest(url, GET), map, offset);
         }
 
-        public static void SendEntry(PlayerSave player, int mapID, long time, Demo demo)
+        public static ApiRequest SendEntry(PlayerSave player, int mapID, long time, Demo demo)
         {
             //TODO: upload demo when needed
-            Dictionary<string, string> data = new Dictionary<string, string> {{"User", player.ID.ToString()}, {"Time", time.ToString()}, {"Map", mapID.ToString()}, {"Token", player.Token}};
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                {"User", player.ID.ToString()},
+                {"Time", ((decimal)time / TICKS_PER_SECOND).ToString(CultureInfo.InvariantCulture)},
+                {"Map", mapID.ToString()},
+                {"Token", player.Token}
+            };
 
             // TODO: Display when entry was successful
             ApiRequest rq = new ApiRequest(LEADERBOARD_URL, POST, data);
@@ -35,6 +43,7 @@ namespace Api
                     Debug.LogError(rq.ErrorText);
             };
             rq.StartRequest();
+            return rq;
         }
 
         public static LeaderboardRequest GetRecord(MapData map)
@@ -48,7 +57,7 @@ namespace Api
         public int id;
         public string playerName;
         public string map;
-        public long time;
+        public decimal time;
         public int rank;
 
         public static implicit operator LeaderboardEntry(LeaderboardResult v)
@@ -61,6 +70,6 @@ namespace Api
     {
         public int ID;
         public string Name;
-        public long Time;
+        public decimal Time;
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UI.MenuWindows;
 using UnityEngine;
+using UnityEngine.UI;
 using Util;
 
 namespace UI
@@ -17,7 +17,6 @@ namespace UI
         FILE,
         GAME_SELECTION,
         LEADERBOARD,
-        LEVEL_SELECT,
         LOGIN,
         NEW_PLAYER,
         SETTINGS,
@@ -36,6 +35,7 @@ namespace UI
 
         [SerializeField] private MenuProperties menuProperties;
         [SerializeField] private GameObject debugWindow;
+        [SerializeField] private GameObject tooltip;
 
         private Window currentWindow = Window.NONE;
         private Stack<MenuWindow> menuStack = new Stack<MenuWindow>();
@@ -73,6 +73,8 @@ namespace UI
                 AddWindow(Window.ESC_MENU);
             if (Input.GetButtonDown("Debug"))
                 ToggleDebugWindow();
+
+            tooltip.transform.position = Input.mousePosition;
         }
 
         public MenuWindow AddWindow(Window window)
@@ -90,6 +92,8 @@ namespace UI
 
             if (OnMenuAdded != null)
                 OnMenuAdded(this, new EventArgs());
+
+            tooltip.GetComponent<RectTransform>().SetAsLastSibling();
 
             return menu;
         }
@@ -132,6 +136,17 @@ namespace UI
         {
             GameObject textBox = menuProperties.CreateTextDisplay(lines, myCanvas.transform);
             StartCoroutine(UnityUtils.WaitForRemove(textBox, duration));
+        }
+
+        public void ShowTooltip(string text)
+        {
+            tooltip.GetComponentInChildren<Text>().text = text;
+            tooltip.SetActive(true);
+        }
+
+        public void HideTooltip()
+        {
+            tooltip.SetActive(false);
         }
     }
 }

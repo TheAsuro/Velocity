@@ -8,13 +8,13 @@ namespace UI
         public void OnPlayButtonPress()
         {
             PlayerSave sd = PlayerSave.current;
-            if(sd == null || sd.Name.Equals("") || sd.IsLoggedIn == false)
+            if (sd == null || sd.Name.Equals("") || sd.IsLoggedIn == false)
             {
                 GameMenu.SingletonInstance.AddWindow(Window.LOGIN);
             }
             else
             {
-                GameMenu.SingletonInstance.AddWindow(Window.LEVEL_SELECT);
+                GameMenu.SingletonInstance.AddWindow(Window.GAME_SELECTION);
             }
         }
 

@@ -9,6 +9,8 @@ namespace UI.MenuWindows
     public class EndLevelWindow : DefaultMenuWindow
     {
         [SerializeField] private Text timeText;
+        [SerializeField] private Transform medalTransform;
+        [SerializeField] private GameObject pbMedalPrefab;
 
         private Demo demo;
 
@@ -17,7 +19,10 @@ namespace UI.MenuWindows
             this.demo = demo;
             PlayRaceDemo();
             timeText.text = timeText.text.Replace("$time", demo.TotalTickTime.ToTimeString());
-            timeText.text = timeText.text.Replace("$ispb", isPb ? ", a new personal record!" : "");
+            if (isPb)
+            {
+                Instantiate(pbMedalPrefab, medalTransform);
+            }
         }
 
         public void RestartRun()
