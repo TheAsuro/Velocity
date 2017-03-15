@@ -368,11 +368,15 @@ namespace Race
             }
         }
 
+        public float GetXzVelocity()
+        {
+            return new Vector3(GetComponent<Rigidbody>().velocity.x, 0f, GetComponent<Rigidbody>().velocity.z).magnitude;
+        }
+
+
         public string GetXzVelocityString()
         {
-            float mag = new Vector3(GetComponent<Rigidbody>().velocity.x, 0f, GetComponent<Rigidbody>().velocity.z)
-                .magnitude;
-            return mag.ToString("0.00");
+            return GetXzVelocity().ToString("0.00");
         }
 
         public string GetYVelocityString()

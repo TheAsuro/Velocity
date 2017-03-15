@@ -9,6 +9,8 @@ namespace UI.MenuWindows
 {
     public class PlayWindow : DefaultMenuWindow
     {
+        [SerializeField] private Material crosshairMat;
+
         private Text timeText;
         private Text speedText;
         private Text nameText;
@@ -33,8 +35,9 @@ namespace UI.MenuWindows
             timeText.text = TimeString;
             timeText.color = Rs.RunValid ? Color.white : Color.red;
 
-            //Display speed+
+            //Display speed
             speedText.text = Rs.Movement.GetXzVelocityString() + " m/s";
+            crosshairMat.SetFloat("_Speed", Rs.Movement.GetXzVelocity());
 
             //Display player name
             nameText.text = GameInfo.info.InEditor ? "-" : PlayerSave.current.Name;

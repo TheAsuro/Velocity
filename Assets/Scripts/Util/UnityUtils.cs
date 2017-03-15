@@ -24,6 +24,7 @@ namespace Util
         }
 
         //Create a md5 hash from a string
+        // TODO: not that important for security, but why the fuck is it md5?!
         public static string Md5Sum(string strToEncrypt)
         {
             System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
