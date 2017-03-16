@@ -78,7 +78,7 @@ namespace Race
             if (started && !paused && !finished)
                 demoRecorder.AddTick(stopwatch.ElapsedTicks);
             //Restart if below map
-            if (transform.position.y <= WorldInfo.info.WorldData.deathHeight)
+            if (transform.position.y <= WorldInfo.info.DeathHeight)
                 ResetToLastCheckpoint();
         }
 

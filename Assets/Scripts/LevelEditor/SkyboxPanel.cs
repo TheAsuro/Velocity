@@ -18,7 +18,7 @@ namespace LevelEditor
 
         private void Awake()
         {
-            newSkyboxMaterial = new Material(WorldInfo.info.WorldData.skybox);
+            newSkyboxMaterial = new Material(WorldInfo.info.skybox);
         }
 
         public void ClearSkybox()
@@ -35,7 +35,7 @@ namespace LevelEditor
 
         public void SaveSkybox()
         {
-            WorldInfo.info.WorldData.skybox = newSkyboxMaterial;
+            WorldInfo.info.skybox = newSkyboxMaterial;
             SetVisible(false);
         }
 

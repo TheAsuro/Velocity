@@ -53,6 +53,7 @@ namespace UI
         {
             if (loadingDemo != null && scene.name == loadingDemo.LevelName)
             {
+                RenderSettings.skybox = WorldInfo.info.skybox;
                 SceneManager.sceneLoaded -= OnSceneLoaded;
                 WorldInfo.info.PlayDemo(loadingDemo, true, true);
                 loadingDemo = null;

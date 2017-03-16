@@ -17,19 +17,31 @@ public class WorldInfo : MonoBehaviour
 
     public RaceScript RaceScript { get; private set; }
 
+    public Material skybox;
+
+    [SerializeField] private float deathHeight;
+
+    public float DeathHeight
+    {
+        get { return deathHeight; }
+    }
+
     [SerializeField] private Checkpoint firstSpawn;
+
     public Checkpoint FirstSpawn
     {
         get { return firstSpawn; }
     }
 
     [SerializeField] private WorldData worldData;
+
     public WorldData WorldData
     {
         get { return worldData; }
     }
 
     [SerializeField] private int mapID;
+
     public int MapID
     {
         get { return mapID; }
@@ -81,7 +93,6 @@ public class WorldInfo : MonoBehaviour
 
     public void RemovePlayer()
     {
-
         RaceScript = null;
     }
 
