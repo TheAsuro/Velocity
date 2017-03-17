@@ -219,6 +219,7 @@ GameObject:
   - component: {fileID: 222271317956269980}
   - component: {fileID: 114426104623820658}
   - component: {fileID: 114552051512637426}
+  - component: {fileID: 114234411910234592}
   m_Layer: 0
   m_Name: Switch User
   m_TagString: Untagged
@@ -447,6 +448,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7e2ba9f92b58104ab1fe80c309eefd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114234411910234592
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1716513953761856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c980c0cec9d1499449780733ec8fb6f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetWindowType: 8
 --- !u!114 &114259317507278834
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -825,7 +838,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 114426104623820658}
   m_OnClick:
     m_PersistentCalls:

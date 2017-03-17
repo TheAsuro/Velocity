@@ -21,7 +21,8 @@ namespace UI
         NEW_PLAYER,
         SETTINGS,
         MAIN_MENU,
-        PLAY
+        PLAY,
+        ERROR
     }
 
     public class GameMenu : MonoBehaviour

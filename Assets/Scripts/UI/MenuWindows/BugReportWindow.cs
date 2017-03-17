@@ -8,6 +8,7 @@ namespace UI.MenuWindows
 {
     public class BugReportWindow : DefaultMenuWindow
     {
+        // TODO: remove php
         private const string BUG_REPORT_URL = "https://theasuro.de/Velocity/Api/bugreport.php";
 
         [SerializeField] private Button sendButton;
@@ -37,7 +38,7 @@ namespace UI.MenuWindows
                 return;
             }
 
-            var data = new Dictionary<string, string> {{"user", userNameField.text}, {"report", bugReportMessageField.text}};
+            StringRequestData data = new StringRequestData {{"user", userNameField.text}, {"report", bugReportMessageField.text}};
 
             ApiRequest rq = new ApiRequest(BUG_REPORT_URL, "POST", data);
             rq.StartRequest();

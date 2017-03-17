@@ -9,7 +9,6 @@ namespace UI.MenuWindows
     {
         [SerializeField] private InputField nameField;
         [SerializeField] private InputField passField;
-        [SerializeField] private Text errorTextField;
 
         public void OnLoginClick()
         {
@@ -19,16 +18,16 @@ namespace UI.MenuWindows
             PlayerSave.current.OnLoginFinished += (sender, e) => GameInfo.info.RunOnMainThread(() =>
             {
                 SetInteractive(true);
-
                 if (!e.Error)
                 {
-                    errorTextField.text = "Login finished.";
                     LoginFinished();
                 }
                 else
-                    errorTextField.text = e.ErrorText;
+                {
+                    ErrorWindow errorWindow = (ErrorWindow) GameMenu.SingletonInstance.AddWindow(Window.ERROR);
+                    errorWindow.SetText(e.ErrorText);
+                }
             });
-            errorTextField.text = "Logging in...";
             PlayerSave.current.StartLogin(passField.text);
         }
 
@@ -36,7 +35,8 @@ namespace UI.MenuWindows
         {
             if (nameField.text == "")
             {
-                errorTextField.text = "Please enter a name for the offline player.";
+                ErrorWindow errorWindow = (ErrorWindow) GameMenu.SingletonInstance.AddWindow(Window.ERROR);
+                errorWindow.SetText("A name for the offline player is required!");
                 return;
             }
 
