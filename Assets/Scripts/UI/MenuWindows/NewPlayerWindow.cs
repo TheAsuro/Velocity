@@ -38,8 +38,8 @@ namespace UI.MenuWindows
         {
             if (e.Error)
             {
-                resultText.text = e.ErrorText;
-                SetInteractive(true);
+                ErrorWindow window = (ErrorWindow) GameMenu.SingletonInstance.AddWindow(Window.ERROR);
+                window.SetText(e.ErrorText);
             }
         }
 
@@ -50,7 +50,8 @@ namespace UI.MenuWindows
             // TODO actually log in player? maybe not? idk
             if (e.Error)
             {
-                resultText.text = e.ErrorText;
+                ErrorWindow window = (ErrorWindow) GameMenu.SingletonInstance.AddWindow(Window.ERROR);
+                window.SetText(e.ErrorText);
             }
         }
     }
