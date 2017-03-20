@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Api;
 using Demos;
 using UI;
@@ -8,6 +9,7 @@ using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Util;
 
 namespace Game
 {
@@ -52,6 +54,8 @@ namespace Game
 
             fx = new GameInfoFx(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
             SceneManager.sceneLoaded += (scene, mode) => fx.StartColorFade(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
+
+            UnityUtils.MainThread = Thread.CurrentThread;
         }
 
         private void Update()

@@ -28,29 +28,24 @@ namespace Api
             {
                 if (!apiRequest.Error)
                 {
-                    Result = ParseEntries(apiRequest.Result, map.id, offset);
+                    Result = ParseEntries(apiRequest.StringResult, map.id, offset);
                 }
                 Done = true;
             };
             this.apiRequest.StartRequest();
         }
 
-        private LeaderboardEntry[] ParseEntries(string entryJson, int mapId, int rankOffset = 0)
+        private static LeaderboardEntry[] ParseEntries(string entryJson, int mapId, int rankOffset = 0)
         {
             if (entryJson == "")
                 return new LeaderboardEntry[0];
 
-            LeaderboardResult[] results = JsonConvert.DeserializeObject<LeaderboardResult[]>(entryJson);
-            LeaderboardEntry[] entries = new LeaderboardEntry[results.Length];
-            for (int i = 0; i < results.Length; i++)
-            {
-                entries[i] = results[i];
-            }
+            LeaderboardEntry[] entries = JsonConvert.DeserializeObject<LeaderboardEntry[]>(entryJson);
 
             for (int i = 0; i < entries.Length; i++)
             {
-                entries[i].map = mapId.ToString();
-                entries[i].rank = rankOffset + i + 1;
+                entries[i].MapID = mapId;
+                entries[i].Rank = rankOffset + i + 1;
             }
 
             return entries;

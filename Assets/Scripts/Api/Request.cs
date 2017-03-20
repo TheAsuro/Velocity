@@ -17,44 +17,40 @@ namespace Api
 
     public class ApiRequest : Request
     {
-        public event EventHandler<RequestFinishedEventArgs<string>> OnDone;
+        public event EventHandler<RequestFinishedEventArgs> OnDone;
 
         public bool Done { get; private set; }
         public bool Error { get; private set; }
         public string ErrorText { get; private set; }
-        public string Result { get; private set; }
+        public byte[] BinaryResult { get; private set; }
         public HttpWebRequest HttpWebRequest { get; private set; }
-        public Dictionary<string, string> RequestData { get; private set; }
+        public RequestData RequestData { get; private set; }
 
-        public ApiRequest(string url, string method, Dictionary<string, string> data = null)
+        public string StringResult
+        {
+            get { return Encoding.UTF8.GetString(BinaryResult); }
+        }
+
+        public ApiRequest(string url, string method, RequestData data = null)
         {
             RequestData = data;
+            string combinedUrl = url;
 
+            if (RequestData != null && method == "GET")
+            {
+                combinedUrl += RequestData.ToString();
+            }
+            CreateRequest(method, combinedUrl);
+        }
+
+        private void CreateRequest(string method, string url)
+        {
             try
             {
-                string combinedUrl = url;
-
-                if (RequestData != null && method == "GET")
-                {
-                    bool first = true;
-
-                    foreach (KeyValuePair<string, string> pair in RequestData)
-                    {
-                        if (!first)
-                            combinedUrl += "&";
-                        else
-                        {
-                            combinedUrl += "?";
-                            first = false;
-                        }
-
-                        combinedUrl += pair.Key + "=" + pair.Value;
-                    }
-                }
-
-                HttpWebRequest = (HttpWebRequest) WebRequest.Create(combinedUrl);
+                HttpWebRequest = (HttpWebRequest) WebRequest.Create(url);
                 HttpWebRequest.Method = method;
-                HttpWebRequest.ContentType = "application/x-www-form-urlencoded";
+                if (RequestData != null)
+                    HttpWebRequest.ContentType = RequestData.GetContentType();
                 HttpWebRequest.Timeout = 3000;
                 ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
                 {
@@ -91,7 +87,7 @@ namespace Api
         {
             if (RequestData != null && HttpWebRequest.Method != "GET")
             {
-                HttpWebRequest.BeginGetRequestStream(ContinueRequest, null);
+                HttpWebRequest.BeginGetRequestStream(SendRequestBody, null);
             }
             else
             {
@@ -99,28 +95,13 @@ namespace Api
             }
         }
 
-        private void ContinueRequest(IAsyncResult result)
+        private void SendRequestBody(IAsyncResult result)
         {
             try
             {
                 using (Stream stream = HttpWebRequest.EndGetRequestStream(result))
                 {
-                    using (StreamWriter sw = new StreamWriter(stream, Encoding.ASCII))
-                    {
-                        bool first = true;
-
-                        foreach (KeyValuePair<string, string> pair in RequestData)
-                        {
-                            if (!first)
-                                sw.Write("&");
-                            else
-                                first = false;
-
-                            sw.Write(pair.Key + "=" + pair.Value);
-                        }
-
-                        sw.Flush();
-                    }
+                    RequestData.WriteData(stream);
                 }
 
                 HttpWebRequest.BeginGetResponse(ProcessResponse, null);
@@ -136,13 +117,29 @@ namespace Api
             try
             {
                 WebResponse response = HttpWebRequest.EndGetResponse(result);
-                Result = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                Stream responseStream = response.GetResponseStream();
+                List<byte> downloadBuffer = new List<byte>(); // TODO: @optimize probably slow
+                int byteResult;
+
+                while ((byteResult = responseStream.ReadByte()) >= 0)
+                {
+                    downloadBuffer.Add((byte)byteResult);
+                }
+
+                BinaryResult = downloadBuffer.ToArray();
                 Finish();
             }
             catch (WebException ex)
             {
                 HandleWebException(ex);
             }
+        }
+
+        private void Finish()
+        {
+            Done = true;
+            if (OnDone != null)
+                OnDone(this, new RequestFinishedEventArgs(Error, ErrorText, BinaryResult));
         }
 
         private void HandleWebException(WebException ex)
@@ -161,26 +158,24 @@ namespace Api
             }
             Finish();
         }
-
-        private void Finish()
-        {
-            Done = true;
-            if (OnDone != null)
-                OnDone(this, new RequestFinishedEventArgs<string>(Error, ErrorText, Result));
-        }
     }
 
-    public class RequestFinishedEventArgs<T> : EventArgs
+    public class RequestFinishedEventArgs : EventArgs
     {
         public bool Error { get; private set; }
         public string ErrorText { get; private set; }
-        public T Result { get; private set; }
+        public byte[] BinaryResult { get; private set; }
 
-        public RequestFinishedEventArgs(bool error, string errorText, T result)
+        public string StringResult
+        {
+            get { return Encoding.UTF8.GetString(BinaryResult); }
+        }
+
+        public RequestFinishedEventArgs(bool error, string errorText, byte[] result)
         {
             Error = error;
             ErrorText = errorText;
-            Result = result;
+            BinaryResult = result;
         }
     }
 }

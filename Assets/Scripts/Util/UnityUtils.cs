@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Security.Policy;
+using System.Threading;
 using Api;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -85,6 +85,8 @@ namespace Util
             };
             eventTrigger.triggers.Add(entry);
         }
+
+        public static Thread MainThread { get; set; }
     }
 
     public class EventArgs<T> : EventArgs

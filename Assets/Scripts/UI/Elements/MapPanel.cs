@@ -57,8 +57,8 @@ namespace UI.Elements
 
         private void SetWrText(LeaderboardEntry entry)
         {
-            wrField.text = entry.time.ToString("0.0000");
-            wrPlayerField.text = entry.playerName;
+            wrField.text = entry.Time.ToString("0.0000");
+            wrPlayerField.text = entry.PlayerName;
         }
     }
 }

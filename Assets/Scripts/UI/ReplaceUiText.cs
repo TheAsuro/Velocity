@@ -104,7 +104,7 @@ namespace UI
                 if (!request.Error && request.Result.Length > 0)
                 {
                     LeaderboardEntry entry = request.Result[0];
-                    wr = entry.time + " by " + entry.playerName;
+                    wr = entry.Time + " by " + entry.PlayerName;
                 }
                 else
                 {

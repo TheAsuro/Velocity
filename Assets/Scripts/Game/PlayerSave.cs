@@ -6,16 +6,13 @@ using System.Reflection;
 using Api;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using UnityEngine;
+using UI;
 using Util;
 
 namespace Game
 {
     public class PlayerSave
     {
-        private const string LOGIN_API_URL = "https://api.theasuro.de/velocity/login";
-        private static readonly string PLAYER_SAVE_DIR = Path.Combine("data", "players");
-
         public static PlayerSave current;
 
         public event EventHandler<EventArgs<string>> OnLoginFinished;
@@ -75,47 +72,47 @@ namespace Game
 
         public void StartCreate(string pass, string mail = "")
         {
-            var data = new Dictionary<string, string> {{"Name", Name}, {"Key", pass}};
+            StringRequestData data = new StringRequestData {{"Name", Name}, {"Key", pass}};
             if (mail != "")
                 data.Add("Mail", mail);
-            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "PUT", data);
+            ApiRequest rq = new ApiRequest(Url.LOGIN, "PUT", data);
             rq.OnDone += FinishCreate;
             rq.StartRequest();
         }
 
-        private void FinishCreate(object o, RequestFinishedEventArgs<string> eventArgs)
+        private void FinishCreate(object o, RequestFinishedEventArgs eventArgs)
         {
             if (!eventArgs.Error)
             {
-                AccountCreationResult account = JsonConvert.DeserializeObject<AccountCreationResult>(eventArgs.Result);
+                AccountCreationResult account = JsonConvert.DeserializeObject<AccountCreationResult>(eventArgs.StringResult);
                 ID = account.ID;
                 DoLogin(account.Token);
             }
 
             if (OnAccountRequestFinished != null)
-                OnAccountRequestFinished(this, new EventArgs<string>(eventArgs.Result, eventArgs.Error, eventArgs.ErrorText));
+                OnAccountRequestFinished(this, new EventArgs<string>(eventArgs.StringResult, eventArgs.Error, eventArgs.ErrorText));
         }
 
         public void StartLogin(string pass)
         {
             if (ID == -1)
             {
-                var data = new Dictionary<string, string> {{"Name", Name}};
-                ApiRequest rq = new ApiRequest(LOGIN_API_URL, "GET", data);
+                StringRequestData data = new StringRequestData {{"Name", Name}};
+                ApiRequest rq = new ApiRequest(Url.LOGIN, "GET", data);
                 rq.OnDone += (sender, args) =>
                 {
                     if (args.Error)
                     {
-                        Debug.LogError(args.ErrorText);
+                        GameMenu.SingletonInstance.ShowError(args.ErrorText);
                         if (OnLoginFinished != null)
                         {
-                            OnLoginFinished(this, new EventArgs<string>(args.Result, args.Error, args.ErrorText));
+                            OnLoginFinished(this, new EventArgs<string>(args.StringResult, args.Error, args.ErrorText));
                             OnLoginFinished = null;
                         }
                     }
                     else
                     {
-                        ID = int.Parse(args.Result);
+                        ID = int.Parse(args.StringResult);
                         ContinueLogin(pass);
                     }
                 };
@@ -129,17 +126,17 @@ namespace Game
 
         private void ContinueLogin(string pass)
         {
-            var data = new Dictionary<string, string> {{"User", ID.ToString()}, {"Key", pass}};
-            ApiRequest rq = new ApiRequest(LOGIN_API_URL, "POST", data);
+            StringRequestData data = new StringRequestData {{"User", ID.ToString()}, {"Key", pass}};
+            ApiRequest rq = new ApiRequest(Url.LOGIN, "POST", data);
             rq.OnDone += FinishLogin;
             rq.StartRequest();
         }
 
-        private void FinishLogin(object sender, RequestFinishedEventArgs<string> eventArgs)
+        private void FinishLogin(object sender, RequestFinishedEventArgs eventArgs)
         {
             if (!eventArgs.Error)
             {
-                string tokenString = eventArgs.Result;
+                string tokenString = eventArgs.StringResult;
                 if (tokenString.StartsWith("\""))
                     tokenString = tokenString.Trim('"');
                 DoLogin(tokenString);
@@ -157,13 +154,12 @@ namespace Game
             Token = token;
             IsLoggedIn = true;
             SaveFile();
-            Debug.Log("Logged in.");
         }
 
         public void SaveFile()
         {
-            if (!Directory.Exists(PLAYER_SAVE_DIR))
-                Directory.CreateDirectory(PLAYER_SAVE_DIR);
+            if (!Directory.Exists(Paths.PlayerSaveDir))
+                Directory.CreateDirectory(Paths.PlayerSaveDir);
             File.WriteAllText(GetFilePath(Name), JsonConvert.SerializeObject(this, new JsonSerializerSettings()
             {
                 ContractResolver = new PrivateContractResolver()
@@ -183,7 +179,7 @@ namespace Game
 
         private static string GetFilePath(string playerName)
         {
-            return Path.Combine(PLAYER_SAVE_DIR, playerName + ".vsav");
+            return Path.Combine(Paths.PlayerSaveDir, playerName + ".vsav");
         }
 
         private class AccountCreationResult

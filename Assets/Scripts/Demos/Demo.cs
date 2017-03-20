@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
+using Util;
 
 namespace Demos
 {
     public class Demo
     {
-        private static readonly string DEMO_DIR = Path.Combine("data","demos");
         private const string DEMO_VERSION_STRING = "VELOCITYDEMO 1.2";
 
         public string PlayerName { get; private set; }
@@ -23,9 +24,22 @@ namespace Demos
         public Demo(string demoName)
         {
             DemoName = demoName;
-            FileStream stream = new FileStream(GetDemoPath(demoName), FileMode.Open);
-            BinaryReader reader = new BinaryReader(stream);
-            LoadFromBinaryReader(reader);
+
+            using (FileStream stream = new FileStream(Paths.GetDemoPath(demoName), FileMode.Open))
+            {
+                BinaryReader reader = new BinaryReader(stream);
+                LoadFromBinaryReader(reader);
+            }
+        }
+
+        public Demo(byte[] data)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                stream.Write(data, 0, data.Length);
+                BinaryReader reader = new BinaryReader(stream);
+                LoadFromBinaryReader(reader);
+            }
         }
 
         //Make a demo from a list of ticks
@@ -47,6 +61,7 @@ namespace Demos
 
             //Read header
             string demoVersion = reader.ReadString();
+            Debug.Log(demoVersion);
             if (demoVersion != DEMO_VERSION_STRING)
                 throw new ArgumentException("Demo version mismatch! File: " + demoVersion + ", current: " + DEMO_VERSION_STRING);
 
@@ -62,9 +77,9 @@ namespace Demos
                 float xPos = reader.ReadSingle();
                 float yPos = reader.ReadSingle();
                 float zPos = reader.ReadSingle();
-                Vector3 pos = new Vector3(xPos, yPos, zPos);
                 float xRot = reader.ReadSingle();
                 float yRot = reader.ReadSingle();
+                Vector3 pos = new Vector3(xPos, yPos, zPos);
                 Quaternion rot = Quaternion.Euler(xRot, yRot, 0f);
                 DemoTick tick = new DemoTick(time, pos, rot);
 
@@ -74,7 +89,7 @@ namespace Demos
 
         public void SaveToFile()
         {
-            using (FileStream stream = new FileStream(GetDemoPath(DemoName), FileMode.Create))
+            using (FileStream stream = new FileStream(Paths.GetDemoPath(DemoName), FileMode.Create))
             {
                 SaveToStream(stream);
             }
@@ -106,7 +121,7 @@ namespace Demos
 
         public void DeleteDemoFile()
         {
-            File.Delete(GetDemoPath(DemoName));
+            File.Delete(Paths.GetDemoPath(DemoName));
         }
 
         public static Demo[] GetAllDemos()
@@ -124,12 +139,7 @@ namespace Demos
 
         private static string[] GetDemoFiles()
         {
-            return Directory.GetFiles(Path.Combine(Application.dataPath, DEMO_DIR), "*.vdem");
-        }
-
-        private static string GetDemoPath(string demoName)
-        {
-            return Path.Combine(DEMO_DIR, demoName + ".vdem");
+            return Directory.GetFiles(Paths.DemoDir, "*.vdem").Select(Path.GetFileNameWithoutExtension).ToArray();
         }
     }
 }

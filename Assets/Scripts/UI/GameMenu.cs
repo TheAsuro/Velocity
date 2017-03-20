@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using Game;
 using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.UI;
@@ -97,6 +99,18 @@ namespace UI
             tooltip.GetComponent<RectTransform>().SetAsLastSibling();
 
             return menu;
+        }
+
+        public void ShowError(string text)
+        {
+            if (UnityUtils.MainThread != Thread.CurrentThread)
+            {
+                GameInfo.info.RunOnMainThread(() => ShowError(text));
+                return;
+            }
+
+            ErrorWindow window = (ErrorWindow) AddWindow(Window.ERROR);
+            window.SetText(text);
         }
 
         public void CloseWindow()

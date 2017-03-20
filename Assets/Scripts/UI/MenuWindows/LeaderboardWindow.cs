@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Api;
+using Demos;
 using Game;
 using UnityEngine.UI;
 using Util;
@@ -53,19 +54,39 @@ namespace UI.MenuWindows
         {
             for(int i = 0; i < entryPanels.Count; i++)
             {
+                LeaderboardPanel panel = entryPanels[i];
+
                 if (entries.Length <= i)
                 {
-                    entryPanels[i].Time = "";
-                    entryPanels[i].Player = "";
-                    entryPanels[i].Rank = "";
-                    entryPanels[i].SetButtonActive(false);
+                    panel.Time = "";
+                    panel.Player = "";
+                    panel.Rank = "";
+                    panel.SetButtonActive(false);
                 }
                 else
                 {
-                    entryPanels[i].Time = entries[i].time.ToString("0.0000");
-                    entryPanels[i].Player = entries[i].playerName;
-                    entryPanels[i].Rank = entries[i].rank.ToString();
-                    entryPanels[i].SetButtonActive(true);
+                    panel.Time = entries[i].Time.ToString("0.0000");
+                    panel.Player = entries[i].PlayerName;
+                    panel.Rank = entries[i].Rank.ToString();
+                    panel.SetButtonActive(true);
+
+                    int player = entries[i].PlayerID;
+                    int map = entries[i].MapID;
+                    panel.SetButtonAction(() =>
+                    {
+                        StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetDemo(player, map), request =>
+                        {
+                            if (request.Error)
+                            {
+                                GameMenu.SingletonInstance.ShowError(request.ErrorText);
+                            }
+                            else
+                            {
+                                Demo demo = new Demo(request.BinaryResult);
+                                demo.SaveToFile();
+                            }
+                        }));
+                    });
                 }
             }
         }
