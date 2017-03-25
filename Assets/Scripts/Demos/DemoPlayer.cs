@@ -34,6 +34,8 @@ namespace Demos
                 Vector3 nextTickPos = Vector3.zero;
                 Quaternion lastTickRot = new Quaternion();
                 Quaternion nextTickRot = new Quaternion();
+                float crouchPercentage = 0f;
+                float framePercentage = -1f;
 
                 //Go through all frames
                 bool found = false;
@@ -49,6 +51,13 @@ namespace Demos
                         nextTickTime = nextFrameSeconds;
                         nextTickPos = tickList[i].Position;
                         nextTickRot = tickList[i].Rotation;
+
+                        framePercentage = (nextTickTime - lastTickTime) / (playTime - lastTickTime);
+
+                        float crouchedLastFrame = tickList[i].Crouched ? 1f : 0f;
+                        float crouchedNextFrame = tickList[i + 1].Crouched ? 1f : 0f;
+                        crouchPercentage = Mathf.Lerp(crouchedLastFrame, crouchedNextFrame, framePercentage);
+
                         found = true;
                         break;
                     }
@@ -57,12 +66,15 @@ namespace Demos
                 //If demo is running
                 if (found)
                 {
+                    Assert.IsTrue(framePercentage >= 0f);
+
                     Quaternion editedLastRot = Quaternion.Euler(lastTickRot.eulerAngles.x, lastTickRot.eulerAngles.y, 0f);
                     Quaternion editedNextRot = Quaternion.Euler(lastTickRot.eulerAngles.x, nextTickRot.eulerAngles.y, 0f);
 
-                    float t = (nextTickTime - lastTickTime) / (playTime - lastTickTime);
-                    transform.position = Vector3.Lerp(lastTickPos, nextTickPos, t);
-                    transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, t);
+
+                    transform.position = Vector3.Lerp(lastTickPos, nextTickPos, framePercentage) + new Vector3(0f, crouchPercentage * -0.5f, 0f);
+                    transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, framePercentage);
+                    transform.localScale = new Vector3(1f, 1f - 0.5f * crouchPercentage, 1f);
 
                     //Update first/third person view
                     camDistance = new Vector3(0f, 0.5f, 0f);

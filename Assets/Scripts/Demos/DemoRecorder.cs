@@ -38,7 +38,7 @@ namespace Demos
 
         public void AddTick(long elapsedTicks)
         {
-            tickList.Add(new DemoTick(elapsedTicks, transform.position, transform.FindChild("Camera").rotation));
+            tickList.Add(new DemoTick(elapsedTicks, transform.position, transform.FindChild("Camera").rotation, WorldInfo.info.RaceScript.Movement.crouched));
         }
 
         public void Finish(long elapsedTicks)

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Util;
 
 namespace Demos
 {
     public class Demo
     {
-        private const string DEMO_VERSION_STRING = "VELOCITYDEMO 1.2";
+        private const string DEMO_VERSION_STRING = "VELOCITYDEMO 1.3";
 
         public string PlayerName { get; private set; }
         public string LevelName { get; private set; }
@@ -61,9 +62,7 @@ namespace Demos
 
             //Read header
             string demoVersion = reader.ReadString();
-            Debug.Log(demoVersion);
-            if (demoVersion != DEMO_VERSION_STRING)
-                throw new ArgumentException("Demo version mismatch! File: " + demoVersion + ", current: " + DEMO_VERSION_STRING);
+            Assert.IsTrue(demoVersion == DEMO_VERSION_STRING);
 
             PlayerName = reader.ReadString();
             LevelName = reader.ReadString();
@@ -79,9 +78,10 @@ namespace Demos
                 float zPos = reader.ReadSingle();
                 float xRot = reader.ReadSingle();
                 float yRot = reader.ReadSingle();
+                bool crouched = reader.ReadBoolean();
                 Vector3 pos = new Vector3(xPos, yPos, zPos);
                 Quaternion rot = Quaternion.Euler(xRot, yRot, 0f);
-                DemoTick tick = new DemoTick(time, pos, rot);
+                DemoTick tick = new DemoTick(time, pos, rot, crouched);
 
                 Ticks.Add(tick);
             }
@@ -115,6 +115,7 @@ namespace Demos
                     writer.Write(tick.Position.z);
                     writer.Write(tick.Rotation.eulerAngles.x);
                     writer.Write(tick.Rotation.eulerAngles.y);
+                    writer.Write(tick.Crouched);
                 }
             }
         }
