@@ -24,12 +24,12 @@ namespace Demos
 
         private void Update()
         {
+            Quaternion viewRotation = Quaternion.identity;
+
             //If we are playing and there is a valid ghost
             if (playing)
             {
                 float playTime = Time.time - startPlayTime;
-                float lastTickTime = -1f;
-                float nextTickTime = -1f;
                 Vector3 lastTickPos = Vector3.zero;
                 Vector3 nextTickPos = Vector3.zero;
                 Quaternion lastTickRot = new Quaternion();
@@ -44,11 +44,11 @@ namespace Demos
                     float nextFrameSeconds = (float)new TimeSpan(tickList[i + 1].Time).TotalSeconds;
                     if (nextFrameSeconds >= playTime)
                     {
-                        lastTickTime = (float)new TimeSpan(tickList[i].Time).TotalSeconds;
+                        var lastTickTime = (float)new TimeSpan(tickList[i].Time).TotalSeconds;
                         lastTickPos = tickList[i].Position;
                         lastTickRot = tickList[i].Rotation;
 
-                        nextTickTime = nextFrameSeconds;
+                        float nextTickTime = nextFrameSeconds;
                         nextTickPos = tickList[i].Position;
                         nextTickRot = tickList[i].Rotation;
 
@@ -70,10 +70,9 @@ namespace Demos
 
                     Quaternion editedLastRot = Quaternion.Euler(lastTickRot.eulerAngles.x, lastTickRot.eulerAngles.y, 0f);
                     Quaternion editedNextRot = Quaternion.Euler(lastTickRot.eulerAngles.x, nextTickRot.eulerAngles.y, 0f);
-
+                    viewRotation = Quaternion.Lerp(editedLastRot, editedNextRot, framePercentage);
 
                     transform.position = Vector3.Lerp(lastTickPos, nextTickPos, framePercentage) + new Vector3(0f, crouchPercentage * -0.5f, 0f);
-                    transform.rotation = Quaternion.Lerp(editedLastRot, editedNextRot, framePercentage);
                     transform.localScale = new Vector3(1f, 1f - 0.5f * crouchPercentage, 1f);
 
                     //Update first/third person view
@@ -89,13 +88,13 @@ namespace Demos
             //make obj at ghost position and child at cam distance
             if (followCam)
             {
-                ghostCam.transform.position = Vector3.Lerp(ghostCam.transform.position, transform.TransformPoint(followCamOffset), Time.deltaTime * followCamSpeed);
+                ghostCam.transform.position = Vector3.Lerp(ghostCam.transform.position, transform.position + viewRotation * followCamOffset, Time.deltaTime * followCamSpeed);
                 ghostCam.transform.rotation = Quaternion.Lerp(ghostCam.transform.rotation, Quaternion.LookRotation(transform.position - ghostCam.transform.position, Vector3.up), Time.deltaTime);
             }
             else
             {
-                ghostCam.transform.position = transform.position + (transform.rotation * camDistance);
-                ghostCam.transform.rotation = transform.rotation;
+                ghostCam.transform.position = transform.position + (viewRotation * camDistance);
+                ghostCam.transform.rotation = viewRotation;
             }
         }
 
@@ -146,7 +145,6 @@ namespace Demos
         public void ResetDemo()
         {
             transform.position = tickList[0].Position;
-            transform.rotation = tickList[0].Rotation;
             ghostCam.transform.position = followCam ? tickList[0].Position + followCamOffset : tickList[0].Position;
             ghostCam.transform.rotation = tickList[0].Rotation;
             startPlayTime = Time.time;
