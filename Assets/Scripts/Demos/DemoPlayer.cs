@@ -11,16 +11,14 @@ namespace Demos
         public event EventHandler OnFinishedPlaying;
 
         [SerializeField] private GameObject ghostCamPrefab;
-        [SerializeField] private Vector3 followCamOffset = new Vector3(0f, 3f, -6f);
-        [SerializeField] private float followCamSpeed = 2f;
 
-        private Vector3 camDistance;
+        private Vector3 firstPersonCamOffset = new Vector3(0f, 0.5f, 0f);
         private bool playing = false;
         private float startPlayTime;
         private GameObject ghostCam;
         private List<DemoTick> tickList;
         private bool looping = false;
-        private bool followCam = false;
+        private bool topView = false;
 
         private void Update()
         {
@@ -63,10 +61,10 @@ namespace Demos
                     }
                 }
 
-                //If demo is running
+                //If demo is running set player position
                 if (found)
                 {
-                    Assert.IsTrue(framePercentage >= 0f);
+                    Assert.AreNotApproximatelyEqual(framePercentage, -1f, "Frame percentage was not set!");
 
                     Quaternion editedLastRot = Quaternion.Euler(lastTickRot.eulerAngles.x, lastTickRot.eulerAngles.y, 0f);
                     Quaternion editedNextRot = Quaternion.Euler(lastTickRot.eulerAngles.x, nextTickRot.eulerAngles.y, 0f);
@@ -74,9 +72,6 @@ namespace Demos
 
                     transform.position = Vector3.Lerp(lastTickPos, nextTickPos, framePercentage) + new Vector3(0f, crouchPercentage * -0.5f, 0f);
                     transform.localScale = new Vector3(1f, 1f - 0.5f * crouchPercentage, 1f);
-
-                    //Update first/third person view
-                    camDistance = new Vector3(0f, 0.5f, 0f);
                 }
                 else
                 {
@@ -85,15 +80,17 @@ namespace Demos
                 }
             }
 
-            //make obj at ghost position and child at cam distance
-            if (followCam)
+            // Set camera position
+            if (topView)
             {
-                ghostCam.transform.position = Vector3.Lerp(ghostCam.transform.position, transform.position + viewRotation * followCamOffset, Time.deltaTime * followCamSpeed);
-                ghostCam.transform.rotation = Quaternion.Lerp(ghostCam.transform.rotation, Quaternion.LookRotation(transform.position - ghostCam.transform.position, Vector3.up), Time.deltaTime);
+                Assert.IsTrue(WorldInfo.info.ReplayCams.Count > 0);
+                WorldInfo.info.ReplayCams[0].enabled = true;
+                ghostCam.GetComponent<Camera>().enabled = false;
             }
-            else
+
+            if (!topView)
             {
-                ghostCam.transform.position = transform.position + (viewRotation * camDistance);
+                ghostCam.transform.position = transform.position + (viewRotation * firstPersonCamOffset);
                 ghostCam.transform.rotation = viewRotation;
             }
         }
@@ -107,10 +104,10 @@ namespace Demos
                 StopDemoPlayback();
         }
 
-        public void PlayDemo(Demo demo, bool doLoop = false, bool followCam = false)
+        public void PlayDemo(Demo demo, bool doLoop = false, bool topView = false)
         {
             looping = doLoop;
-            this.followCam = followCam;
+            this.topView = topView;
 
             //Load demo ticks
             tickList = demo.Ticks;
@@ -145,7 +142,7 @@ namespace Demos
         public void ResetDemo()
         {
             transform.position = tickList[0].Position;
-            ghostCam.transform.position = followCam ? tickList[0].Position + followCamOffset : tickList[0].Position;
+            ghostCam.transform.position = tickList[0].Position;
             ghostCam.transform.rotation = tickList[0].Rotation;
             startPlayTime = Time.time;
 

@@ -47,6 +47,13 @@ public class WorldInfo : MonoBehaviour
         get { return mapID; }
     }
 
+    [SerializeField] private List<Camera> replayCams;
+
+    public List<Camera> ReplayCams
+    {
+        get { return replayCams; }
+    }
+
     private DemoPlayer demoPlayer;
 
     private SortedList<int, Checkpoint> levelCheckpoints = new SortedList<int, Checkpoint>();

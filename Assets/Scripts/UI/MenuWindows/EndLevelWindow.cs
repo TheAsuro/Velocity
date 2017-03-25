@@ -33,7 +33,7 @@ namespace UI.MenuWindows
 
         public void PlayRaceDemo()
         {
-            WorldInfo.info.PlayDemo(demo, true, false);
+            WorldInfo.info.PlayDemo(demo, true, true);
         }
 
         public void SaveLastDemo()
