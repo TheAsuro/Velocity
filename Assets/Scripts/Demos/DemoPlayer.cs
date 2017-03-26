@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -34,6 +35,7 @@ namespace Demos
                 Quaternion nextTickRot = new Quaternion();
                 float crouchPercentage = 0f;
                 float framePercentage = -1f;
+                int nextTickIndex = -1;
 
                 //Go through all frames
                 bool found = false;
@@ -51,6 +53,7 @@ namespace Demos
                         nextTickRot = tickList[i].Rotation;
 
                         framePercentage = (nextTickTime - lastTickTime) / (playTime - lastTickTime);
+                        nextTickIndex = i;
 
                         float crouchedLastFrame = tickList[i].Crouched ? 1f : 0f;
                         float crouchedNextFrame = tickList[i + 1].Crouched ? 1f : 0f;
@@ -80,14 +83,6 @@ namespace Demos
                 }
             }
 
-            // Set camera position
-            if (topView)
-            {
-                Assert.IsTrue(WorldInfo.info.ReplayCams.Count > 0);
-                WorldInfo.info.ReplayCams[0].enabled = true;
-                ghostCam.GetComponent<Camera>().enabled = false;
-            }
-
             if (!topView)
             {
                 ghostCam.transform.position = transform.position + (viewRotation * firstPersonCamOffset);
@@ -108,16 +103,28 @@ namespace Demos
         {
             looping = doLoop;
             this.topView = topView;
-
-            //Load demo ticks
             tickList = demo.Ticks;
 
-            //Get ghost spawn
-            ghostCam = Instantiate(ghostCamPrefab);
+            Vector3[] lineRenderTicks = new Vector3[tickList.Count / 10];
+            for (int i = 0; i < lineRenderTicks.Length; i++)
+            {
+                lineRenderTicks[i] = tickList[i * 10].Position;
+            }
+            GetComponent<LineRenderer>().numPositions = lineRenderTicks.Length;
+            GetComponent<LineRenderer>().SetPositions(lineRenderTicks);
 
             //Set up camera
-            Camera cam = ghostCam.GetComponent<Camera>();
-            cam.fieldOfView = Settings.GameSettings.SingletonInstance.Fov;
+            if (topView)
+            {
+                Assert.IsTrue(WorldInfo.info.ReplayCams.Count > 0);
+                WorldInfo.info.ReplayCams[0].enabled = true;
+            }
+            else
+            {
+                ghostCam = Instantiate(ghostCamPrefab);
+                Camera cam = ghostCam.GetComponent<Camera>();
+                cam.fieldOfView = Settings.GameSettings.SingletonInstance.Fov;
+            }
 
             //Set start time to current time
             startPlayTime = Time.time;
@@ -142,10 +149,14 @@ namespace Demos
         public void ResetDemo()
         {
             transform.position = tickList[0].Position;
-            ghostCam.transform.position = tickList[0].Position;
-            ghostCam.transform.rotation = tickList[0].Rotation;
-            startPlayTime = Time.time;
 
+            if (!topView)
+            {
+                ghostCam.transform.position = tickList[0].Position;
+                ghostCam.transform.rotation = tickList[0].Rotation;
+            }
+
+            startPlayTime = Time.time;
             playing = true;
         }
     }
