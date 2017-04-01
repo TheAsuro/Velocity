@@ -9,23 +9,19 @@ namespace UI
 {
     public class MainMenuScene : MonoBehaviour
     {
-        [SerializeField] private string defaultDemo;
-        [SerializeField] private GameObject emergencyCam;
+        [SerializeField] private string previewLevelName;
 
-        private Demo loadingDemo;
         private int otherMenusOpen = 0;
 
         private void Start()
         {
             GameMenu.SingletonInstance.AddWindow(Window.MAIN_MENU);
 
-            if (defaultDemo == "")
-                throw new MissingReferenceException("Put in default demo pls");
-
             GameMenu.SingletonInstance.OnMenuAdded += IncreaseMenuCounter;
             GameMenu.SingletonInstance.OnMenuRemoved += DecreaseMenuCounter;
 
-            LoadDemo(defaultDemo);
+            SceneManager.LoadSceneAsync(previewLevelName, LoadSceneMode.Additive);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private void OnDestroy()
@@ -34,29 +30,11 @@ namespace UI
             GameMenu.SingletonInstance.OnMenuAdded -= DecreaseMenuCounter;
         }
 
-        private void LoadDemo(string path)
-        {
-            try
-            {
-                loadingDemo = new Demo(path);
-                SceneManager.LoadSceneAsync(loadingDemo.LevelName, LoadSceneMode.Additive);
-                SceneManager.sceneLoaded += OnSceneLoaded;
-            }
-            catch (IOException e)
-            {
-                Debug.LogWarning("Could not load default demo!\n" + e.Message);
-                emergencyCam.SetActive(true);
-            }
-        }
-
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (loadingDemo != null && scene.name == loadingDemo.LevelName)
+            if (scene.name == previewLevelName)
             {
                 RenderSettings.skybox = WorldInfo.info.skybox;
-                SceneManager.sceneLoaded -= OnSceneLoaded;
-                WorldInfo.info.PlayDemo(loadingDemo, true, true);
-                loadingDemo = null;
             }
         }
 

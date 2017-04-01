@@ -49,6 +49,7 @@ namespace Race
             firstCheckpoint = WorldInfo.info.FirstSpawn;
             currentCheckpoint = firstCheckpoint;
             checkpointTimes = new List<long>();
+            WorldInfo.info.ActiveCameraMode = WorldInfo.CameraMode.FIRST_PERSON;
             WorldInfo.info.OnCheckpointTrigger += CheckpointHit;
         }
 

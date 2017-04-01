@@ -116,11 +116,11 @@ namespace Demos
             //Set up camera
             if (topView)
             {
-                Assert.IsTrue(WorldInfo.info.ReplayCams.Count > 0);
-                WorldInfo.info.ReplayCams[0].enabled = true;
+                WorldInfo.info.ActiveCameraMode = WorldInfo.CameraMode.TOP;
             }
             else
             {
+                WorldInfo.info.ActiveCameraMode = WorldInfo.CameraMode.FIRST_PERSON;
                 ghostCam = Instantiate(ghostCamPrefab);
                 Camera cam = ghostCam.GetComponent<Camera>();
                 cam.fieldOfView = Settings.GameSettings.SingletonInstance.Fov;

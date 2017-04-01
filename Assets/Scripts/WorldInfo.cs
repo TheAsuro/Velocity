@@ -48,11 +48,7 @@ public class WorldInfo : MonoBehaviour
     }
 
     [SerializeField] private List<Camera> replayCams;
-
-    public List<Camera> ReplayCams
-    {
-        get { return replayCams; }
-    }
+    [SerializeField] private Camera previewCam;
 
     private DemoPlayer demoPlayer;
 
@@ -119,5 +115,39 @@ public class WorldInfo : MonoBehaviour
     public bool IsEndCheckpoint(Checkpoint cp)
     {
         return levelCheckpoints.Last().Value == cp;
+    }
+
+    public enum CameraMode
+    {
+        PREVIEW,
+        TOP,
+        FIRST_PERSON,
+    }
+
+    private CameraMode activeCameraMode = CameraMode.PREVIEW;
+    public CameraMode ActiveCameraMode
+    {
+        get { return activeCameraMode; }
+        set
+        {
+            activeCameraMode = value;
+            previewCam.enabled = false;
+            replayCams.ForEach(cam => cam.enabled = false);
+            switch (value)
+            {
+                case CameraMode.PREVIEW:
+                    previewCam.enabled = true;
+                    break;
+                case CameraMode.TOP:
+                    Assert.IsTrue(replayCams.Count > 0);
+                    replayCams[0].enabled = true;
+                    break;
+                case CameraMode.FIRST_PERSON:
+                    break;
+                default:
+                    Assert.IsTrue(true, "Unknown camera mode!");
+                    break;
+            }
+        }
     }
 }

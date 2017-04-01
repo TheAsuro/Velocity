@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -473,8 +473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bc318c80a5bd14a87a0cd5fcc24a81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultDemo: default
-  emergencyCam: {fileID: 1353721709}
+  previewLevelName: v_tempel_v1
 --- !u!4 &907232350
 Transform:
   m_ObjectHideFlags: 0
