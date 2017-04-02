@@ -1,0 +1,20 @@
+# Velocity config file rules:
+# Empty lines or lines starting with '#' are ignored
+# The file is split up into key-value pairs
+# Starting from the first line, the program is looking for a key
+# Keys must not contain the character '=' or start with '#'
+# The character '=' must be written directly after the key
+# After the '=' charater there must be the value or a line break
+# Line breaks in values must be replaced with '\n'
+# Possible values:
+# - a string
+# - an array
+# arrays start with '[', are separated with ',' and end with a ']'.
+# arrays can either contain values or key-value pairs (but not both at once)
+# newlines or spaces are not ignored
+# if you want to write a string that starts with '[', use \[
+
+ID=50
+Name=xd
+Token=JgCIkFJ0JBMIJFLHkHNatmp4hQZEUMFu
+personalBestTimes=[9=[44575167,76190063,99906539,117629420],3=[153300415]]
