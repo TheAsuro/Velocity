@@ -556,6 +556,69 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3ca3c041edce49546a8fa6bcb32b26a9, type: 3}
   m_IsPrefabParent: 0
+--- !u!1 &201787418
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 201787423}
+  - component: {fileID: 201787422}
+  m_Layer: 0
+  m_Name: PreviewCam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!20 &201787422
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 201787418}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
+--- !u!4 &201787423
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 201787418}
+  m_LocalRotation: {x: 0.23063366, y: -0.46913072, z: 0.12838472, w: 0.84275854}
+  m_LocalPosition: {x: 137.6, y: 84.3, z: -96.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 30.61, y: -58.206, z: 0}
 --- !u!1 &212149555 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 3ca3c041edce49546a8fa6bcb32b26a9, type: 3}
@@ -2050,6 +2113,10 @@ Prefab:
       propertyPath: replayCams.Array.data[0]
       value: 
       objectReference: {fileID: 1578899442}
+    - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
+      propertyPath: previewCam
+      value: 
+      objectReference: {fileID: 201787422}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
   m_IsPrefabParent: 0

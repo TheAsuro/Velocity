@@ -25,6 +25,8 @@ namespace Game
         [SerializeField] private MapManager mapManager;
         public MapManager MapManager { get { return mapManager; } }
 
+        [SerializeField] private GameObject eventSystemObj;
+
         public float circleSpeed1 = 10f;
         public float circleSpeed2 = 20f;
         public float circleSpeed3 = 30f;
@@ -44,6 +46,7 @@ namespace Game
             {
                 info = this;
                 DontDestroyOnLoad(gameObject);
+                eventSystemObj.SetActive(true);
             }
             else
             {
