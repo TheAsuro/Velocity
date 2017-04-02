@@ -35,7 +35,6 @@ namespace Demos
                 Quaternion nextTickRot = new Quaternion();
                 float crouchPercentage = 0f;
                 float framePercentage = -1f;
-                int nextTickIndex = -1;
 
                 //Go through all frames
                 bool found = false;
@@ -53,7 +52,6 @@ namespace Demos
                         nextTickRot = tickList[i].Rotation;
 
                         framePercentage = (nextTickTime - lastTickTime) / (playTime - lastTickTime);
-                        nextTickIndex = i;
 
                         float crouchedLastFrame = tickList[i].Crouched ? 1f : 0f;
                         float crouchedNextFrame = tickList[i + 1].Crouched ? 1f : 0f;

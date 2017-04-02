@@ -109,6 +109,8 @@ namespace UI
                 return;
             }
 
+            Debug.LogError(text);
+
             ErrorWindow window = (ErrorWindow) AddWindow(Window.ERROR);
             window.SetText(text);
         }
