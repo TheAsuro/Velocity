@@ -40,13 +40,6 @@ public class WorldInfo : MonoBehaviour
         get { return worldData; }
     }
 
-    [SerializeField] private int mapID;
-
-    public int MapID
-    {
-        get { return mapID; }
-    }
-
     [SerializeField] private List<Camera> replayCams;
     [SerializeField] private Camera previewCam;
 

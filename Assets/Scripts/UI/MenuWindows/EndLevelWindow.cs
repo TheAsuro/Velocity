@@ -1,6 +1,8 @@
-﻿using Demos;
+﻿using System.Collections.Generic;
+using Demos;
 using Game;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Util;
 
@@ -8,7 +10,7 @@ namespace UI.MenuWindows
 {
     public class EndLevelWindow : DefaultMenuWindow
     {
-        [SerializeField] private Text timeText;
+        [SerializeField] private List<Text> replaceTargets;
         [SerializeField] private Transform medalTransform;
         [SerializeField] private GameObject pbMedalPrefab;
 
@@ -18,11 +20,21 @@ namespace UI.MenuWindows
         {
             this.demo = demo;
             PlayRaceDemo();
-            timeText.text = timeText.text.Replace("$time", demo.TotalTickTime.ToTimeString());
+            replaceTargets.ForEach(textDisplay =>
+            {
+                textDisplay.text = textDisplay.text
+                    .Replace("$time", demo.TotalTickTime.ToTimeString())
+                    .Replace("$level", SceneManager.GetActiveScene().name);
+            });
             if (isPb)
             {
                 Instantiate(pbMedalPrefab, medalTransform);
             }
+        }
+
+        public void NewOnlineRank(int rank)
+        {
+            replaceTargets.ForEach(textDisplay => textDisplay.text = textDisplay.text.Replace("$rank", rank.ToString()));
         }
 
         public void RestartRun()

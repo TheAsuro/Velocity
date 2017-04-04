@@ -96,7 +96,7 @@ namespace Game
         }
 
         //Player hit the goal
-        public void RunFinished(long[] time, int mapID, Demo demo)
+        public void RunFinished(long[] time, MapData map, Demo demo)
         {
             currentDemo = demo;
 
@@ -120,7 +120,27 @@ namespace Game
                 return;
             }
 
-            Leaderboard.SendEntry(PlayerSave.current, mapID, time.Last(), currentDemo);
+            StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.SendEntry(PlayerSave.current, map.id, time.Last(), currentDemo), entryRequest =>
+            {
+                if (!entryRequest.Error)
+                {
+                    StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(map), recordRequest =>
+                    {
+                        if (recordRequest.Error)
+                        {
+                            GameMenu.SingletonInstance.ShowError(recordRequest.ErrorText);
+                        }
+                        else if (recordRequest.Result.Length == 0)
+                        {
+                            GameMenu.SingletonInstance.ShowError("Record request returned no results!");
+                        }
+                        else
+                        {
+                            window.NewOnlineRank(recordRequest.Result[0].Rank);
+                        }
+                    }));
+                }
+            }));
         }
 
         public void RunOnMainThread(Action action)
