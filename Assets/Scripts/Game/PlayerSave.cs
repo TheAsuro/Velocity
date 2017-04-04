@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Api;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using UI;
 using Util;
 
@@ -28,10 +26,8 @@ namespace Game
 
         public static PlayerSave LoadFromFile(string playerName)
         {
-            return JsonConvert.DeserializeObject<PlayerSave>(File.ReadAllText(GetFilePath(playerName)), new JsonSerializerSettings()
-            {
-                ContractResolver = new PrivateContractResolver()
-            });
+            SerializablePlayerSave save = JsonConvert.DeserializeObject<SerializablePlayerSave>(File.ReadAllText(GetFilePath(playerName)));
+            return new PlayerSave(save);
         }
 
         public PlayerSave(string name)
@@ -39,6 +35,14 @@ namespace Game
             Name = name;
             IsLoggedIn = false;
             ID = -1;
+        }
+
+        private PlayerSave(SerializablePlayerSave save)
+        {
+            personalBestTimes = save.PersonalBestTimes;
+            ID = save.ID;
+            Name = save.Name;
+            Token = save.Token;
         }
 
         public bool SaveTimeIfPersonalBest(long[] time, MapData map)
@@ -160,10 +164,9 @@ namespace Game
         {
             if (!Directory.Exists(Paths.PlayerSaveDir))
                 Directory.CreateDirectory(Paths.PlayerSaveDir);
-            File.WriteAllText(GetFilePath(Name), JsonConvert.SerializeObject(this, new JsonSerializerSettings()
-            {
-                ContractResolver = new PrivateContractResolver()
-            }));
+
+            SerializablePlayerSave save = new SerializablePlayerSave(personalBestTimes, ID, Name, Token);
+            File.WriteAllText(GetFilePath(Name), JsonConvert.SerializeObject(save));
         }
 
         public void DeleteFile()
@@ -188,18 +191,19 @@ namespace Game
             public string Token { get; private set; }
         }
 
-        private class PrivateContractResolver : DefaultContractResolver
+        private class SerializablePlayerSave
         {
-            protected override List<MemberInfo> GetSerializableMembers(Type objectType)
-            {
-                List<MemberInfo> baseMembers = base.GetSerializableMembers(objectType);
-                baseMembers.Add(objectType.GetField("personalBestTimes", BindingFlags.Instance | BindingFlags.NonPublic));
-                return baseMembers;
-            }
+            public Dictionary<int, long[]> PersonalBestTimes { get; private set; }
+            public int ID { get; private set; }
+            public string Name { get; private set; }
+            public string Token { get; private set; }
 
-            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            public SerializablePlayerSave(Dictionary<int, long[]> personalBestTimes, int id, string name, string token)
             {
-                return base.CreateProperties(type, MemberSerialization.Fields);
+                PersonalBestTimes = personalBestTimes;
+                ID = id;
+                Name = name;
+                Token = token;
             }
         }
     }
