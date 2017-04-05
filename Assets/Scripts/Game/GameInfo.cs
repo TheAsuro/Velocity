@@ -122,7 +122,11 @@ namespace Game
 
             StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.SendEntry(PlayerSave.current, map.id, time.Last(), currentDemo), entryRequest =>
             {
-                if (!entryRequest.Error)
+                if (entryRequest.Error)
+                {
+                    GameMenu.SingletonInstance.ShowError(entryRequest.ErrorText);
+                }
+                else
                 {
                     StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(map), recordRequest =>
                     {

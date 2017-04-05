@@ -1,4 +1,6 @@
 ﻿using System;
+using Game;
+using UnityEngine.SceneManagement;
 
 namespace Util
 {
@@ -36,6 +38,13 @@ namespace Util
                 result += time.Minutes.ToString("0") + ":";
             result += time.Seconds.ToString("0") + "." + time.Milliseconds.ToString("00");
             return result;
+        }
+
+        public static string ReplaceDefaultTemplates(this string str)
+        {
+            return str
+                .Replace("$level", SceneManager.GetActiveScene().name)
+                .Replace("$player", PlayerSave.current == null ? "" : PlayerSave.current.Name);
         }
     }
 }

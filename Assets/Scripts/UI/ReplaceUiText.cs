@@ -3,7 +3,6 @@ using Api;
 using Game;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Util;
 
@@ -21,9 +20,6 @@ namespace UI
         private string wr = "";
         private bool loadingWr = false;
 
-        private string bestEntry = "";
-        private bool loadingBestEntry = false;
-
         private string pb = "";
 
         private void Start()
@@ -34,19 +30,11 @@ namespace UI
         private void Update()
         {
             string temp = initialText;
-            PlayerSave playerSave = PlayerSave.current;
+            temp = temp.ReplaceDefaultTemplates();
 
-            if (temp.Contains("$player") && playerSave != null)
-            {
-                temp = temp.Replace("$player", playerSave.Name);
-            }
             if (temp.Contains("$time"))
             {
                 temp = temp.Replace("$time", WorldInfo.info.RaceScript.ElapsedTime.ToString());
-            }
-            if (temp.Contains("$map"))
-            {
-                temp = SceneManager.GetActiveScene().name;
             }
 
             if (temp.Contains("$wr"))
@@ -55,10 +43,10 @@ namespace UI
                     LoadWr();
             }
 
-            if (pb.Equals("") && playerSave != null)
+            if (pb.Equals("") && PlayerSave.current != null)
             {
                 long[] pbTime;
-                if (playerSave.GetPersonalBest(GameInfo.info.MapManager.CurrentMap, out pbTime))
+                if (PlayerSave.current.GetPersonalBest(GameInfo.info.MapManager.CurrentMap, out pbTime))
                 {
                     Assert.IsTrue(pbTime.Length > 0);
                     pb = pbTime.Last().ToTimeString();
@@ -73,23 +61,6 @@ namespace UI
             if (temp.Contains("$pb"))
             {
                 temp = temp.Replace("$pb", pb);
-            }
-
-            if (temp.Contains("$rank"))
-            {
-                if (!loadingBestEntry && bestEntry == "")
-                {
-                    // TODO
-                    loadingBestEntry = true;
-                }
-            }
-
-            if (temp.Contains("$currentplayer"))
-            {
-                if (playerSave != null && playerSave.Name != "")
-                    temp = temp.Replace("$currentplayer", playerSave.Name);
-                else
-                    temp = temp.Replace("$currentplayer", "No player selected!");
             }
 
             TextScript.text = temp;

@@ -21,6 +21,7 @@ namespace Api
 
         public bool Done { get; private set; }
         public bool Error { get; private set; }
+        public int ErrorCode { get; private set; }
         public string ErrorText { get; private set; }
         public byte[] BinaryResult { get; private set; }
         public HttpWebRequest HttpWebRequest { get; private set; }
@@ -79,6 +80,7 @@ namespace Api
             }
             catch (WebException ex)
             {
+                ErrorCode = -1;
                 HandleWebException(ex);
             }
         }
@@ -108,6 +110,7 @@ namespace Api
             }
             catch (WebException ex)
             {
+                ErrorCode = -2;
                 HandleWebException(ex);
             }
         }
@@ -131,6 +134,7 @@ namespace Api
             }
             catch (WebException ex)
             {
+                ErrorCode = -3;
                 HandleWebException(ex);
             }
         }
@@ -139,14 +143,16 @@ namespace Api
         {
             Done = true;
             if (OnDone != null)
-                OnDone(this, new RequestFinishedEventArgs(Error, ErrorText, BinaryResult));
+                OnDone(this, new RequestFinishedEventArgs(Error, ErrorCode, ErrorText, BinaryResult));
         }
 
         private void HandleWebException(WebException ex)
         {
             Error = true;
+
             if (ex.Response != null)
             {
+                ErrorCode = (int)((HttpWebResponse) ex.Response).StatusCode;
                 using (StreamReader reader = new StreamReader(ex.Response.GetResponseStream()))
                 {
                     ErrorText = ex.Message + "\n" + reader.ReadToEnd();
@@ -163,6 +169,7 @@ namespace Api
     public class RequestFinishedEventArgs : EventArgs
     {
         public bool Error { get; private set; }
+        public int ErrorCode { get; private set; }
         public string ErrorText { get; private set; }
         public byte[] BinaryResult { get; private set; }
 
@@ -171,9 +178,10 @@ namespace Api
             get { return Encoding.UTF8.GetString(BinaryResult); }
         }
 
-        public RequestFinishedEventArgs(bool error, string errorText, byte[] result)
+        public RequestFinishedEventArgs(bool error, int errorCode, string errorText, byte[] result)
         {
             Error = error;
+            ErrorCode = errorCode;
             ErrorText = errorText;
             BinaryResult = result;
         }

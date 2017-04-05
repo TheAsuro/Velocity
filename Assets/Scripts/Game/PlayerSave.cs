@@ -5,6 +5,7 @@ using System.Linq;
 using Api;
 using Newtonsoft.Json;
 using UI;
+using UnityEngine.Assertions;
 using Util;
 
 namespace Game
@@ -89,6 +90,9 @@ namespace Game
             if (!eventArgs.Error)
             {
                 AccountCreationResult account = JsonConvert.DeserializeObject<AccountCreationResult>(eventArgs.StringResult);
+                Assert.IsTrue(account.ID != 0);
+                Assert.IsNotNull(account.Token);
+
                 ID = account.ID;
                 DoLogin(account.Token);
             }

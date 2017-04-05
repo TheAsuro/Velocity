@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
-  m_SkyboxMaterial: {fileID: 2100000, guid: 9ca0c697b8a762043af575bb52a315b7, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: b3e08fa978fd92d40b549c8ff2b6237c, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.5363705, g: 0.62322056, b: 0.74420834, a: 1}
+  m_IndirectSpecularColor: {r: 0.007946552, g: 0.032331865, b: 0.08441874, a: 1}
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -2108,7 +2108,7 @@ Prefab:
     - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
       propertyPath: skybox
       value: 
-      objectReference: {fileID: 2100000, guid: 9ca0c697b8a762043af575bb52a315b7, type: 2}
+      objectReference: {fileID: 2100000, guid: b3e08fa978fd92d40b549c8ff2b6237c, type: 2}
     - target: {fileID: 11400000, guid: 8d3e5431ecb0edb48b42effb62b767ea, type: 2}
       propertyPath: replayCams.Array.data[0]
       value: 

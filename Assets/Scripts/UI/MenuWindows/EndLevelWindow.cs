@@ -31,7 +31,7 @@ namespace UI.MenuWindows
             {
                 textDisplay.text = textDisplay.text
                     .Replace("$time", demo.TotalTickTime.ToTimeString())
-                    .Replace("$level", SceneManager.GetActiveScene().name);
+                    .ReplaceDefaultTemplates();
             });
             StartCoroutine(FadeText(1f, fadeDuration, textMoveDistance, timeText));
             if (isPb)

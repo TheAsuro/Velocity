@@ -18,9 +18,6 @@ namespace UI.MenuWindows
         [SerializeField]
         private InputField playerMailField;
 
-        [SerializeField]
-        private Text resultText;
-
         public void OnOkClick()
         {
             currentName = playerNameField.text;
@@ -38,6 +35,8 @@ namespace UI.MenuWindows
         {
             if (e.Error)
             {
+                SetInteractive(true);
+
                 ErrorWindow window = (ErrorWindow) GameMenu.SingletonInstance.AddWindow(Window.ERROR);
                 window.SetText(e.ErrorText);
             }

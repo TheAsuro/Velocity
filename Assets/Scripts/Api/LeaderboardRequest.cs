@@ -12,6 +12,11 @@ namespace Api
             get { return apiRequest.Error; }
         }
 
+        public int ErrorCode
+        {
+            get { return apiRequest.ErrorCode; }
+        }
+
         public string ErrorText
         {
             get { return apiRequest.ErrorText; }
