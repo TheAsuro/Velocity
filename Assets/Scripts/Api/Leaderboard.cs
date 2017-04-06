@@ -43,16 +43,16 @@ namespace Api
             ApiRequest rq = new ApiRequest(Url.HIGHSCORES, POST, data);
             rq.OnDone += (sender, args) =>
             {
-                if (rq.Error)
-                    GameMenu.SingletonInstance.ShowError(rq.ErrorText);
-                else
+                if (args.Error)
+                    GameMenu.SingletonInstance.ShowError(args.ErrorText);
+                else if (int.Parse(args.StringResult) != 0)
                 {
                     using (MemoryStream stream = new MemoryStream())
                     {
                         demo.SaveToStream(stream);
                         RequestData demoData = new BinaryRequestData(stream.GetBuffer());
                         // TODO: get run id from highscore request
-                        ApiRequest demoRq = new ApiRequest(Url.DEMOS + "/" + 7, POST, demoData);
+                        ApiRequest demoRq = new ApiRequest(Url.DEMOS + "/" + 50 + "/" + 7, POST, demoData);
                         demoRq.OnDone += (o, eventArgs) =>
                         {
                             if (demoRq.Error)

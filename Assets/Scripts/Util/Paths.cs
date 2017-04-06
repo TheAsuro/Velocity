@@ -21,5 +21,10 @@ namespace Util
         {
             return Path.Combine(DemoDir, demoName + ".vdem");
         }
+
+        public static string GetSavePath(string playerName)
+        {
+            return Path.Combine(PlayerSaveDir, playerName + ".vsav");
+        }
     }
 }

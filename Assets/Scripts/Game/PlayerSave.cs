@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using Api;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UI;
-using UnityEngine.Assertions;
 using Util;
 
 namespace Game
@@ -16,7 +16,6 @@ namespace Game
 
         public event EventHandler<EventArgs<string>> OnLoginFinished;
         public event EventHandler<EventArgs<string>> OnAccountRequestFinished;
-        public event EventHandler<EventArgs<bool>> OnLoginCheckFinished;
 
         public int ID { get; private set; }
         public string Name { get; private set; }
@@ -27,7 +26,7 @@ namespace Game
 
         public static PlayerSave LoadFromFile(string playerName)
         {
-            SerializablePlayerSave save = JsonConvert.DeserializeObject<SerializablePlayerSave>(File.ReadAllText(GetFilePath(playerName)));
+            SerializablePlayerSave save = JsonConvert.DeserializeObject<SerializablePlayerSave>(File.ReadAllText(Paths.GetSavePath(playerName)));
             return new PlayerSave(save);
         }
 
@@ -89,16 +88,15 @@ namespace Game
         {
             if (!eventArgs.Error)
             {
-                AccountCreationResult account = JsonConvert.DeserializeObject<AccountCreationResult>(eventArgs.StringResult);
-                Assert.IsTrue(account.ID != 0);
-                Assert.IsNotNull(account.Token);
-
-                ID = account.ID;
-                DoLogin(account.Token);
+                JObject accountObj = JObject.Parse(eventArgs.StringResult);
+                ID = (int) accountObj["ID"];
+                SetLoggedInAndSave((string) accountObj["Token"]);
             }
 
             if (OnAccountRequestFinished != null)
                 OnAccountRequestFinished(this, new EventArgs<string>(eventArgs.StringResult, eventArgs.Error, eventArgs.ErrorText));
+
+            InvokeLoginDone(eventArgs.Error, eventArgs.ErrorText);
         }
 
         public void StartLogin(string pass)
@@ -112,11 +110,7 @@ namespace Game
                     if (args.Error)
                     {
                         GameMenu.SingletonInstance.ShowError(args.ErrorText);
-                        if (OnLoginFinished != null)
-                        {
-                            OnLoginFinished(this, new EventArgs<string>(args.StringResult, args.Error, args.ErrorText));
-                            OnLoginFinished = null;
-                        }
+                        InvokeLoginDone(args.Error, args.ErrorText);
                     }
                     else
                     {
@@ -147,21 +141,26 @@ namespace Game
                 string tokenString = eventArgs.StringResult;
                 if (tokenString.StartsWith("\""))
                     tokenString = tokenString.Trim('"');
-                DoLogin(tokenString);
+                SetLoggedInAndSave(tokenString);
             }
 
-            if (OnLoginFinished != null)
-            {
-                OnLoginFinished(this, new EventArgs<string>(Token, eventArgs.Error, eventArgs.ErrorText));
-                OnLoginFinished = null;
-            }
+            InvokeLoginDone(eventArgs.Error, eventArgs.ErrorText);
         }
 
-        private void DoLogin(string token)
+        private void SetLoggedInAndSave(string token)
         {
             Token = token;
             IsLoggedIn = true;
             SaveFile();
+        }
+
+        private void InvokeLoginDone(bool error, string errorText)
+        {
+            if (OnLoginFinished != null)
+            {
+                OnLoginFinished(this, new EventArgs<string>(Token, error, errorText));
+                OnLoginFinished = null;
+            }
         }
 
         public void SaveFile()
@@ -170,29 +169,18 @@ namespace Game
                 Directory.CreateDirectory(Paths.PlayerSaveDir);
 
             SerializablePlayerSave save = new SerializablePlayerSave(personalBestTimes, ID, Name, Token);
-            File.WriteAllText(GetFilePath(Name), JsonConvert.SerializeObject(save));
+            File.WriteAllText(Paths.GetSavePath(Name), JsonConvert.SerializeObject(save));
         }
 
         public void DeleteFile()
         {
-            if (File.Exists(GetFilePath(Name)))
-                File.Delete(GetFilePath(Name));
+            if (File.Exists(Paths.GetSavePath(Name)))
+                File.Delete(Paths.GetSavePath(Name));
         }
 
         public static bool PlayerFileExists(string playerName)
         {
-            return File.Exists(GetFilePath(playerName));
-        }
-
-        private static string GetFilePath(string playerName)
-        {
-            return Path.Combine(Paths.PlayerSaveDir, playerName + ".vsav");
-        }
-
-        private class AccountCreationResult
-        {
-            public int ID { get; private set; }
-            public string Token { get; private set; }
+            return File.Exists(Paths.GetSavePath(playerName));
         }
 
         private class SerializablePlayerSave

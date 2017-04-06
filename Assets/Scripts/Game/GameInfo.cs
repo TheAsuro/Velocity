@@ -122,27 +122,14 @@ namespace Game
 
             StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.SendEntry(PlayerSave.current, map.id, time.Last(), currentDemo), entryRequest =>
             {
+                int rank;
                 if (entryRequest.Error)
                 {
                     GameMenu.SingletonInstance.ShowError(entryRequest.ErrorText);
                 }
-                else
+                else if (int.TryParse(entryRequest.StringResult, out rank) && rank > 0)
                 {
-                    StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(map), recordRequest =>
-                    {
-                        if (recordRequest.Error)
-                        {
-                            GameMenu.SingletonInstance.ShowError(recordRequest.ErrorText);
-                        }
-                        else if (recordRequest.Result.Length == 0)
-                        {
-                            GameMenu.SingletonInstance.ShowError("Record request returned no results!");
-                        }
-                        else
-                        {
-                            window.NewOnlineRank(recordRequest.Result[0].Rank);
-                        }
-                    }));
+                    window.NewOnlineRank(rank);
                 }
             }));
         }

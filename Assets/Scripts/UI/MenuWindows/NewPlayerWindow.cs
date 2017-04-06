@@ -7,7 +7,7 @@ namespace UI.MenuWindows
 {
     public class NewPlayerWindow : DefaultMenuWindow
     {
-        private string currentName;
+        private PlayerSave player;
 
         [SerializeField]
         private InputField playerNameField;
@@ -20,18 +20,17 @@ namespace UI.MenuWindows
 
         public void OnOkClick()
         {
-            currentName = playerNameField.text;
-            PlayerSave sd = new PlayerSave(currentName);
-            sd.SaveFile();
-            // TODO remove events when done
-            sd.OnAccountRequestFinished += (s, e) => GameInfo.info.RunOnMainThread(() => FinishedAccountRequest(sd, e));
-            sd.OnLoginFinished += (s, e) => GameInfo.info.RunOnMainThread(() => FinishedLoginRequest(sd, e));
-            sd.StartCreate(playerPassField.text, playerMailField.text);
+            player = new PlayerSave(playerNameField.text);
+            player.SaveFile();
+
+            player.OnAccountRequestFinished += (s, e) => GameInfo.info.RunOnMainThread(() => FinishedAccountRequest(e));
+            player.OnLoginFinished += (s, e) => GameInfo.info.RunOnMainThread(() => FinishedLoginRequest(e));
+            player.StartCreate(playerPassField.text, playerMailField.text);
 
             SetInteractive(false);
         }
 
-        private void FinishedAccountRequest(PlayerSave sd, EventArgs<string> e)
+        private void FinishedAccountRequest(EventArgs<string> e)
         {
             if (e.Error)
             {
@@ -42,15 +41,20 @@ namespace UI.MenuWindows
             }
         }
 
-        private void FinishedLoginRequest(PlayerSave sd, EventArgs<string> e)
+        private void FinishedLoginRequest(EventArgs<string> e)
         {
             SetInteractive(true);
 
-            // TODO actually log in player? maybe not? idk
             if (e.Error)
             {
                 ErrorWindow window = (ErrorWindow) GameMenu.SingletonInstance.AddWindow(Window.ERROR);
                 window.SetText(e.ErrorText);
+            }
+            else
+            {
+                PlayerSave.current = player;
+                GameMenu.SingletonInstance.CloseWindow();
+                GameMenu.SingletonInstance.CloseWindow();
             }
         }
     }
