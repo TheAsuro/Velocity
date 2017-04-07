@@ -43,7 +43,7 @@ namespace UI
 
         private void IncreaseMenuCounter(object sender, EventArgs eventArgs)
         {
-            if (otherMenusOpen == 0)
+            if (otherMenusOpen == 0 && Camera.main.gameObject.GetComponent<BlurOptimized>() != null)
                 Camera.main.gameObject.GetComponent<BlurOptimized>().enabled = true;
             otherMenusOpen++;
         }
@@ -51,7 +51,7 @@ namespace UI
         private void DecreaseMenuCounter(object sender, EventArgs eventArgs)
         {
             otherMenusOpen--;
-            if (otherMenusOpen == 0)
+            if (otherMenusOpen == 0 && Camera.main.gameObject.GetComponent<BlurOptimized>() != null)
                 Camera.main.gameObject.GetComponent<BlurOptimized>().enabled = false;
         }
     }

@@ -66,7 +66,6 @@ namespace Game
         {
             InEditor = false;
             yield return new WaitForSecondsRealtime(0.5f);
-            GameMenu.SingletonInstance.CloseAllWindows();
             MapManager.LoadMap(map);
         }
 

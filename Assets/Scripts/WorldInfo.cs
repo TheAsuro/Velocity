@@ -84,6 +84,7 @@ public class WorldInfo : MonoBehaviour
         RaceScript.PrepareNewRun();
 
         // UI
+        GameMenu.SingletonInstance.CloseAllWindows();
         GameMenu.SingletonInstance.AddWindow(Window.PLAY);
     }
 
