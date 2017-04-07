@@ -42,17 +42,15 @@ namespace UI.Elements
 
             StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(map), (request) =>
             {
-                if (!request.Error)
-                {
-                    if (request.Result.Length == 1)
-                        SetWrText(request.Result[0]);
-                }
+                if (!request.Error && request.Result.Length > 0)
+                    SetWrText(request.Result[0]);
             }));
         }
 
         private void OnPlayableMapClick(MapData map)
         {
-            GameInfo.info.PlayLevel(map);
+            GameMenu.SingletonInstance.AddWindow(Window.LOADING);
+            StartCoroutine(GameInfo.info.LoadMapWithEffect(map));
         }
 
         private void SetWrText(LeaderboardEntry entry)

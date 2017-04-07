@@ -24,7 +24,8 @@ namespace UI
         SETTINGS,
         MAIN_MENU,
         PLAY,
-        ERROR
+        ERROR,
+        LOADING
     }
 
     public class GameMenu : MonoBehaviour

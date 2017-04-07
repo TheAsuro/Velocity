@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using Demos;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.ImageEffects;
@@ -12,6 +10,7 @@ namespace UI
         [SerializeField] private string previewLevelName;
 
         private int otherMenusOpen = 0;
+        private bool loading = true;
 
         private void Start()
         {
@@ -19,6 +18,8 @@ namespace UI
 
             GameMenu.SingletonInstance.OnMenuAdded += IncreaseMenuCounter;
             GameMenu.SingletonInstance.OnMenuRemoved += DecreaseMenuCounter;
+
+            GameMenu.SingletonInstance.AddWindow(Window.LOADING);
 
             SceneManager.LoadSceneAsync(previewLevelName, LoadSceneMode.Additive);
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -32,9 +33,11 @@ namespace UI
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == previewLevelName)
+            if (scene.name == previewLevelName && loading)
             {
                 RenderSettings.skybox = WorldInfo.info.skybox;
+                GameMenu.SingletonInstance.CloseWindow();
+                loading = false;
             }
         }
 

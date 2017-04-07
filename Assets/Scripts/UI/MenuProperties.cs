@@ -25,6 +25,7 @@ namespace UI
         [SerializeField] private GameObject playWindow;
         [SerializeField] private GameObject settingsWindowPrefab;
         [SerializeField] private GameObject errorWindowPrefab;
+        [SerializeField] private GameObject loadWindowPrefab;
 
         private Dictionary<Window, TypeAndPrefab> typePairs;
 
@@ -48,6 +49,7 @@ namespace UI
                 {Window.PLAY, new TypeAndPrefab(typeof(PlayWindow), playWindow)},
                 {Window.SETTINGS, new TypeAndPrefab(typeof(SettingsWindow), settingsWindowPrefab)},
                 {Window.ERROR, new TypeAndPrefab(typeof(ErrorWindow), errorWindowPrefab)},
+                {Window.LOADING, new TypeAndPrefab(typeof(LoadWindow), loadWindowPrefab)}
             };
         }
 

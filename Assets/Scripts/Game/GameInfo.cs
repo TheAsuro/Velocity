@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,7 +9,6 @@ using UI;
 using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Util;
 
 namespace Game
@@ -34,9 +34,7 @@ namespace Game
         public bool InEditor { get; private set; }
         public bool CheatsActive { get; set; }
 
-        private GameInfoFx fx;
         private Demo currentDemo;
-        private GameObject myCanvas;
 
         private List<Action> actionQueue = new List<Action>();
 
@@ -53,11 +51,6 @@ namespace Game
                 Destroy(gameObject);
             }
 
-            myCanvas = transform.Find("Canvas").gameObject;
-
-            fx = new GameInfoFx(myCanvas.transform.FindChild("FxImage").GetComponent<Image>());
-            SceneManager.sceneLoaded += (scene, mode) => fx.StartColorFade(Color.black, new Color(0f, 0f, 0f, 0f), 0.5f);
-
             UnityUtils.MainThread = Thread.CurrentThread;
         }
 
@@ -67,20 +60,14 @@ namespace Game
 
             actionQueue.ForEach(action => action());
             actionQueue.Clear();
-
-            //Update effects
-            fx.Update();
         }
 
-        //Load a level
-        public void PlayLevel(MapData map)
+        public IEnumerator LoadMapWithEffect(MapData map)
         {
             InEditor = false;
-            fx.StartColorFade(new Color(0f, 0f, 0f, 0f), Color.black, 0.5f, () =>
-            {
-                GameMenu.SingletonInstance.CloseAllWindows();
-                MapManager.LoadMap(map);
-            });
+            yield return new WaitForSecondsRealtime(0.5f);
+            GameMenu.SingletonInstance.CloseAllWindows();
+            MapManager.LoadMap(map);
         }
 
         public void LoadEditor(string editorLevelName)
