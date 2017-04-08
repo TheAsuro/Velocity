@@ -1,5 +1,7 @@
 ﻿using Demos;
+using Game;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Util;
 
@@ -9,6 +11,8 @@ namespace UI.MenuWindows
     {
         [SerializeField] private GameObject demoContentPanel;
         [SerializeField] private GameObject demoPanelPrefab;
+
+        private Demo loadingDemo;
 
         public override void OnActivate()
         {
@@ -37,13 +41,27 @@ namespace UI.MenuWindows
         private void CreateDemoPanel(int slot, Demo demo)
         {
             Transform t = GameMenu.CreatePanel(slot, demoPanelPrefab, demoContentPanel.transform).transform;
+            MapData demoMap = GameInfo.info.MapManager.GetMapById(demo.MapID);
 
-            t.FindChild("Map").GetComponent<Text>().text = demo.LevelName;
+            t.FindChild("Map").GetComponent<Text>().text = demoMap.name;
             t.FindChild("Time").GetComponent<Text>().text = demo.TotalTickTime.ToTimeString();
             t.FindChild("Player").GetComponent<Text>().text = demo.PlayerName;
 
-            t.FindChild("Button").GetComponent<Button>().onClick.AddListener(() => WorldInfo.info.PlayDemo(demo, false, false));
+            t.FindChild("Button").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                loadingDemo = demo;
+                GameMenu.SingletonInstance.AddWindow(Window.LOADING);
+                SceneManager.sceneLoaded += LoadedDemoMap;
+                GameInfo.info.MapManager.LoadMap(demoMap);
+            });
             t.FindChild("Remove").GetComponent<Button>().onClick.AddListener(demo.DeleteDemoFile);
+        }
+
+        private void LoadedDemoMap(Scene scene, LoadSceneMode mode)
+        {
+            SceneManager.sceneLoaded -= LoadedDemoMap;
+            GameMenu.SingletonInstance.CloseAllWindows();
+            WorldInfo.info.PlayDemo(loadingDemo, true, false);
         }
     }
 }

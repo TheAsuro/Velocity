@@ -2,6 +2,7 @@
 using Game;
 using UI.MenuWindows;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Util;
 
@@ -50,7 +51,14 @@ namespace UI.Elements
         private void OnPlayableMapClick(MapData map)
         {
             GameMenu.SingletonInstance.AddWindow(Window.LOADING);
-            StartCoroutine(GameInfo.info.LoadMapWithEffect(map));
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            GameInfo.info.MapManager.LoadMap(map);
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            WorldInfo.info.CreatePlayer(false);
         }
 
         private void SetWrText(LeaderboardEntry entry)

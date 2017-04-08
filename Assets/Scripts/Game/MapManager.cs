@@ -16,17 +16,15 @@ namespace Game
             get { return defaultMaps; }
         }
 
+        public MapData GetMapById(int id)
+        {
+            return defaultMaps.Find(map => map.id == id);
+        }
+
         public void LoadMap(MapData map)
         {
             CurrentMap = map;
-            SceneManager.sceneLoaded += OnMapLoaded;
             SceneManager.LoadScene(map.name);
-        }
-
-        private void OnMapLoaded(Scene scene, LoadSceneMode mode)
-        {
-            SceneManager.sceneLoaded -= OnMapLoaded;
-            WorldInfo.info.CreatePlayer(false);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Game;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Util;
@@ -13,7 +14,7 @@ namespace Demos
         private const string DEMO_VERSION_STRING = "VELOCITYDEMO 1.3";
 
         public string PlayerName { get; private set; }
-        public string LevelName { get; private set; }
+        public int MapID { get; private set; }
         public long TotalTickTime { get; private set; }
         public List<DemoTick> Ticks { get; private set; }
         public bool RunValid { get; set; }
@@ -44,11 +45,11 @@ namespace Demos
         }
 
         //Make a demo from a list of ticks
-        public Demo(List<DemoTick> pTicks, string pPlayerName, string pLevelName, bool valid)
+        public Demo(List<DemoTick> pTicks, string pPlayerName, MapData map, bool valid)
         {
             Ticks = pTicks;
             PlayerName = pPlayerName;
-            LevelName = pLevelName;
+            MapID = map.id;
             DemoName = Guid.NewGuid().ToString();
             RunValid = valid;
 
@@ -65,7 +66,7 @@ namespace Demos
             Assert.IsTrue(demoVersion == DEMO_VERSION_STRING);
 
             PlayerName = reader.ReadString();
-            LevelName = reader.ReadString();
+            MapID = reader.ReadInt32();
             TotalTickTime = reader.ReadInt64();
             RunValid = reader.ReadBoolean();
 
@@ -102,7 +103,7 @@ namespace Demos
                 //header
                 writer.Write(DEMO_VERSION_STRING);
                 writer.Write(PlayerName);
-                writer.Write(LevelName);
+                writer.Write(MapID);
                 writer.Write(TotalTickTime);
                 writer.Write(RunValid);
 

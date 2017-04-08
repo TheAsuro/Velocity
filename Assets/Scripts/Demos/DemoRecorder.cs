@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Game;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Demos
 {
@@ -18,13 +17,13 @@ namespace Demos
 
         private List<DemoTick> tickList;
         private string playerName;
-        private string levelName;
+        private MapData map;
 
         public void StartRecording(string playerName)
         {
             this.playerName = playerName;
             tickList = new List<DemoTick>();
-            levelName = SceneManager.GetActiveScene().name;
+            map = GameInfo.info.MapManager.CurrentMap;
             CheckpointTicks = new List<long>();
             lastSecondComputer = DateTime.Now;
             lastSecondGame = Time.time;
@@ -44,7 +43,7 @@ namespace Demos
         public void Finish(long elapsedTicks)
         {
             FinalTimeTicks = elapsedTicks;
-            Demo = new Demo(tickList, playerName, levelName, IsValid);
+            Demo = new Demo(tickList, playerName, map, IsValid);
         }
 
         public void InvalidRunCheck()

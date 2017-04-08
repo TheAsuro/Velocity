@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -60,13 +59,6 @@ namespace Game
 
             actionQueue.ForEach(action => action());
             actionQueue.Clear();
-        }
-
-        public IEnumerator LoadMapWithEffect(MapData map)
-        {
-            InEditor = false;
-            yield return new WaitForSecondsRealtime(0.5f);
-            MapManager.LoadMap(map);
         }
 
         public void LoadEditor(string editorLevelName)
