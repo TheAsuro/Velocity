@@ -125,7 +125,8 @@ public class WorldInfo : MonoBehaviour
         set
         {
             activeCameraMode = value;
-            previewCam.enabled = false;
+            if (previewCam != null)
+                previewCam.enabled = false;
             replayCams.ForEach(cam => cam.enabled = false);
             switch (value)
             {
