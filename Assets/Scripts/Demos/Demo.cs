@@ -36,12 +36,8 @@ namespace Demos
 
         public Demo(byte[] data)
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                stream.Write(data, 0, data.Length);
-                BinaryReader reader = new BinaryReader(stream);
-                LoadFromBinaryReader(reader);
-            }
+            BinaryReader reader = new BinaryReader(new MemoryStream(data));
+            LoadFromBinaryReader(reader);
         }
 
         //Make a demo from a list of ticks

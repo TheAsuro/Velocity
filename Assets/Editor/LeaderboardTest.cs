@@ -39,24 +39,34 @@ namespace Tests
         }
 
         [Test]
-        public void DemoUploadTest()
+        public void DemoTest()
         {
+            byte[] streamData;
+            Demo testDemo = new Demo("12d22e1a-9851-421a-a8d0-9ca85487e499");
+
             using (MemoryStream stream = new MemoryStream())
             {
-                new Demo("default").SaveToStream(stream);
-                RequestData demoData = new BinaryRequestData(stream.ToArray());
-                // TODO: get run id from highscore request
-                ApiRequest demoRq = new ApiRequest(Url.DEMOS + "/34/1", "POST", demoData);
-                demoRq.OnDone += (o, eventArgs) => { Debug.Log(demoRq.Error ? demoRq.ErrorText : "Demo upload finished!"); };
-                demoRq.StartRequest();
+                testDemo.SaveToStream(stream);
+                streamData = stream.ToArray();
             }
-        }
 
-        [Test]
-        public void DemoDownloadTest()
-        {
-            ApiRequest rq = new ApiRequest(Url.DEMOS + "/34/1", "GET");
-            rq.OnDone += (sender, args) =>
+            // test if demo was correctly written to stream
+            Demo testDemo2 = new Demo(streamData);
+            AssertDemosEqual(testDemo, testDemo2);
+
+            // send demo to server
+            RequestData demoData = new BinaryRequestData(streamData);
+            ApiRequest sendRq = new ApiRequest(Url.DEMOS + "/34/1", "POST", demoData);
+            sendRq.OnDone += (o, eventArgs) => { Debug.Log(sendRq.Error ? sendRq.ErrorText : "Demo upload finished!"); };
+            sendRq.StartRequest();
+            while(!sendRq.Done) {}
+
+            Assert.IsFalse(sendRq.Error);
+            Debug.Log(sendRq.Error ? sendRq.ErrorText : "Send succeded.");
+
+            // request demo from server
+            ApiRequest recvRq = new ApiRequest(Url.DEMOS + "/34/1", "GET");
+            recvRq.OnDone += (sender, args) =>
             {
                 if (args.Error)
                     Debug.Log(args.ErrorText);
@@ -66,7 +76,30 @@ namespace Tests
                     Debug.Log(demo.PlayerName);
                 }
             };
-            rq.StartRequest();
+            recvRq.StartRequest();
+            while (!recvRq.Done) {}
+
+            Assert.IsFalse(recvRq.Error);
+            Debug.Log(sendRq.Error ? sendRq.ErrorText : "Recieve succeded.");
+
+            // check if server returned what we sent
+            for (int i = 0; i < streamData.Length; i++)
+            {
+                Assert.AreEqual(streamData[i], recvRq.BinaryResult[i]);
+                if (streamData[i] != recvRq.BinaryResult[i])
+                    Debug.Log("Bytes differ at index " + i);
+            }
+
+            Demo result = new Demo(recvRq.BinaryResult);
+            AssertDemosEqual(testDemo, result);
+        }
+
+        private static void AssertDemosEqual(Demo demo1, Demo demo2)
+        {
+            for (int i = 0; i < demo1.Ticks.Count; i++)
+            {
+                Assert.AreEqual(demo1.Ticks[i].Time, demo2.Ticks[i].Time);
+            }
         }
     }
 }
