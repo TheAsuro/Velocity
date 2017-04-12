@@ -52,7 +52,7 @@ namespace Api
                         demo.SaveToStream(stream);
                         RequestData demoData = new BinaryRequestData(stream.GetBuffer());
                         // TODO: get run id from highscore request
-                        ApiRequest demoRq = new ApiRequest(Url.DEMOS + "/" + 50 + "/" + 7, POST, demoData);
+                        ApiRequest demoRq = new ApiRequest(Url.DEMOS + "/" + player.ID + "/" + mapID, POST, demoData);
                         demoRq.OnDone += (o, eventArgs) =>
                         {
                             if (demoRq.Error)

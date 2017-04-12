@@ -2,7 +2,7 @@
 {
     public static class Url
     {
-        private const string BASE_URL = "http://localhost:54586/velocity/";
+        private const string BASE_URL = "https://api.theasuro.de/velocity/";
 
         public static string LOGIN
         {

@@ -74,7 +74,7 @@ namespace Game
         }
 
         //Player hit the goal
-        public void RunFinished(long[] time, MapData map, Demo demo)
+        public void RunFinished(long[] time, Demo demo)
         {
             currentDemo = demo;
 
@@ -98,7 +98,7 @@ namespace Game
                 return;
             }
 
-            StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.SendEntry(PlayerSave.current, map.id, time.Last(), currentDemo), entryRequest =>
+            StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.SendEntry(PlayerSave.current, MapManager.CurrentMap.id, time.Last(), currentDemo), entryRequest =>
             {
                 int rank;
                 if (entryRequest.Error)

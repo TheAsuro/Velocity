@@ -38,7 +38,7 @@ namespace UI.MenuWindows
                 if (!request.Error)
                     DisplayData(request.Result);
                 else
-                    print(request.ErrorText);
+                    GameMenu.SingletonInstance.ShowError(request.ErrorText);
             }));
         }
 
