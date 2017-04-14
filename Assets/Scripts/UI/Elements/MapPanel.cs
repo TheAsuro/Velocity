@@ -29,17 +29,8 @@ namespace UI.Elements
             previewImage.texture = map.previewImage;
             pbField.text = pb;
             loadButton.onClick.AddListener(() => OnPlayableMapClick(map));
-            pbButton.onClick.AddListener(() =>
-            {
-                LeaderboardWindow leaderboard = (LeaderboardWindow) GameMenu.SingletonInstance.AddWindow(Window.LEADERBOARD);
-                // TODO: load leaderboards at pb index
-                leaderboard.LoadMap(map);
-            });
-            wrButton.onClick.AddListener(() =>
-            {
-                LeaderboardWindow leaderboard = (LeaderboardWindow) GameMenu.SingletonInstance.AddWindow(Window.LEADERBOARD);
-                leaderboard.LoadMap(map);
-            });
+            pbButton.onClick.AddListener(OpenLeaderboardButton.CreateClickListener(map, 0)); // TODO load at player index instead of 0
+            wrButton.onClick.AddListener(OpenLeaderboardButton.CreateClickListener(map, 0));
 
             StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetRecord(map), (request) =>
             {

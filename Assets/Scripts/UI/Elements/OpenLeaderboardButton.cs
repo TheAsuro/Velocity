@@ -2,6 +2,7 @@
 using Game;
 using UI.MenuWindows;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UI.Elements
@@ -13,11 +14,16 @@ namespace UI.Elements
 
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(() =>
+            GetComponent<Button>().onClick.AddListener(CreateClickListener(targetMap, loadIndex));
+        }
+
+        public static UnityAction CreateClickListener(MapData map, int index)
+        {
+            return () =>
             {
                 LeaderboardWindow window = (LeaderboardWindow) GameMenu.SingletonInstance.AddWindow(Window.LEADERBOARD);
-                window.LoadMap(targetMap ?? GameInfo.info.MapManager.CurrentMap, loadIndex);
-            });
+                window.LoadMap(map ?? GameInfo.info.MapManager.CurrentMap, index);
+            };
         }
     }
 }
