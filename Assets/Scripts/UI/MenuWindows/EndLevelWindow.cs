@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Demos;
 using Game;
+using UI.Elements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,12 +15,15 @@ namespace UI.MenuWindows
         [SerializeField] private List<Text> replaceTargets;
         [SerializeField] private Transform medalTransform;
         [SerializeField] private GameObject pbMedalPrefab;
+        [SerializeField] private GameObject leaderboardButton;
         [SerializeField] private Text timeText;
         [SerializeField] private Text pbText;
         [SerializeField] private Text rankText;
         [SerializeField] private AnimationCurve textFadeCurve;
         [SerializeField] private float fadeDuration = 5f;
         [SerializeField] private float textMoveDistance = 100f;
+        [SerializeField] private float textStartDelay = 0.5f;
+        [SerializeField] private float textNextDelay = 0.5f;
 
         private Demo demo;
 
@@ -33,18 +37,19 @@ namespace UI.MenuWindows
                     .Replace("$time", demo.TotalTickTime.ToTimeString())
                     .ReplaceDefaultTemplates();
             });
-            StartCoroutine(FadeText(1f, fadeDuration, textMoveDistance, timeText));
+            StartCoroutine(FadeText(textStartDelay, fadeDuration, textMoveDistance, timeText));
             if (isPb)
             {
                 Instantiate(pbMedalPrefab, medalTransform);
-                StartCoroutine(FadeText(3f, fadeDuration, textMoveDistance, pbText));
+                StartCoroutine(FadeText(textStartDelay + textNextDelay, fadeDuration, textMoveDistance, pbText));
             }
         }
 
         public void NewOnlineRank(int rank)
         {
             replaceTargets.ForEach(textDisplay => textDisplay.text = textDisplay.text.Replace("$rank", rank.ToString()));
-            StartCoroutine(FadeText(5f, fadeDuration, textMoveDistance, rankText));
+            leaderboardButton.GetComponent<OpenLeaderboardButton>().loadIndex = rank;
+            StartCoroutine(FadeText(textStartDelay + 2 * textNextDelay, fadeDuration, textMoveDistance, rankText));
         }
 
         public void RestartRun()

@@ -381,7 +381,7 @@ GameObject:
   - component: {fileID: 222260828868413478}
   - component: {fileID: 114778948463947866}
   - component: {fileID: 114520988933913412}
-  - component: {fileID: 114115136916586094}
+  - component: {fileID: 114609422289690222}
   m_Layer: 5
   m_Name: Leaderboards
   m_TagString: Untagged
@@ -527,18 +527,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Back to Menu
---- !u!114 &114115136916586094
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1922845839043840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c980c0cec9d1499449780733ec8fb6f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetWindowType: 7
 --- !u!114 &114132002773968656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -937,6 +925,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Replay
+--- !u!114 &114609422289690222
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1922845839043840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5056b0680b2d430586327b5f5b0fbed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadIndex: 0
 --- !u!114 &114637422736761808
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1214,6 +1214,7 @@ MonoBehaviour:
   medalTransform: {fileID: 224670882427266838}
   pbMedalPrefab: {fileID: 1108600067338734, guid: 9d2f14c01bae5554ca742f23310089f4,
     type: 2}
+  leaderboardButton: {fileID: 1922845839043840}
   timeText: {fileID: 114786669456211196}
   pbText: {fileID: 114721907915557816}
   rankText: {fileID: 114845974361555860}
@@ -1249,6 +1250,8 @@ MonoBehaviour:
     m_RotationOrder: 0
   fadeDuration: 5
   textMoveDistance: 100
+  textStartDelay: 0.5
+  textNextDelay: 0.5
 --- !u!114 &114778948463947866
 MonoBehaviour:
   m_ObjectHideFlags: 1

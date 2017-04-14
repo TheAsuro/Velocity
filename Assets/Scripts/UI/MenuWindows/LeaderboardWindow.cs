@@ -30,8 +30,11 @@ namespace UI.MenuWindows
                 DisplayData(new LeaderboardEntry[0]);
         }
 
-        public void LoadMap(MapData map)
+        public void LoadMap(MapData map, int index = 0)
         {
+            // pages should always start with a multiple of 10
+            startIndex = (index / 10) * 10;
+
             loadedMap = map;
             StartCoroutine(UnityUtils.RunWhenDone(Leaderboard.GetEntries(map, startIndex, entryPanels.Count), (request) =>
             {
