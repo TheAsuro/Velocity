@@ -4,6 +4,8 @@ using System.IO;
 using Api;
 using Newtonsoft.Json;
 using Sound;
+using UI;
+using UnityEditor;
 using UnityEngine;
 using Util;
 
@@ -115,12 +117,27 @@ namespace Settings
         {
             try
             {
-                GameSettings.SingletonInstance = JsonConvert.DeserializeObject<GameSettings>(File.ReadAllText(SETTINGS_PATH));
+                if (!File.Exists(SETTINGS_PATH))
+                {
+                    Debug.LogWarning("Settings file missing, creating new.");
+                    singletonInstance = new GameSettings();
+                    singletonInstance.Save();
+                }
+                else
+                {
+                    singletonInstance = JsonConvert.DeserializeObject<GameSettings>(File.ReadAllText(SETTINGS_PATH));
+                }
             }
             catch (IOException)
             {
                 Debug.LogWarning("Couldn't load settins file, loading default values instead!");
-                GameSettings.SingletonInstance = new GameSettings();
+                singletonInstance = new GameSettings();
+            }
+            catch (JsonException)
+            {
+                // TODO: window gets rekt by level load
+                GameMenu.SingletonInstance.ShowError("Settings file is corrupted, loading default values!");
+                singletonInstance = new GameSettings();
             }
         }
 
