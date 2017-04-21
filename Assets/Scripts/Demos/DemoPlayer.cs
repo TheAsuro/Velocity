@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game;
+using UI;
+using UI.MenuWindows;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -76,7 +79,10 @@ namespace Demos
                 else
                 {
                     playing = false;
-                    StartCoroutine(EndDemoDelay());
+                    if (looping)
+                        ResetDemo();
+                    else
+                        StopDemoPlayback();
                 }
             }
 
@@ -85,15 +91,6 @@ namespace Demos
                 ghostCam.transform.position = transform.position + (viewRotation * firstPersonCamOffset);
                 ghostCam.transform.rotation = viewRotation;
             }
-        }
-
-        private IEnumerator EndDemoDelay()
-        {
-            yield return new WaitForSecondsRealtime(3f);
-            if (looping)
-                ResetDemo();
-            else
-                StopDemoPlayback();
         }
 
         public void PlayDemo(Demo demo, bool doLoop = false, bool topView = false)
@@ -105,7 +102,10 @@ namespace Demos
             Vector3[] lineRenderTicks = new Vector3[tickList.Count / 10];
             for (int i = 0; i < lineRenderTicks.Length; i++)
             {
-                lineRenderTicks[i] = tickList[i * 10].Position;
+                Vector3 footOffset = new Vector3(0f, 0.99f, 0f);
+                if (tickList[i * 10].Crouched)
+                    footOffset /= 2f;
+                lineRenderTicks[i] = tickList[i * 10].Position - footOffset;
             }
             GetComponent<LineRenderer>().numPositions = lineRenderTicks.Length;
             GetComponent<LineRenderer>().SetPositions(lineRenderTicks);

@@ -6,16 +6,18 @@ namespace UI.MenuWindows
 {
     public class LoadWindow : DefaultMenuWindow
     {
+        public const float LOAD_DURATION = 0.1f;
+
         public override void OnActivate()
         {
             base.OnActivate();
-            StartCoroutine(Fade(Color.clear, Color.white, 0.1f));
+            StartCoroutine(Fade(Color.clear, Color.white, LOAD_DURATION));
         }
 
         public override void OnClose()
         {
             base.OnClose();
-            StartCoroutine(Fade(Color.white, Color.clear, 0.1f));
+            StartCoroutine(Fade(Color.white, Color.clear, LOAD_DURATION));
         }
 
         private IEnumerator Fade(Color start, Color end, float duration)
